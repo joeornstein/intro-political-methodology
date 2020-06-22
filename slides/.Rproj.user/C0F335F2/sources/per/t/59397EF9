@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591975050671.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1184756222",
+    "id" : "59397EF9",
+    "lastKnownWriteTime" : 1592396104,
+    "last_content_update" : 1592396104759,
+    "path" : "~/teaching/intro-political-methodology/slides/01 Introduction/01 Introduction.Rmd",
+    "project_path" : "01 Introduction/01 Introduction.Rmd",
+    "properties" : {
+        "cursorPosition" : "21,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

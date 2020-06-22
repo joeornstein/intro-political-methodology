@@ -1,0 +1,46 @@
+---
+title: "Introduction to R"
+subtitle: "POLS 7012: Introduction to Political Methodology"
+author: "Joseph T. Ornstein"
+date: "June 12, 2020"
+institute: "University of Georgia"
+output: 
+  beamer_presentation:
+    theme: "Singapore"
+    toc: true
+    keep_tex: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+# What Are We Doing Here?
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+# `R`
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+

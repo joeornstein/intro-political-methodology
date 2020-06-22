@@ -1,0 +1,39 @@
+
+In this problem set, you will create an `R` script that performs some basic analysis of the 2019 ANES (American National Election Studies) Pilot Study. More information about that study is [here](https://electionstudies.org/data-center/2019-pilot-study/). (Basically, they test a bunch of questions on a non-random opt-in Internet panel, so don't draw far-reaching conclusions from this dataset.)
+
+Make sure to comment your code so that you know what each line is doing, like this:
+
+```{r comment example, echo = TRUE, evaluate = FALSE}
+# Compute the median age
+median(data$age)
+```
+
+When you're done, upload the `.R` file to eLC. Feel free to work with others in the class, but you must submit your own work.
+
+
+Calculator
+
+# What is 2+2?
+
+
+
+Objects
+
+
+
+Basic Functions in R
+
+- load() loads a .RData file. load the dataset in the folder 'data/ANES.RData'
+- nrow() counts the number of rows (i.e. obseravations) in a dataframe. How many observations are in this dataset?
+- ncol() counts the number of columns. How many variables are in this dataset?
+- summary() presents a basic summary of the variables in the dataset. How many respondents are missing a response to variable `X`?
+- What are the names() of the variables?
+- The '$' operator
+- What is the average value of X?
+- What is the standard deviation (sd) of Y?
+- Make a table of Z
+- Create a new variable X
+- head() displays the
+
+
+FUNCTIONS and OBJECTS

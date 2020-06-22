@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1591029158322.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1130669296",
+    "id" : "FE123452",
+    "lastKnownWriteTime" : 1591098590,
+    "last_content_update" : 1591098590711,
+    "path" : "~/teaching/intro-political-methodology/bradley-terry/R/bradley-terry.R",
+    "project_path" : "R/bradley-terry.R",
+    "properties" : {
+        "cursorPosition" : "147,0",
+        "scrollLine" : "134"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

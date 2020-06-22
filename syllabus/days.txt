@@ -1,0 +1,27 @@
+Aug 26: Overcoming Fear, Notation, Pretest, Getting started with R. R will be frustrating. What is data? Resources for learning R. Eat your vegetables: high school algebra (solving equations, order of operations, distribution, factorization) (could also save that for "functions" day)
+Sep 2: Visualizing Data (ggplot, distributions, correlation, faceting)
+Sep 9: Tools for Reproducible Research (RMarkdown, LaTeX, rticles, Zotero/Mendeley & bibtex, git, github, .Rproj, file structure, documentation)
+Sep 16: Tidying, Transforming, and Describing Data (tidyverse, dplyr, merging, filtering, grouping)
+Sep 23: Functions (Summation, Products, and Logarithms), Writing Better Code with Functions and Flow Control
+Sep 30: Differential Calculus, Optimization, and Estimation
+Oct 7: Probability: Combinatorics, Random Variables, Expectation, Variance, Covariance, Conditional Probability, Bayes Rule, Law of Large Numbers
+Oct 14: Inference: PDFs and CDFs, Integrals, The Fundamental Theorem of Calculus, CLT, and Hypothesis Testing
+Oct 21: Matrix Algebra and OLS (the linear regression problem, systems of linear equations, linear independence, matrix multiplication, matrix inversion)
+Oct 28: Prediction (fitting and visualizing models, machine learning, overfitting, cross-validation, regularization, ensembles)
+Nov 4: Review and Catchup
+Nov 11: Bonus Day 1
+Nov 18: Bonus Day 2
+Dec 2: Bonus Day 3
+Dec 9: Review
+
+Von Moltke writes that a battle plan never survives first contact with the enemy. The same goes for a syllabus. This is my first time teaching this course, so I've built in a lot of buffer space at the end in case my estimates are off. (For example, can we really get through Calculus 1, 2, and 3 in one week? I mean, if we stick to the important bits, I guess. But I'm open to the possibility that we may need more time.) Depending on how the semester goes, the weeks labeled "Bonus Day" will either be dedicated to catching up on the core material or to topics by popular demand. These topics could include
+
+15 Days
+
+Bonus Topics: causality, text-as-data, big data, machine learning, networks, spatial data, blogdown/bookdown
+
+Probability Day
+
+P(A|B) = P(B|A)*P(A)/P(B)
+
+P(A|B)P(B) = P(B|A)P(A) = P(A,B)
