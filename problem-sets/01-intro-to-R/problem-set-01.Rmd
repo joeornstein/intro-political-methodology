@@ -1,0 +1,119 @@
+---
+title: "POLS 7012: Problem Set 1"
+author: "Joseph T. Ornstein"
+date: "August 26, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# For problem set, echo and eval = FALSE
+# For answer key, echo and eval = TRUE
+knitr::opts_chunk$set(echo = FALSE, eval = FALSE)
+library(tidyverse)
+```
+
+In this problem set, you will create an `R` script that performs some basic analysis of the 2019 ANES (American National Election Studies) Pilot Study. More information about that study is [here](https://electionstudies.org/data-center/2019-pilot-study/). (Basically, they test a bunch of questions on a non-random opt-in Internet panel, so don't draw far-reaching conclusions from this dataset.)
+
+Make sure to comment your code so that a reader will know what each line is doing, like this:
+
+```{r comment example, echo = TRUE, eval = FALSE}
+# Compute the median age
+median(data$age)
+```
+
+When you're done, upload the `.R` file to eLC. Feel free to work with others in the class, but you must submit your own work.
+
+
+## Create an R Project
+
+R Projects are a great way to organize your workflow. In a nutshell, they keep all your files in one place so that `R` knows where to look. See [R4DS Chapter 8](https://r4ds.had.co.nz/workflow-projects.html) for more detail. I recommend that whenever you start a new data analysis project, your first step should be to create an R Project.
+
+In RStudio, click the "Create a project" button. Put in a New Directory (where you can easily find it), and title it whatever you want.  
+
+Create a subfolder in your project folder called `data/` and put the the data file `anes_pilot_2019.RData` into that subfolder.
+
+Now you're all set up!
+
+## Load The Data
+
+The `load()` function loads an `.RData` file. To load the ANES data, run `load("data/anes_pilot_2019.RData")`. (Don't forget the quotation marks around the path.)
+
+```{r Load Data}
+load('data/anes_pilot_2019.RData')
+```
+
+You should now have an object called `data` in your environment.
+
+## Summarize the Data
+
+ - The `nrow()` function counts the number of rows (i.e. observations) in a dataframe. How many observations are in this dataset? 
+ - The `ncol()` function counts the number of columns (i.e. variables) in a dataframe. How many variables are in this dataset?
+ - What are the `names()` of the variables?
+
+```{r Summarize Data}
+# How many observations are there?
+nrow(data)
+
+# How many variables are there?
+ncol(data)
+
+# What are the variables named?
+names(data)[1:10] # just print the first 10 for the answer key
+```
+
+## Explore Some Variables
+
+ - There is a variable for birth year, called `birthyr`, but no variable for age. Let's fix that. Create a variable called `age`, and set it equal to the current year minus birth year. 
+ - What is the `median()` age of our survey respondents?
+ - Create a histogram of age with the `hist()` function. (We'll learn how to make prettier ones later.)
+
+```{r Age}
+# Create an 'age' variable
+data$age <- 2020 - data$birthyr
+
+# What is the median age?
+median(data$age)
+
+# Plot a histogram of age
+hist(data$age)
+```
+
+ - Create a `table()` of the variable `liveurban`. Where are our respondents most likely to live? See the  [ANES codebook](https://electionstudies.org/wp-content/uploads/2020/02/anes_pilot_2019_userguidecodebook.pdf) to learn what the labels mean.
+ - Create a two-way table (just the `table` function, but with two inputs) with `liveurban` and `vote20jb`. Who are the rural respondents in our sample most likely to vote for? The urban respondents?
+
+```{r Geography}
+# Where do our respondents live?
+table(data$liveurban)
+
+# Two-way table: place of residence vs. vote intention
+table(data$liveurban, data$vote20jb)
+```
+ 
+ - The codebook for this dataset is [here](https://electionstudies.org/wp-content/uploads/2020/02/anes_pilot_2019_userguidecodebook.pdf). Skim over it and find three variables that you think are interesting. Summarize each one, either with a `table()` for categorical variables or the `mean()` for continuous variables.
+
+```{r Some interesting variables, message=FALSE}
+# Two-way table: current place of residence and place of residence growing up
+table(data$liveurban, data$youthurban)
+
+# Feeling thermometer: Pete Buttigieg vs. Joe Biden
+median(data$ftbiden)
+median(data$ftbuttigieg)
+plot(data$ftbiden, data$ftbuttigieg)
+
+# Look at that: missing data is coded as 997! Boy if you didn't know that, you could come to some weird conclusions
+data <- subset(data, ftbiden < 101 & ftbuttigieg < 101 & 
+                 ftbiden >= 0 & ftbuttigieg >= 0)
+plot(data$ftbiden, data$ftbuttigieg)
+
+
+# Conspiracy theories vs. political knowledge.
+# Are you more likely to believe that business and politics are secretly controlled by a single group if you don't know who Angela Merkel is?
+table(data$pk_germ_correct, data$conspire1)
+
+data %>% 
+  group_by(pk_germ_correct) %>% 
+  summarise(mean_conspiracy = mean(conspire1))
+# Maybe slightly? We'll learn how to do hypothesis tests later :-)
+
+```
+
