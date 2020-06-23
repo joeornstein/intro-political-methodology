@@ -44,7 +44,7 @@ load('data/anes_pilot_2019.RData')
 
 You should now have an object called `data` in your environment.
 
-## Summarize the Data
+## Summarize The Data
 
  - The `nrow()` function counts the number of rows (i.e. observations) in a dataframe. How many observations are in this dataset? 
  - The `ncol()` function counts the number of columns (i.e. variables) in a dataframe. How many variables are in this dataset?
@@ -61,7 +61,7 @@ ncol(data)
 names(data)[1:10] # just print the first 10 for the answer key
 ```
 
-## Explore Some Variables
+## Clean Up The Data
 
  - There is a variable for birth year, called `birthyr`, but no variable for age. Let's fix that. Create a variable called `age`, and set it equal to the current year minus birth year. 
  - What is the `median()` age of our survey respondents?
@@ -77,6 +77,26 @@ median(data$age)
 # Plot a histogram of age
 hist(data$age)
 ```
+
+A lot of the variables have **missing values**, and it will trip up your data analysis if you don't know where those missing values are.
+
+ - Create a `table()` of the variable `vote16`. How many respondents skipped this question (code = -1)?
+ - In `R`, we typically represent missing values with `NA`. We can recode those values with the power of **indexing**. Try this: `data$vote16[data$vote16 == -1] <- NA`. (Read that line of code as "get the vote16 variable, but only the entries where it equals -1, and assign those entries the value `NA`).
+ - Create the table again. What happened?
+ 
+```{r Missing Values}
+# Table of reported voting in 2016 (-1 = missing, 1 = Donald Trump, 2 = Hillary Clinton, 3 = someone else)
+table(data$vote16)
+
+# Replace the missing values with NA
+data$vote16[data$vote16 == -1] <- NA
+
+# Show that table again. The NA values are omitted!
+table(data$vote16)
+
+```
+
+## Explore The Data
 
  - Create a `table()` of the variable `liveurban`. Where are our respondents most likely to live? See the  [ANES codebook](https://electionstudies.org/wp-content/uploads/2020/02/anes_pilot_2019_userguidecodebook.pdf) to learn what the labels mean.
  - Create a two-way table (just the `table` function, but with two inputs) with `liveurban` and `vote20jb`. Who are the rural respondents in our sample most likely to vote for? The urban respondents?

@@ -388,19 +388,30 @@ median(data$age)</code></pre>
 <p>You should now have an object called <code>data</code> in your environment.</p>
 </div>
 <div id="summarize-the-data" class="section level2">
-<h2>Summarize the Data</h2>
+<h2>Summarize The Data</h2>
 <ul>
 <li>The <code>nrow()</code> function counts the number of rows (i.e. observations) in a dataframe. How many observations are in this dataset?</li>
 <li>The <code>ncol()</code> function counts the number of columns (i.e. variables) in a dataframe. How many variables are in this dataset?</li>
 <li>What are the <code>names()</code> of the variables?</li>
 </ul>
 </div>
-<div id="explore-some-variables" class="section level2">
-<h2>Explore Some Variables</h2>
+<div id="clean-up-the-data" class="section level2">
+<h2>Clean Up The Data</h2>
 <ul>
 <li>There is a variable for birth year, called <code>birthyr</code>, but no variable for age. Let’s fix that. Create a variable called <code>age</code>, and set it equal to the current year minus birth year.</li>
 <li>What is the <code>median()</code> age of our survey respondents?</li>
-<li><p>Create a histogram of age with the <code>hist()</code> function. (We’ll learn how to make prettier ones later.)</p></li>
+<li>Create a histogram of age with the <code>hist()</code> function. (We’ll learn how to make prettier ones later.)</li>
+</ul>
+<p>A lot of the variables have <strong>missing values</strong>, and it will trip up your data analysis if you don’t know where those missing values are.</p>
+<ul>
+<li>Create a <code>table()</code> of the variable <code>vote16</code>. How many respondents skipped this question (code = -1)?</li>
+<li>In <code>R</code>, we typically represent missing values with <code>NA</code>. We can recode those values with the power of <strong>indexing</strong>. Try this: <code>data$vote16[data$vote16 == -1] &lt;- NA</code>. (Read that line of code as &quot;get the vote16 variable, but only the entries where it equals -1, and assign those entries the value <code>NA</code>).</li>
+<li>Create the table again. What happened?</li>
+</ul>
+</div>
+<div id="explore-the-data" class="section level2">
+<h2>Explore The Data</h2>
+<ul>
 <li>Create a <code>table()</code> of the variable <code>liveurban</code>. Where are our respondents most likely to live? See the <a href="https://electionstudies.org/wp-content/uploads/2020/02/anes_pilot_2019_userguidecodebook.pdf">ANES codebook</a> to learn what the labels mean.</li>
 <li><p>Create a two-way table (just the <code>table</code> function, but with two inputs) with <code>liveurban</code> and <code>vote20jb</code>. Who are the rural respondents in our sample most likely to vote for? The urban respondents?</p></li>
 <li><p>The codebook for this dataset is <a href="https://electionstudies.org/wp-content/uploads/2020/02/anes_pilot_2019_userguidecodebook.pdf">here</a>. Skim over it and find three variables that you think are interesting. Summarize each one, either with a <code>table()</code> for categorical variables or the <code>mean()</code> for continuous variables.</p></li>
