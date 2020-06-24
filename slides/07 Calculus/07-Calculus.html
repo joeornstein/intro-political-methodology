@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>All The Calculus You Need To Know</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Joseph T. Ornstein" />
+    <meta name="date" content="2020-06-12" />
+    <link href="07-Calculus_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="07-Calculus_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# All The Calculus You Need To Know
+## POLS 7012: Introduction to Political Methodology
+### Joseph T. Ornstein
+### University of Georgia
+### June 12, 2020
+
+---
+
+
+
+
+# Learning Objectives
+
+- Find the slope of a function at any point
+
+--
+
+- Identify the *minimum* or *maximum* value of a function
+
+--
+
+
+- Compute the area under a curve
+
+--
+
+- Explain the Fundamental Theorem of Calculus
+
+
+
+???
+
+- Optimization is central to game theory, statistical estimation. So much of mathematical social science is maximizing a value function or minimizing a cost function.
+- When we get to inference and hypothesis testing, we'll need to know how to take the area under a probability distribution function.
+- And the FOTC is just cool.
+
+---
+
+
+class: center, middle
+
+# Slopes
+
+
+---
+
+# Linear Functions
+
+&lt;!-- `\(y = ax + b\)` --&gt;
+
+&lt;img src="07-Calculus_files/figure-html/Plot Linear Function-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Linear Functions
+
+Find the slope of each function:
+
+- `\(y = 2x + 4\)`
+
+- `\(f(x) = \frac{1}{2}x - 2\)`
+
+- life expectancy (years) = 18.09359 + 5.737335 `\(\times\)` log(GDP per capita)
+
+
+--
+
+### Remember:
+
+Slope of a line `\(= \frac{rise}{run}\)` 
+
+--
+`\(= \frac{\Delta Y}{\Delta X}\)`
+
+--
+`\(= \frac{f(x+h) - f(x)}{h}\)`
+
+???
+
+Pretty easy!
+
+https://smartech.gatech.edu/bitstream/handle/1853/56031/effect_of_gdp_per_capita_on_national_life_expectancy.pdf
+
+---
+
+# Nonlinear Functions
+
+.center[
+&lt;img src="07-Calculus_files/figure-html/Nonlinear Function-1.png" width="600" style="display: block; margin: auto;" /&gt;
+]
+
+???
+
+Nonlinear functions are confusing and scary. Sometimes the slope is positive. Sometimes it's negative. Sometimes it's zero. And unlike with linear functions, just looking at the formula gives you no indication what the slope is at any point.
+
+
+---
+
+
+
+# Sir Isaac Newton
+
+![](img/newton.png)
+
+???
+
+Developed/Discovered:
+- The theory of universal gravitation
+- Three Laws of Motion
+- The Nature of Light
+- And, as a side project so he'd have mathematical notation for those other projects, he created calculus
+
+NB: Newton did some of his best work while stuck at home during an epidemic. So, you know, get to it.
+
+---
+
+# Newton's Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+--
+
+background-image: url("img/enhance.gif")
+
+???
+
+&lt;https://knowyourmeme.com/memes/zoom-and-enhance&gt;
+
+---
+
+# Zoom and Enhance...
+
+&lt;img src="07-Calculus_files/figure-html/Show the function again-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Zoom and Enhance...
+
+&lt;img src="07-Calculus_files/figure-html/Zoom and Enhance-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Zoom and Enhance...
+
+&lt;img src="07-Calculus_files/figure-html/Zoom and Enhance 2-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Zoom and Enhance...Again...
+
+&lt;img src="07-Calculus_files/figure-html/Zoom and Enhance 3-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Zoom and Enhance...Again...
+
+&lt;img src="07-Calculus_files/figure-html/Zoom and Enhance 4-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Zoom and Enhance...Again...And Again...
+
+&lt;img src="07-Calculus_files/figure-html/Zoom and Enhance 5-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Zoom and Enhance...Again...And Again...
+
+&lt;img src="07-Calculus_files/figure-html/Zoom and Enhance 6-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+--
+
+It's basically a straight line!
+
+???
+
+The point is that, in the limit, as you shrink the interval smaller and smaller (infinitesimally small), the function is better and better approximated by a straight line. And we already know the slope of a straight line, so the problem is solved! (That line is called the tangent line FYI.)
+
+---
+
+# Putting All That Into Math...
+
+.center[
+`$$f'(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$`
+]
+
+--
+
+In English, the slope of a function at point `\(x\)` equals:
+
+- "Rise" `\(f(x+h) - f(x)\)`...
+
+--
+
+- divided by "run" `\((h)\)`...
+
+--
+
+- as `\(h\)` shrinks to zero `\((\lim_{h \to 0})\)`.
+
+--
+
+This is called the **derivative** of a function.
+
+---
+
+# Exercises
+
+
+### Problem 1
+
+Let `\(f(x) = 2x + 3\)`. What is `\(f'(x)\)`?
+
+
+### Problem 2
+
+Let `\(f(x) = 3x^2\)`. What is `\(f'(x)\)`?
+
+
+### Remember:
+
+.center[
+`$$f'(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$`
+]
+
+
+---
+
+Hey you've discovered a bunch of derivative rules!
+
+--
+
+### Rule 1: The derivative of a constant function is zero
+
+If `\(f(x) = c\)`, then `\(f'(x) = 0\)`
+
+--
+
+### Rule 2: The derivative of a sum is equal to the sum of derivatives
+
+If `\(f(x) = g(x) + h(x)\)`, then `\(f'(x) = g'(x) + h'(x)\)`
+
+--
+
+### Rule 3: The Exponent Rule
+
+If `\(f(x) = ax^p\)`, then `\(f'(x) = pax^{p-1}\)`
+
+--
+
+The good news is that mathematicians have discovered a whole bunch of other ones, so we don't have to duplicate their work. 
+
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,359 @@
+---
+title: "All The Calculus You Need To Know"
+author: "Joseph T. Ornstein"
+date: "June 12, 2020"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightStyle: github
+      countIncrementalSlides: false
+subtitle: 'POLS 7012: Introduction to Political Methodology'
+institute: University of Georgia
+---
+
+```{r Setup, include=FALSE}
+library(tidyverse)
+theme_set(theme_bw())
+knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
+                      fig.align = 'center', out.width = 600,
+                      message=FALSE, warning=FALSE, echo=FALSE)
+```
+
+# Learning Objectives
+
+- Find the slope of a function at any point
+
+--
+
+- Identify the *minimum* or *maximum* value of a function
+
+--
+
+
+- Compute the area under a curve
+
+--
+
+- Explain the Fundamental Theorem of Calculus
+
+
+
+???
+
+- Optimization is central to game theory, statistical estimation. So much of mathematical social science is maximizing a value function or minimizing a cost function.
+- When we get to inference and hypothesis testing, we'll need to know how to take the area under a probability distribution function.
+- And the FOTC is just cool.
+
+---
+
+
+class: center, middle
+
+# Slopes
+
+
+---
+
+# Linear Functions
+
+<!-- $y = ax + b$ -->
+
+```{r Plot Linear Function}
+
+a <- 2
+b <- 1
+
+x <- seq(-1,1,0.01)
+y <- a*x + b
+
+p <- ggplot(data = tibble(x,y)) +
+  geom_line(aes(x=x,y=y),size=1) +
+  theme_minimal() +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  ggtitle('y = ax+b')
+
+p
+```
+
+
+---
+
+# Linear Functions
+
+Find the slope of each function:
+
+- $y = 2x + 4$
+
+- $f(x) = \frac{1}{2}x - 2$
+
+- life expectancy (years) = 18.09359 + 5.737335 $\times$ log(GDP per capita)
+
+
+--
+
+### Remember:
+
+Slope of a line $= \frac{rise}{run}$ 
+
+--
+$= \frac{\Delta Y}{\Delta X}$
+
+--
+$= \frac{f(x+h) - f(x)}{h}$
+
+???
+
+Pretty easy!
+
+https://smartech.gatech.edu/bitstream/handle/1853/56031/effect_of_gdp_per_capita_on_national_life_expectancy.pdf
+
+---
+
+# Nonlinear Functions
+
+.center[
+```{r Nonlinear Function}
+
+arbitrary_polynomial <- function(x){
+  return((x-1)*(x+2)*(x-3)*(x+4)*(x-4))
+ # return(x^5 + 3*x^4 - 2*x^3 + 5*x^2 - 6*x + 2)
+}
+
+#TODO: Set the interval really small when you're ready to publish
+x <- seq(-4,4,0.005)
+y <- arbitrary_polynomial(x)
+
+p <- ggplot(data = tibble(x,y)) +
+  geom_line(aes(x=x,y=y),size=1) +
+  theme_minimal(base_size = 16) +
+  xlab('x') + ylab('y')
+  
+
+p + 
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0)
+```
+]
+
+???
+
+Nonlinear functions are confusing and scary. Sometimes the slope is positive. Sometimes it's negative. Sometimes it's zero. And unlike with linear functions, just looking at the formula gives you no indication what the slope is at any point.
+
+
+---
+
+
+
+# Sir Isaac Newton
+
+![](img/newton.png)
+
+???
+
+Developed/Discovered:
+- The theory of universal gravitation
+- Three Laws of Motion
+- The Nature of Light
+- And, as a side project so he'd have mathematical notation for those other projects, he created calculus
+
+NB: Newton did some of his best work while stuck at home during an epidemic. So, you know, get to it.
+
+---
+
+# Newton's Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+--
+
+background-image: url("img/enhance.gif")
+
+???
+
+<https://knowyourmeme.com/memes/zoom-and-enhance>
+
+---
+
+# Zoom and Enhance...
+
+```{r Show the function again}
+p +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0)
+
+```
+
+---
+
+# Zoom and Enhance...
+
+```{r Zoom and Enhance}
+
+# Add first rectangle
+p + 
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_rect(aes(xmin=1.2, xmax=1.75, ymin=25, ymax=50), fill = NA, 
+            color="black", alpha=0.5) 
+
+```
+
+---
+
+# Zoom and Enhance...
+
+```{r Zoom and Enhance 2}
+
+# Zoom into first rectangle
+p + scale_x_continuous(limits = c(1.2, 1.75)) +
+  scale_y_continuous(limits = c(25, 50)) +
+  geom_rect(aes(xmin=1.2, xmax=1.75, ymin=25, ymax=50), fill = NA, 
+            color="black", alpha=0.5) 
+
+```
+
+
+---
+
+# Zoom and Enhance...Again...
+
+```{r Zoom and Enhance 3}
+
+# Add second rectangle
+p + scale_x_continuous(limits = c(1.2, 1.75)) +
+  scale_y_continuous(limits = c(25, 50)) +
+  geom_rect(aes(xmin=1.425, xmax=1.525, ymin=32.5, ymax=37.5), fill = NA, 
+            color="black", alpha=0.5) 
+
+```
+
+
+---
+
+# Zoom and Enhance...Again...
+
+```{r Zoom and Enhance 4}
+
+# Zoom into second rectangle
+p + scale_x_continuous(limits = c(1.425, 1.525)) +
+  scale_y_continuous(limits = c(32.5, 37.5)) +
+  geom_rect(aes(xmin=1.425, xmax=1.525, ymin=32.5, ymax=37.5), fill = NA, 
+            color="black", alpha=0.5) 
+
+```
+
+---
+
+# Zoom and Enhance...Again...And Again...
+
+```{r Zoom and Enhance 5}
+
+# Add third rectangle
+p + scale_x_continuous(limits = c(1.425, 1.525)) +
+  scale_y_continuous(limits = c(32.5, 37.5)) +
+  geom_rect(aes(xmin=1.4775, xmax=1.4875, ymin=35, ymax=35.5), fill = NA, 
+            color="black", alpha=0.5) 
+
+```
+
+---
+
+# Zoom and Enhance...Again...And Again...
+
+```{r Zoom and Enhance 6}
+
+# Zoom to third rectangle
+p + scale_x_continuous(limits = c(1.4775, 1.4875)) +
+  scale_y_continuous(limits = c(35, 35.5)) +
+  geom_rect(aes(xmin=1.4775, xmax=1.4875, ymin=35, ymax=35.5), fill = NA, 
+            color="black", alpha=0.5) 
+
+```
+
+--
+
+It's basically a straight line!
+
+???
+
+The point is that, in the limit, as you shrink the interval smaller and smaller (infinitesimally small), the function is better and better approximated by a straight line. And we already know the slope of a straight line, so the problem is solved! (That line is called the tangent line FYI.)
+
+---
+
+# Putting All That Into Math...
+
+.center[
+$$f'(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$
+]
+
+--
+
+In English, the slope of a function at point $x$ equals:
+
+- "Rise" $f(x+h) - f(x)$...
+
+--
+
+- divided by "run" $(h)$...
+
+--
+
+- as $h$ shrinks to zero $(\lim_{h \to 0})$.
+
+--
+
+This is called the **derivative** of a function.
+
+---
+
+# Exercises
+
+
+### Problem 1
+
+Let $f(x) = 2x + 3$. What is $f'(x)$?
+
+
+### Problem 2
+
+Let $f(x) = 3x^2$. What is $f'(x)$?
+
+
+### Remember:
+
+.center[
+$$f'(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$
+]
+
+
+---
+
+Hey you've discovered a bunch of derivative rules!
+
+--
+
+### Rule 1: The derivative of a constant function is zero
+
+If $f(x) = c$, then $f'(x) = 0$
+
+--
+
+### Rule 2: The derivative of a sum is equal to the sum of derivatives
+
+If $f(x) = g(x) + h(x)$, then $f'(x) = g'(x) + h'(x)$
+
+--
+
+### Rule 3: The Exponent Rule
+
+If $f(x) = ax^p$, then $f'(x) = pax^{p-1}$
+
+--
+
+The good news is that mathematicians have discovered a whole bunch of other ones, so we don't have to duplicate their work. 
+
+
+---
+
+
