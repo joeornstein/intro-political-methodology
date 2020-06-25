@@ -13,7 +13,7 @@ institute: University of Georgia
 
 ```{r Setup, include=FALSE}
 library(tidyverse)
-theme_set(theme_bw())
+theme_set(theme_minimal(base_size = 16))
 knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
                       fig.align = 'center', out.width = 600,
                       message=FALSE, warning=FALSE, echo=FALSE)
@@ -102,9 +102,12 @@ $= \frac{\Delta Y}{\Delta X}$
 --
 $= \frac{f(x+h) - f(x)}{h}$
 
+
 ???
 
-Pretty easy!
+Finding the slope of a line is *easy*.
+
+Just wanted you to get comfortable with that last expression, because we'll be see it again in a moment. 
 
 https://smartech.gatech.edu/bitstream/handle/1853/56031/effect_of_gdp_per_capita_on_national_life_expectancy.pdf
 
@@ -126,7 +129,6 @@ y <- arbitrary_polynomial(x)
 
 p <- ggplot(data = tibble(x,y)) +
   geom_line(aes(x=x,y=y),size=1) +
-  theme_minimal(base_size = 16) +
   xlab('x') + ylab('y')
   
 
@@ -145,7 +147,7 @@ Nonlinear functions are confusing and scary. Sometimes the slope is positive. So
 
 
 
-# Sir Isaac Newton
+# Isaac Newton
 
 ![](img/newton.png)
 
@@ -161,7 +163,20 @@ NB: Newton did some of his best work while stuck at home during an epidemic. So,
 
 ---
 
-# Newton's Insight
+# Gottfried Wilhelm Leibniz
+
+
+```{r Leibniz picture}
+knitr::include_graphics('img/leibniz.jpg')
+```
+
+???
+
+Also invented calculus, but with better notation. A philosophical optimist who believed we lived in the "best of all possible worlds", a sentiment parodied by Voltaire, and perhaps belied by the fact that Newton took all the credit for inventing calculus. 
+
+---
+
+# Newton and Leibniz's Insight
 
 Any curve becomes a straight line if you "zoom in" far enough.
 
@@ -273,7 +288,7 @@ p + scale_x_continuous(limits = c(1.4775, 1.4875)) +
 
 --
 
-It's basically a straight line!
+It's basically a straight line! And finding the slope of a straight line is easy...
 
 ???
 
@@ -307,35 +322,90 @@ This is called the **derivative** of a function.
 
 ---
 
-# Exercises
-
-
-### Problem 1
+# Example
 
 Let $f(x) = 2x + 3$. What is $f'(x)$?
 
+--
 
-### Problem 2
+$$f'(x) =  \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$ 
+--
 
-Let $f(x) = 3x^2$. What is $f'(x)$?
+$$= \lim_{h \to 0}\frac{2(x+h)+3-(2x+3)}{h}$$ 
 
+--
 
-### Remember:
+$$= \lim_{h \to 0}\frac{2x+2h+3-(2x+3)}{h}$$
 
-.center[
-$$f'(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$
-]
+--
+
+$$= \lim_{h \to 0}\frac{2h}{h}$$
+
+--
+
+$$= 2$$
+
+???
+
+Hey look what we discovered! The slope of a linear function equals the coefficient on $x$!
+
+---
+
+# Now You Try One
+
+Let $f(x) = 3x^2 + 2x + 3$. What is $f'(x)$?
+
 
 
 ---
+
+# Solution
+
+```{r Derivative Exercise Solution}
+
+f <- function(x){
+  3*x^2 + 2*x + 3
+}
+
+f_prime <- function(x){
+  6*x + 2
+}
+
+x <- seq(-2,2, 0.001)
+
+data <- tibble(x = x,
+               y1 = f(x),
+               y2 = f_prime(x))
+
+ggplot(data) +
+  geom_line(aes(x=x,y=y1), color = 'black', size = 1) +
+  geom_line(aes(x=x,y=y2), color = 'red', size = 1) +
+  xlab('x') + ylab('y') +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  geom_text(aes(x=0.8,y=15,label="f(x) = 3x^2 + 2x + 3"), size = 5) +
+  geom_text(aes(x=1.5,y=6,label="f '(x) = 6x + 2"), color = 'red', size = 5)
+  
+
+
+```
+
+???
+
+This function, $f'(x)$, outputs the slope of $f(x)$ at every point. You can "read off" the slope of $f(x)$ from the vertical of $f'(x)$.
+
+---
+
+If $f(x) = 3x^2+2x+3$, then $f'(x) = 6x + 2$
+
+--
 
 Hey you've discovered a bunch of derivative rules!
 
 --
 
-### Rule 1: The derivative of a constant function is zero
+### Rule 1: The Power Rule
 
-If $f(x) = c$, then $f'(x) = 0$
+If $f(x) = ax^k$, then $f'(x) = kax^{k-1}$
 
 --
 
@@ -345,9 +415,9 @@ If $f(x) = g(x) + h(x)$, then $f'(x) = g'(x) + h'(x)$
 
 --
 
-### Rule 3: The Exponent Rule
+### Rule 3: The derivative of a constant is zero
 
-If $f(x) = ax^p$, then $f'(x) = pax^{p-1}$
+If $f(x) = c$, then $f'(x) = 0$
 
 --
 
@@ -356,4 +426,352 @@ The good news is that mathematicians have discovered a whole bunch of other ones
 
 ---
 
+![](img/moore-siegel.png)
+---
 
+# Don't Freak Out
+
+.center[![](img/math.gif)]
+
+--
+
+If you haven't seen these before, it's a lot to absorb. But practice helps.
+
+---
+
+# Here. Practice.
+
+### Problem 1: Power Rule
+
+Let $f(x) = 2x^3 + 4x + 79$. What is $f'(x)$?
+
+### Problem 2: Product Rule
+
+Let $f(x) = (x^2 + 1)(x+3)$. What is $f'(x)$?
+
+### Problem 3: Quotient Rule
+
+Let $f(x) = \frac{2x+1}{x^2}$. What is $f'(x)$?
+
+---
+
+class: center, middle
+
+# I taught you that...
+
+
+
+---
+
+class: center, middle
+
+# ...so you could do *this*.
+
+---
+
+class: center, middle
+
+# Optimization
+
+---
+
+# Optimization
+
+Let $f(x) = 2x^2 + 8x - 32$. At what value of $x$ is the function minimized?
+
+```{r Optimization Function, out.width = 500}
+
+f <- function(x){
+  2*x^2 + 8*x - 32
+}
+
+f_prime <- function(x){
+  4*x + 8
+}
+
+x <- seq(-10,10,0.001)
+
+data <- tibble(x=x,
+               y1 = f(x),
+               y2 = f_prime(x))
+
+p <- ggplot(data = data) +
+  geom_line(aes(x=x,y=y1),size = 1) +
+  xlab('x') + ylab('y')
+              
+p
+```
+
+--
+
+**Key Insight**: Function is minimized when the slope "switches" from decreasing to increasing. Exactly at the point where the slope equals zero.
+
+---
+
+# Optimization in Three Steps
+
+--
+
+#### 1. Take the derivative of the function.
+
+--
+
+#### 2. Set it equal to zero.
+
+--
+
+#### 3. Solve for $x$.
+
+---
+
+# Optimization in Three Steps
+
+#### 1. Take the derivative of the function.
+
+--
+
+$$f(x) = 2x^2 + 8x - 32$$
+
+--
+
+$$f'(x) = 4x + 8$$
+
+--
+
+#### 2. Set it equal to zero
+
+$$4x + 8 = 0$$
+
+--
+
+#### 3. Solve for $x$.
+
+--
+
+$$x = -2$$
+
+
+???
+
+That second step is called the "First Order Condition", or FOC.
+
+---
+
+# Optimization in Three Steps
+
+```{r Optimization Plot with Solution}
+
+p + geom_text(aes(x=7,y=175,label="f(x)"), size = 5) +
+  geom_line(aes(x=x,y=y2), color = 'red', size = 1) +
+  geom_text(aes(x=9,y=20,label="f '(x)"), size = 5, color = 'red') +
+  geom_vline(xintercept = -2, linetype = 'dashed', color = 'blue') +
+  geom_text(aes(x = 0, y = 125, label = 'x = -2'), color = 'blue', size = 5)
+
+```
+
+
+???
+
+Bonus question: how do you know if it's a maximum or a minimum? Take the second derivative! If it's positive, then the slope is increasing (so it's a minimum). If it's positive, then the slope is decreasing (so it's a maximum).
+
+---
+
+# Now You Try It
+
+Suppose that happiness as a function of jellybeans consumed is 
+
+$$h(j) = -\frac{1}{3}j^3 + 81j + 2$$ 
+
+How many jellybeans should you eat? (Assume you can only eat a positive number of jellybeans).
+
+--
+
+```{r Jellybean Plot}
+
+happiness <- function(j){
+  (-1/3)*j^3 + 81*j + 2
+}
+
+happiness_prime <- function(j){
+  81 - j^2
+}
+
+j <- seq(0, 15, 0.01)
+h <- happiness(j)
+h_prime <- happiness_prime(j)
+
+ggplot(data = tibble(j, h, h_prime)) +
+  geom_line(aes(x=j,y=h), size = 1) +
+  geom_line(aes(x=j,y=h_prime), color = 'red', size = 1) +
+  xlab('Jellybeans Consumed') + ylab('Happiness') +
+  geom_text(aes(x=13,y=420,label = 'h(j)'), size = 5) +
+  geom_text(aes(x=14,y=-40,label = "h'(j)"), color = 'red', size = 5) +
+  geom_vline(xintercept = 9, linetype = 'dashed', color = 'blue')
+
+
+```
+
+---
+
+class: center, middle
+
+# Partial Derivatives
+
+
+---
+
+# Partial Derivatives
+
+What if you have a multivariable function?
+
+$$f(x,y) = 2x^2y + xy - 4x + y -6$$
+
+--
+
+Same procedure! To get the derivative of a function *with respect to* $x$ or $y$, treat the other variable as a constant.
+
+--
+
+$$\frac{\partial f}{\partial x} = 4yx + y - 4$$
+
+--
+
+$$\frac{\partial f}{\partial y} = 2x^2 + x + 1$$
+
+---
+
+# Now You Try...
+
+Suppose happiness as a function of jellybeans and Dr. Peppers consumed is
+
+$$h(j,d) = -\frac{1}{2}j^2 + 400j + 200d - d^2 - 2jd + 2$$
+How many jellybeans should you eat? How many Dr. Peppers should you drink?
+
+--
+
+Intuitively, the $-2jd$ term is an **interaction effect**. The effect of jellybeans on happiness decreases if you also drink a lot of Dr. Peppers. 
+
+---
+
+# Now You Try...
+
+$$h(j,d) = -\frac{1}{2}j^2 + 400j + 200d - d^2 - 2jd + 2$$
+
+--
+
+$$\frac{\partial h}{\partial j} = 400 - j - 2d = 0$$
+--
+
+$$\frac{\partial h}{\partial j} = 200 - 2d - 2j = 0$$
+--
+
+$$j = 400 - 2d$$
+
+$$d = 100 - j$$
+--
+
+$$j = 400 - 2(100 - j)$$
+$$ $$
+
+<TODO: Clearly you need some pen and paper>
+
+---
+
+class: center, middle
+
+# Integrals
+
+---
+
+# The Area Under a Curve
+
+Rectangles are easy. $A = bh$
+
+```{r rectangular area}
+
+data = tibble(x = -2:2,
+              y = 2)
+
+ggplot() +
+  geom_rect(aes(xmin = -2, xmax = 2, ymin = 0, ymax = 2),
+            alpha = 0.3, fill = 'blue') + 
+  geom_line(data = data, aes(x=x,y=y), size = 1) +
+  scale_x_continuous(limits = c(-4,4)) +
+  scale_y_continuous(limits = c(-4,4)) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + 
+  xlab('x') + ylab('y') + 
+  geom_text(aes(x=2.4,y=2, label='f(x)'), size = 5)
+
+
+```
+
+---
+
+# The Area Under a Curve
+
+Curves are harder. We didn't learn this in geometry!
+
+
+```{r plot curve}
+
+# f <- function(x){
+#   x^3 - 2*x^2 + 2
+# }
+
+f <- function(x){
+  0.7*x^2
+}
+
+x <- seq(-3,3,0.01)
+
+data <- tibble(x=x,
+               y=f(x))
+
+ggplot() +
+  geom_line(data = data, aes(x=x,y=y), size = 1) +
+  scale_x_continuous(limits = c(-4,4)) +
+  scale_y_continuous(limits = c(-4,4)) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + 
+  xlab('x') + ylab('y') + 
+  geom_text(aes(x=2.4,y=2, label='f(x)'), size = 5)
+
+
+```
+
+---
+
+
+
+```{r reimann rectangles}
+
+rectangles <- tibble(xmin = 1:10,
+                     xmax = 2:11,
+                     ymin = 0,
+                     ymax = 1:10)
+
+
+ggplot() +
+  geom_rect(data = rectangles,
+            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+            fill = 'blue', color = 'black', alpha = 0.3) +
+  theme_bw()
+
+```
+
+---
+
+As $h$ shrinks to zero...
+
+$$F(x+h) - F(x) \approx f(x) \cdot h$$
+
+...
+
+$$f(x) = \lim_{h \to 0} \frac{F(x+h) - F(x)}{h}$$
+
+--
+
+We've seen that before!
+
+--
+
+$f(x) = F'(x)$. In other words, $F(x)$ is the *antiderivative* of $f(x)$.
