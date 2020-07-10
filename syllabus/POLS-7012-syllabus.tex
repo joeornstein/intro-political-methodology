@@ -1,0 +1,220 @@
+% Syllabus Template from Arman Shokrollahi
+% https://www.overleaf.com/latex/templates/syllabus-template-course-info/gbqbpcdgvxjs
+
+\documentclass[11pt, letterpaper]{article}
+%\usepackage{geometry}
+\usepackage[inner=2cm,outer=2cm,top=2.5cm,bottom=2.5cm]{geometry}
+\pagestyle{empty}
+\usepackage{graphicx}
+\usepackage{fancyhdr, lastpage, bbding, pmboxdraw}
+\usepackage[usenames,dvipsnames]{color}
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkred}{rgb}{.7,0,0}
+\definecolor{darkgreen}{rgb}{0,.6,0}
+\definecolor{red}{rgb}{.98,0,0}
+\usepackage[colorlinks,pagebackref,pdfusetitle,urlcolor=darkblue,citecolor=darkblue,linkcolor=darkred,bookmarksnumbered,plainpages=false]{hyperref}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{ \fancyplain{}{Introduction to Political Methodology} }
+%\chead{ \fancyplain{}{} }
+\rhead{ \fancyplain{}{Fall 2020} }%\today
+%\rfoot{\fancyplain{}{page \thepage\ of \pageref{LastPage}}}
+\fancyfoot[RO, LE] {page \thepage\ of \pageref{LastPage} }
+\thispagestyle{plain}
+
+%%%%%%%%%%%% LISTING %%%
+\usepackage{listings}
+\usepackage{caption}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\usepackage{verbatim} % used to display code
+\usepackage{fancyvrb}
+\usepackage{acronym}
+\usepackage{amsthm}
+\VerbatimFootnotes % Required, otherwise verbatim does not work in footnotes!
+
+
+
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{lightlightgray}{gray}{0.93}
+
+
+
+\lstset{
+%language=bash,                          % Code langugage
+basicstyle=\ttfamily,                   % Code font, Examples: \footnotesize, \ttfamily
+keywordstyle=\color{OliveGreen},        % Keywords font ('*' = uppercase)
+commentstyle=\color{gray},              % Comments font
+numbers=left,                           % Line nums position
+numberstyle=\tiny,                      % Line-numbers fonts
+stepnumber=1,                           % Step between two line-numbers
+numbersep=5pt,                          % How far are line-numbers from code
+backgroundcolor=\color{lightlightgray}, % Choose background color
+frame=none,                             % A frame around the code
+tabsize=2,                              % Default tab size
+captionpos=t,                           % Caption-position = bottom
+breaklines=true,                        % Automatic line breaking?
+breakatwhitespace=false,                % Automatic breaks only at whitespace?
+showspaces=false,                       % Dont make spaces visible
+showtabs=false,                         % Dont make tabls visible
+columns=flexible,                       % Column format
+morekeywords={__global__, __device__},  % CUDA specific keywords
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{center}
+{\Large \textsc{POLS 7012: Introduction to Political Methodology}}
+\end{center}
+\begin{center}
+{\large Fall 2020}
+\end{center}
+
+\begin{center}
+\rule{6.5in}{0.4pt}
+\begin{minipage}[t]{.96\textwidth}
+\begin{tabular}{llcccll}
+\textbf{Professor:} & Joe Ornstein & & &  & \textbf{Time:} & W 6:30 -- 9:15pm \\
+\textbf{Email:} &  \href{mailto:jornstein@uga.edu}{jornstein@uga.edu} & & & & \textbf{Place:} & 102 Baldwin Hall\\
+\textbf{Website:} & \href{https://uga.view.usg.edu/d2l/home/2058721}{https://uga.view.usg.edu/d2l/home/2058721} & & & & &
+\end{tabular}
+\end{minipage}
+\rule{6.5in}{0.4pt}
+\end{center}
+\vspace{.15cm}
+\setlength{\unitlength}{1in}
+\renewcommand{\arraystretch}{2}
+
+\begin{figure}[h]
+	\centering
+	\href{https://xkcd.com/1856/}{\includegraphics[width=0.8\textwidth]{img/existence_proof_2x.png}}
+\end{figure}
+
+%\begin{quotation}
+%	\noindent``\textit{You can't really know anything if you just remember isolated facts. If the facts don't hang together on a latticework of theory, you don't have them in a usable form. You've got to have models in your head.}''\\
+%	\\
+%	--Charlie Munger (investor, vice chairman of Berkshire Hathaway)
+%\end{quotation}
+
+\noindent Math. Computation. ....In this class, we'll learn the math and computer skills we need to get started analyzing political data. Hit the ground running with real datasets.
+
+\section*{Course Objectives}
+%\vskip.15in
+%\noindent\textbf{Course Objectives:}  
+By the end of this course, you will be able to:
+\begin{itemize}
+	\item Manipulate, wrangle, and clean datasets using the \texttt{R} programming language
+	\item Create beautiful data visualizations
+	\item Organize your work so that it is transparent and reproducible
+	\item Compute derivatives and solve systems of linear equations
+	\item Explain the properties of probability distributions and expected values
+	\item Perform hypothesis tests and fit models to data
+\end{itemize}
+
+
+\section*{Assignments \& Grading}
+
+Each week, I will assign a problem set. Midterm and a final, completed individually.
+
+%\vskip.15in
+%\noindent\textbf{Office Hours:} 
+\section*{Office Hours}
+Every Wednesday from noon to 1pm I will hold Virtual Office Hours over Zoom. I will put a sign up spreadsheet on the course website. I'm also available before and after class to chat.
+
+%\vskip.15in
+%\noindent\textbf{Textbook:} %\footnotemark
+\section*{Textbook}
+There are no 
+\begin{itemize}
+\item R4DS
+\item All of Statistics
+\item Simon \& Blume
+\item Tufte
+\item Kieran Healy
+\end{itemize} 
+
+
+\section*{Tentative Course Outline}
+
+Von Moltke writes that no battle plan survives first contact with the enemy. The same is true for syllabi. The following schedule is a rough outline that I may need to adjust on the fly. For instance, can I teach you everything you need to know about calculus in one week? Maybe! But if not, I've built in some Bonus Weeks towards the end of the semester that we can use for catch up. If everything goes according to plan, then we can cover extra topics during those weeks by populat demand.
+
+%\begin{center} 
+%\begin{minipage}{6in}
+%\begin{flushleft}
+%Chapter 1 \dotfill ~$\approx$ 3 days \\
+%{\color{darkgreen}{\Rectangle}} ~A little of probability theory and graph theory	
+\subsubsection*{Week 1: Getting Started}
+\textit{Pre-Class Survey, Overcoming Fear, Notation, Setting up R and RStudio, Tidy Data, Basic Programming}
+
+\subsubsection*{Week 2: Visualizing Data}
+\textit{ggplot2, Tufte's Principles, Distributions, Correlations, Faceting}
+
+\subsubsection*{Week 3: Tools for Reproducible Research}
+\textit{Workflow, Documentation, File Structure, RMarkdown, \LaTeX, Zotero/Mendeley, \texttt{git} and GitHub}
+
+\subsubsection*{Week 4: Tidying, Transforming, and Describing Data}
+\textit{\texttt{tidyverse}, Merging, Filtering, Grouping}
+
+\subsubsection*{Week 5: Functions}
+\textit{Summation, Products, Logarithms, Exponentials, Writing Better Code, Flow Control}
+
+\subsubsection*{Week 6: All The Calculus You Need}
+\textit{Limits, Derivatives, Optimization, Integrals, Fundamental Theorem of Calculus}
+
+\subsubsection*{Week 7: Probability}
+\textit{Combinatorics, Random Variables, Expectation, Variance, Covariance, Conditional Probability, Bayes Rule, Law of Large Numbers}
+
+\subsubsection*{Week 8: Inference}
+\textit{PDFs and CDFs, Central Limit Theorem, Hypothesis Testing}
+
+\subsubsection*{Week 9: Matrix Algebra and OLS}
+\textit{Regression, Systems of Linear Equations, Independence, Matrix Multiplication, Matrix Inversion}
+
+\subsubsection*{Week 10: Prediction}
+\textit{Fitting Models, Machine Learning, Overfitting, Cross-Validation, Regularization, Ensembles}
+
+\subsubsection*{Week 11: Review \& Catchup}
+\textit{Midterm Exam}
+
+\subsubsection*{Week 12: Bonus Week 1}
+Possible Topics: \textit{Causal Inference, Text-As-Data, Big Data, Machine Learning, Networks, Spatial Data, \texttt{blogdown, bookdown}, Advanced Reproducible Research}
+
+\subsubsection*{Week 13: Bonus Week 2}
+Possible Topics: \textit{Causal Inference, Text-As-Data, Big Data, Machine Learning, Networks, Spatial Data, \texttt{blogdown, bookdown}, Advanced Reproducible Research}
+
+\subsubsection*{Week 14: Bonus Week 3}
+Possible Topics: \textit{Causal Inference, Text-As-Data, Big Data, Machine Learning, Networks, Spatial Data, \texttt{blogdown, bookdown}, Advanced Reproducible Research}
+
+\subsubsection*{Week 15: Review \& Catchup}
+\textit{Final Exam}
+
+
+
+%\end{flushleft}
+%\end{minipage}
+%\end{center}
+
+%\vskip.15in
+%\noindent\textbf{Important Dates:}
+%\begin{center} \begin{minipage}{3.8in}
+%\begin{flushleft}
+%Midterm \#1      \dotfill ~\={A}b\={a}n 16, 1393  \\
+%Midterm \#2      \dotfill ~\={A}zar 21, 1393  \\
+%%Project Deadline \dotfill ~Month Day \\
+%Final Exam       \dotfill ~Dey 18, 1393  \\
+%\end{flushleft}
+%\end{minipage}
+%\end{center}
+
+
+
+\subsection*{Academic Honesty}
+Remember that when you joined the University of Georgia community, you agreed to abide by a code of conduct outlined in the academic honesty policy called \href{https://honesty.uga.edu/Academic-Honesty-Policy/Introduction/}{\textit{A Culture of Honesty}}. COVID-19 hasn't changed any of that. Problem sets can be completed in groups, but I expect your responses to be individual, and the midterm and final must be completed individually. 
+
+
+%%%%%% THE END 
+\end{document} 

@@ -3,26 +3,78 @@ title: "Tools for Reproducible Research"
 author: "Joseph T. Ornstein"
 date: "June 12, 2020"
 output:
-  beamer_presentation:
-    keep_tex: yes
-    theme: Singapore
-    toc: yes
+  xaringan::moon_reader:
+    nature:
+      highlightStyle: github
+      countIncrementalSlides: false
 subtitle: 'POLS 7012: Introduction to Political Methodology'
 institute: University of Georgia
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+theme_set(theme_minimal(base_size = 16))
+knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
+                      fig.align = 'center', out.width = 600,
+                      message=FALSE, warning=FALSE, echo=FALSE)
 ```
 
+## Reasons to think seriously about reproducibility
 
-# RMarkdown
+--
 
-## R Markdown
+#### (From most high-minded to least high-minded...)
+
+--
+
+1. Science
+
+--
+
+2. awawet
+
+--
+
+3. awet
+
+--
+
+4. Increasingly, top journals require it.
+
+???
+
+1.
+
+2. 
+
+3. 
+
+4. In order to publish at journals like *APSR* and *Political Analysis*, you need to submit code and data such that a third-party can independently reproduce all of your tables and charts. 
+
+---
+
+# Three Tools
+
+1. Reproducible Reports (`RMarkdown`)
+
+2. Version Control (`git` and `GitHub`)
+
+3. 
+
+--
+
+There are others, but this will get you started...
+
+
+---
+
+# R Markdown
 
 This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+---
 
 ## Slide with Bullets
 
@@ -30,16 +82,23 @@ When you click the **Knit** button a document will be generated that includes bo
 - Bullet 2
 - Bullet 3
 
+---
+
 ## `rticles` package for academic papers
 
 ```{r rticles, eval=FALSE, echo=TRUE}
 install.packages('rticles')
 ```
 
-\centering \includegraphics[width=0.7\linewidth]{img/new_rticles.png}
+```{r rticles image}
+knitr::include_graphics('img/new_rticles.png')
+```
+
+---
 
 ## Try It!
 
+---
 
 ## Further Reading
 
@@ -51,13 +110,19 @@ install.packages('rticles')
 
 [Common Symbols in \LaTeX](https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols) 
 
+---
 
-# `git` and `GitHub`
+class: center, middle
 
+# Version Control (`git` and `GitHub`)
+
+---
 
 ## The Typical Academic's Version Control System
 
-\centering ![](img/typical_vcs.png)
+.center[![](img/typical_vcs.png)]
+
+---
 
 ## The Typical Academic's Version Control System
 
@@ -68,18 +133,23 @@ install.packages('rticles')
 - All those copies waste memory.
 - What's up with the directory structure? Why is some data outside of the `data/` folder?
 
+---
+
 ## Actual Version Control System (VCS)
 
 Picture of GitHub
 
 - Requires an initial investment to learn, but it's **WORTH IT**.
 
+---
 
 ## Slide with R Output
 
 ```{r cars, echo = TRUE}
 summary(cars)
 ```
+
+---
 
 ## Slide with Plot
 
