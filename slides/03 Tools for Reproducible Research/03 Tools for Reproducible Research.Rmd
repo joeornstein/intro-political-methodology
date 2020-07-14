@@ -59,7 +59,7 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
 
 2. Version Control (`git` and `GitHub`)
 
-3. 
+3. Citation Management (Zotero, Meneley, perma.cc)
 
 --
 
