@@ -1,2 +1,0 @@
-\beamer@sectionintoc {1}{What Are We Doing Here?}{3}{0}{1}
-\beamer@sectionintoc {2}{\texttt {R}}{6}{0}{2}

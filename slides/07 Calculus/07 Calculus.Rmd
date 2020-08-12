@@ -21,6 +21,10 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
 
 # Learning Objectives
 
+By the end of this week, you will be able to:
+
+--
+
 - Find the slope of a function at any point
 
 --
@@ -467,11 +471,6 @@ class: center, middle
 
 # ...so you could do *this*.
 
----
-
-class: center, middle
-
-# Optimization
 
 ---
 
@@ -738,15 +737,15 @@ ggplot() +
 
 # The Area Under a Curve
 
-With derivatives, we could approximate the hard thing (slope of a curve) with an easy thing (slope of a line) if we zoom in close enough.
+ - With derivatives, we approximated the hard thing (slope of a curve) using an easy thing (slope of a line) by zooming in close enough.
 
 --
 
-With integrals, we'll use a similar trick.
+ - With integrals, we'll use a similar trick.
 
 --
 
-We'll approximate the hard thing (area under a curve) with an easy thing (area of a bunch of rectangles) by making the rectangles *really* small.
+ - We'll approximate the hard thing (area under a curve) using an easy thing (area of a bunch of rectangles) by making the rectangles *really* small.
 
 ---
 

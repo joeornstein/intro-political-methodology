@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Getting Started</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Joseph T. Ornstein (Joe)" />
+    <meta name="date" content="2020-08-26" />
+    <link href="01-Getting-Started_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="01-Getting-Started_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Getting Started
+## POLS 7012: Introduction to Political Methodology
+### Joseph T. Ornstein (Joe)
+### University of Georgia
+### August 26, 2020
+
+---
+
+
+
+
+# Learning Objectives
+
+By the end of this week, you will be able to:
+
+--
+
+- Write basic R scripts for loading and exploring data
+
+--
+
+- Navigate around RStudio
+
+--
+
+
+- Compute useful summary statistics (e.g. mean, mode, standard deviation)
+
+---
+
+class: center, middle
+
+# What Are We Doing Here?
+
+---
+
+
+
+
+---
+
+# So...this is a weird semester...
+
+---
+
+
+---
+
+class: center, middle
+
+# `R`
+
+
+---
+
+# What is R?
+
+R is a programming language specifically designed for statistical computing.
+
+--
+
+It is widely used in academia and data science communities. By some measures it is the [8th most popular programming language](https://www.tiobe.com/tiobe-index/).
+
+???
+
+That's out of *all programming languages*, including whatever they use to make Bejeweled.
+
+---
+
+# Why use R?
+
+**Major Alternatives**: Microsoft Excel, Stata, SPSS, SAS, Python
+
+--
+
+*Short Answer*: 
+
+ - I use R and I'm comfortable teaching it.
+
+--
+
+*Long Answer*:
+
+- It's free
+- It's open-source
+- It's reproducible
+- It has a huge user community building useful packages (add-ons)
+- In academic social science, R is now fairly predominant (particularly among younger cohorts)
+- It has a shorter learning curve than Python
+
+???
+
+- So many research bungles come from non-reproducible analyses in Excel or point-and-click workflows in Stata/SPSS/SAS. More on reproducibility in a few weeks.
+- Python is a good choice too, and very popular in the data science world. If you want to become a professional data scientist, definitely learn Python too! But for our purposes, it's a bit much. Python is a *general-purpose* programming language. It can do so much more than statistical analysis. And so getting it set up / learning the basics takes a bit longer. It's like teaching you to fly a Boeing 737 when all you really want to do is learn how to drive a car. Sure, if you can pilot an aircraft, you'd probably become pretty good at driving too. But when starting out, it's probably easier to just start with the car. 
+
+
+--- 
+
+
+
+
+---
+
+# Download R
+
+Here (click the picture):
+
+[![](img/download-r.png)](https://cloud.r-project.org/)
+
+
+---
+
+# Download R
+
+You could stop there, and work with R in this nice black terminal box...
+
+&lt;img src="img/rterm.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+...or we could use an IDE (integrated development environment) called RStudio.
+
+---
+
+# Download RStudio
+
+Here:
+
+[![](img/download-rstudio.png)](https://rstudio.com/products/rstudio/download/#download)
+
+---
+
+class: center, middle
+
+# Navigating RStudio
+
+---
+
+# Navigating RStudio
+
+Open RStudio, and you should see *this*:
+
+&lt;img src="img/rstudio_ide.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: middle, center
+
+# R is a Fancy Calculator
+
+
+---
+
+# R is a Fancy Calculator
+
+Type `2+2` into the console.
+
+--
+
+
+```r
+2 + 2
+```
+
+```
+[1] 4
+```
+
+--
+
+I basically use R whenever I need a calculator now. 
+
+--
+
+(I Kon-Maried my Texas Instruments TI-83. Thank you, old friend.)
+
+![](img/ti-tetris.gif)
+
+---
+
+# R is a Fancy Calculator
+
+#### Subtraction, Multiplication, and Division
+
+```r
+2 - 2
+```
+
+```
+[1] 0
+```
+
+```r
+2 * 2
+```
+
+```
+[1] 4
+```
+
+```r
+2 / 2
+```
+
+```
+[1] 1
+```
+
+---
+
+# R is a Fancy Calculator
+
+#### Exponentiation
+
+`\(2^4 = 2 \times 2 \times 2 \times 2 = ?\)`
+
+--
+
+
+```r
+2^4
+```
+
+```
+[1] 16
+```
+
+--
+
+Now you try. Compute `\(3^6\)`.
+
+--
+
+
+```r
+3^6
+```
+
+```
+[1] 729
+```
+
+---
+
+# R is a Fancy Calculator
+
+### Fractional Exponents
+
+Remember what happens when you raise a number to a fractional power? Say, `\(9^\frac{1}{2}\)`?
+
+--
+
+
+```r
+9^0.5
+```
+
+```
+[1] 3
+```
+
+--
+
+`\(9^\frac{1}{2} = \sqrt{9}\)`
+
+---
+
+# R is a Fancy Calculator
+
+### Fractional Exponents
+
+What is `\((4^3)^\frac{1}{3}\)`?
+
+--
+
+
+```r
+(4^3)^(1/3)
+```
+
+```
+[1] 4
+```
+
+--
+
+**General Rule**: When you have nested exponents like that, you can just multiply the exponents.
+
+
+```r
+(2^3)^6
+```
+
+```
+[1] 262144
+```
+
+```r
+2^18
+```
+
+```
+[1] 262144
+```
+
+---
+
+# R is a Fancy Calculator
+
+Hey, remember logarithms?
+
+--
+
+### Logarithms
+
+Subtraction reverses addition. 
+
+`\(2+3-3=2\)`
+
+--
+
+Division reverses multiplication.
+
+`\(2 \times 3 \div 3 = 2\)`
+
+--
+
+Logarithms reverse exponentiation.
+
+`\(\log_{3}(3^2) = 2\)`
+
+--
+
+The subscript is the "base" of the logarithm. When you see `\(\log_x(y)\)`, think "how many times do I have to multiply `\(x\)` by itself to get `\(y\)`? 
+
+---
+
+# R is a Fancy Calculator
+
+What is `\(\log_{10}(100)\)`?
+
+--
+
+
+```r
+log(100, base = 10)
+```
+
+```
+[1] 2
+```
+
+--
+
+Because `\(10^2 = 100\)`.
+
+--
+
+What is `\(\log_2(100)\)`?
+
+--
+
+
+```r
+log(100, base = 2)
+```
+
+```
+[1] 6.643856
+```
+
+--
+
+Because `\(2^6 = 64\)` and `\(2^7 = 128\)`, so you need to multiply 2 by itself roughly 6.6 times in order to get 100.
+
+--
+
+Weird. I know.
+
+---
+
+# R is a Fancy Calculator
+
+R respects the **Order of Operations**.
+
+- Parentheses, Exponents, Multiplication, Division, Addition, then Subtraction
+
+--
+
+- (**P**lease **E**xcuse **M**y **D**ear **A**unt **S**ally)
+
+--
+
+Try `\(\frac{2(3+2)^2 - 2}{3}\)`
+
+--
+
+$$
+\frac{2(3+2)^2 - 2}{3} = \frac{2(5)^2 - 2}{3} = \frac{2(25) - 2}{3} = \frac{50-2}{3} = \frac{48}{3} = 16
+$$
+--
+
+Or, in R:
+
+
+```r
+(2*(3+2)^2 - 2)/3
+```
+
+```
+[1] 16
+```
+
+
+---
+
+class: middle, center
+
+# Objects
+
+
+---
+
+
+class: middle, center
+
+# Functions
+
+
+---
+
+# Functions
+
+A **function** transforms an input into an output. 
+
+&lt;img src="img/function.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+--
+
+`\(f(x) = 2x + 2\)`
+
+--
+
+`\(f(2) = ?\)`
+
+---
+
+Hey while we're talking about functions, remember the properties of functions?
+
+---
+
+
+class: center, middle
+
+# Data
+
+---
+
+# Vectors
+
+
+
+---
+
+# Vectors
+
+.pull-left[
+### Adding Vectors
+
+`\(\begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix} + \begin{bmatrix} 3 \\ 2 \\ 2 \end{bmatrix} = \begin{bmatrix} 4 \\ 5 \\ 6 \end{bmatrix}\)`
+
+
+```r
+x &lt;- c(1,3,4)
+y &lt;- c(3,2,2)
+
+x + y
+```
+
+```
+[1] 4 5 6
+```
+
+]
+
+--
+
+.pull-right[
+### Scalar Multiplication
+
+`\(2 \times \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix} = \begin{bmatrix} 2 \\ 6 \\ 8 \end{bmatrix}\)`
+
+
+```r
+x &lt;- c(1,3,4)
+
+2*x
+```
+
+```
+[1] 2 6 8
+```
+
+]
+
+---
+
+
+---
+
+# Matrices
+
+A **matrix** (the plural is **matrices**) is a bunch of vectors smushed together.
+
+$$
+A = 
+`\begin{bmatrix}
+1 &amp; 2 &amp; 3\\
+3 &amp; 1 &amp; 2
+\end{bmatrix}`
+$$
+
+$$
+B = 
+`\begin{bmatrix}
+3.2 &amp; 1 &amp; 7\\
+9 &amp; 8 &amp; 42\\
+1 &amp; 12 &amp; \pi
+\end{bmatrix}`
+$$
+
+--
+
+Each row is a vector and so is each column.
+
+
+---
+
+# Let's Play with Matrices
+
+To create a matrix in R, we **bind** together a set of vectors using the `rbind()` or `cbind()` functions.
+
+
+```r
+A &lt;- rbind(c(1, 2, 3), 
+           c(2, 1, 3), 
+           c(42, 1, pi))
+
+A
+```
+
+```
+     [,1] [,2]     [,3]
+[1,]    1    2 3.000000
+[2,]    2    1 3.000000
+[3,]   42    1 3.141593
+```
+
+--
+
+Now you try. Create the matrix `A` again, but this time use `cbind()` to paste the columns together. 
+
+---
+
+# Let's Play with Matrices
+
+Get entries in the matrix like so:
+
+--
+
+
+```r
+A[1,2]
+```
+
+```
+[1] 2
+```
+
+--
+
+
+```r
+A[3,3]
+```
+
+```
+[1] 3.141593
+```
+
+--
+
+
+```r
+A[3,] # the third row
+```
+
+```
+[1] 42.000000  1.000000  3.141593
+```
+
+--
+
+
+```r
+A[,2] # the second column
+```
+
+```
+[1] 2 1 1
+```
+
+
+---
+
+
+# Tidy Data
+
+Tidy data is a rectangular matrix, arranged like this:
+
+![](img/tidy-1.png)
+
+--
+
+**Unit of Observation**: What are the rows? 
+ - Could be countries, people, "country-years", etc. Just keep it consistent!
+
+---
+
+# Load Data
+
+
+---
+
+class: center, middle
+
+# USE THE CODE EDITOR. SERIOUSLY.
+
+---
+
+# USE THE CODE EDITOR. SERIOUSLY.
+
+--
+
+We've been having a lot of fun typing commands into the console. It's fast, easy...addictive.
+
+--
+
+**NEVER ACTUALLY DO YOUR WORK THERE.**
+
+--
+
+Why?
+
+--
+
+Because go ahead and close your RStudio window. Then reopen it.
+
+--
+
+Go ahead, I'll wait.
+
+--
+
+AAAAAAAAAAAAAAAAAAAHHHHHHHHHH WHAT HAPPENED TO MY WORK??? IT'S GONE! HOW WILL I EVER REMEMBER WHAT I DID TO GET MY RESULT????
+
+--
+
+Don't let this sort of thing happen to you. Use the **Code Editor**.
+
+???
+
+I was once like you are now. Fancy free. Typing all of my commands into the console. When I was a research assistant right out of college, I did an entire data analysis and made a nice chart right from the console. Showed it to the Fellow I was working with. She said "looks great! could you make a few changes?" Um....no?
+
+---
+
+class: center, middle
+
+# Writing R Scripts
+
+---
+
+# Writing R Scripts
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

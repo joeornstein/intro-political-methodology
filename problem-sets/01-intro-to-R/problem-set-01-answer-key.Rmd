@@ -1,8 +1,11 @@
 ---
-title: "POLS 7012: Problem Set 1 (Answer Key)"
-author: "Joseph T. Ornstein"
-date: "August 26, 2020"
-output: html_document
+title: 'POLS 7012: Problem Set 1 (Answer Key)'
+author: "Joe Ornstein"
+date: "Due September 2, 2020"
+output:
+  pdf_document: default
+  html_document: default
+urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
@@ -28,7 +31,7 @@ When you're done, upload the `.R` file to eLC. Feel free to work with others in 
 
 R Projects are a great way to organize your workflow. In a nutshell, they keep all your files in one place so that `R` knows where to look. See [R4DS Chapter 8](https://r4ds.had.co.nz/workflow-projects.html) for more detail. I recommend that whenever you start a new data analysis project, your first step should be to create an R Project.
 
-In RStudio, click the "Create a project" button. Put in a New Directory (where you can easily find it), and title it whatever you want.  
+In RStudio, click the "Create a project" button. Put it in a New Directory (where you can easily find it), and title it whatever you want.  
 
 Create a subfolder in your project folder called `data/` and put the the data file `anes_pilot_2019.RData` into that subfolder.
 
@@ -109,7 +112,7 @@ table(data$liveurban)
 table(data$liveurban, data$vote20jb)
 ```
  
- - The codebook for this dataset is [here](https://electionstudies.org/wp-content/uploads/2020/02/anes_pilot_2019_userguidecodebook.pdf). Skim over it and find three variables that you think are interesting. Summarize each one, either with a `table()` for categorical variables or the `mean()` for continuous variables.
+ - Skim the codebook and find three variables that you think are interesting. Summarize each one, either with a `table()` for categorical variables or the `mean()` for continuous variables.
 
 ```{r Some interesting variables, message=FALSE}
 # Two-way table: current place of residence and place of residence growing up
