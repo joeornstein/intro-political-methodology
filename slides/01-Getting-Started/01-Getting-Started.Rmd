@@ -20,7 +20,106 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
                       message=FALSE, warning=FALSE, echo=TRUE)
 ```
 
-# Learning Objectives
+class: center, middle
+
+## What Are We Doing Here?
+
+---
+
+# Computers Can Be Frustrating
+
+--
+
+![](img/ron-swanson.gif)
+
+???
+
+---
+
+# Computers Can Be Frustrating
+
+Computers are great at a lot of things, like:
+
+--
+
+- Multiplying large numbers
+
+--
+
+- Following instructions perfectly
+
+--
+
+- Never getting tired or sleepy
+
+--
+
+Computers are *not-so-great* at other things, like: 
+
+--
+
+- Guessing what you really mean
+
+> "Like all programming languages, R does exactly what you tell it to, rather than exactly what you want it to...It is as if one had an endlessly energetic, powerful, but also extremely literal-minded robot to order around."
+>
+> -Kieran Healy
+
+---
+
+# Computers Can Be Frustrating
+
+But the good news is that **you're not alone**.
+
+--
+
+Everyone who ever learned math or computer programming has felt these feelings before.
+
+--
+
+And for whatever problem you're facing, I guarantee that at some point in the past, someone has asked a question about it on one of these websites:
+
+--
+
+.center[
+![](img/stackoverflow-logo.png)
+]
+
+--
+
+.pull-left[
+![](img/github-logo.png)
+]
+
+--
+
+.pull-right[
+![](img/google-logo.png)
+]
+
+
+
+---
+
+# So...this is a weird semester...
+
+**The Plan**:
+
+- Face-to-face courses until Thanksgiving
+
+- Simulcast over Zoom
+
+- 
+
+---
+
+# Other Logistics
+
+
+---
+
+---
+
+# Today's Objectives
 
 By the end of this week, you will be able to:
 
@@ -34,23 +133,7 @@ By the end of this week, you will be able to:
 
 --
 
-
-- Compute useful summary statistics (e.g. mean, mode, standard deviation)
-
----
-
-class: center, middle
-
-# What Are We Doing Here?
-
----
-
-
-
-
----
-
-# So...this is a weird semester...
+- Explain several foundational mathematical/statistical concepts
 
 ---
 
@@ -70,7 +153,7 @@ R is a programming language specifically designed for statistical computing.
 
 --
 
-It is widely used in academia and data science communities. By some measures it is the [8th most popular programming language](https://www.tiobe.com/tiobe-index/).
+It is widely used in academia and the data science community. By some measures it is the [8th most popular programming language](https://www.tiobe.com/tiobe-index/).
 
 ???
 
@@ -155,7 +238,6 @@ Open RStudio, and you should see *this*:
 knitr::include_graphics('img/rstudio_ide.png')
 ```
 
-
 ---
 
 class: middle, center
@@ -167,7 +249,7 @@ class: middle, center
 
 # R is a Fancy Calculator
 
-Type `2+2` into the console.
+Type `2+2` into the console and press `Enter`.
 
 --
 
@@ -197,6 +279,14 @@ I basically use R whenever I need a calculator now.
 
 2 / 2
 ```
+
+--
+
+*Note*: whenever you see a **code block** like the ones above, please follow along by typing the code into your R Console! If you don't get the same result as me, stop me and we'll discuss.
+
+???
+
+This is meant to be an interactive practice. The best way to learn how to program is to do it!
 
 ---
 
@@ -268,11 +358,9 @@ What is $(4^3)^\frac{1}{3}$?
 
 # R is a Fancy Calculator
 
-Hey, remember logarithms?
+Hey, remember **logarithms**?
 
 --
-
-### Logarithms
 
 Subtraction reverses addition. 
 
@@ -292,7 +380,7 @@ $\log_{3}(3^2) = 2$
 
 --
 
-The subscript is the "base" of the logarithm. When you see $\log_x(y)$, think "how many times do I have to multiply $x$ by itself to get $y$? 
+The subscript is the "base" of the logarithm. When you see $\log_x(y)$, think "how many times do I have to multiply $x$ by itself to get $y$?"
 
 ---
 
@@ -332,6 +420,91 @@ Weird. I know.
 
 # R is a Fancy Calculator
 
+### The Nice Thing About Logarithms
+
+--
+
+Logarithms turn multiplication into addition:
+
+$$\log(ab) = \log(a) + \log(b)$$
+
+--
+
+And they turn exponentiation into multiplication:
+
+$$\log(a^b) = b \log(a)$$
+
+--
+
+This comes in handy a lot! Basically anytime you see a "log transformation" in political science, we're taking advantage of this fact to make the math easier.
+
+---
+
+# R is a Fancy Calculator
+
+Compute `log(342 * 702)` and `log(342) + log(702)`.
+
+--
+
+You should get: 
+
+```{r log multiplication}
+log(342 * 702)
+
+log(342) + log(702)
+```
+
+--
+
+---
+
+# R is a Fancy Calculator
+
+Now try `log(342 ^ 702)` and `702 * log(342)`.
+
+--
+
+You should get: 
+
+```{r log exponents}
+log(342 ^ 702)
+
+702 * log(342)
+```
+
+--
+
+The first one completely broke R because $342^{702}$ is an unimaginably large number that it can't keep in memory. So, it's useful to know your logarithm rules sometimes. 
+
+---
+
+# R is a Fancy Calculator
+
+### Oh Hey
+
+What base does R use when you don't give it a base for the `log` calculation?
+
+--
+
+**Answer:** It uses base $e \approx 2.718$, also known as **Euler's Number**. The logarithm with base $e$ is called the "natural logarithm", also denoted $\ln x$.
+
+
+--
+
+```{r euler pic, echo = FALSE, out.width='25%'}
+knitr::include_graphics('img/Leonhard_Euler.jpg')
+```
+
+That's Leonhard Euler. Don't let the weird towel hat fool you. He was a towering 18th century mathematical genius.
+
+???
+
+$e$ is one of those special, magical mathematical constants that gets its very own letter, like $\pi$. When we get to calculus in a few weeks, it will become clearer why it is so special, but the intution for now is that if you loan me \$1 and I promise to pay you 100% interest compounded *infinitely*, you'll have $e$ dollars in one year. 
+
+---
+
+# R is a Fancy Calculator
+
 R respects the **Order of Operations**.
 
 - Parentheses, Exponents, Multiplication, Division, Addition, then Subtraction
@@ -357,6 +530,24 @@ Or, in R:
 (2*(3+2)^2 - 2)/3
 ```
 
+---
+
+# R is a Fancy Calculator
+
+Finally, R can evaluate **logical expressions**.
+
+--
+
+```{r logical expressions}
+2 < 3
+
+2 > 3
+
+2*2 < 4*5
+
+3*4 == 2*6
+```
+
 
 ---
 
@@ -367,6 +558,128 @@ class: middle, center
 
 ---
 
+# Objects
+
+--
+
+One of the features that makes R such a *fancy* calculator is the ability to save **objects**.
+
+--
+
+You can assign any value to an object like this:
+
+```{r assignment}
+x <- 2
+```
+
+--
+
+The left arrow (`<-`) tells R that we want to assign the value 2 to an object named `x`. 
+
+--
+
+Now when you type `x` into the console, R will output the value 2.
+
+```{r return x}
+x
+```
+
+---
+
+# Objects
+
+You can manipulate objects just like we manipulated numbers.
+
+--
+
+```{r objects in calculations}
+2 * x
+
+2 - x^2 * 5
+```
+
+---
+
+# Objects
+
+You can give objects whatever names you like, with a few restrictions:
+
+--
+
+- No spaces
+
+- No special mathematical characters, like `-`, `+`, `*`, `/`
+
+- Variable names can include numbers, but must *start* with a letter.
+
+--
+
+Use good names for your objects!
+
+```{r good name}
+georgia_population <- 10620000
+```
+
+--
+
+This is a bad name:
+
+```{r bad name}
+vargp <- 10620000
+```
+
+--
+
+I personally use underscores (`_`) if I want to name an object something with multiple words.
+
+---
+
+# Objects
+
+Now you try! Create an object, name it whatever you want, and assign it a number. 
+
+Then create a second object that is two times your first object.
+
+--
+
+```{r object practice}
+x <- 10
+
+x_twice <- 2*x
+
+x
+
+x_twice
+```
+
+---
+
+# Objects
+
+Objects can also be **characters** instead of numbers. 
+
+--
+
+```{r characters}
+my_name <- "Joe"
+
+my_name
+```
+
+--
+
+They can also be **booleans**, which is computer-speak for "true or false".
+
+```{r boolean}
+i_am_joe <- (my_name == "Joe")
+two_plus_two_is_five <- (2 + 2 == 5)
+
+i_am_joe
+two_plus_two_is_five
+```
+
+
+---
 
 class: middle, center
 
@@ -377,7 +690,7 @@ class: middle, center
 
 # Functions
 
-A **function** transforms an input into an output. 
+A **function** transforms one or more inputs into an output. 
 
 ```{r function figure, out.width = '50%', echo = FALSE}
 knitr::include_graphics('img/function.png')
@@ -393,24 +706,196 @@ $f(2) = ?$
 
 ---
 
-Hey while we're talking about functions, remember the properties of functions?
+# Functions
+
+You've already seen some built-in R functions, for example:
+
+`log(x, base)`
+
+--
+
+The `log()` function takes two inputs, a number `x` and a value for `base`, and outputs the logarithm.
+
+--
+
+R functions almost always come in this form: a name followed by one or more inputs in parentheses, separated by commas.
 
 ---
 
+# Functions
+
+What does the `round()` function do? What about the `paste()` function?
+
+--
+
+```{r round}
+round(3.4)
+round(3.6)
+```
+
+--
+
+```{r paste}
+paste("Hi", "my name is", my_name)
+```
+
+--
+
+There are *lots* of built-in and user-created functions for R. If you ever want to know what a function does, type `?` + the name of the function in the console. 
+
+```{r help, eval = FALSE}
+?log
+```
+
+---
+
+# Functions
+
+You can also make your own functions, like this:
+
+```{r custom function}
+my_function <- function(x, y){
+  return(2*x + y^2 - 2)
+}
+```
+
+--
+
+```{r custom function 2}
+my_function(x = 4, y = 6)
+```
+
+--
+
+This is **super** helpful when writing lots of repetitious code. More on this in a few weeks.
+
+--
+
+### Now you try! 
+
+Write a function called `round_the_log` which takes a number, finds the natural logarithm, and rounds it to the nearest whole number.
+
+???
+
+Since you'll need multiple lines of code, try out the Code Editor.
+
+---
+
+# Functions
+
+### Now you try!
+
+Write a function called `round_the_log` which inputs a number `x`, and returns the natural logarithm rounded to the nearest whole number.
+
+--
+
+```{r round_the_log}
+round_the_log <- function(x){
+  return(round(log(x)))
+}
+```
+
+--
+
+```{r round_the_log 2}
+round_the_log(42)
+```
+
+---
 
 class: center, middle
 
+# Some Useful RStudio Tips
+
+---
+
+# Some Useful RStudio Tips
+
+- If you want to learn more about a function, type `?` and then the function name into the console. For example `?log`.
+
+- To repeat a previous console command, tap the `Up Arrow`.
+
+- Code Completion: When you start typing a command, RStudio will try to guess what you want, and will give you a list of suggestions. Tap `Tab` to auto-complete.
+
+- [More Tips And Tricks](https://www.dataquest.io/blog/rstudio-tips-tricks-shortcuts/), most of which will be more useful after we've learned a bit more.
+
+???
+
+Now that we've learned a little bit of R, here are some tips to help you navigate around R and RStudio.
+
+---
+
+class: center, middle
+
+## We're finally ready to work with...
+
+---
+
+class: center, middle
+
+# Data!
+
+--
+
+![](img/data-yes.gif)
+
+---
+
 # Data
 
+--
+
+### 1. Vectors
+
+A **vector** is a collection of values arranged in some order. Vectors are the building blocks of datasets. 
+
+--
+
+For example, this is the vector $\bf{x}$.
+
+$\bf{x} = \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix}$
+
+--
+
+We build vectors in R using the function `c()`, which is short for **concatenate**.
+
+```{r c()}
+x <- c(1,3,4)
+
+x
+```
+
 ---
 
-# Vectors
+# Data
 
+### 1. Vectors
 
+You can retrieve the elements of a vector using brackets `[]`.
+
+--
+
+```{r retrieve vector elements}
+x
+
+x[1]
+
+x[2]
+
+x[2:3]
+```
 
 ---
 
-# Vectors
+# Data
+
+### 1. Vectors
+
+--
+
+If you've never seen vectors before, don't worry. They basically operate how you would expect a bunch of numbers squished together to operate.
+
+--
 
 .pull-left[
 ### Adding Vectors
@@ -443,10 +928,211 @@ x <- c(1,3,4)
 
 ---
 
+# Data
+
+### 1. Vectors
+
+Many R functions are **vectorized**. If you input a vector, it evaluates the function for each element of the vector.
+
+--
+
+```{r vectorized functions}
+x <- c(3.4, 3.5, 3.6)
+
+round(x)
+
+log(x)
+
+round_the_log(x)
+```
 
 ---
 
-# Matrices
+# Data
+
+### 1. Vectors
+
+Other functions input a vector and return a single value. 
+
+--
+
+Suppose you have a vector $x$ representing the number of Democratic votes cast in a collection of counties.
+
+```{r summary statistics}
+democratic_votes <- c(1562, 2890, 49134, 18, 901)
+```
+
+--
+
+If you want to know how many entries are in the vector, use `length()`.
+
+```{r length function}
+length(democratic_votes)
+```
+
+---
+
+# Data
+
+### 1. Vectors
+
+To get the **minimum** and **maximum** values in a vector, use the `min()` and `max()` functions.
+
+--
+
+```{r min and max}
+min(democratic_votes)
+
+max(democratic_votes)
+```
+
+---
+
+# Data
+
+### 1. Vectors
+
+Maybe you want to take the sum across all counties:
+
+$$
+\sum_i x_i
+$$
+
+--
+
+Use the `sum()` function.
+
+```{r sum function}
+sum(democratic_votes)
+```
+
+---
+
+# Data
+
+### 1. Vectors
+
+Maybe you want the **mean** (average) value, the sum divided by the length.
+
+$$
+\bar{x} = \frac{\sum_i x_i}{n}
+$$
+--
+
+Use the `mean()` function.
+
+```{r mean function}
+mean(democratic_votes)
+```
+
+--
+
+Now try to take the `sum()` divided by the `length()`. Do you get the same result?
+
+--
+
+```{r mean function 2}
+sum(democratic_votes) / length(democratic_votes)
+```
+
+---
+
+# Data
+
+### 1. Vectors
+
+The **median** is the value right in the middle of a vector sorted from least to greatest.
+
+--
+
+```{r median}
+democratic_votes
+```
+
+--
+
+```{r median 2}
+median(democratic_votes)
+
+sort(democratic_votes)
+```
+
+---
+
+# Data
+
+### 1. Vectors
+
+The **variance** of a vector measures how far values tend to be from the mean. It is a measure of *dispersion*.
+
+--
+
+Variance equals the average *squared* distance from the mean.
+
+$$
+\sigma^2_x = \frac{\sum_i (x_i - \bar{x})^2}{n}
+$$
+
+--
+
+You can compute variance in R with the `var()` function.
+
+```{r var function}
+var(democratic_votes)
+```
+
+???
+
+We use squares so that positives and negatives don't cancel out. Also it makes the calculus nice. 
+
+---
+
+# Data
+
+### 1. Vectors
+
+Which of these vectors has a smaller variance?
+
+```{r var comparison}
+x <- c(1, 1, 1, 1, 1, 1)
+
+y <- c(1, 2, 3, 4, 5, 6)
+```
+
+--
+
+```{r var comparison 2}
+var(x)
+var(y)
+```
+
+---
+
+# Data
+
+### 1. Vectors
+
+The square root of variance is the **standard deviation**.
+
+$$
+\sigma_x = \sqrt{\frac{\sum_i (x_i - \bar{x})^2}{n}}
+$$
+
+--
+
+```{r sd function}
+sd(democratic_votes)
+```
+
+
+
+---
+
+# Data
+
+### 2. Matrices
+
+--
 
 A **matrix** (the plural is **matrices**) is a bunch of vectors smushed together.
 
@@ -474,7 +1160,9 @@ Each row is a vector and so is each column.
 
 ---
 
-# Let's Play with Matrices
+# Data
+
+### 3. Playing with matrices
 
 To create a matrix in R, we **bind** together a set of vectors using the `rbind()` or `cbind()` functions.
 
@@ -492,9 +1180,11 @@ Now you try. Create the matrix `A` again, but this time use `cbind()` to paste t
 
 ---
 
-# Let's Play with Matrices
+# Data
 
-Get entries in the matrix like so:
+### 3. Playing with matrices
+
+You can retrieve entries in the matrix like so:
 
 --
 
@@ -511,20 +1201,21 @@ A[3,3]
 --
 
 ```{r get matrix entry 3}
-A[3,] # the third row
+A[3,]
 ```
 
 --
 
 ```{r get matrix entry 4}
-A[,2] # the second column
+A[,2]
 ```
 
 
 ---
 
+# Data
 
-# Tidy Data
+### 4. Tidy Data
 
 Tidy data is a rectangular matrix, arranged like this:
 
@@ -532,13 +1223,56 @@ Tidy data is a rectangular matrix, arranged like this:
 
 --
 
-**Unit of Observation**: What are the rows? 
+**Unit of Observation**: What does each row represent? 
  - Could be countries, people, "country-years", etc. Just keep it consistent!
 
 ---
 
-# Load Data
+# Data
 
+### 4. Tidy Data
+
+In R, we represent data using a special object called a `data.frame`. (Or a `tibble`, which I'll show you next week.)
+
+--
+
+```{r data.frame}
+height <- c(5.3, 5.8, 4.2)
+gender <- c('male', 'male', 'female')
+party <- c('R', 'D', 'D')
+
+data <- data.frame(height, gender, party)
+
+data
+```
+
+---
+
+# Data
+
+### 4. Tidy Data
+
+You can access columns in a data frame by using `$` + the variable name.
+
+```{r $}
+data$height
+
+data$party
+```
+
+--
+
+And then you can manipulate it just like any other vector.
+
+```{r data.frame summary statistics}
+mean(data$height)
+```
+
+---
+
+class: center, middle
+
+### Now it's time for a lesson I like to call...
 
 ---
 
@@ -552,7 +1286,7 @@ class: center, middle
 
 --
 
-We've been having a lot of fun typing commands into the console. It's fast, easy...addictive.
+We've been having a lot of fun typing commands into the console. It's fast. It's easy. It's *addictive*.
 
 --
 
@@ -591,3 +1325,112 @@ class: center, middle
 ---
 
 # Writing R Scripts
+
+--
+
+An **R script** is a series of commands that you can save, modify, and re-run whenever you like.
+
+--
+
+```{r example script}
+x <- c(1, 3, 4)
+
+y <- mean(x)
+
+z <- median(x)
+
+y < z
+```
+
+The four lines of code above:
+ - Creates a vector called `x`
+ - Compute the mean and median of `x`
+ - Tells you if the mean is smaller than the median
+ 
+--
+
+Copy all that into the Code Editor.
+
+---
+
+# Writing R Scripts
+
+--
+
+- To run the entire script, type `Ctrl + Shift + Enter`
+
+--
+
+- To run a single line in the script, click on the line and type `Ctrl + Enter`
+
+--
+
+- To save a script, type `Ctrl + S`. The file extension is `.R`
+
+---
+
+# Commenting Your Code
+
+Just plain code can be hard to read. If someone else (or a future version of you) tries to read this, it may not be obvious what the code does or why.
+
+```{r example script without comments, eval=FALSE}
+x <- c(1, 3, 4)
+
+y <- mean(x)
+
+z <- median(x)
+
+y < z
+```
+
+---
+
+# Commenting Your Code
+
+**Comments** make code easier to read. Insert a comment with `#`.
+
+```{r example script with comments, eval = FALSE}
+# This script creates a vector of data and returns TRUE if the mean is smaller than the median
+# Author: Joe Ornstein
+# Version: 1.0
+# Date: August 26, 2020
+
+# Create the vector
+x <- c(1, 3, 4)
+
+# Compute the mean
+y <- mean(x)
+
+# Compute the median
+z <- median(x)
+
+# Compare the mean and median with a logical expression
+y < z
+```
+
+---
+
+# Now You Try!
+
+Create, comment, and save an R script that does the following:
+
+1. Create an object called `GDP` and assign it a vector of numbers (whatever numbers you like). 
+
+2. Create an object called `population` and assign it a vector of numbers. Make sure it is the same length as `GDP`. 
+
+3. Create an object called `GDP_per_capita`, which is GDP divided by population.
+
+4. Put all three vectors into a `data.frame` called `data`.
+
+5. Compute the mean and standard deviation of GDP per capita.
+
+---
+
+class: center, middle
+
+### Okay. That's it for today. 
+### Next week, we take our new data skills and make some **graphs**.
+
+--
+
+
