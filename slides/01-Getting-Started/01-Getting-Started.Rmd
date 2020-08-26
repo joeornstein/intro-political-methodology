@@ -22,85 +22,54 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
 
 class: center, middle
 
-## What Are We Doing Here?
+# What Are We Doing Here?
 
 ---
 
-# Computers Can Be Frustrating
+# What Are We Doing Here?
 
 --
 
-![](img/ron-swanson.gif)
+Modern political science is full of data analysis and mathematical thinking. You'll want to speak the language.
+
+--
+
+### By the end of this course, you will be able to...
+
+--
+
+ - "Wrangle" and summarize data
+
+--
+
+ - Construct elegant and informative data visualizations
+ 
+--
+
+ - Distinguish between patterns in data and random noise (**probability** and **inference**)
+ 
+--
+
+ - Build models and conveniently represent data using **matrix algebra**
+
+--
+
+ - Optimize objective functions using **calculus**
+ 
+
 
 ???
 
----
+No matter your subfield or approach to political science, chances are you'll find it useful to be able to analyze data. You'll certainly find it useful to understand what other people are doing when they use mathetmatical / computational techniques in their research.
 
-# Computers Can Be Frustrating
-
-Computers are great at a lot of things, like:
-
---
-
-- Multiplying large numbers
-
---
-
-- Following instructions perfectly
-
---
-
-- Never getting tired or sleepy
-
---
-
-Computers are *not-so-great* at other things, like: 
-
---
-
-- Guessing what you really mean
-
-> "Like all programming languages, R does exactly what you tell it to, rather than exactly what you want it to...It is as if one had an endlessly energetic, powerful, but also extremely literal-minded robot to order around."
->
-> -Kieran Healy
-
----
-
-# Computers Can Be Frustrating
-
-But the good news is that **you're not alone**.
-
---
-
-Everyone who ever learned math or computer programming has felt these feelings before.
-
---
-
-And for whatever problem you're facing, I guarantee that at some point in the past, someone has asked a question about it on one of these websites:
-
---
-
-.center[
-![](img/stackoverflow-logo.png)
-]
-
---
-
-.pull-left[
-![](img/github-logo.png)
-]
-
---
-
-.pull-right[
-![](img/google-logo.png)
-]
-
+In political science, we don't only seek to describe our datasets, but to *understand* and *explain* them. And for that you'll need some mathematical tools. 
 
 
 ---
 
-# So...this is a weird semester...
+## So...this is a weird semester...
+
+--
 
 **The Plan**:
 
@@ -108,14 +77,29 @@ And for whatever problem you're facing, I guarantee that at some point in the pa
 
 - Simulcast over Zoom
 
-- 
+- Slides and lecture recordings posted to the course website
+
+--
+
+**Assignments**:
+
+- 1 Problem Set each week
+
+- 1 Midterm + 1 Final Exam
+
+--
+
+**Other Logistics:**
+
+- No required textbook, but lots of suggestions in the syllabus
+
+- Weekly virtual office hours over Zoom
 
 ---
 
-# Other Logistics
+class: center, middle
 
-
----
+## Introductions
 
 ---
 
@@ -129,13 +113,17 @@ By the end of this week, you will be able to:
 
 --
 
-- Navigate around RStudio
+- Navigate RStudio
 
 --
 
-- Explain several foundational mathematical/statistical concepts
-
----
+- Explain several foundational mathematical/statistical concepts, including:
+  - Logarithms
+  - Functions
+  - Vectors
+  - Matrices
+  - Mean & Median
+  - Variance & Standard Deviation
 
 
 ---
@@ -188,11 +176,6 @@ That's out of *all programming languages*, including whatever they use to make B
 - Python is a good choice too, and very popular in the data science world. If you want to become a professional data scientist, definitely learn Python too! But for our purposes, it's a bit much. Python is a *general-purpose* programming language. It can do so much more than statistical analysis. And so getting it set up / learning the basics takes a bit longer. It's like teaching you to fly a Boeing 737 when all you really want to do is learn how to drive a car. Sure, if you can pilot an aircraft, you'd probably become pretty good at driving too. But when starting out, it's probably easier to just start with the car. 
 
 
---- 
-
-
-
-
 ---
 
 # Download R
@@ -237,6 +220,80 @@ Open RStudio, and you should see *this*:
 ```{r RStudio IDE figure, out.width='70%', echo = FALSE}
 knitr::include_graphics('img/rstudio_ide.png')
 ```
+
+---
+
+# R Will Be Frustrating
+
+--
+
+<br>
+
+```{r swanson, echo = FALSE}
+knitr::include_graphics('img/ron-swanson.gif')
+```
+
+
+???
+
+---
+
+# R Will Be Frustrating
+
+Computers are great at a lot of things, like:
+
+--
+
+- Multiplying large numbers
+
+--
+
+- Following instructions perfectly
+
+--
+
+- Never getting tired or sleepy
+
+--
+
+Computers are *not-so-great* at other things, like: 
+
+--
+
+- Guessing what you really want
+
+> "Like all programming languages, R does exactly what you tell it to, rather than exactly what you want it to...It is as if one had an endlessly energetic, powerful, but also extremely literal-minded robot to order around."
+>
+> -Kieran Healy
+
+---
+
+# R Will Be Frustrating
+
+But the good news is that **you're not alone**.
+
+--
+
+No matter what problem you're facing, I guarantee that someone has already asked a question about it on one of these websites:
+
+--
+
+.center[
+![](img/stackoverflow-logo.png)
+]
+
+--
+
+.pull-left[
+![](img/github-logo.png)
+]
+
+--
+
+.pull-right[
+![](img/google-logo.png)
+]
+
 
 ---
 
