@@ -1,0 +1,13 @@
+## Why Look At Data?
+
+ 1. To understand it ourselves! This is the most skipped step, and that's crazy. (See Anscombe's Quartet, also the dinosaur)
+ 2. To memorably, effectively communicate our findings. (Fact is, this is how *most* readers will be reading your paper).
+
+## What makes an effective visualization?
+
+Plenty of disagreement, but some core principles include:
+
+ 1. Easy to interpret at a glance, (self-explanatory without a big caption); be kind to the reader
+ 2. Efficiently convey information (Tufte admonishes us to maximize the "data-to-ink ratio" and eliminate "chartjunk")
+
+[It] is that which gives to the viewer the greatest number of ideas in the shortest time with the least ink in the smallest space
