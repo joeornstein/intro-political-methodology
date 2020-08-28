@@ -31,3 +31,6 @@ ggplot(data = data) +
 ggplot(data = data) +
   geom_bar(mapping = aes(x=liveurban)) +
   facet_wrap(~ youthurban)
+
+
+# TODO: geom_point,  geom_histogram, geom_jitter, geom_boxplot, geom_violin, geom_bar
