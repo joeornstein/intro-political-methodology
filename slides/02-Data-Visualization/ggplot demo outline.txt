@@ -1,0 +1,31 @@
+1. Something's going on with the Feeling Thermometers
+ - mean(harris, biden, buttigieg)
+ - histogram
+ - filter
+
+2. How do *Democrats* feel about Harris, Biden, Buttigieg? Facet by votedem20
+ - clean up votedem20
+ - demonstrate xlab(), themes
+ - cleaning up votedem20 in fig2_data doesn't clean it up in `data`
+
+<Now you try! Use an FT for a different candidate>
+
+ 3. Other options for plotting distributions
+  - boxplot
+  - jitter, demonstrate color, alpha
+  - violin
+
+4. Plotting relationships between two variables: scatter plots
+ - ftharris vs. ftbiden
+ - you can facet that too.
+ - color points by another variable?
+
+<Now you try! Scatter two feeling thermometers of your choice>
+
+5. Working with categorical variables
+ - Liveurban barplot
+ - Clean up Liveurban
+ - facet by youthurban
+ - jitter liveurban & youthurban
+
+ < Now you try! Pick three categorical variables, clean them up, and find a useful way to display their relationship >
