@@ -1,0 +1,91 @@
+---
+title: "Problem Set 1"
+author: "Stewart Ulrich"
+date: "9/2/2020"
+output: html_document
+---
+```{r}
+# Load Data
+load('../data/anes_pilot_2019.RData')
+
+#Find number of rows
+nrow(data)
+```
+```{r}
+#Find number of columns
+ncol(data)
+```
+```{r}
+#Create age variable 
+data$age <- 2020-data$birthyr
+```
+
+```{r}
+#Find median age
+median(data$age)
+```
+
+```{r}
+#Histogram of age variable 
+hist(data$age)
+```
+
+```{r}
+#Table of vote16 variable
+table(data$vote16)
+```
+#603 respondents skipped this question 
+
+```{r}
+#Remove NA's
+data$vote16[data$vote16 == -1] <- NA
+```
+
+```{r}
+#Create table without NA's
+table(data$vote16)
+```
+#Removed the -1 respondents as they are now coded as NA
+
+```{r}
+#Table of liveurban variable
+table(data$liveurban)
+```
+#Most respondents are in option 3, which is a suburb
+
+```{r}
+#2 way table of liveurban and vote20jb
+table(data$liveurban, data$vote20jb)
+```
+#Rural respondents are most likely to vote for Donald Trump 
+#Urban respondents are most likely to vote for Joe Biden 
+
+```{r}
+#Table of reg1a variable, whether people are registred to vote
+table(data$reg1a)
+```
+#Many skipped this question, but most who did are registered to vote 
+
+```{r}
+#Table of reg1b, another question of whether people are registered to vote 
+table(data$reg1b)
+```
+#Same with the other registered to vote question 
+
+```{r}
+#Find mean of feeling thermometer for Trump
+mean(data$fttrump)
+```
+#The average feeling thermometer score for Trump 
+
+```{r}
+#Find mean of feeling thermometer for Obama
+mean(data$ftobama)
+```
+#The average feeling thermometer score for Obama. Higher than Trump's 
+
+
+
+
+
+
