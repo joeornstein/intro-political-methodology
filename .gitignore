@@ -1,3 +1,6 @@
 # dross folder
 resources/
 .Rproj.user
+
+# subfolder with its own git
+problem-sets/rticles-demo/
