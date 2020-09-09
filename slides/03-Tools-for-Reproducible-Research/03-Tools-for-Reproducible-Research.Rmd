@@ -302,10 +302,18 @@ knitr::include_graphics('img/final-phd-comics.gif')
 
 ---
 
-## Step 1: Install `git`
+## Step 1: Install and setup `git`
 
 [![](img/git.png)](https://git-scm.com/downloads)
 
+### Introduce Yourself
+
+Type this into the Terminal (Tools > Shell)
+
+```
+git config --global user.name 'yourGitHubUsername'
+git config --global user.email 'name@provider.com'
+```
 
 ---
 
@@ -352,6 +360,76 @@ print(paste('The value of x is', x))
 
 ---
 
+## Try It!
+
+- Copy your `R Markdown` file (and all the data you need) into the new project.
+
+- Do you see it in the `Git` pane? Stage and commit it (commit message: "initial commit")
+
+- Now make some modifications to the text or code. Stage and commit.
+
+  - Repeat
+  
+  - Repeat
+  
+- Click "History" (the clock button). You should see a log of all the revisions you made.
+
+### Further Reading
+
+[Reproducible Research Workshop](https://www.geo.uzh.ch/microsite/reproducible_research/post/rr-rstudio-git/)
+
+
+
+---
+
+class: center, middle
+
+## GitHub
+
+---
+
+## Step 1: Create a GitHub account
+
+![](img/github-profile.png)
+
+---
+
+## Step 2: Create a new repository
+
+![](img/GitHub-create-repo.png)
+
+---
+
+## Step 3: Copy the repository URL
+
+![](img/GitHub-copy-repo-https.png)
+
+---
+
+## Step 4: Create a New R Project with Version Control
+
+![](img/RStudio-clone-git-project.gif)
+
+This "clones" the repository so you now have a local copy.
+
+---
+
+## Step 5: Modify, Stage, and Commit As Usual
+
+![](img/git-commit.png)
+
+---
+
+## Step 6: Push and Pull
+
+- After committing updates, click the green "Push" arrow to update the GitHub repository.
+
+![](img/updated-repo.png)
+
+- To get updates *from* GitHub, click the blue "Pull" arrow.
+
+---
+
 ## The Basic Workflow
 
 ```{r git flow, out.width='70%'}
@@ -369,6 +447,19 @@ knitr::include_graphics('img/git-flow.webp')
 - Easy fix: tell `git` to ignore the folder where you put your data and have it focus on the code.
 
   - Just select your data folder in the `Git` pane in RStudio and click "Ignore".
+
+
+---
+
+## Try It!
+
+- Add an R script or `R Markdown` document to your GitHub-linked project. 
+
+- Make modifications, track changes with the `Git` pane.
+
+- Push to the remote GitHub repository. 
+
+  - Refresh the web browser. You should see your files there!
 
 ---
 
