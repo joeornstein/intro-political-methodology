@@ -310,6 +310,18 @@ We too fall prey...
 
 ---
 
+## Warning: gitignore your big data files
+
+- I had this problem this morning. 
+
+- If you have a really big data file (>100MB), GitHub will reject it, and it will be a **pain** to fix.
+
+- Easy fix: tell `git` to ignore the folder where you put your data and have it focus on the code.
+
+  - Just select your data folder in the `Git` pane in RStudio and click "Ignore".
+
+---
+
 class: center, middle
 
 ## Reference Management (Zotero)
