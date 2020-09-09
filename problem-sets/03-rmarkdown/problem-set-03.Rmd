@@ -1,0 +1,38 @@
+---
+title: 'POLS 7012: Problem Set 3'
+author: "Joe Ornstein"
+date: "Due September 16, 2020"
+output:
+  pdf_document: default
+  html_document: default
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+# For problem set, echo and eval = FALSE
+# For answer key, echo and eval = TRUE
+knitr::opts_chunk$set(echo = FALSE, eval = FALSE)
+library(tidyverse)
+```
+
+Take all of your new skills and coauthor a (tiny) paper with one or two of your classmates. Use the [World Values Survey Wave 7](http://www.worldvaluessurvey.org/WVSDocumentationWV7.jsp) sample data I posted on eLC or another dataset of your choosing. Describe and plot some interesting patterns that you observe in the data. (For example, in which countries do people report the highest levels of social trust?)
+
+1. Write the paper in `R Markdown`.
+
+2. Maintain all materials on a private `GitHub` repository.
+
+3. Embed figures and analyses in the text.
+
+4. Include in-line citations and a bibliography.
+
+5. Submit by adding me to your repository (joeornstein).
+
+5. I should be able to:
+
+    - Pull your repository to my computer.
+
+    - Delete your paper.
+  
+    - Click `Knit` on my computer and the paper will reproduce itself.
+
+6. After you submit, I'll play reviewer and ask you to revise a few things.
