@@ -4,3 +4,6 @@ resources/
 
 # subfolder with its own git
 problem-sets/rticles-demo/
+
+# big dataset
+problem-sets/03-rmarkdown/data/
