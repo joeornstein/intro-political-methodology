@@ -302,25 +302,59 @@ knitr::include_graphics('img/final-phd-comics.gif')
 
 ---
 
-## Install `git`
+## Step 1: Install `git`
 
 [![](img/git.png)](https://git-scm.com/downloads)
 
 
 ---
 
-## Create a new R project
+## Step 2: Create a new R project
 
 ```{r, out.width='85%'}
 knitr::include_graphics('img/check-git-repo.png')
 ```
 
+---
+
+## Step 3: Modify Your Code
+
+```{r code example, echo = TRUE, eval=FALSE}
+x <- 5
+
+print(x*2)
+
+print(paste('The value of x is', x))
+```
+
+---
+
+## Step 4: Stage Your Changes
+
+- Go to the `Git` pane in the upper right.
+
+- Check the box of all the files you want to track.
+
+- They are now added to the "staging area".
+
+![](img/git-stage.png)
+
+---
+
+## Step 5: Commit Your Changes
+
+- When you've added all the files you want to track, click "Commit"
+
+![](img/git-commit.png)
+- Add a "commit message" that says what you did and why
+
+- Click "Commit"
 
 ---
 
 ## The Basic Workflow
 
-```{r git flow, out.width='60%'}
+```{r git flow, out.width='70%'}
 knitr::include_graphics('img/git-flow.webp')
 ```
 
