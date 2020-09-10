@@ -1,0 +1,49 @@
+Create GitHub repository w/ RMarkdown document (floating toc). We're going to walk through that document and make edits.
+
+
+Statistics is the plural of *statistic*. What is a *statistic*?
+ - A **statistic** is a quantity computed from data. We use statistics to describe the world and make inferences.
+
+Two purposes:
+  1. Describe the sample we have
+  2. Make inferences about the broader population (this in a few weeks)
+
+In stylized terms
+Data -> Function -> Statistic
+
+
+
+Two step process:
+ - Get the data object into an appropriate form
+ - Apply a function (or series of functions) to compute statistics
+
+Today, we learn how to wrangle datasets so we can compute statistics.
+ - Objects
+ - Functions
+
+
+Understand and compute standard descriptive statistics:
+ - Mean, median, mode
+ - Variance, standard deviation
+ - Covariance, correlation
+ - Sample size
+ - Proportions
+ - Kurtosis / skewness?
+ - Quartiles, interquartile range
+
+ Use tidyverse package to clean, merge, and transform datasets
+
+  - Merge functions
+  - summarize()
+  - group_by()
+  - mutate()
+  - if_else()
+  - select()
+  - Pipes: %>%
+
+Some basic programming:
+
+ - loops
+ - if/else
+ - indentation
+ - writing your own functions
