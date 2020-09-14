@@ -1,0 +1,66 @@
+---
+title: Problem Set 3 Answer Key
+#date: "`r Sys.Date()`"
+authors:
+  - name: Joseph T. Ornstein
+    email: jornstein@uga.edu
+    address: University of Georgia
+abstract: |
+  In this short paper, I demonstrate how to embed basic data analysis and visualization into an `RMarkdown` document, creating a reproducible workflow.
+keywords:
+  - RMarkdown
+  - reproducible research
+  - World Values Survey
+#fontsize: 12pt
+#spacing: halfline # could also be oneline
+#classoptions:
+#  - endnotes
+bibliography: refs.bib
+biblio-style: apsr
+output: rticles::oup_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE) # By default, hide code; set to TRUE to see code
+knitr::opts_chunk$set(fig.pos = 'p') # Places figures on their own pages
+knitr::opts_chunk$set(out.width = '100%', dpi=300) # Figure resolution and size
+knitr::opts_chunk$set(fig.env="figure") # Latex figure environment
+
+library(xtable) # Creates tables that follow OUP guidelines; other options, such as kable, may also be workable
+library(tidyverse)
+```
+
+
+```{r load data}
+load('data/World_Values_Survey_Wave_7_Sample.RData')
+```
+
+# Introduction
+
+The World Values Survey (WVS) is an extensive survey of cultural values; Wave 7 of the survey interviewed `r nrow(wvs)` people in `r length(unique(wvs$B_COUNTRY))` countries.  It has been cited in papers like @inglehartModernizationCulturalChange2000 and @minkovHofstedeFifthDimension2012.
+
+# Results
+
+Fig. \ref{fig:fig1} plots the number of respondents in each country who say they are willing to fight for their country in the event of another war. Note that the largest outlier is Japan, where a substantial majority say no. 
+
+```{r fig1, fig.cap="Willingness to fight for one's country, by country", fig.width=5, fig.height=7}
+
+# Clean up Q150
+wvs <- wvs %>% 
+  mutate(fight_for_country = if_else(Q151 == 1, 'Yes', 'No'))
+
+fig1 <- ggplot(data = wvs %>% 
+                 filter(!is.na(fight_for_country))) +
+  geom_bar(aes(x = fight_for_country)) +
+  facet_wrap(~B_COUNTRY_ALPHA) +
+  theme_classic() +
+  labs(x = 'Willing to Fight for Your Country?',
+       y = 'Count')
+
+fig1
+```
+
+
+
+
+# References
