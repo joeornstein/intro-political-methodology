@@ -1,0 +1,24 @@
+Note about objects in Environment Pane
+
+Two Common Sticking Points:
+
+ - Parentheses
+ - Quotation Marks
+
+They're very special in R. Parentheses mean a function, and quotation marks mean a character (distinguish from an object)
+
+x <- 2
+print(x)
+print("x")
+
+Double or single quotes are okay; just be consistent, and make sure that there are quotes at the beginning and end of your character.
+
+Parentheses hold the inputs to functions. Make sure your list of inputs starts with a ( and ends with a ). If you nest multiple functions (you wil), make sure all of your parentheses match up.
+
+Exercise: 
+
+What's wrong with this code?
+
+```{r eval = FALSE}
+print(paste("The dog", "ate', x, 'bananas')
+```
