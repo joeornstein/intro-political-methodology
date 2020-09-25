@@ -1,5 +1,7 @@
 Note about objects in Environment Pane
 
+Take out the stuff about making matrices in R. You can just go to dataframes, and then tell them it's also called a matrix.
+
 Two Common Sticking Points:
 
  - Parentheses
@@ -15,7 +17,7 @@ Double or single quotes are okay; just be consistent, and make sure that there a
 
 Parentheses hold the inputs to functions. Make sure your list of inputs starts with a ( and ends with a ). If you nest multiple functions (you wil), make sure all of your parentheses match up.
 
-Exercise: 
+Exercise:
 
 What's wrong with this code?
 

@@ -1,7 +1,7 @@
 ---
 title: "All The Calculus You Need To Know"
-author: "Joseph T. Ornstein"
-date: "June 12, 2020"
+author: "Joe   Ornstein"
+date: "September 30, 2020"
 output:
   xaringan::moon_reader:
     nature:
@@ -18,6 +18,81 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
                       fig.align = 'center', out.width = 600,
                       message=FALSE, warning=FALSE, echo=FALSE)
 ```
+
+# Warm Up
+
+--
+
+1. What is a **function**?
+
+--
+
+  A **function** takes one or more inputs and produces an output.
+  
+--
+
+<br>
+
+2. If $f(x) = 2x^2 + 2x + 3$, what is $f(2)$?
+
+--
+
+$$f(2) = 2(2)^2 + 2(2) + 3 = 8 + 4 + 3 = 15$$
+
+
+---
+
+# Warm Up
+
+What is the **slope** of $f(x) = 3x + 2$?
+
+```{r slope, out.width='70%'}
+x <- -2:2
+y <- 3*x + 2
+
+tibble(x,y) %>% 
+  ggplot + 
+  geom_line(aes(x=x,y=y))
+```
+
+--
+
+The slope of a linear function (a straight line) is measured by how much $y$ increases when you increase $x$ by $1$. In this case, $3$.
+
+---
+
+# Warm Up
+
+What is the **area** of this rectangle?
+
+```{r rectangle, out.width = '80%'}
+
+ggplot() + 
+  geom_rect(aes(xmin = 0, xmax = 2, ymin = 0, ymax = 5), 
+            fill = NA, color = 'black') +
+  geom_text(aes(x = 1, y = 0.25, label = '2'), size = 5) +
+  geom_text(aes(x = 1.95, y = 2.5, label = '5'), size = 5) +
+  theme_void()
+
+```
+
+--
+
+Area $= bh = 2 \times 5 = 10$
+
+---
+
+class: center, middle
+
+**Good news!** You're super close to knowing all the calculus you need.
+
+???
+
+You know what a function is; you know how to compute the slope of a line; you know how to compute the area of a rectangle.
+
+It's just **one** conceptual step from there to calculus. The hard part is the tedious computation. But you don't have to do that stuff. Computers can do it now.
+
+---
 
 # Learning Objectives
 
@@ -46,7 +121,7 @@ By the end of this week, you will be able to:
 
 - Optimization is central to game theory, statistical estimation. So much of mathematical social science is maximizing a value function or minimizing a cost function.
 - When we get to inference and hypothesis testing, we'll need to know how to take the area under a probability distribution function.
-- And the FOTC is just cool.
+- And the FOTC is just cool. It shows that those two things that seem very different are in fact fundamentally unified on a deep level.
 
 ---
 
@@ -72,7 +147,6 @@ y <- a*x + b
 
 p <- ggplot(data = tibble(x,y)) +
   geom_line(aes(x=x,y=y),size=1) +
-  theme_minimal() +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   ggtitle('y = ax+b')
@@ -302,27 +376,30 @@ The point is that, in the limit, as you shrink the interval smaller and smaller 
 
 # Putting All That Into Math...
 
-.center[
+
+<br>
+
+<br>
+
 $$f'(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$
-]
+
+---
+
+# Putting All That Into Math...
+
+<br>
+
+<br>
+
+$$f'(x) = \underbrace{\lim_{h \to 0}}_\text{shrink h really small}\frac{\overbrace{f(x+h)-f(x)}^\text{the change in y}}{\underbrace{h}_\text{the change in x}}$$
 
 --
 
-In English, the slope of a function at point $x$ equals:
+<br>
 
-- "Rise" $f(x+h) - f(x)$...
-
---
-
-- divided by "run" $(h)$...
-
---
-
-- as $h$ shrinks to zero $(\lim_{h \to 0})$.
-
---
 
 This is called the **derivative** of a function.
+
 
 ---
 
@@ -355,7 +432,7 @@ Hey look what we discovered! The slope of a linear function equals the coefficie
 
 ---
 
-# Now You Try One
+# Now A Nonlinear One
 
 Let $f(x) = 3x^2 + 2x + 3$. What is $f'(x)$?
 
@@ -399,63 +476,119 @@ This function, $f'(x)$, outputs the slope of $f(x)$ at every point. You can "rea
 
 ---
 
-If $f(x) = 3x^2+2x+3$, then $f'(x) = 6x + 2$
+class: center, middle
 
---
+More **good news!** You don't have to go through that process every time. Mathematicians have done it for you, and have discovered a whole bunch of useful shortcuts.
 
-Hey you've discovered a bunch of derivative rules!
+---
 
---
-
-### Rule 1: The Power Rule
+## Shortcut 1: The Power Rule
 
 If $f(x) = ax^k$, then $f'(x) = kax^{k-1}$
 
 --
 
-### Rule 2: The derivative of a sum is equal to the sum of derivatives
+<br>
+
+### Practice Problem:
+
+Let $f(x) = 3x^2$. What is $f'(x)$?
+
+--
+
+<br>
+
+$$f'(x) = 6x$$
+
+---
+
+## Shortcut 2: The Sum Rule
+
+The derivative of a sum is equal to the sum of derivatives.
 
 If $f(x) = g(x) + h(x)$, then $f'(x) = g'(x) + h'(x)$
 
 --
 
-### Rule 3: The derivative of a constant is zero
+<br>
+
+### Practice Problem:
+
+If $f(x) = 2x^3 + 3x$, what is $f'(x)$?
+
+--
+
+$$f'(x) = 6x + 3$$
+
+---
+
+
+## Shortcut 3: The Constant Rule
+
+The derivative of a constant is zero
 
 If $f(x) = c$, then $f'(x) = 0$
 
 --
 
-The good news is that mathematicians have discovered a whole bunch of other ones, so we don't have to duplicate their work. 
+<br>
 
+### Practice Problem:
+
+If $f(x) = 4x^2 + x + 5$, what is $f'(x)$?
+
+--
+
+<br>
+
+$$f'(x) = 8x + 1$$
 
 ---
 
-![](img/moore-siegel.png)
+TODO: Add exponentials and product rule.
+
 ---
 
-# Don't Freak Out
+## Other Derivative Rules
+
+![](img/moore-siegel-truncated.png)
+---
+
+<br>
+
+<br>
+
+<br>
 
 .center[![](img/math.gif)]
 
 --
 
+<br>
+
 If you haven't seen these before, it's a lot to absorb. But practice helps.
+
+???
+
+Don't freak out.
 
 ---
 
-# Here. Practice.
+# More Practice
 
-### Problem 1: Power Rule
+### Problem 1: Sum of Powers (Polynomial)
 
 Let $f(x) = 2x^3 + 4x + 79$. What is $f'(x)$?
 
-### Problem 2: Product Rule
+### Problem 2: Multiply By A Constant
+
+Let $f(x) = 3(x^2 + x + 42)$. What is $f'(x)$?
+
+### Problem 3: Product Rule
 
 Let $f(x) = (x^2 + 1)(x+3)$. What is $f'(x)$?
 
-### Problem 3: Quotient Rule
 
-Let $f(x) = \frac{2x+1}{x^2}$. What is $f'(x)$?
 
 ---
 
@@ -610,6 +743,72 @@ ggplot(data = tibble(j, h, h_prime)) +
 
 class: center, middle
 
+### Wait, how do you know if it's a maximum or a minimum?
+
+---
+
+## Jellybeans Again
+
+$h(j) = \frac{1}{3}j^3 + 81j + 2$ and $h'(j) = 81 - j^2$
+
+```{r Jellybean Plot Again, out.width = '60%'}
+
+ggplot(data = tibble(j, h, h_prime)) +
+  geom_line(aes(x=j,y=h), size = 1) +
+  geom_line(aes(x=j,y=h_prime), color = 'red', size = 1) +
+  xlab('Jellybeans Consumed') + ylab('Happiness') +
+  geom_text(aes(x=13,y=420,label = 'h(j)'), size = 5) +
+  geom_text(aes(x=14,y=-40,label = "h'(j)"), color = 'red', size = 5) +
+  geom_vline(xintercept = 9, linetype = 'dashed', color = 'blue')
+
+
+```
+
+--
+
+It's a maximum when the slope is **decreasing**, and a minimum when then slope is **increasing**. How do you figure out if the slope is increasing or decreasing?
+
+--
+
+That's right. You find the **slope of the slope** (aka the **second derivative**).
+
+---
+
+## The Second Derivative Test
+
+$h(j) = \frac{1}{3}j^3 + 81j + 2$ and $h'(j) = 81 - j^2$
+
+What is $h''(j)$? Is it positive or negative when you eat $9$ jellybeans?
+
+--
+
+$$h''(j) = -2j$$
+
+```{r second derivative, out.width='60%'}
+
+happiness_prime_prime <- function(j){
+  -2*j
+}
+
+h_prime_prime <- happiness_prime_prime(j)
+
+ggplot(data = tibble(j, h, h_prime)) +
+  geom_line(aes(x=j,y=h), size = 1) +
+  geom_line(aes(x=j,y=h_prime), color = 'red', size = 1) +
+  geom_line(aes(x=j,y=h_prime_prime), color = 'purple', size = 1) +
+  xlab('Jellybeans Consumed') + ylab('Happiness') +
+  geom_text(aes(x=13,y=420,label = 'h(j)'), size = 5) +
+  geom_text(aes(x=14,y=-60,label = "h'(j)"), color = 'red', size = 5) +
+  geom_text(aes(x=1,y=-20,label = "h''(j)"), color = 'purple', size = 5) +
+  geom_vline(xintercept = 9, linetype = 'dashed', color = 'blue')
+
+```
+
+
+---
+
+class: center, middle
+
 # Partial Derivatives
 
 
@@ -639,36 +838,36 @@ $$\frac{\partial f}{\partial y} = 2x^2 + x + 1$$
 
 Suppose happiness as a function of jellybeans and Dr. Peppers consumed is
 
-$$h(j,d) = -\frac{1}{2}j^2 + 400j + 200d - d^2 - 2jd + 2$$
+$$h(j,d) = -\frac{3}{4}j^2 + 10j + 10d - 2d^2 - jd + 100$$
 How many jellybeans should you eat? How many Dr. Peppers should you drink?
 
 --
 
-Intuitively, the $-2jd$ term is an **interaction effect**. The effect of jellybeans on happiness decreases if you also drink a lot of Dr. Peppers. 
+Intuitively, the $-jd$ term is an **interaction effect**. The effect of jellybeans on happiness decreases if you also drink a lot of Dr. Peppers. 
 
 ---
 
 # Now You Try...
 
-$$h(j,d) = -\frac{1}{2}j^2 + 400j + 200d - d^2 - 2jd + 2$$
+$$h(j,d) = -\frac{3}{4}j^2 + 10j + 10d - 2d^2 - jd + 100$$
 
 --
 
-$$\frac{\partial h}{\partial j} = 400 - j - 2d = 0$$
+$$\frac{\partial h}{\partial j} = 10 - \frac{3}{2}j - d = 0$$
 --
 
-$$\frac{\partial h}{\partial j} = 200 - 2d - 2j = 0$$
+$$\frac{\partial h}{\partial d} = 10 - 4d - j = 0$$
 --
 
-$$j = 400 - 2d$$
+$$d = 10 - \frac{6}{4}j$$
 
-$$d = 100 - j$$
+$$d = 2.5 - \frac{1}{4}j$$
 --
 
-$$j = 400 - 2(100 - j)$$
+$$10 - \frac{3}{2}j = 2.5 - j$$
 $$ $$
 
-<TODO: Clearly you need some pen and paper>
+
 
 ---
 
@@ -737,7 +936,7 @@ ggplot() +
 
 # The Area Under a Curve
 
- - With derivatives, we approximated the hard thing (slope of a curve) using an easy thing (slope of a line) by zooming in close enough.
+ - With derivatives, we approximated a hard problem (the slope of a curve) using an easy problem (the slope of a line) by zooming in close enough.
 
 --
 
@@ -745,7 +944,7 @@ ggplot() +
 
 --
 
- - We'll approximate the hard thing (area under a curve) using an easy thing (area of a bunch of rectangles) by making the rectangles *really* small.
+ - We approximate a hard problem (the area under a curve) using an easy problem (the area of a bunch of rectangles) by making the rectangles *really* small.
 
 ---
 
@@ -775,7 +974,15 @@ ggplot() +
 
 ---
 
-As $h$ approaches to zero...
+TODO: Introduce integral notation; show that shrinkage.
+
+$$\sum $$
+
+---
+
+# Riemann Sum
+
+As $h$ approaches zero...
 
 $$F(x+h) - F(x) \approx f(x) \cdot h$$
 
