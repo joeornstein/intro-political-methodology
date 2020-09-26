@@ -15,10 +15,15 @@ Double or single quotes are okay; just be consistent, and make sure that there a
 
 Parentheses hold the inputs to functions. Make sure your list of inputs starts with a ( and ends with a ). If you nest multiple functions (you wil), make sure all of your parentheses match up.
 
-Exercise: 
+Exercise:
 
 What's wrong with this code?
 
 ```{r eval = FALSE}
 print(paste("The dog", "ate', x, 'bananas')
 ```
+
+
+For problem set 1:
+
+rename the ANES dataset to anes, so it's not confusing that the dataset is named "data". Should be clear that it's an object.
