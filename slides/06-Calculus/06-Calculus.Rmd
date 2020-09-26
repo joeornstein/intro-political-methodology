@@ -31,8 +31,6 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
   
 --
 
-<br>
-
 2. If $f(x) = 2x^2 + 2x + 3$, what is $f(2)$?
 
 --
@@ -260,7 +258,11 @@ Any curve becomes a straight line if you "zoom in" far enough.
 
 --
 
-background-image: url("img/enhance.gif")
+<br>
+
+```{r enhance gif}
+knitr::include_graphics('img/enhance.gif')
+```
 
 ???
 
@@ -436,7 +438,21 @@ Hey look what we discovered! The slope of a linear function equals the coefficie
 
 Let $f(x) = 3x^2 + 2x + 3$. What is $f'(x)$?
 
+--
 
+$$= \lim_{h \to 0}\frac{3(x+h)^2 + 2(x+h) + 3 - (3x^2 + 2x + 3)}{h}$$
+--
+
+$$= \lim_{h \to 0}\frac{3x^2 + 3h^2 + 6xh + 2x+ 2h + 3 - (3x^2 + 2x + 3)}{h}$$
+
+$$= \lim_{h \to 0}\frac{3h^2 + 6xh + 2h}{h}$$
+--
+
+$$= \lim_{h \to 0}3h + 6x + 2$$
+
+--
+
+$$= 6x + 2$$
 
 ---
 
@@ -522,7 +538,6 @@ $$f'(x) = 6x + 3$$
 
 ---
 
-
 ## Shortcut 3: The Constant Rule
 
 The derivative of a constant is zero
@@ -545,7 +560,53 @@ $$f'(x) = 8x + 1$$
 
 ---
 
-TODO: Add exponentials and product rule.
+## Shortcut 4: The Product Rule
+
+The derivative of a product is a bit trickier...
+
+If $f(x) = g(x) \cdot h(x)$, then $f'(x) = g'(x) \cdot h(x) + g(x) \cdot h'(x)$
+
+--
+
+### Practice Problem
+
+$f(x) = (3x^2 + 6x)(x+2)$, what is $f'(x)$?
+
+--
+
+$$f'(x) = (3x^2 + 6x)(1) + (6x + 6)(x+2)$$
+
+$$f'(x) = 3x^2 + 6x + 6x^2 + 6x + 12x + 12$$
+
+$$f'(x) = 9x^2 + 24x + 12$$
+
+---
+
+## Shortcut 5: The Exponential Rule
+
+Remember Euler's number? $e =$ `r exp(1) %>% round(8)`...
+
+--
+
+If $f(x) = e^x$, then $f'(x) = e^x$
+
+
+```{r exponential rule, out.width = '80%'}
+
+x <- seq(0,5, 0.1)
+
+y <- exp(x)
+
+tibble(x,y) %>% 
+  ggplot() +
+  geom_line(aes(x=x,y=y))
+
+
+```
+
+???
+
+Often when we use $e$ in applied mathematics, we're taking advantage of this fact to make the math easier.
 
 ---
 
@@ -838,36 +899,36 @@ $$\frac{\partial f}{\partial y} = 2x^2 + x + 1$$
 
 Suppose happiness as a function of jellybeans and Dr. Peppers consumed is
 
-$$h(j,d) = -\frac{3}{4}j^2 + 10j + 10d - 2d^2 - jd + 100$$
+$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$
 How many jellybeans should you eat? How many Dr. Peppers should you drink?
 
 --
 
-Intuitively, the $-jd$ term is an **interaction effect**. The effect of jellybeans on happiness decreases if you also drink a lot of Dr. Peppers. 
+Intuitively, the $jd$ term is an **interaction effect**. The effect of jellybeans on happiness increases if you also drink more Dr. Peppers. 
 
 ---
 
 # Now You Try...
 
-$$h(j,d) = -\frac{3}{4}j^2 + 10j + 10d - 2d^2 - jd + 100$$
+$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$
 
 --
 
-$$\frac{\partial h}{\partial j} = 10 - \frac{3}{2}j - d = 0$$
+$$\frac{\partial h}{\partial j} = 8 - j + d = 0$$
 --
 
-$$\frac{\partial h}{\partial d} = 10 - 4d - j = 0$$
+$$\frac{\partial h}{\partial d} = 2 - 6d + j = 0$$
 --
 
-$$d = 10 - \frac{6}{4}j$$
+$$j = 8 + d$$
 
-$$d = 2.5 - \frac{1}{4}j$$
+$$j = 6d - 2$$
 --
 
-$$10 - \frac{3}{2}j = 2.5 - j$$
-$$ $$
+<br>
 
-
+$$d^* = 2$$
+$$j^* = 10$$
 
 ---
 
@@ -944,7 +1005,7 @@ ggplot() +
 
 --
 
- - We approximate a hard problem (the area under a curve) using an easy problem (the area of a bunch of rectangles) by making the rectangles *really* small.
+ - We approximate a hard problem (the area under a curve) using an easy problem (the area of a bunch of rectangles) by making the rectangles *really* thin.
 
 ---
 
@@ -1076,4 +1137,4 @@ $= 6 \frac{2}{3}$
 
 class: center, middle
 
-## ...and that's All The Calculus You Need To Know
+## ...and that's All The Calculus You Need
