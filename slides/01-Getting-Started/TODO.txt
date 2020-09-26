@@ -1,5 +1,7 @@
 Note about objects in Environment Pane
 
+Take out the stuff about making matrices in R. You can just go to dataframes, and then tell them it's also called a matrix.
+
 Two Common Sticking Points:
 
  - Parentheses
