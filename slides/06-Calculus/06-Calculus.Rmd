@@ -1,6 +1,6 @@
 ---
-title: "All The Calculus You Need To Know"
-author: "Joe   Ornstein"
+title: "All The Calculus You Need"
+author: "Joe Ornstein"
 date: "September 30, 2020"
 output:
   xaringan::moon_reader:
@@ -23,20 +23,45 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
 
 --
 
-1. What is a **function**?
+- What is a **function**?
 
 --
 
-  A **function** takes one or more inputs and produces an output.
+  - A **function** takes one or more inputs and produces an output.
   
 --
 
-2. If $f(x) = 2x^2 + 2x + 3$, what is $f(2)$?
+<br>
+
+- If $f(x) = 2x^2 + 2x + 3$, what is $f(2)$?
 
 --
 
 $$f(2) = 2(2)^2 + 2(2) + 3 = 8 + 4 + 3 = 15$$
 
+--
+
+<br>
+
+- $y = 2x + 1$ and $y = 10 - x$. Solve for $x$ and $y$.
+
+--
+
+$$10 - x = 2x + 1$$
+--
+
+$$3x = 9$$
+
+--
+
+<br>
+
+$$x = 3$$
+$$y = 7$$
+
+???
+
+Two equations, two unknowns.
 
 ---
 
@@ -69,7 +94,9 @@ ggplot() +
   geom_rect(aes(xmin = 0, xmax = 2, ymin = 0, ymax = 5), 
             fill = NA, color = 'black') +
   geom_text(aes(x = 1, y = 0.25, label = '2'), size = 5) +
-  geom_text(aes(x = 1.95, y = 2.5, label = '5'), size = 5) +
+  geom_text(aes(x = 1.8, y = 2.5, label = '5'), size = 5) +
+  scale_x_continuous(limits = c(0,5)) +
+  scale_y_continuous(limits = c(0,5)) +
   theme_void()
 
 ```
@@ -200,7 +227,7 @@ arbitrary_polynomial <- function(x){
 }
 
 #TODO: Set the interval really small when you're ready to publish
-x <- seq(-4,4,0.005)
+x <- seq(-4,4,0.0001) #0.0001
 y <- arbitrary_polynomial(x)
 
 p <- ggplot(data = tibble(x,y)) +
@@ -508,13 +535,13 @@ If $f(x) = ax^k$, then $f'(x) = kax^{k-1}$
 
 ### Practice Problem:
 
-Let $f(x) = 3x^2$. What is $f'(x)$?
+Let $f(x) = 2x^3$. What is $f'(x)$?
 
 --
 
 <br>
 
-$$f'(x) = 6x$$
+$$f'(x) = 6x^2$$
 
 ---
 
@@ -530,11 +557,11 @@ If $f(x) = g(x) + h(x)$, then $f'(x) = g'(x) + h'(x)$
 
 ### Practice Problem:
 
-If $f(x) = 2x^3 + 3x$, what is $f'(x)$?
+If $f(x) = 2x^3 + x^2$, what is $f'(x)$?
 
 --
 
-$$f'(x) = 6x + 3$$
+$$f'(x) = 6x^2 + 2x$$
 
 ---
 
@@ -550,13 +577,13 @@ If $f(x) = c$, then $f'(x) = 0$
 
 ### Practice Problem:
 
-If $f(x) = 4x^2 + x + 5$, what is $f'(x)$?
+If $f(x) = 4x^2 + 3x + 5$, what is $f'(x)$?
 
 --
 
 <br>
 
-$$f'(x) = 8x + 1$$
+$$f'(x) = 8x + 3$$
 
 ---
 
@@ -932,6 +959,38 @@ $$j^* = 10$$
 
 ---
 
+## Visualizing That Function
+
+$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$
+
+```{r plotly}
+library(plotly)
+
+# thanks: https://www.datamentor.io/r-programming/3d-plot/
+
+f <- function(j,d){
+  8*j - 0.5*j^2 + 2*d - 3*d^2 + j*d + 100
+}
+
+j <- seq(0, 20, length= 20)
+d <- seq(0, 4, length = 4)
+
+happiness <- outer(j, d, f)
+
+p <- plot_ly(z = happiness, type = "surface") %>% 
+  layout(
+    scene = list(
+      xaxis = list(title = "Dr. Peppers"),
+      yaxis = list(title = "Jellybeans"),
+      zaxis = list(title = "Happiness")
+    ))
+p
+
+```
+
+
+---
+
 class: center, middle
 
 # Integrals
@@ -1011,45 +1070,153 @@ ggplot() +
 
 # Riemann Sum
 
-```{r reimann sum}
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+--
+
+```{r reimann plot function}
+# function to plot Riemann sums
+
+riemann_plot <- function(x_minimum, x_maximum, f, h,
+                         rectangle_outline = 'black'){
+  
+  # create x and y variables
+  x <- seq(x_minimum,x_maximum,0.1)
+  y <- f(x)
+  
+  # rectangle dimensions
+  x_rectangles <- seq(x_minimum, x_maximum - h, h)
+  y_rectangles <- f(seq(x_minimum, x_maximum - h, h))
+  
+  # approximate area
+  approximate_area <- sum(y_rectangles * h)
+  
+  # rectangle dataframe for plot
+  rectangles <- tibble(xmin = x_rectangles,
+                       xmax = seq(x_minimum + h, x_maximum, h),
+                       ymin = 0,
+                       ymax = f(xmin))
+  
+  
+  # return ggplot object
+  ggplot() +
+    geom_line(data = tibble(x,y),
+              aes(x=x,y=y)) +
+    geom_rect(data = rectangles,
+              aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+              fill = 'blue', color = rectangle_outline, alpha = 0.3) +
+    labs(title = paste0("h = ", h, 
+                        ", Approximate Area = ", round(approximate_area, 3))) +
+    theme_bw()
+}
+
+```
+
+```{r reimann sum 1}
 
 f <- function(x){
   x^3 - 2*x^2 + 2
 }
 
-
-
-rectangles <- tibble(xmin = 1:10,
-                     xmax = 2:11,
-                     ymin = 0,
-                     ymax = 1:10)
-
-
-ggplot() +
-  geom_rect(data = rectangles,
-            aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
-            fill = 'blue', color = 'black', alpha = 0.3) +
-  theme_bw()
-
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.5)
 ```
-
----
-
-TODO: Introduce integral notation; show that shrinkage.
-
-$$\sum $$
 
 ---
 
 # Riemann Sum
 
-As $h$ approaches zero...
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
 
-$$F(x+h) - F(x) \approx f(x) \cdot h$$
+```{r reimann sum 3}
+
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.25)
+```
+
+---
+
+# Riemann Sum
+
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+```{r reimann sum 4}
+
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.1)
+```
+
+---
+
+# Riemann Sum
+
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+```{r reimann sum 5}
+
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.01)
+```
+
+---
+
+# Riemann Sum
+
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+```{r reimann sum 6}
+
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.001,
+             rectangle_outline = NA)
+```
+
+
+---
+
+## Integral Notation
+
+$$\lim_{h \to 0} \sum f(x) \cdot h = \int f(x)dx $$
 
 --
 
-Rearranging yields:
+$dx$ is an "infinitesimal" (infinitely small value). 
+
+So $\int f(x)dx$ is the area of an infinite number of infinitely skinny rectangles.
+
+--
+
+If we want the area under a curve between $a$ and $b$, we denote it like so:
+
+$$\int_a^b f(x)dx$$
+
+---
+
+## There has to be an easier way!
+
+What we want is a function $F(x)$; let's call it the **area function**.
+  
+- $F(c)$ gives the area under $f(x)$ between $-\inf$ and $c$.
+
+--
+
+- As $h$ approaches zero, our skinny rectangles become a better and better approximation of the area function...
+
+$$f(x) \cdot h = \lim_{h \to 0} F(x+h) - F(x)$$
+
+--
+
+Divide by $h$ on both sides:
 
 $$f(x) = \lim_{h \to 0} \frac{F(x+h) - F(x)}{h}$$
 
@@ -1074,7 +1241,7 @@ Computing the area under the curve and taking the antiderivative are equivalent 
 
 ---
 
-# The Area Under a Curve
+# Try It!
 
 If $f(x) = x$, find the area under the curve between $x=0$ and $x=4$.
 
@@ -1114,13 +1281,13 @@ $F(4) - F(0) = \frac{1}{2}\cdot4^2 = 8$
 
 ---
 
-# Now You Try!
+## Now a Nonlinear Example...
 
-If $f(x) = x^3 - 2x^2 + 2$, find the area under the curve between $x=1$ and $x=3$.
+If $f(x) = x^3 - 2x^2 + 2$, find the area under the curve between $x=0$ and $x=3$.
 
 --
 
-$$\int_1^3 f(x)dx = F(3) - F(1)$$
+$$\int_0^3 f(x)dx = F(3) - F(0)$$
 
 --
 
@@ -1128,10 +1295,25 @@ $F(x) = \frac{1}{4}x^4 - \frac{2}{3}x^3 + 2x + C$
 
 --
 
-$F(3) - F(1) = \frac{1}{4}3^4 - \frac{2}{3}3^3 + 2(3) - [\frac{1}{4}1^4 - \frac{2}{3}1^3 + 2(1)]$
+$F(3) - F(1) = \frac{1}{4}3^4 - \frac{2}{3}3^3 + 2(3) - [\frac{1}{4}0^4 - \frac{2}{3}0^3 + 2(0)]$
 
 --
-$= 6 \frac{2}{3}$
+$= 8.25$
+
+---
+
+## Now a Nonlinear Example...
+
+That's the same answer that we got from the skinny rectangles!
+
+```{r reimann sum 7}
+
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.001,
+             rectangle_outline = NA)
+```
 
 ---
 
