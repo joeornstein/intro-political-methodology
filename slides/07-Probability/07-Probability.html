@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Probability Theory</title>
+    <meta charset="utf-8" />
+    <link href="07-Probability_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="07-Probability_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Probability Theory
+## POLS 7012: Introduction to Political Methodology
+### University of Georgia
+
+---
+
+
+&lt;style&gt;
+
+.center-middle {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+&lt;/style&gt;
+
+
+
+
+A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way! 
+
+We'll start by learning some functions to draw random values in `R`.
+
+Then Law of Large Numbers, Bayes Rule, Central Limit Theorem
+
+Random Variables and their properties: Expectation, Variance, Covariance
+
+
+---
+
+
+## Generating Random Numbers in `R`
+
+The `sample` function draws values at random from a vector:
+
+
+```r
+x &lt;- 1:20
+
+sample(x, size = 1)
+```
+
+```
+[1] 17
+```
+
+```r
+sample(x, size = 1)
+```
+
+```
+[1] 5
+```
+
+```r
+sample(x, size = 100, replace = TRUE)
+```
+
+```
+  [1]  1 10  4 18 17 15  7  4  5 14 20 18 15  3  9  4  5 13  5 20  2  8  3  1 10 11 15  8  4  4 18 13  5  4  2 18  3 17 18  6  6  2 20  3  2  6 10  8  5  1
+ [51] 17  7  4 13 10  9 12 20  9 11  3 16  5 14  5  2 18 17 18  5 14  8  8  4  4  7 10 18 13 19 16 17 12  9 11 16  8  6  1 13 14  5  9 16 11 10 10  1 19 17
+```
+
+---
+
+## Generating Random Numbers in `R`
+
+**Exercise**: Draw 5 random letters. (Note: the vector `LETTERS` is built-in to R.)
+
+--
+
+
+```r
+sample(LETTERS, size = 5, replace = TRUE)
+```
+
+```
+[1] "N" "N" "O" "F" "X"
+```
+
+---
+
+## Generating Random Numbers
+
+
+---
+
+## Creating Your Own Functions
+
+
+```r
+draw_n_letters &lt;- function(num_letters = 5){
+  sample(LETTERS, size = num_letters, replace = TRUE)
+}
+
+draw_n_letters(num_letters = 10)
+```
+
+```
+ [1] "O" "K" "E" "P" "Q" "V" "Q" "R" "B" "F"
+```
+
+```r
+count_Q &lt;- function(num_letters = 5){
+  sample_letters &lt;- LETTERS %&gt;% 
+    sample(size = num_letters, replace = TRUE)
+  
+  length(sample_letters[sample_letters == 'Q'])
+}
+
+count_Q(100)
+```
+
+```
+[1] 7
+```
+
+---
+
+## Repeating Commands with `replicate`
+
+TODO: Questioning lifecycle 
+
+
+```r
+replicate(5, draw_n_letters(10))
+```
+
+```
+      [,1] [,2] [,3] [,4] [,5]
+ [1,] "E"  "Q"  "G"  "J"  "J" 
+ [2,] "K"  "K"  "Q"  "I"  "V" 
+ [3,] "O"  "R"  "E"  "W"  "Y" 
+ [4,] "U"  "W"  "V"  "Z"  "V" 
+ [5,] "B"  "B"  "T"  "S"  "Q" 
+ [6,] "Y"  "Z"  "R"  "I"  "U" 
+ [7,] "F"  "J"  "Z"  "K"  "L" 
+ [8,] "A"  "D"  "I"  "S"  "U" 
+ [9,] "N"  "T"  "K"  "U"  "F" 
+[10,] "P"  "O"  "F"  "D"  "O" 
+```
+
+---
+
+## Monte Carlo
+
+Draw a bunch of samples and compute statistic:
+
+
+```r
+Q &lt;- replicate(1000, count_Q(1000))
+
+hist(Q)
+```
+
+&lt;img src="07-Probability_files/figure-html/monte carlo-1.png" width="600" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

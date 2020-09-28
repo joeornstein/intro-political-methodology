@@ -1,0 +1,121 @@
+---
+title: "Probability Theory"
+# author: "Joseph T. Ornstein"
+# date: "June 12, 2020"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightStyle: github
+      countIncrementalSlides: false
+subtitle: 'POLS 7012: Introduction to Political Methodology'
+institute: University of Georgia
+---
+
+<style>
+
+.center-middle {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+</style>
+
+```{r Setup, include=FALSE}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 16))
+knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
+                      fig.align = 'center', out.width = 600,
+                      message=FALSE, warning=FALSE, echo=TRUE)
+set.seed(42)
+```
+
+
+A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way! 
+
+We'll start by learning some functions to draw random values in `R`.
+
+Then Law of Large Numbers, Bayes Rule, Central Limit Theorem
+
+Random Variables and their properties: Expectation, Variance, Covariance
+
+
+---
+
+
+## Generating Random Numbers in `R`
+
+The `sample` function draws values at random from a vector:
+
+```{r sample}
+x <- 1:20
+
+sample(x, size = 1)
+
+sample(x, size = 1)
+
+sample(x, size = 100, replace = TRUE)
+```
+
+---
+
+## Generating Random Numbers in `R`
+
+**Exercise**: Draw 5 random letters. (Note: the vector `LETTERS` is built-in to R.)
+
+--
+
+```{r sample exercise}
+sample(LETTERS, size = 5, replace = TRUE)
+```
+
+---
+
+## Generating Random Numbers
+
+
+---
+
+## Creating Your Own Functions
+
+```{r create function}
+draw_n_letters <- function(num_letters = 5){
+  sample(LETTERS, size = num_letters, replace = TRUE)
+}
+
+draw_n_letters(num_letters = 10)
+
+count_Q <- function(num_letters = 5){
+  sample_letters <- LETTERS %>% 
+    sample(size = num_letters, replace = TRUE)
+  
+  length(sample_letters[sample_letters == 'Q'])
+}
+
+count_Q(100)
+```
+
+---
+
+## Repeating Commands with `replicate`
+
+TODO: Questioning lifecycle 
+
+```{r replicate}
+replicate(5, draw_n_letters(10))
+```
+
+---
+
+## Monte Carlo
+
+Draw a bunch of samples and compute statistic:
+
+```{r monte carlo, out.wdith = '50%'}
+Q <- replicate(1000, count_Q(1000))
+
+hist(Q)
+```
