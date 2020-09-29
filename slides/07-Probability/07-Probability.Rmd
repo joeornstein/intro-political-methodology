@@ -255,6 +255,71 @@ rep(1:20, times = 2)
 
 ---
 
+class: center, middle
+
+## Expected Value
+
+---
+
+## Expected Value
+
+The **expected value** is the average value of a random variable $X$.
+
+- Specifically, a *weighted average* of all possible outcomes times their probability.
+
+Discrete: 
+$$E(X) = \sum_x x f(x)$$
+
+Continuous:
+$$E(X) = \int_{-\infty}^{+\infty} x f(x)dx$$
+
+---
+
+## Expected Value
+
+Suppose $X$ is distrubted as follows:
+
+$P(X = 0) = 1-p$ and $P(X = 1) = p$
+
+What is $E(X)$?
+
+--
+
+$$E(X) = 0(1-p) + 1p = p$$
+--
+
+(This is called the Bernoulli Distribution)
+
+---
+
+class: center, middle
+
+## The Law of Large Numbers
+
+If repeatedly draw a random variable a **large number of times**, the average draw will converge on the expected value.
+
+---
+
+## The Law of Large Numbers
+
+If repeatedly draw a random variable a **large number of times**, the average draw will converge on the expected value.
+
+--
+
+**Example:** If you flip a coin 2 million times, roughly how many will be heads?
+
+--
+
+Yep, about 1 million.
+
+---
+
+## Let's Prove It
+
+
+
+---
+
 ## Monte Carlo
 
 Draw a bunch of samples and compute statistic:
