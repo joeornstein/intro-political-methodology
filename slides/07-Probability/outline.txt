@@ -1,0 +1,79 @@
+Warmup:
+
+Hmmm...what's the probability of rolling 1 on a six-sided die?
+
+---------------
+
+Probability Distribution Functions:
+
+A special kind of function that describes the likelihood of random events.
+(Probability not about coin flips and card games; probability is a function that characterizes our uncertainty over outcomes)
+
+Functions take inputs and produce outputs. PDFs output the probability of an event.
+
+Heads -> P() -> 0.5
+
+Tails -> P() -> 0.5
+
+P(x) = probability of x
+
+P(x) >= 0
+\sum P(x) = 1 (for all possible values of x)
+
+(rigor and clarity not synonymous; if you want rigor, check out the books.)
+
+--------------------
+
+So let's create a probability distribution function in R.
+
+
+
+----------------------------
+
+Expected Value:
+
+Properties of Expectations?
+
+--------------------------
+
+Variance and Standard Deviation
+
+
+----------------------------------
+
+Law of Large Numbers
+
+
+-------------------------------
+
+Central Limit Theorem here?
+
+--------------------------
+
+MULTIPLE VARIABLES
+
+---------------------------
+
+Joint Distributions (plotly?)
+
+
+---------------------------
+
+Independence
+
+
+------------------------
+
+Covariance
+
+-------------------------
+
+Conditional Probability
+
+
+-----------------------
+
+Bayes Rule
+
+
+--------------------------

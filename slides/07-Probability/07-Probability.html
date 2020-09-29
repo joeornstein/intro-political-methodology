@@ -33,53 +33,125 @@ class: center, middle, inverse, title-slide
 
 
 
+## Outline
+
 A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way! 
 
-We'll start by learning some functions to draw random values in `R`.
+We'll start by learning some functions to draw random values in `R` (from probability distribution functions).
 
 Then Law of Large Numbers, Bayes Rule, Central Limit Theorem
 
 Random Variables and their properties: Expectation, Variance, Covariance
 
+As a bonus, you'll get to practice creating your own functions...very useful when you want to customize / mix-and-match the built-in functions we've learned.
 
 ---
 
+# Warm Up
 
-## Generating Random Numbers in `R`
+- Create an `.R` script where you can keep all your code from this session.
+
+- Load `tidyverse`
+
+--
+
+- Create a object `x` and assign it a vector with the elements 1, 2, 3, and 4.
+
+--
+
+
+```r
+x &lt;- c(1,2,3,4)
+
+# this works too
+x &lt;- 1:4
+```
+
+--
+
+- Find the sum of your vector `x` using a function.
+
+
+```r
+sum(x)
+```
+
+```
+[1] 10
+```
+
+---
+
+# Probability Distribution Functions (PDF)
+
+A special kind of function that describes the likelihood of random events.
+(Probability not about coin flips and card games; probability is a function that characterizes our uncertainty over outcomes)
+
+Functions take inputs and produce outputs. PDFs output the probability of an event.
+
+Heads -&gt; P() -&gt; 0.5
+
+Tails -&gt; P() -&gt; 0.5
+
+P(x) = probability of x
+
+`\(P(x) \geq 0\)`
+
+`\(\sum P(x) = 1\)` (for all possible values of x)
+
+???
+
+(As Wasserman says, rigor and clarity not synonymous; if you want rigor, check out the books.)
+
+---
+
+## Example PDF: Flipping a Coin
+
+`\(\Omega =\)` {heads, tails}
+
+`\(P(\text{heads}) = 0.5\)`
+
+`\(P(\text{tails}) = 0.5\)`
+
+---
+
+## Generating Random Values in `R`
 
 The `sample` function draws values at random from a vector:
 
 
 ```r
-x &lt;- 1:20
+coin_outcomes &lt;- c('Heads', 'Tails')
 
-sample(x, size = 1)
-```
-
-```
-[1] 17
-```
-
-```r
-sample(x, size = 1)
+sample(coin_outcomes, size = 1)
 ```
 
 ```
-[1] 5
+[1] "Heads"
 ```
 
 ```r
-sample(x, size = 100, replace = TRUE)
+sample(coin_outcomes, size = 1)
 ```
 
 ```
-  [1]  1 10  4 18 17 15  7  4  5 14 20 18 15  3  9  4  5 13  5 20  2  8  3  1 10 11 15  8  4  4 18 13  5  4  2 18  3 17 18  6  6  2 20  3  2  6 10  8  5  1
- [51] 17  7  4 13 10  9 12 20  9 11  3 16  5 14  5  2 18 17 18  5 14  8  8  4  4  7 10 18 13 19 16 17 12  9 11 16  8  6  1 13 14  5  9 16 11 10 10  1 19 17
+[1] "Heads"
+```
+
+```r
+sample(coin_outcomes, size = 30, replace = TRUE)
+```
+
+```
+ [1] "Heads" "Heads" "Tails" "Tails" "Tails" "Tails" "Heads" "Tails" "Heads"
+[10] "Tails" "Heads" "Tails" "Heads" "Heads" "Tails" "Tails" "Tails" "Tails"
+[19] "Heads" "Heads" "Heads" "Heads" "Heads" "Tails" "Heads" "Heads" "Heads"
+[28] "Heads" "Tails" "Tails"
 ```
 
 ---
 
-## Generating Random Numbers in `R`
+## Generating Random Values in `R`
 
 **Exercise**: Draw 5 random letters. (Note: the vector `LETTERS` is built-in to R.)
 
@@ -91,13 +163,104 @@ sample(LETTERS, size = 5, replace = TRUE)
 ```
 
 ```
-[1] "N" "N" "O" "F" "X"
+[1] "H" "C" "Z" "A" "J"
 ```
 
 ---
 
-## Generating Random Numbers
+class: center, middle
 
+## Creating Your Own Functions
+
+---
+
+## Creating Your Own Functions
+
+Here's a function that takes two inputs and adds 1 to their sum:
+
+
+```r
+add_one &lt;- function(x, y = 1){
+  x + y + 1
+}
+
+add_one(x = 1, y = 2)
+```
+
+```
+[1] 4
+```
+
+```r
+add_one(1)
+```
+
+```
+[1] 3
+```
+
+--
+
+- `add_one` is the name
+- `&lt;- function()` assigns a function to that name
+- `x, y = 1` are the inputs (aka arguments); `y` has a default value of 1.
+- The code within the brackets executes whenever you call the function, and the last line is the function's output.
+
+???
+
+- An **enormous** strength of working with `R`
+
+- Get comfortable with creating your own functions, and you can make `R` do whatever you want.
+
+---
+
+## Creating Your Own Functions
+
+
+```r
+flip_coin &lt;- function(N = 100){
+  # specify the sample space of outcomes
+  coin_outcomes &lt;- c('Heads', 'Tails')
+  
+  # return a vector of N random coin flips
+  sample(coin_outcomes,
+         size = N,
+         replace = TRUE)
+}
+
+flip_coin(N = 8)
+```
+
+```
+[1] "Tails" "Tails" "Heads" "Heads" "Tails" "Tails" "Tails" "Tails"
+```
+
+---
+
+## Creating Your Own Functions
+
+
+```r
+fraction_heads &lt;- function(N){
+  
+  # flip the coin N times, assign to 'flips' vector
+  flips &lt;- flip_coin(N)
+  
+  # return the number of heads divided by number of flips
+  sum(flips == 'Heads') / N
+}
+```
+
+--
+
+
+```r
+fraction_heads(N = 100)
+```
+
+```
+[1] 0.46
+```
 
 ---
 
@@ -113,29 +276,35 @@ draw_n_letters(num_letters = 10)
 ```
 
 ```
- [1] "O" "K" "E" "P" "Q" "V" "Q" "R" "B" "F"
+ [1] "P" "Z" "K" "J" "J" "X" "A" "Y" "Y" "S"
 ```
+
+--
+
 
 ```r
 count_Q &lt;- function(num_letters = 5){
-  sample_letters &lt;- LETTERS %&gt;% 
-    sample(size = num_letters, replace = TRUE)
   
-  length(sample_letters[sample_letters == 'Q'])
+  # draw n letters
+  sample_letters &lt;- draw_n_letters(num_letters)
+  
+  # return the number of Q's
+  sum(sample_letters == 'Q')
 }
 
 count_Q(100)
 ```
 
 ```
-[1] 7
+[1] 10
 ```
 
 ---
 
 ## Repeating Commands with `replicate`
 
-TODO: Questioning lifecycle 
+TODO: Questioning lifecycle ; okay here's the approach:
+create functions to draw the variable, compute the summary statistic, and replicate the heck out of it. Histogram that distribution.
 
 
 ```r
@@ -144,16 +313,34 @@ replicate(5, draw_n_letters(10))
 
 ```
       [,1] [,2] [,3] [,4] [,5]
- [1,] "E"  "Q"  "G"  "J"  "J" 
- [2,] "K"  "K"  "Q"  "I"  "V" 
- [3,] "O"  "R"  "E"  "W"  "Y" 
- [4,] "U"  "W"  "V"  "Z"  "V" 
- [5,] "B"  "B"  "T"  "S"  "Q" 
- [6,] "Y"  "Z"  "R"  "I"  "U" 
- [7,] "F"  "J"  "Z"  "K"  "L" 
- [8,] "A"  "D"  "I"  "S"  "U" 
- [9,] "N"  "T"  "K"  "U"  "F" 
-[10,] "P"  "O"  "F"  "D"  "O" 
+ [1,] "P"  "V"  "B"  "B"  "T" 
+ [2,] "V"  "T"  "Y"  "Z"  "R" 
+ [3,] "X"  "W"  "F"  "J"  "Z" 
+ [4,] "A"  "V"  "A"  "D"  "I" 
+ [5,] "F"  "Z"  "N"  "T"  "K" 
+ [6,] "K"  "M"  "P"  "O"  "F" 
+ [7,] "I"  "E"  "Q"  "G"  "J" 
+ [8,] "V"  "K"  "K"  "Q"  "I" 
+ [9,] "Z"  "O"  "R"  "E"  "W" 
+[10,] "V"  "U"  "W"  "V"  "Z" 
+```
+
+```r
+rep(1:20, each = 2)
+```
+
+```
+ [1]  1  1  2  2  3  3  4  4  5  5  6  6  7  7  8  8  9  9 10 10 11 11 12 12
+[25] 13 13 14 14 15 15 16 16 17 17 18 18 19 19 20 20
+```
+
+```r
+rep(1:20, times = 2)
+```
+
+```
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20  1  2  3  4
+[25]  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
 ```
 
 ---
@@ -164,9 +351,14 @@ Draw a bunch of samples and compute statistic:
 
 
 ```r
-Q &lt;- replicate(1000, count_Q(1000))
+Q &lt;- replicate(10000, count_Q(1000))
 
-hist(Q)
+tibble(Q) %&gt;% 
+  ggplot() +
+  geom_histogram(aes(x=Q, y = ..density..), color = 'black', binwidth = 3) +
+  labs(x = 'Number of Qs in a Random String of Size 1000',
+       y = 'Probability') +
+  theme_bw()
 ```
 
 &lt;img src="07-Probability_files/figure-html/monte carlo-1.png" width="600" style="display: block; margin: auto;" /&gt;

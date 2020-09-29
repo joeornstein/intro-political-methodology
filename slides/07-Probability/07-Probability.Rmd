@@ -34,35 +34,99 @@ set.seed(42)
 ```
 
 
+## Outline
+
 A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way! 
 
-We'll start by learning some functions to draw random values in `R`.
+We'll start by learning some functions to draw random values in `R` (from probability distribution functions).
 
 Then Law of Large Numbers, Bayes Rule, Central Limit Theorem
 
 Random Variables and their properties: Expectation, Variance, Covariance
 
+As a bonus, you'll get to practice creating your own functions...very useful when you want to customize / mix-and-match the built-in functions we've learned.
 
 ---
 
+# Warm Up
 
-## Generating Random Numbers in `R`
+- Create an `.R` script where you can keep all your code from this session.
 
-The `sample` function draws values at random from a vector:
+- Load `tidyverse`
 
-```{r sample}
-x <- 1:20
+--
 
-sample(x, size = 1)
+- Create a object `x` and assign it a vector with the elements 1, 2, 3, and 4.
 
-sample(x, size = 1)
+--
 
-sample(x, size = 100, replace = TRUE)
+```{r vector x}
+x <- c(1,2,3,4)
+
+# this works too
+x <- 1:4
+```
+
+--
+
+- Find the sum of your vector `x` using a function.
+
+```{r sum x}
+sum(x)
 ```
 
 ---
 
-## Generating Random Numbers in `R`
+# Probability Distribution Functions (PDF)
+
+A special kind of function that describes the likelihood of random events.
+(Probability not about coin flips and card games; probability is a function that characterizes our uncertainty over outcomes)
+
+Functions take inputs and produce outputs. PDFs output the probability of an event.
+
+Heads -> P() -> 0.5
+
+Tails -> P() -> 0.5
+
+P(x) = probability of x
+
+$P(x) \geq 0$
+
+$\sum P(x) = 1$ (for all possible values of x)
+
+???
+
+(As Wasserman says, rigor and clarity not synonymous; if you want rigor, check out the books.)
+
+---
+
+## Example PDF: Flipping a Coin
+
+$\Omega =$ {heads, tails}
+
+$P(\text{heads}) = 0.5$
+
+$P(\text{tails}) = 0.5$
+
+---
+
+## Generating Random Values in `R`
+
+The `sample` function draws values at random from a vector:
+
+```{r sample}
+coin_outcomes <- c('Heads', 'Tails')
+
+sample(coin_outcomes, size = 1)
+
+sample(coin_outcomes, size = 1)
+
+sample(coin_outcomes, size = 30, replace = TRUE)
+```
+
+---
+
+## Generating Random Values in `R`
 
 **Exercise**: Draw 5 random letters. (Note: the vector `LETTERS` is built-in to R.)
 
@@ -74,8 +138,77 @@ sample(LETTERS, size = 5, replace = TRUE)
 
 ---
 
-## Generating Random Numbers
+class: center, middle
 
+## Creating Your Own Functions
+
+---
+
+## Creating Your Own Functions
+
+Here's a function that takes two inputs and adds 1 to their sum:
+
+```{r funtion syntax}
+add_one <- function(x, y = 1){
+  x + y + 1
+}
+
+add_one(x = 1, y = 2)
+
+add_one(1)
+```
+
+--
+
+- `add_one` is the name
+- `<- function()` assigns a function to that name
+- `x, y = 1` are the inputs (aka arguments); `y` has a default value of 1.
+- The code within the brackets executes whenever you call the function, and the last line is the function's output.
+
+???
+
+- An **enormous** strength of working with `R`
+
+- Get comfortable with creating your own functions, and you can make `R` do whatever you want.
+
+---
+
+## Creating Your Own Functions
+
+```{r flip coin}
+flip_coin <- function(N = 100){
+  # specify the sample space of outcomes
+  coin_outcomes <- c('Heads', 'Tails')
+  
+  # return a vector of N random coin flips
+  sample(coin_outcomes,
+         size = N,
+         replace = TRUE)
+}
+
+flip_coin(N = 8)
+```
+
+---
+
+## Creating Your Own Functions
+
+```{r fraction_heads()}
+fraction_heads <- function(N){
+  
+  # flip the coin N times, assign to 'flips' vector
+  flips <- flip_coin(N)
+  
+  # return the number of heads divided by number of flips
+  sum(flips == 'Heads') / N
+}
+```
+
+--
+
+```{r call fraction_heads}
+fraction_heads(N = 100)
+```
 
 ---
 
@@ -87,12 +220,18 @@ draw_n_letters <- function(num_letters = 5){
 }
 
 draw_n_letters(num_letters = 10)
+```
 
+--
+
+```{r create function 2}
 count_Q <- function(num_letters = 5){
-  sample_letters <- LETTERS %>% 
-    sample(size = num_letters, replace = TRUE)
   
-  length(sample_letters[sample_letters == 'Q'])
+  # draw n letters
+  sample_letters <- draw_n_letters(num_letters)
+  
+  # return the number of Q's
+  sum(sample_letters == 'Q')
 }
 
 count_Q(100)
@@ -102,10 +241,16 @@ count_Q(100)
 
 ## Repeating Commands with `replicate`
 
-TODO: Questioning lifecycle 
+TODO: Questioning lifecycle ; okay here's the approach:
+create functions to draw the variable, compute the summary statistic, and replicate the heck out of it. Histogram that distribution.
 
 ```{r replicate}
 replicate(5, draw_n_letters(10))
+
+rep(1:20, each = 2)
+
+rep(1:20, times = 2)
+
 ```
 
 ---
@@ -115,7 +260,12 @@ replicate(5, draw_n_letters(10))
 Draw a bunch of samples and compute statistic:
 
 ```{r monte carlo, out.wdith = '50%'}
-Q <- replicate(1000, count_Q(1000))
+Q <- replicate(10000, count_Q(1000))
 
-hist(Q)
+tibble(Q) %>% 
+  ggplot() +
+  geom_histogram(aes(x=Q, y = ..density..), color = 'black', binwidth = 3) +
+  labs(x = 'Number of Qs in a Random String of Size 1000',
+       y = 'Probability') +
+  theme_bw()
 ```
