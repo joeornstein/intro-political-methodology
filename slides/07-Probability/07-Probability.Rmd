@@ -1,5 +1,5 @@
 ---
-title: "Probability Theory"
+title: "Probability & Inference"
 # author: "Joseph T. Ornstein"
 # date: "June 12, 2020"
 output:
@@ -8,7 +8,7 @@ output:
       highlightStyle: github
       countIncrementalSlides: false
 subtitle: 'POLS 7012: Introduction to Political Methodology'
-institute: University of Georgia
+# institute: University of Georgia
 ---
 
 <style>
@@ -38,11 +38,15 @@ set.seed(42)
 
 A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way! 
 
-We'll start by learning some functions to draw random values in `R` (from probability distribution functions).
+We'll start by learning about probability distribution functions, and learn how to draw random values in `R`.
 
-Then Law of Large Numbers, Bayes Rule, Central Limit Theorem
+We'll see how this procedure underlies **all** statistical inference.
 
-Random Variables and their properties: Expectation, Variance, Covariance
+Then, I think, Central Limit Theorem. A little backwards compared to the usual approach, but trust me, let's front-load the good stuff.
+
+Random Variables and their properties: Expectation, Variance, Law of Large Numbers
+
+Multivariable PDFs: Covariance, Joint Probability, Conditional Probability, Bayes Rule
 
 As a bonus, you'll get to practice creating your own functions...very useful when you want to customize / mix-and-match the built-in functions we've learned.
 
@@ -50,9 +54,9 @@ As a bonus, you'll get to practice creating your own functions...very useful whe
 
 # Warm Up
 
-- Create an `.R` script where you can keep all your code from this session.
+- Create an `R` project where you can keep all your code from this session.
 
-- Load `tidyverse`
+- Create `week7.R` in your project folder. Load `tidyverse`.
 
 --
 
@@ -69,32 +73,119 @@ x <- 1:4
 
 --
 
-- Find the sum of your vector `x` using a function.
+- Find the sum of your vector `x`. Find the length of your vector `x`
 
-```{r sum x}
+--
+
+```{r x functions}
 sum(x)
+
+length(x)
 ```
 
 ---
 
-# Probability Distribution Functions (PDF)
+# Warm Up
+
+- What does this expression mean?
+
+$$\int_{-\infty}^{+\infty} f(x)dx = 1$$
+--
+
+The area under the entire curve $f(x)$, from positive to negative infinity, equals $1$. 
+
+--
+
+<br>
+
+Keep a copy of these slides open so that you can copy-paste code into your script when needed!
+
+---
+
+## Learning Objectives
+
+By the end of this module, you will be able to...
+
+- Write your own functions and generate random values in `R`
+
+- Explain several foundational concepts in probability theory
+  - Probability Distribution Functions (PDFs)
+  - Random Variables
+  - Expectation
+  - the Law of Large Numbers
+  - the (amazing) Central Limit Theorem
+  - Bayes Rule
+
+- Make inferences about populations from sample data
+
+---
+
+class: center, middle
+
+## The Trick Coin Problem
+
+---
+
+## The Trick Coin Problem
+
+Suppose someone flips a coin 100 times and it lands on heads 65 times.
+
+```{r coin gif, echo = FALSE}
+knitr::include_graphics('img/flipping-coin-animated-gif-1.gif')
+```
+
+--
+
+**The Challenge:** Is it a trick coin? Or did they just get lucky? How would we know? What is the *probability* of getting that many heads with a fair coin?
+
+---
+
+## The Trick Coin
+
+**Our Approach**: Take a fair coin, flip it an enormous number of times, and see how often you get 65 heads in 100 flips.
+
+--
+
+```{r schitts creek gif, echo = FALSE, out.width = '70%'}
+knitr::include_graphics('img/schitts-creek.gif')
+```
+
+On second thought, that would be exhausting, so let's make the computer do it instead.
+
+---
+
+class: center, middle
+
+## Probability Distribution Functions (PDFs)
+
+---
+
+## Probability Distribution Functions (PDFs)
 
 A special kind of function that describes the likelihood of random events.
-(Probability not about coin flips and card games; probability is a function that characterizes our uncertainty over outcomes)
 
-Functions take inputs and produce outputs. PDFs output the probability of an event.
+--
 
-Heads -> P() -> 0.5
-
-Tails -> P() -> 0.5
-
-P(x) = probability of x
+### Property 1
 
 $P(x) \geq 0$
 
-$\sum P(x) = 1$ (for all possible values of x)
+Nothing has a less-than-zero chance of happening.
+
+--
+
+### Property 2
+
+$\sum P(x) = 1$
+
+The probability of **something** happening equals 1.
 
 ???
+
+- (Probability not about coin flips and card games; probability is a function that characterizes our uncertainty over outcomes)
+
+Functions take inputs and produce outputs. PDFs output the probability of an event.
+
 
 (As Wasserman says, rigor and clarity not synonymous; if you want rigor, check out the books.)
 
@@ -102,25 +193,39 @@ $\sum P(x) = 1$ (for all possible values of x)
 
 ## Example PDF: Flipping a Coin
 
-$\Omega =$ {heads, tails}
+$$\Omega = \{\text{heads}, \text{tails}\}$$
 
-$P(\text{heads}) = 0.5$
+$$P(\text{heads}) = 0.5$$
 
-$P(\text{tails}) = 0.5$
+$$P(\text{tails}) = 0.5$$
+
+--
+
+<br>
+
+For you logophiles out there, this is also known as the **Bernoulli** distribution.
+
+---
+
+class: center, middle
+
+## Generating Random Values
 
 ---
 
 ## Generating Random Values in `R`
 
-The `sample` function draws values at random from a vector:
+The `sample` function draws values at random (with equal probability) from a vector:
 
 ```{r sample}
 coin_outcomes <- c('Heads', 'Tails')
 
 sample(coin_outcomes, size = 1)
+```
 
-sample(coin_outcomes, size = 1)
+--
 
+```{r sample 2}
 sample(coin_outcomes, size = 30, replace = TRUE)
 ```
 
@@ -128,7 +233,21 @@ sample(coin_outcomes, size = 30, replace = TRUE)
 
 ## Generating Random Values in `R`
 
-**Exercise**: Draw 5 random letters. (Note: the vector `LETTERS` is built-in to R.)
+### Exercise 1
+
+Flip the coin 100 times, and assign the result to an object called `flips`.
+
+--
+
+```{r flip exercise}
+flips <- sample(coin_outcomes, size = 100, replace = TRUE)
+```
+
+--
+
+### Exercise 2
+
+Draw 5 letters at random from the alphabet. (Note: the vector `LETTERS` is built-in to R.)
 
 --
 
@@ -146,7 +265,15 @@ class: center, middle
 
 ## Creating Your Own Functions
 
-Here's a function that takes two inputs and adds 1 to their sum:
+- An **enormous** strength of working with `R`
+
+- Get comfortable with creating your own functions, and you can make `R` do whatever you want.
+
+---
+
+## Creating Your Own Functions
+
+Here's a (silly) function that takes two inputs and adds 1 to their sum:
 
 ```{r funtion syntax}
 add_one <- function(x, y = 1){
@@ -165,15 +292,11 @@ add_one(1)
 - `x, y = 1` are the inputs (aka arguments); `y` has a default value of 1.
 - The code within the brackets executes whenever you call the function, and the last line is the function's output.
 
-???
-
-- An **enormous** strength of working with `R`
-
-- Get comfortable with creating your own functions, and you can make `R` do whatever you want.
-
 ---
 
 ## Creating Your Own Functions
+
+Here's a function that will flip a coin $N$ times and return the result.
 
 ```{r flip coin}
 flip_coin <- function(N = 100){
@@ -192,6 +315,8 @@ flip_coin(N = 8)
 ---
 
 ## Creating Your Own Functions
+
+Here's a function that will flip a coin $N$ times and return the fraction that landed on heads. (**Note**: it calls the `flip_coin()` function we just made!)
 
 ```{r fraction_heads()}
 fraction_heads <- function(N){
@@ -214,6 +339,10 @@ fraction_heads(N = 100)
 
 ## Creating Your Own Functions
 
+### Exercise 1
+
+Create a function called `draw_n_letters()`, which draws $N$ letters at random from the alphabet.
+
 ```{r create function}
 draw_n_letters <- function(num_letters = 5){
   sample(LETTERS, size = num_letters, replace = TRUE)
@@ -221,6 +350,14 @@ draw_n_letters <- function(num_letters = 5){
 
 draw_n_letters(num_letters = 10)
 ```
+
+---
+
+## Creating Your Own Functions
+
+### Exercise 2
+
+Create a function called `count_Q()`, which draws $N$ letters from the alphabet at random and counts the number of Q's.
 
 --
 
@@ -239,19 +376,72 @@ count_Q(100)
 
 ---
 
-## Repeating Commands with `replicate`
+class: center, middle
+
+## Back to the Trick Coin Problem
+
+---
+
+## The Trick Coin Problem
+
+We can solve this now. We have the technology.
+
+--
+
+```{r call fraction_heads once}
+fraction_heads(N = 100)
+```
+
+--
+
+Let's repeat that 100,000 times and see how often you get 65% heads.
+
+--
+
+```{r replicate}
+# Flip a coin 100 times and count the fraction of heads. 
+# Repeat that 100,000 times and save the results
+results <- replicate(100000, fraction_heads(N = 100))
+```
+
+???
 
 TODO: Questioning lifecycle ; okay here's the approach:
 create functions to draw the variable, compute the summary statistic, and replicate the heck out of it. Histogram that distribution.
 
-```{r replicate}
-replicate(5, draw_n_letters(10))
+---
 
-rep(1:20, each = 2)
+## The Trick Coin Problem
 
-rep(1:20, times = 2)
-
+```{r hist coin flips, out.width = '65%'}
+tibble(results) %>% 
+  ggplot() +
+  geom_histogram(aes(x=results), color = 'black', 
+                 binwidth = 0.01) +
+  geom_vline(xintercept = 0.65, color = 'red') +
+  labs(x = 'Fraction Heads in 100 Fair Coin Flips',
+       y = 'Count')
 ```
+
+---
+
+## The Trick Coin Problem
+
+Compute p-value.
+
+By the way, that's called the **binomial** distribution. Sum of a bunch of Bernoulli random variables. 
+
+---
+
+class: center, middle
+
+## So What?
+
+---
+
+## The Polling Problem
+
+
 
 ---
 
@@ -277,7 +467,7 @@ $$E(X) = \int_{-\infty}^{+\infty} x f(x)dx$$
 
 ## Expected Value
 
-Suppose $X$ is distrubted as follows:
+Suppose $X$ is distributed as follows:
 
 $P(X = 0) = 1-p$ and $P(X = 1) = p$
 
