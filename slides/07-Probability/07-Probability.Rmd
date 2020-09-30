@@ -1,5 +1,5 @@
 ---
-title: "Probability & Inference"
+title: "Probability & Inference (Part 1?)"
 # author: "Joseph T. Ornstein"
 # date: "June 12, 2020"
 output:
@@ -316,23 +316,23 @@ flip_coin(N = 8)
 
 ## Creating Your Own Functions
 
-Here's a function that will flip a coin $N$ times and return the fraction that landed on heads. (**Note**: it calls the `flip_coin()` function we just made!)
+Here's a function that will flip a coin $N$ times and return the number that landed on heads. (**Note**: it calls the `flip_coin()` function we just made!)
 
-```{r fraction_heads()}
-fraction_heads <- function(N){
+```{r count_heads()}
+count_heads <- function(N){
   
   # flip the coin N times, assign to 'flips' vector
   flips <- flip_coin(N)
   
   # return the number of heads divided by number of flips
-  sum(flips == 'Heads') / N
+  sum(flips == 'Heads')
 }
 ```
 
 --
 
-```{r call fraction_heads}
-fraction_heads(N = 100)
+```{r call count_heads}
+count_heads(N = 100)
 ```
 
 ---
@@ -343,7 +343,9 @@ fraction_heads(N = 100)
 
 Create a function called `draw_n_letters()`, which draws $N$ letters at random from the alphabet.
 
-```{r create function}
+--
+
+```{r create draw letters function}
 draw_n_letters <- function(num_letters = 5){
   sample(LETTERS, size = num_letters, replace = TRUE)
 }
@@ -357,21 +359,21 @@ draw_n_letters(num_letters = 10)
 
 ### Exercise 2
 
-Create a function called `count_Q()`, which draws $N$ letters from the alphabet at random and counts the number of Q's.
+Create a function called `fraction_Q()`, which draws $N$ letters from the alphabet at random and returns the fraction that are Q's.
 
 --
 
 ```{r create function 2}
-count_Q <- function(num_letters = 5){
+fraction_Q <- function(num_letters = 5){
   
   # draw n letters
   sample_letters <- draw_n_letters(num_letters)
   
   # return the number of Q's
-  sum(sample_letters == 'Q')
+  sum(sample_letters == 'Q') / num_letters
 }
 
-count_Q(100)
+fraction_Q(100)
 ```
 
 ---
@@ -388,25 +390,25 @@ We can solve this now. We have the technology.
 
 --
 
-```{r call fraction_heads once}
-fraction_heads(N = 100)
+```{r call count_heads once}
+count_heads(N = 100)
 ```
 
 --
 
-Let's repeat that 100,000 times and see how often you get 65% heads.
+Let's repeat that 100,000 times and see how often you get 65 heads.
 
 --
 
 ```{r replicate}
-# Flip a coin 100 times and count the fraction of heads. 
+# Flip a coin 100 times and count the number of heads. 
 # Repeat that 100,000 times and save the results
-results <- replicate(100000, fraction_heads(N = 100))
+results <- replicate(100000, count_heads(N = 100))
 ```
 
 ???
 
-TODO: Questioning lifecycle ; okay here's the approach:
+TODO: Questioning lifecycle; okay here's the approach:
 create functions to draw the variable, compute the summary statistic, and replicate the heck out of it. Histogram that distribution.
 
 ---
@@ -417,11 +419,17 @@ create functions to draw the variable, compute the summary statistic, and replic
 tibble(results) %>% 
   ggplot() +
   geom_histogram(aes(x=results), color = 'black', 
-                 binwidth = 0.01) +
-  geom_vline(xintercept = 0.65, color = 'red') +
-  labs(x = 'Fraction Heads in 100 Fair Coin Flips',
+                 binwidth = 1) +
+  geom_vline(xintercept = 65, color = 'red') +
+  labs(x = 'Number of Heads in 100 Fair Coin Flips',
        y = 'Count')
 ```
+
+???
+
+Out of 100,000 tries we only got a result like 65 a handful of times. It's a low-frequency event.
+
+Next time I see that guy, I'm gonna say "hey let me see that coin". I can't prove it's fake, but, y'know, it's suspicious.
 
 ---
 
@@ -441,7 +449,44 @@ class: center, middle
 
 ## The Polling Problem
 
+**Exercise:** You've taken a random sample of 1,000 voters. 526 say they plan to vote for the Democrat and 474 say they plan to vote for the Republican.
 
+If 50% of all voters planned to vote for the Republican, what is the probability you would observe a poll so favorable to Democrats?
+
+---
+
+## The Polling Problem
+
+```{r polling problem}
+# create 100,000 random polls of 1,000 respondents each
+results <- replicate(100000, count_heads(N = 1000))
+
+# what's the probability of getting at least 526 Democratic voters?
+sum(results >= 526) / length(results)
+```
+
+```{r polling histogram, echo = FALSE, out.width = '65%'}
+tibble(results) %>% 
+  ggplot() +
+  geom_histogram(aes(x=results), color = 'black') +
+  geom_vline(xintercept = 526, color = 'red') +
+  labs(x = 'Support for Democrat in a Random Poll',
+       y = 'Number of Polls')
+```
+
+---
+
+That's called the sampling distribution. And that's the trick we use over and over and over and over again in empirical social science.
+
+(That weird trick is called **frequentist hypothesis testing**)
+
+1. Define your Null Hypothesis $(H_0)$
+
+2. Compute the distribution of the test statistic under $H_0$
+
+3. Compute the test statistic from your dataset.
+
+4. How unlikely is it?
 
 ---
 
@@ -515,12 +560,12 @@ Yep, about 1 million.
 Draw a bunch of samples and compute statistic:
 
 ```{r monte carlo, out.wdith = '50%'}
-Q <- replicate(10000, count_Q(1000))
+Q <- replicate(10000, fraction_Q(1000))
 
 tibble(Q) %>% 
   ggplot() +
   geom_histogram(aes(x=Q, y = ..density..), color = 'black', binwidth = 3) +
-  labs(x = 'Number of Qs in a Random String of Size 1000',
+  labs(x = 'Fraction of Qs in a Random String of Size 1000',
        y = 'Probability') +
   theme_bw()
 ```
