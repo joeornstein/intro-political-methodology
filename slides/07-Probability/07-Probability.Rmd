@@ -36,7 +36,7 @@ set.seed(42)
 
 ## Outline
 
-A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way! 
+A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way!
 
 We'll start by learning about probability distribution functions, and learn how to draw random values in `R`.
 
@@ -535,17 +535,114 @@ tibble(results) %>%
 
 ---
 
+## Statistical Inference
+
 That's called the sampling distribution. And that's the trick we use over and over and over and over again in empirical social science.
 
-(That weird trick is called **frequentist statistical inference**)
+That weird trick is called **frequentist statistical inference**.
+
+--
+
+### Three Steps
 
 1. Define your Null Hypothesis $(H_0)$
 
 2. Compute the distribution of the test statistic under $H_0$
 
-3. Compute the test statistic from your dataset.
+3. Compare the test statistic from your observed data with the null distribution.
 
-4. How unlikely is it?
+--
+
+Every (frequentist) hypothesis test is a variation on this! The only thing that changes is the PDF. 
+
+---
+
+class: center, middle
+
+## Uniform Distribution?
+
+---
+
+```{r runif}
+runif(1,0,1)
+```
+---
+
+class: center, middle
+
+## The Normal Distribution
+
+---
+
+## The Normal Distribution
+
+---
+
+## Structure
+
+expected values, 95% within 2 standard deviations, plot, etc.
+
+---
+
+class: center, middle
+
+## The Central Limit Theorem
+
+The sum (or mean) of a large number of independent random variables will be normally distributed.
+
+---
+
+Prove it
+
+<TODO: don't pull from a r function. pull from **data**>
+
+```{r load CCES}
+CCES <- read_rds('data/CCES_2018.RDS')
+
+ggplot(CCES) + 
+  geom_histogram(aes(x=2018-birthyr))
+```
+
+---
+
+```{r sample age}
+# draw a sample of age
+sample_ages <- function(data, n){
+  data %>% 
+    mutate(age = 2018 - birthyr) %>% 
+    pull(age) %>% 
+    sample(size = n, replace = FALSE)
+}
+
+sample_ages(data = CCES, n = 100)
+
+mean(sample_ages(data = CCES, n = 100))
+```
+
+---
+
+```{r repeat mean sample ages}
+replicate(10000, mean(sample_ages(data = CCES, n = 100))) %>% 
+  hist
+```
+
+---
+
+```{r clt}
+sum_rv <- function(m){
+  draws <- runif(m,0,1)
+  
+  # return the sum
+  sum(draws)
+}
+
+sum_of_random_variables <- function(n,m){
+  replicate(n, sum_rv(m))
+}
+
+sum_of_random_variables(n=100000, m = 50) %>% hist
+
+```
 
 ---
 
@@ -580,9 +677,6 @@ What is $E(X)$?
 --
 
 $$E(X) = 0(1-p) + 1p = p$$
---
-
-(This is called the Bernoulli Distribution)
 
 ---
 
@@ -590,41 +684,46 @@ class: center, middle
 
 ## The Law of Large Numbers
 
-If repeatedly draw a random variable a **large number of times**, the average draw will converge on the expected value.
+If you repeatedly draw a random variable a **large number of times**, the sample mean will converge on the expected value.
 
----
-
-## The Law of Large Numbers
-
-If repeatedly draw a random variable a **large number of times**, the average draw will converge on the expected value.
-
---
-
-**Example:** If you flip a coin 2 million times, roughly how many will be heads?
-
---
-
-Yep, about 1 million.
+$$\bar{X}_n \overset{P}{\to} E(X)$$
 
 ---
 
 ## Let's Prove It
 
+```{r law of large numbers}
+num_draws <- 100000 # draw 100,000 random Bernoulli draws
+p <- 0.4 # p = 0.4
 
+draws <- sample(c(0,1), num_draws, replace = TRUE, prob = c(1-p, p))
 
-<!-- --- -->
+# create a dataframe and plot sample mean as n increases
+fig <- tibble(n = 1:num_draws,
+       draws) %>% 
+  mutate(sample_mean = cumsum(draws) / n) %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x = n, y = sample_mean)) + 
+  geom_hline(yintercept = p, color = 'red', linetype = 'dashed') +
+  labs(x = 'n', y = 'Sample Mean')
+```
 
-<!-- ## Monte Carlo -->
+---
 
-<!-- Draw a bunch of samples and compute statistic: -->
+## Let's Prove It
 
-<!-- ```{r monte carlo, out.wdith = '50%'} -->
-<!-- Q <- replicate(100000, fraction_Q(1000)) -->
+```{r lln fig, echo = FALSE}
+fig
+```
 
-<!-- tibble(Q) %>%  -->
-<!--   ggplot() + -->
-<!--   geom_histogram(aes(x=Q), color = 'black', binwidth = 0.01) + -->
-<!--   labs(x = 'Fraction of Qs in a Random String of Size 1000', -->
-<!--        y = 'Probability') + -->
-<!--   theme_bw() -->
-<!-- ``` -->
+---
+
+## Confidence Intervals
+
+Man, what a wacky idea.
+
+The 95% confidence interval:
+
+If you were to repeat this procedure a large number of times, the true value would lie within the confidence interval 95% of the time. 
+
+Alternatively, it is the set of values for which we can't reject the null hypothesis with $p < 0.05$.

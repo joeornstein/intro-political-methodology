@@ -34,7 +34,7 @@ class: center, middle, inverse, title-slide
 
 ## Outline
 
-A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way! 
+A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way!
 
 We'll start by learning about probability distribution functions, and learn how to draw random values in `R`.
 
@@ -608,17 +608,142 @@ sum(results &gt;= 526) / length(results)
 
 ---
 
+## Statistical Inference
+
 That's called the sampling distribution. And that's the trick we use over and over and over and over again in empirical social science.
 
-(That weird trick is called **frequentist statistical inference**)
+That weird trick is called **frequentist statistical inference**.
+
+--
+
+### Three Steps
 
 1. Define your Null Hypothesis `\((H_0)\)`
 
 2. Compute the distribution of the test statistic under `\(H_0\)`
 
-3. Compute the test statistic from your dataset.
+3. Compare the test statistic from your observed data with the null distribution.
 
-4. How unlikely is it?
+--
+
+Every (frequentist) hypothesis test is a variation on this! The only thing that changes is the PDF. 
+
+---
+
+class: center, middle
+
+## Uniform Distribution?
+
+---
+
+
+```r
+runif(1,0,1)
+```
+
+```
+[1] 0.6147598
+```
+---
+
+class: center, middle
+
+## The Normal Distribution
+
+---
+
+## The Normal Distribution
+
+---
+
+## Structure
+
+expected values, 95% within 2 standard deviations, plot, etc.
+
+---
+
+class: center, middle
+
+## The Central Limit Theorem
+
+The sum (or mean) of a large number of independent random variables will be normally distributed.
+
+---
+
+Prove it
+
+&lt;TODO: don't pull from a r function. pull from **data**&gt;
+
+
+```r
+CCES &lt;- read_rds('data/CCES_2018.RDS')
+
+ggplot(CCES) + 
+  geom_histogram(aes(x=2018-birthyr))
+```
+
+&lt;img src="07-Probability_files/figure-html/load CCES-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+# draw a sample of age
+sample_ages &lt;- function(data, n){
+  data %&gt;% 
+    mutate(age = 2018 - birthyr) %&gt;% 
+    pull(age) %&gt;% 
+    sample(size = n, replace = FALSE)
+}
+
+sample_ages(data = CCES, n = 100)
+```
+
+```
+  [1] 54 40 66 69 57 68 29 27 56 40 50 64 83 28 38 30 65 65 23 38 47 76 18 21
+ [25] 47 80 60 23 45 48 76 69 60 76 78 44 60 80 53 53 36 65 50 52 70 46 65 56
+ [49] 39 74 22 63 40 49 27 22 61 37 32 45 27 68 28 61 18 52 63 35 47 33 77 72
+ [73] 29 74 35 54 39 35 55 54 23 27 65 32 62 56 42 67 23 63 27 54 38 59 38 62
+ [97] 62 19 38 80
+```
+
+```r
+mean(sample_ages(data = CCES, n = 100))
+```
+
+```
+[1] 45.78
+```
+
+---
+
+
+```r
+replicate(10000, mean(sample_ages(data = CCES, n = 100))) %&gt;% 
+  hist
+```
+
+&lt;img src="07-Probability_files/figure-html/repeat mean sample ages-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+sum_rv &lt;- function(m){
+  draws &lt;- runif(m,0,1)
+  
+  # return the sum
+  sum(draws)
+}
+
+sum_of_random_variables &lt;- function(n,m){
+  replicate(n, sum_rv(m))
+}
+
+sum_of_random_variables(n=100000, m = 50) %&gt;% hist
+```
+
+&lt;img src="07-Probability_files/figure-html/clt-1.png" width="600" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -653,9 +778,6 @@ What is `\(E(X)\)`?
 --
 
 `$$E(X) = 0(1-p) + 1p = p$$`
---
-
-(This is called the Bernoulli Distribution)
 
 ---
 
@@ -663,44 +785,48 @@ class: center, middle
 
 ## The Law of Large Numbers
 
-If repeatedly draw a random variable a **large number of times**, the average draw will converge on the expected value.
+If you repeatedly draw a random variable a **large number of times**, the sample mean will converge on the expected value.
 
----
-
-## The Law of Large Numbers
-
-If repeatedly draw a random variable a **large number of times**, the average draw will converge on the expected value.
-
---
-
-**Example:** If you flip a coin 2 million times, roughly how many will be heads?
-
---
-
-Yep, about 1 million.
+`$$\bar{X}_n \overset{P}{\to} E(X)$$`
 
 ---
 
 ## Let's Prove It
 
 
+```r
+num_draws &lt;- 100000 # draw 100,000 random Bernoulli draws
+p &lt;- 0.4 # p = 0.4
 
-&lt;!-- --- --&gt;
+draws &lt;- sample(c(0,1), num_draws, replace = TRUE, prob = c(1-p, p))
 
-&lt;!-- ## Monte Carlo --&gt;
+# create a dataframe and plot sample mean as n increases
+fig &lt;- tibble(n = 1:num_draws,
+       draws) %&gt;% 
+  mutate(sample_mean = cumsum(draws) / n) %&gt;% 
+  ggplot() + 
+  geom_line(mapping = aes(x = n, y = sample_mean)) + 
+  geom_hline(yintercept = p, color = 'red', linetype = 'dashed') +
+  labs(x = 'n', y = 'Sample Mean')
+```
 
-&lt;!-- Draw a bunch of samples and compute statistic: --&gt;
+---
 
-&lt;!-- ```{r monte carlo, out.wdith = '50%'} --&gt;
-&lt;!-- Q &lt;- replicate(100000, fraction_Q(1000)) --&gt;
+## Let's Prove It
 
-&lt;!-- tibble(Q) %&gt;%  --&gt;
-&lt;!--   ggplot() + --&gt;
-&lt;!--   geom_histogram(aes(x=Q), color = 'black', binwidth = 0.01) + --&gt;
-&lt;!--   labs(x = 'Fraction of Qs in a Random String of Size 1000', --&gt;
-&lt;!--        y = 'Probability') + --&gt;
-&lt;!--   theme_bw() --&gt;
-&lt;!-- ``` --&gt;
+&lt;img src="07-Probability_files/figure-html/lln fig-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Confidence Intervals
+
+Man, what a wacky idea.
+
+The 95% confidence interval:
+
+If you were to repeat this procedure a large number of times, the true value would lie within the confidence interval 95% of the time. 
+
+Alternatively, it is the set of values for which we can't reject the null hypothesis with `\(p &lt; 0.05\)`.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
