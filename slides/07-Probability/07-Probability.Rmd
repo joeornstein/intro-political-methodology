@@ -279,10 +279,6 @@ Here's a (silly) function that takes two inputs and adds 1 to their sum:
 add_one <- function(x, y = 1){
   x + y + 1
 }
-
-add_one(x = 1, y = 2)
-
-add_one(1)
 ```
 
 --
@@ -291,6 +287,39 @@ add_one(1)
 - `<- function()` assigns a function to that name
 - `x, y = 1` are the inputs (aka arguments); `y` has a default value of 1.
 - The code within the brackets executes whenever you call the function, and the last line is the function's output.
+
+---
+
+## Creating Your Own Functions
+
+Here's a (silly) function that takes two inputs and adds 1 to their sum:
+
+```{r funtion syntax 2}
+add_one <- function(x, y = 1){
+  x + y + 1
+}
+```
+
+What happens if you call `add_one(x = 1, y = 2)`?
+
+--
+
+```{r add one example 1}
+add_one(x = 1, y = 2)
+```
+
+--
+
+What about `add_one(1)`?
+
+--
+
+```{r add one example 2}
+add_one(1)
+```
+
+
+
 
 ---
 
@@ -334,6 +363,10 @@ count_heads <- function(N){
 ```{r call count_heads}
 count_heads(N = 100)
 ```
+
+???
+
+Functions are like Las Vegas.
 
 ---
 
@@ -425,6 +458,22 @@ tibble(results) %>%
        y = 'Count')
 ```
 
+---
+
+## The Trick Coin Problem
+
+```{r hist coin flips 2, out.width = '40%'}
+tibble(results) %>% 
+  ggplot() +
+  geom_histogram(aes(x=results), color = 'black', 
+                 binwidth = 1) +
+  geom_vline(xintercept = 65, color = 'red') +
+  labs(x = 'Number of Heads in 100 Fair Coin Flips',
+       y = 'Count')
+```
+
+By the way, that's called the **binomial** distribution. Take $n$ Bernoulli random variables and add them together. 
+
 ???
 
 Out of 100,000 tries we only got a result like 65 a handful of times. It's a low-frequency event.
@@ -435,9 +484,19 @@ Next time I see that guy, I'm gonna say "hey let me see that coin". I can't prov
 
 ## The Trick Coin Problem
 
-Compute p-value.
+A **p-value** is the probability that we observe a result at least as extreme as our test statistic.
 
-By the way, that's called the **binomial** distribution. Sum of a bunch of Bernoulli random variables. 
+--
+
+```{r compute p-value}
+p <- sum(results >= 65) / length(results)
+
+p
+```
+
+--
+
+The probability of getting 65 or more heads from a fair coin is roughly 0.1%.
 
 ---
 
@@ -468,7 +527,7 @@ sum(results >= 526) / length(results)
 ```{r polling histogram, echo = FALSE, out.width = '65%'}
 tibble(results) %>% 
   ggplot() +
-  geom_histogram(aes(x=results), color = 'black') +
+  geom_histogram(aes(x=results), color = 'black', binwidth = 5) +
   geom_vline(xintercept = 526, color = 'red') +
   labs(x = 'Support for Democrat in a Random Poll',
        y = 'Number of Polls')
@@ -478,7 +537,7 @@ tibble(results) %>%
 
 That's called the sampling distribution. And that's the trick we use over and over and over and over again in empirical social science.
 
-(That weird trick is called **frequentist hypothesis testing**)
+(That weird trick is called **frequentist statistical inference**)
 
 1. Define your Null Hypothesis $(H_0)$
 
@@ -553,19 +612,19 @@ Yep, about 1 million.
 
 
 
----
+<!-- --- -->
 
-## Monte Carlo
+<!-- ## Monte Carlo -->
 
-Draw a bunch of samples and compute statistic:
+<!-- Draw a bunch of samples and compute statistic: -->
 
-```{r monte carlo, out.wdith = '50%'}
-Q <- replicate(10000, fraction_Q(1000))
+<!-- ```{r monte carlo, out.wdith = '50%'} -->
+<!-- Q <- replicate(100000, fraction_Q(1000)) -->
 
-tibble(Q) %>% 
-  ggplot() +
-  geom_histogram(aes(x=Q, y = ..density..), color = 'black', binwidth = 3) +
-  labs(x = 'Fraction of Qs in a Random String of Size 1000',
-       y = 'Probability') +
-  theme_bw()
-```
+<!-- tibble(Q) %>%  -->
+<!--   ggplot() + -->
+<!--   geom_histogram(aes(x=Q), color = 'black', binwidth = 0.01) + -->
+<!--   labs(x = 'Fraction of Qs in a Random String of Size 1000', -->
+<!--        y = 'Probability') + -->
+<!--   theme_bw() -->
+<!-- ``` -->
