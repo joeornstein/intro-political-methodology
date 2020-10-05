@@ -112,8 +112,9 @@ By the end of this module, you will be able to...
   - Probability Distribution Functions (PDFs)
   - Random Variables
   - Expectation
-  - the Law of Large Numbers
-  - the (amazing) Central Limit Theorem
+  - Variance
+  - Central Limit Theorem
+  - Law of Large Numbers
   - Bayes Rule
 
 - Make inferences about populations from sample data
@@ -140,9 +141,9 @@ knitr::include_graphics('img/flipping-coin-animated-gif-1.gif')
 
 ---
 
-## The Trick Coin
+## The Trick Coin Problem
 
-**Our Approach**: Take a fair coin, flip it an enormous number of times, and see how often you get 65 heads in 100 flips.
+**Our Approach**: Take a fair coin, flip it 10 million times, and see how often we get 65 heads in 100 flips.
 
 --
 
@@ -168,7 +169,7 @@ A special kind of function that describes the likelihood of random events.
 
 ### Property 1
 
-$P(x) \geq 0$
+$$P(x) \geq 0$$
 
 Nothing has a less-than-zero chance of happening.
 
@@ -176,7 +177,7 @@ Nothing has a less-than-zero chance of happening.
 
 ### Property 2
 
-$\sum P(x) = 1$
+$$\sum_{x \in \Omega} P(x) = 1$$
 
 The probability of **something** happening equals 1.
 
@@ -185,7 +186,6 @@ The probability of **something** happening equals 1.
 - (Probability not about coin flips and card games; probability is a function that characterizes our uncertainty over outcomes)
 
 Functions take inputs and produce outputs. PDFs output the probability of an event.
-
 
 (As Wasserman says, rigor and clarity not synonymous; if you want rigor, check out the books.)
 
@@ -204,6 +204,9 @@ $$P(\text{tails}) = 0.5$$
 <br>
 
 For you logophiles out there, this is also known as the **Bernoulli** distribution.
+
+ - Two outcomes (0 and 1)
+ - $P(1) = p$ and $P(0) = 1-p$
 
 ---
 
@@ -374,16 +377,16 @@ Functions are like Las Vegas.
 
 ### Exercise 1
 
-Create a function called `draw_n_letters()`, which draws $N$ letters at random from the alphabet.
+Create a function called `sample_n_letters()`, which samples $N$ letters at random from the alphabet.
 
 --
 
-```{r create draw letters function}
-draw_n_letters <- function(num_letters = 5){
+```{r create sample letters function}
+sample_n_letters <- function(num_letters = 5){
   sample(LETTERS, size = num_letters, replace = TRUE)
 }
 
-draw_n_letters(num_letters = 10)
+sample_n_letters(num_letters = 10)
 ```
 
 ---
@@ -392,7 +395,7 @@ draw_n_letters(num_letters = 10)
 
 ### Exercise 2
 
-Create a function called `fraction_Q()`, which draws $N$ letters from the alphabet at random and returns the fraction that are Q's.
+Create a function called `fraction_Q()`, which samples $N$ letters from the alphabet at random and returns the fraction that are Q's.
 
 --
 
@@ -400,7 +403,7 @@ Create a function called `fraction_Q()`, which draws $N$ letters from the alphab
 fraction_Q <- function(num_letters = 5){
   
   # draw n letters
-  sample_letters <- draw_n_letters(num_letters)
+  sample_letters <- sample_n_letters(num_letters)
   
   # return the number of Q's
   sum(sample_letters == 'Q') / num_letters
@@ -489,9 +492,8 @@ A **p-value** is the probability that we observe a result at least as extreme as
 --
 
 ```{r compute p-value}
-p <- sum(results >= 65) / length(results)
-
-p
+# the frequency of draws >= 65 as a fraction of all draws
+sum(results >= 65) / length(results)
 ```
 
 --
@@ -547,15 +549,50 @@ That weird trick is called **frequentist statistical inference**.
 
 1. Define your Null Hypothesis $(H_0)$
 
-2. Compute the distribution of the test statistic under $H_0$
+2. Construct the **sampling distribution** of the test statistic under $H_0$
 
-3. Compare the test statistic from your observed data with the null distribution.
+3. Compare the test statistic from your observed data with the sampling distribution.
 
 --
 
 Every (frequentist) hypothesis test is a variation on this! The only thing that changes is the PDF. 
 
 ---
+
+class: center, middle
+
+## Expected Value and Variance
+
+---
+
+## Expected Value
+
+The **expected value** is the average value of a random variable $X$.
+
+- Specifically, a *weighted average* of all possible outcomes times their probability.
+
+Discrete: 
+$$E(X) = \sum_x x f(x)$$
+
+Continuous:
+$$E(X) = \int_{-\infty}^{+\infty} x f(x)dx$$
+
+---
+
+## Expected Value
+
+Suppose $X$ is distributed as follows:
+
+$P(X = 0) = 1-p$ and $P(X = 1) = p$
+
+What is $E(X)$?
+
+--
+
+$$E(X) = 0(1-p) + 1p = p$$
+
+---
+
 
 class: center, middle
 
@@ -579,7 +616,7 @@ expected values, 95% within 2 standard deviations, plot, etc.
 
 ## Import CCES
 
-```{r load CCES, out.width = '60%'}
+```{r load CCES, out.width = '50%'}
 CCES <- read_rds('data/CCES_2018.RDS') %>% 
   mutate(age = 2018 - birthyr)
 
@@ -622,8 +659,7 @@ draws <- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
 tibble(draws) %>% 
   ggplot() + 
   geom_histogram(mapping = aes(x=draws), color = 'black') +
-  labs(x = 'Mean Age From Sample', 
-       y = 'Count')
+  labs(x = 'Mean Age From Sample', y = 'Count')
 ```
 
 --
@@ -652,37 +688,56 @@ Imagine that each ball is a sample: when it goes left that means we randomly sel
 
 class: center, middle
 
-## Expected Value
+## Standard Errors
 
 ---
 
-## Expected Value
+## Standard Errors
 
-The **expected value** is the average value of a random variable $X$.
-
-- Specifically, a *weighted average* of all possible outcomes times their probability.
-
-Discrete: 
-$$E(X) = \sum_x x f(x)$$
-
-Continuous:
-$$E(X) = \int_{-\infty}^{+\infty} x f(x)dx$$
-
----
-
-## Expected Value
-
-Suppose $X$ is distributed as follows:
-
-$P(X = 0) = 1-p$ and $P(X = 1) = p$
-
-What is $E(X)$?
+The **standard error** is the standard deviation of the sampling distribution. 
 
 --
 
-$$E(X) = 0(1-p) + 1p = p$$
+> What is the standard deviation of the sampling distribution you just created?
+
+--
+
+```{r standard error}
+sd(draws)
+```
+
+--
+
+> What if you increased the sample size to 400?
+
+--
+
+```{r quadruple sample size}
+draws <- replicate(10000, mean_age_of_sample(data = CCES, n = 400))
+
+sd(draws)
+```
+
 
 ---
+
+## Standard Errors
+
+Quadrupling the sample size cut the standard error in half.
+
+--
+
+That's because standard error equals:
+
+$$SE = \frac{\sigma}{\sqrt{N}}$$
+--
+
+<br>
+
+What happens to the standard error as $N \to \infty$?
+
+---
+
 
 class: center, middle
 
@@ -692,12 +747,16 @@ If you repeatedly draw a random variable a **large number of times**, the sample
 
 $$\bar{X}_n \overset{P}{\to} E(X)$$
 
+???
+
+Quite easy to understand Law of Large Numbers once you understand CLT.
+
 ---
 
 ## Let's Prove It
 
 ```{r law of large numbers}
-num_draws <- 100000 # draw 100,000 random Bernoulli draws
+num_draws <- 10000 # draw 10,000 Benoulli random variables
 p <- 0.4 # p = 0.4
 
 draws <- sample(c(0,1), num_draws, replace = TRUE, prob = c(1-p, p))
@@ -719,6 +778,13 @@ fig <- tibble(n = 1:num_draws,
 ```{r lln fig, echo = FALSE}
 fig
 ```
+
+
+---
+
+class: center, middle
+
+## Confidence Intervals
 
 ---
 
@@ -758,15 +824,4 @@ CCES %>%
   group_by(rich) %>% 
   summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
             num = n())
-
-CCES %>% 
-  filter(!is.na(CC18_325b)) %>% 
-  mutate(rich = if_else(faminc_new >= 10, 1, 0),
-         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
-                                          CC18_325b == 2 ~ 0)) %>%
-  group_by(rich) %>% 
-  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
-            num = n())
-
-
 ```

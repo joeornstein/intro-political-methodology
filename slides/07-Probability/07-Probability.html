@@ -422,17 +422,17 @@ Functions are like Las Vegas.
 
 ### Exercise 1
 
-Create a function called `draw_n_letters()`, which draws `\(N\)` letters at random from the alphabet.
+Create a function called `sample_n_letters()`, which samples `\(N\)` letters at random from the alphabet.
 
 --
 
 
 ```r
-draw_n_letters &lt;- function(num_letters = 5){
+sample_n_letters &lt;- function(num_letters = 5){
   sample(LETTERS, size = num_letters, replace = TRUE)
 }
 
-draw_n_letters(num_letters = 10)
+sample_n_letters(num_letters = 10)
 ```
 
 ```
@@ -445,7 +445,7 @@ draw_n_letters(num_letters = 10)
 
 ### Exercise 2
 
-Create a function called `fraction_Q()`, which draws `\(N\)` letters from the alphabet at random and returns the fraction that are Q's.
+Create a function called `fraction_Q()`, which samples `\(N\)` letters from the alphabet at random and returns the fraction that are Q's.
 
 --
 
@@ -454,7 +454,7 @@ Create a function called `fraction_Q()`, which draws `\(N\)` letters from the al
 fraction_Q &lt;- function(num_letters = 5){
   
   # draw n letters
-  sample_letters &lt;- draw_n_letters(num_letters)
+  sample_letters &lt;- sample_n_letters(num_letters)
   
   # return the number of Q's
   sum(sample_letters == 'Q') / num_letters
@@ -560,9 +560,8 @@ A **p-value** is the probability that we observe a result at least as extreme as
 
 
 ```r
-p &lt;- sum(results &gt;= 65) / length(results)
-
-p
+# the frequency of draws &gt;= 65 as a fraction of all draws
+sum(results &gt;= 65) / length(results)
 ```
 
 ```
@@ -620,9 +619,9 @@ That weird trick is called **frequentist statistical inference**.
 
 1. Define your Null Hypothesis `\((H_0)\)`
 
-2. Compute the distribution of the test statistic under `\(H_0\)`
+2. Construct the **sampling distribution** of the test statistic under `\(H_0\)`
 
-3. Compare the test statistic from your observed data with the null distribution.
+3. Compare the test statistic from your observed data with the sampling distribution.
 
 --
 
@@ -632,115 +631,7 @@ Every (frequentist) hypothesis test is a variation on this! The only thing that 
 
 class: center, middle
 
-## The Normal Distribution
-
----
-
-## The Normal Distribution
-
----
-
-## Structure
-
-expected values, 95% within 2 standard deviations, plot, etc.
-
----
-
-## Where Does The Normal Distribution Come From?
-
----
-
-## Import CCES
-
-
-```r
-CCES &lt;- read_rds('data/CCES_2018.RDS')
-
-ggplot(data = CCES) + 
-  geom_histogram(aes(x=2018-birthyr), color = 'black') +
-  labs(x = 'Age', y = 'Count')
-```
-
-&lt;img src="07-Probability_files/figure-html/load CCES-1.png" width="600" style="display: block; margin: auto;" /&gt;
-
----
-
-## Take a Sample
-
-
-```r
-# draw a sample of age
-sample_ages &lt;- function(data, n){
-  data %&gt;%
-    mutate(age = 2018 - birthyr) %&gt;% 
-    pull(age) %&gt;% 
-    sample(size = n, replace = FALSE)
-}
-
-sample_ages(data = CCES, n = 100)
-```
-
-```
-  [1] 21 24 37 63 26 29 41 83 42 27 75 54 28 25 48 43 75 55 70 49 73 19 30 44
- [25] 73 53 48 67 82 52 56 68 62 68 37 20 62 38 50 81 61 73 29 27 74 28 31 41
- [49] 35 81 62 32 50 25 55 28 39 40 21 26 59 62 64 73 39 28 44 56 36 28 67 47
- [73] 23 47 81 32 76 29 61 35 67 47 26 40 57 23 39 78 53 60 42 60 43 57 23 51
- [97] 30 28 49 52
-```
-
-```r
-mean(sample_ages(data = CCES, n = 100))
-```
-
-```
-[1] 47.23
-```
-
----
-
-
-```r
-replicate(10000, mean(sample_ages(data = CCES, n = 100))) %&gt;% 
-  hist
-```
-
-&lt;img src="07-Probability_files/figure-html/repeat mean sample ages-1.png" width="600" style="display: block; margin: auto;" /&gt;
-
----
-
-
-```r
-sum_rv &lt;- function(m){
-  draws &lt;- runif(m,0,1)
-  
-  # return the sum
-  sum(draws)
-}
-
-sum_of_random_variables &lt;- function(n,m){
-  replicate(n, sum_rv(m))
-}
-
-sum_of_random_variables(n=100000, m = 50) %&gt;% hist
-```
-
-&lt;img src="07-Probability_files/figure-html/clt-1.png" width="600" style="display: block; margin: auto;" /&gt;
-
----
-
-class: center, middle
-
-## The Central Limit Theorem
-
-The sum (or mean) of a large number of independent random variables will be normally distributed.
-
----
-
----
-
-class: center, middle
-
-## Expected Value
+## Expected Value and Variance
 
 ---
 
@@ -772,6 +663,183 @@ What is `\(E(X)\)`?
 
 ---
 
+
+class: center, middle
+
+## The Normal Distribution
+
+---
+
+## The Normal Distribution
+
+---
+
+## Structure
+
+expected values, 95% within 2 standard deviations, plot, etc.
+
+---
+
+## Where Does The Normal Distribution Come From?
+
+---
+
+## Import CCES
+
+
+```r
+CCES &lt;- read_rds('data/CCES_2018.RDS') %&gt;% 
+  mutate(age = 2018 - birthyr)
+
+ggplot(data = CCES) + 
+  geom_histogram(aes(x=age), color = 'black', binwidth = 2) +
+  labs(x = 'Age', y = 'Count')
+```
+
+&lt;img src="07-Probability_files/figure-html/load CCES-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+```r
+mean(CCES$age)
+```
+
+```
+[1] 48.08623
+```
+
+---
+
+## Take a Sample
+
+
+```r
+# draw a sample of ages and take the mean
+mean_age_of_sample &lt;- function(data, n){
+  data %&gt;%
+    pull(age) %&gt;%
+    sample(size = n) %&gt;%
+    mean
+}
+
+mean_age_of_sample(data = CCES, n = 100)
+```
+
+```
+[1] 47.68
+```
+
+```r
+mean_age_of_sample(data = CCES, n = 100)
+```
+
+```
+[1] 47.23
+```
+
+--
+
+The mean from any one sample will always be off a bit.
+
+---
+
+## The Sampling Distribution
+
+
+```r
+draws &lt;- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
+
+tibble(draws) %&gt;% 
+  ggplot() + 
+  geom_histogram(mapping = aes(x=draws), color = 'black') +
+  labs(x = 'Mean Age From Sample', 
+       y = 'Count')
+```
+
+&lt;img src="07-Probability_files/figure-html/repeat mean sample ages-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+--
+
+It's the normal distribution!
+
+---
+
+class: center, middle
+
+## The Central Limit Theorem
+
+The mean of a large number of independent random variables will be (approximately) normally distributed.
+
+---
+
+## Central Limit Theorem
+
+&lt;iframe width="860" height="455" src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Galton_box.webm" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+
+???
+
+Imagine that each ball is a sample: when it goes left that means we randomly selected a person younger than the average, when it goes right that means we randomly selected a person older than the average. Most samples end up pretty close to the true mean, but sometimes you get really unlucky and draw a bunch of old people or a bunch of young people.
+
+---
+
+class: center, middle
+
+## Sampling Distribution
+
+---
+
+## Standard Error
+
+.middle[
+The **standard error** is the standard deviation of the sampling distribution. 
+]
+
+---
+
+## Standard Error
+
+&gt; What is the standard deviation of the sampling distribution you just created?
+
+--
+
+
+```r
+sd(draws)
+```
+
+```
+[1] 1.769707
+```
+
+--
+
+&gt; What if you increased the sample size to 400?
+
+--
+
+
+```r
+draws &lt;- replicate(10000, mean_age_of_sample(data = CCES, n = 400))
+
+sd(draws)
+```
+
+```
+[1] 0.8921625
+```
+
+
+---
+
+## Standard Errors
+
+Quadrupling the sample size cut the standard error in half.
+
+--
+
+That's because standard error equals:
+
+`$$SE = \frac{\sigma}{\sqrt{N}}$$`
+---
+
 class: center, middle
 
 ## The Law of Large Numbers
@@ -779,6 +847,10 @@ class: center, middle
 If you repeatedly draw a random variable a **large number of times**, the sample mean will converge on the expected value.
 
 `$$\bar{X}_n \overset{P}{\to} E(X)$$`
+
+???
+
+Quite easy to understand Law of Large Numbers once you understand CLT.
 
 ---
 
@@ -807,6 +879,13 @@ fig &lt;- tibble(n = 1:num_draws,
 
 &lt;img src="07-Probability_files/figure-html/lln fig-1.png" width="600" style="display: block; margin: auto;" /&gt;
 
+
+---
+
+class: center, middle
+
+## Confidence Intervals
+
 ---
 
 ## Confidence Intervals
@@ -818,6 +897,73 @@ The 95% confidence interval:
 If you were to repeat this procedure a large number of times, the true value would lie within the confidence interval 95% of the time. 
 
 Alternatively, it is the set of values for which we can't reject the null hypothesis with `\(p &lt; 0.05\)`.
+
+---
+
+## Let's Do A Hypothesis Test
+
+
+```r
+CCES %&gt;% 
+  filter(ownhome &lt; 3,
+         !is.na(CC18_325b)) %&gt;% 
+  mutate(ownhome = case_when(ownhome == 1 ~ 'Own',
+                             ownhome == 2 ~ 'Rent'),
+         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
+                                          CC18_325b == 2 ~ 0)) %&gt;%
+  group_by(ownhome) %&gt;% 
+  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
+            num = n())
+```
+
+```
+# A tibble: 2 x 3
+  ownhome pct_supporting_reduced_MID   num
+  &lt;chr&gt;                        &lt;dbl&gt; &lt;int&gt;
+1 Own                          0.651 36348
+2 Rent                         0.635 20244
+```
+
+```r
+# respondents making over $100,000
+CCES %&gt;% 
+  filter(faminc_new %in% 1:16,
+         !is.na(CC18_325b)) %&gt;% 
+  mutate(rich = if_else(faminc_new &gt;= 10, 1, 0),
+         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
+                                          CC18_325b == 2 ~ 0)) %&gt;%
+  group_by(rich) %&gt;% 
+  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
+            num = n())
+```
+
+```
+# A tibble: 2 x 3
+   rich pct_supporting_reduced_MID   num
+  &lt;dbl&gt;                      &lt;dbl&gt; &lt;int&gt;
+1     0                      0.661 43045
+2     1                      0.593 10582
+```
+
+```r
+CCES %&gt;% 
+  filter(!is.na(CC18_325b)) %&gt;% 
+  mutate(rich = if_else(faminc_new &gt;= 10, 1, 0),
+         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
+                                          CC18_325b == 2 ~ 0)) %&gt;%
+  group_by(rich) %&gt;% 
+  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
+            num = n())
+```
+
+```
+# A tibble: 3 x 3
+   rich pct_supporting_reduced_MID   num
+  &lt;dbl&gt;                      &lt;dbl&gt; &lt;int&gt;
+1     0                      0.661 43045
+2     1                      0.602 16456
+3    NA                      0.663   338
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
