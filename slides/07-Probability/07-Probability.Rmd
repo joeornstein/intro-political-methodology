@@ -177,7 +177,9 @@ Nothing has a less-than-zero chance of happening.
 
 ### Property 2
 
-$$\sum_{x \in \Omega} P(x) = 1$$
+$$\sum_{x} P(x) = 1$$ (discrete)
+
+$$\int_{-\infty}^{+\infty} P(x)dx = 1$$ (continuous)
 
 The probability of **something** happening equals 1.
 
@@ -537,15 +539,36 @@ tibble(results) %>%
 
 ---
 
-## Statistical Inference
+## The Polling Problem
 
-That's called the sampling distribution. And that's the trick we use over and over and over and over again in empirical social science.
+```{r polling problem 2}
+# create 100,000 random polls of 1,000 respondents each
+results <- replicate(100000, count_heads(N = 1000))
 
-That weird trick is called **frequentist statistical inference**.
+# what's the probability of getting at least 526 Democratic voters?
+sum(results >= 526) / length(results)
+```
+
+```{r polling histogram 2, echo = FALSE, out.width = '45%'}
+tibble(results) %>% 
+  ggplot() +
+  geom_histogram(aes(x=results), color = 'black', binwidth = 5) +
+  geom_vline(xintercept = 526, color = 'red') +
+  labs(x = 'Support for Democrat in a Random Poll',
+       y = 'Number of Polls')
+```
+
+That's called the **sampling distribution**. If you understand that, then you understand frequentist statistical inference.
+
+???
+
+Because it's the one weird trick we use over and over and over and over again.
+
+---
+
+## Statistical Inference in Three Steps
 
 --
-
-### Three Steps
 
 1. Define your Null Hypothesis $(H_0)$
 
@@ -572,10 +595,10 @@ The **expected value** is the average value of a random variable $X$.
 - Specifically, a *weighted average* of all possible outcomes times their probability.
 
 Discrete: 
-$$E(X) = \sum_x x f(x)$$
+$$E(X) = \sum_x x P(x)$$
 
 Continuous:
-$$E(X) = \int_{-\infty}^{+\infty} x f(x)dx$$
+$$E(X) = \int_{-\infty}^{+\infty} x P(x)dx$$
 
 ---
 
@@ -589,10 +612,29 @@ What is $E(X)$?
 
 --
 
-$$E(X) = 0(1-p) + 1p = p$$
+$$E(X) = 0 \times (1-p) + 1 \times p = p$$
 
 ---
 
+## Properties of Expected Values
+
+$$E(aX) = aE(X)$$
+<TODO: Is this useful?>
+
+---
+
+## Variance
+
+The **variance** of a random variable $X$ is the average squared distance from the expected value. In math:
+
+$$\text{Var}(X) = \sigma^2_X = E[(X-E(X))^2]$$
+--
+
+The **standard deviation** $(\sigma)$ of a random variable $X$ is the square root of its variance.
+
+$$\sigma_X = \sqrt{\text{Var(X)}}$$
+
+---
 
 class: center, middle
 
@@ -600,15 +642,15 @@ class: center, middle
 
 ---
 
-## The Normal Distribution
+<br>
+
+```{r normal distribution structure, echo = FALSE}
+knitr::include_graphics('img/normal-distribution.png')
+```
 
 ---
 
-## Structure
-
-expected values, 95% within 2 standard deviations, plot, etc.
-
----
+class: center, middle
 
 ## Where Does The Normal Distribution Come From?
 
@@ -616,7 +658,7 @@ expected values, 95% within 2 standard deviations, plot, etc.
 
 ## Import CCES
 
-```{r load CCES, out.width = '50%'}
+```{r load CCES, out.width = '40%'}
 CCES <- read_rds('data/CCES_2018.RDS') %>% 
   mutate(age = 2018 - birthyr)
 
@@ -653,7 +695,7 @@ The mean from any one sample will always be off a bit.
 
 ## The Sampling Distribution
 
-```{r repeat mean sample ages, out.width='60%'}
+```{r repeat mean sample ages, out.width='50%'}
 draws <- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
 
 tibble(draws) %>% 

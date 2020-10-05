@@ -122,8 +122,9 @@ By the end of this module, you will be able to...
   - Probability Distribution Functions (PDFs)
   - Random Variables
   - Expectation
-  - the Law of Large Numbers
-  - the (amazing) Central Limit Theorem
+  - Variance
+  - Central Limit Theorem
+  - Law of Large Numbers
   - Bayes Rule
 
 - Make inferences about populations from sample data
@@ -148,9 +149,9 @@ Suppose someone flips a coin 100 times and it lands on heads 65 times.
 
 ---
 
-## The Trick Coin
+## The Trick Coin Problem
 
-**Our Approach**: Take a fair coin, flip it an enormous number of times, and see how often you get 65 heads in 100 flips.
+**Our Approach**: Take a fair coin, flip it 10 million times, and see how often we get 65 heads in 100 flips.
 
 --
 
@@ -174,7 +175,7 @@ A special kind of function that describes the likelihood of random events.
 
 ### Property 1
 
-`\(P(x) \geq 0\)`
+`$$P(x) \geq 0$$`
 
 Nothing has a less-than-zero chance of happening.
 
@@ -182,7 +183,7 @@ Nothing has a less-than-zero chance of happening.
 
 ### Property 2
 
-`\(\sum P(x) = 1\)`
+`$$\sum_{x \in \Omega} P(x) = 1$$`
 
 The probability of **something** happening equals 1.
 
@@ -191,7 +192,6 @@ The probability of **something** happening equals 1.
 - (Probability not about coin flips and card games; probability is a function that characterizes our uncertainty over outcomes)
 
 Functions take inputs and produce outputs. PDFs output the probability of an event.
-
 
 (As Wasserman says, rigor and clarity not synonymous; if you want rigor, check out the books.)
 
@@ -210,6 +210,9 @@ Functions take inputs and produce outputs. PDFs output the probability of an eve
 &lt;br&gt;
 
 For you logophiles out there, this is also known as the **Bernoulli** distribution.
+
+ - Two outcomes (0 and 1)
+ - `\(P(1) = p\)` and `\(P(0) = 1-p\)`
 
 ---
 
@@ -607,15 +610,34 @@ sum(results &gt;= 526) / length(results)
 
 ---
 
-## Statistical Inference
+## The Polling Problem
 
-That's called the sampling distribution. And that's the trick we use over and over and over and over again in empirical social science.
 
-That weird trick is called **frequentist statistical inference**.
+```r
+# create 100,000 random polls of 1,000 respondents each
+results &lt;- replicate(100000, count_heads(N = 1000))
+
+# what's the probability of getting at least 526 Democratic voters?
+sum(results &gt;= 526) / length(results)
+```
+
+```
+[1] 0.05394
+```
+
+&lt;img src="07-Probability_files/figure-html/polling histogram 2-1.png" width="35%" style="display: block; margin: auto;" /&gt;
+
+That's called the **sampling distribution**. If you understand that, then you understand frequentist statistical inference.
+
+???
+
+Because it's the one weird trick we use over and over and over and over again.
+
+---
+
+## Statistical Inference in Three Steps
 
 --
-
-### Three Steps
 
 1. Define your Null Hypothesis `\((H_0)\)`
 
@@ -642,10 +664,10 @@ The **expected value** is the average value of a random variable `\(X\)`.
 - Specifically, a *weighted average* of all possible outcomes times their probability.
 
 Discrete: 
-`$$E(X) = \sum_x x f(x)$$`
+`$$E(X) = \sum_x x P(x)$$`
 
 Continuous:
-`$$E(X) = \int_{-\infty}^{+\infty} x f(x)dx$$`
+`$$E(X) = \int_{-\infty}^{+\infty} x P(x)dx$$`
 
 ---
 
@@ -659,10 +681,29 @@ What is `\(E(X)\)`?
 
 --
 
-`$$E(X) = 0(1-p) + 1p = p$$`
+`$$E(X) = 0 \times (1-p) + 1 \times p = p$$`
 
 ---
 
+## Properties of Expected Values
+
+`$$E(aX) = aE(X)$$`
+&lt;TODO: Is this useful?&gt;
+
+---
+
+## Variance
+
+The **variance** of a random variable `\(X\)` is the average squared distance from the expected value. In math:
+
+`$$\text{Var}(X) = \sigma^2_X = E[(X-E(X))^2]$$`
+--
+
+The **standard deviation** `\((\sigma)\)` of a random variable `\(X\)` is the square root of its variance.
+
+`$$\sigma_X = \sqrt{\text{Var(X)}}$$`
+
+---
 
 class: center, middle
 
@@ -672,13 +713,16 @@ class: center, middle
 
 ## The Normal Distribution
 
+
+```r
+knitr::include_graphics('img/normal-distribution.png')
+```
+
+&lt;img src="img/normal-distribution.png" width="600" style="display: block; margin: auto;" /&gt;
+
 ---
 
-## Structure
-
-expected values, 95% within 2 standard deviations, plot, etc.
-
----
+class: center, middle
 
 ## Where Does The Normal Distribution Come From?
 
@@ -696,7 +740,7 @@ ggplot(data = CCES) +
   labs(x = 'Age', y = 'Count')
 ```
 
-&lt;img src="07-Probability_files/figure-html/load CCES-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-Probability_files/figure-html/load CCES-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ```r
 mean(CCES$age)
@@ -724,7 +768,7 @@ mean_age_of_sample(data = CCES, n = 100)
 ```
 
 ```
-[1] 47.68
+[1] 46.82
 ```
 
 ```r
@@ -732,7 +776,7 @@ mean_age_of_sample(data = CCES, n = 100)
 ```
 
 ```
-[1] 47.23
+[1] 49.74
 ```
 
 --
@@ -750,11 +794,10 @@ draws &lt;- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
 tibble(draws) %&gt;% 
   ggplot() + 
   geom_histogram(mapping = aes(x=draws), color = 'black') +
-  labs(x = 'Mean Age From Sample', 
-       y = 'Count')
+  labs(x = 'Mean Age From Sample', y = 'Count')
 ```
 
-&lt;img src="07-Probability_files/figure-html/repeat mean sample ages-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-Probability_files/figure-html/repeat mean sample ages-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -782,19 +825,15 @@ Imagine that each ball is a sample: when it goes left that means we randomly sel
 
 class: center, middle
 
-## Sampling Distribution
+## Standard Errors
 
 ---
 
-## Standard Error
+## Standard Errors
 
-.middle[
 The **standard error** is the standard deviation of the sampling distribution. 
-]
 
----
-
-## Standard Error
+--
 
 &gt; What is the standard deviation of the sampling distribution you just created?
 
@@ -806,7 +845,7 @@ sd(draws)
 ```
 
 ```
-[1] 1.769707
+[1] 1.777336
 ```
 
 --
@@ -823,7 +862,7 @@ sd(draws)
 ```
 
 ```
-[1] 0.8921625
+[1] 0.8889038
 ```
 
 
@@ -838,7 +877,14 @@ Quadrupling the sample size cut the standard error in half.
 That's because standard error equals:
 
 `$$SE = \frac{\sigma}{\sqrt{N}}$$`
+--
+
+&lt;br&gt;
+
+What happens to the standard error as `\(N \to \infty\)`?
+
 ---
+
 
 class: center, middle
 
@@ -858,7 +904,7 @@ Quite easy to understand Law of Large Numbers once you understand CLT.
 
 
 ```r
-num_draws &lt;- 100000 # draw 100,000 random Bernoulli draws
+num_draws &lt;- 10000 # draw 10,000 Benoulli random variables
 p &lt;- 0.4 # p = 0.4
 
 draws &lt;- sample(c(0,1), num_draws, replace = TRUE, prob = c(1-p, p))
@@ -943,26 +989,6 @@ CCES %&gt;%
   &lt;dbl&gt;                      &lt;dbl&gt; &lt;int&gt;
 1     0                      0.661 43045
 2     1                      0.593 10582
-```
-
-```r
-CCES %&gt;% 
-  filter(!is.na(CC18_325b)) %&gt;% 
-  mutate(rich = if_else(faminc_new &gt;= 10, 1, 0),
-         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
-                                          CC18_325b == 2 ~ 0)) %&gt;%
-  group_by(rich) %&gt;% 
-  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
-            num = n())
-```
-
-```
-# A tibble: 3 x 3
-   rich pct_supporting_reduced_MID   num
-  &lt;dbl&gt;                      &lt;dbl&gt; &lt;int&gt;
-1     0                      0.661 43045
-2     1                      0.602 16456
-3    NA                      0.663   338
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
