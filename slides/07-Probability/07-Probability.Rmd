@@ -867,3 +867,110 @@ CCES %>%
   summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
             num = n())
 ```
+
+
+---
+
+class: center, middle
+
+# Glossary of Terms
+
+???
+
+I threw a lot of new vocabulary at you
+
+---
+
+# Glossary of Terms
+
+---
+
+### Probability Distribution Function (PDF)
+
+--
+
+A function that describes the likelihood of random events. Must be greater than or equal to zero and sum to 1.
+
+--
+
+### Expected Value
+
+--
+
+The average value of a PDF. $\sum xf(x)$ or $\int xf(x)dx$
+
+--
+
+### Law of Large Numbers
+
+--
+
+As your sample size approaches infinity, the sample mean converges on the expected value. $\bar{X}_n \to E(X)$
+
+---
+
+# Glossary of Terms
+
+--
+
+### Variance
+
+--
+
+The average squared distance of a random variable from its expected value. Denoted $\sigma^2$.
+
+--
+
+### Standard Deviation
+
+--
+
+The square root of variance. Denoted $\sigma$.
+
+--
+
+### Sampling Distribution
+
+--
+
+The distribution of a test statistic from repeated resampling. (E.g. if you were to repeatedly rerun a random poll, your sampling distribution would be binomial centered around the true mean.)
+
+--
+
+### Standard Error
+
+--
+
+The standard deviation of the sampling distribution. $SE = \frac{\sigma}{\sqrt{N}}$ for the mean of a sample.
+
+--
+
+### Central Limit Theorem
+
+--
+
+The sampling distribution of the mean of a large number $(n>30)$ of independent random variables will be normally distributed around the true mean.
+
+---
+
+# Glossary of Terms
+
+--
+
+### Bernoulli Distribution
+
+$P(X=1) = p$ and $P(X=0) = 1-p$
+
+--
+
+### Binomial Distribution
+
+The sum of $n$ Bernoulli random variables
+
+--
+
+### Normal Distribution
+
+--
+
+A continuous, symmetric probability distribution function; 95% of the distribution falls within $[\mu - 2\sigma, \mu + 2\sigma]$.
