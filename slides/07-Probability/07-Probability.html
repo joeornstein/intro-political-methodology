@@ -183,7 +183,9 @@ Nothing has a less-than-zero chance of happening.
 
 ### Property 2
 
-`$$\sum_{x \in \Omega} P(x) = 1$$`
+`$$\sum_{x} P(x) = 1$$` (discrete)
+
+`$$\int_{-\infty}^{+\infty} P(x)dx = 1$$` (continuous)
 
 The probability of **something** happening equals 1.
 
@@ -625,7 +627,7 @@ sum(results &gt;= 526) / length(results)
 [1] 0.05394
 ```
 
-&lt;img src="07-Probability_files/figure-html/polling histogram 2-1.png" width="35%" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-Probability_files/figure-html/polling histogram 2-1.png" width="45%" style="display: block; margin: auto;" /&gt;
 
 That's called the **sampling distribution**. If you understand that, then you understand frequentist statistical inference.
 
@@ -711,12 +713,7 @@ class: center, middle
 
 ---
 
-## The Normal Distribution
-
-
-```r
-knitr::include_graphics('img/normal-distribution.png')
-```
+&lt;br&gt;
 
 &lt;img src="img/normal-distribution.png" width="600" style="display: block; margin: auto;" /&gt;
 
@@ -740,7 +737,7 @@ ggplot(data = CCES) +
   labs(x = 'Age', y = 'Count')
 ```
 
-&lt;img src="07-Probability_files/figure-html/load CCES-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-Probability_files/figure-html/load CCES-1.png" width="40%" style="display: block; margin: auto;" /&gt;
 
 ```r
 mean(CCES$age)
@@ -990,6 +987,365 @@ CCES %&gt;%
 1     0                      0.661 43045
 2     1                      0.593 10582
 ```
+
+---
+
+## Hypothesis Test
+
+`\(H_0\)`: There is no difference between the average age of Republicans and Democrats.
+
+
+```r
+# sample 100 Republicans ages
+rep_age &lt;- CCES %&gt;% 
+  mutate(age = 2018 - birthyr) %&gt;%  
+  filter(pid3 == 2) %&gt;% 
+  pull(age) %&gt;% 
+  sample(100)
+
+# sample 100 Democrats ages
+dem_age &lt;- CCES %&gt;% 
+  mutate(age = 2018 - birthyr) %&gt;%  
+  filter(pid3 == 1) %&gt;% 
+  pull(age) %&gt;% 
+  sample(100)
+
+mean(rep_age)
+```
+
+```
+[1] 50.96
+```
+
+```r
+mean(dem_age)
+```
+
+```
+[1] 49.58
+```
+
+The Republicans seem to be older on average, but is that just sampling error?
+
+--
+
+How would you test it?
+
+---
+
+## Function: Compute Test Statistic
+
+
+```r
+difference_in_means &lt;- function(population, n1 = 100, n2 = 100){
+  
+  # get the mean age of a random sample of size n1
+  mean_age_dem &lt;- population %&gt;%
+    pull(age) %&gt;%
+    sample(size = n1) %&gt;%
+    mean
+  
+  # get the mean age of a random sample of size n2
+  mean_age_rep &lt;- population %&gt;%
+    pull(age) %&gt;%
+    sample(size = n2) %&gt;%
+    mean
+  
+  # return the difference
+  mean_age_rep - mean_age_dem
+}
+
+difference_in_means(CCES, n1 = 100, n2 = 100)
+```
+
+```
+[1] 0.98
+```
+
+---
+
+## Get Sampling Distribution
+
+
+```r
+observed &lt;- mean(rep_age) - mean(dem_age)
+draws &lt;- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
+
+# sampling distribution
+tibble(draws) %&gt;% 
+  ggplot() + 
+  geom_histogram(aes(x=draws), color = 'black') +
+  labs(x = 'Difference in Means', y = 'Count') +
+  theme_bw() + 
+  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
+```
+
+&lt;img src="07-Probability_files/figure-html/hypothesis test: ages-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+```r
+# p-value
+sum(abs(draws) &gt; observed) / length(draws)
+```
+
+```
+[1] 0.5872
+```
+
+---
+
+## T Test
+
+Hey good news; you can do it with one line.
+
+
+```r
+t.test(rep_age, dem_age)
+```
+
+```
+
+	Welch Two Sample t-test
+
+data:  rep_age and dem_age
+t = 0.52572, df = 197.56, p-value = 0.5997
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -3.79658  6.55658
+sample estimates:
+mean of x mean of y 
+    50.96     49.58 
+```
+
+
+---
+
+## Another
+
+
+```r
+n1 &lt;- 500
+n2 &lt;- 500
+
+CCES &lt;- CCES %&gt;% 
+  mutate(rich = if_else(faminc_new &gt;= 10, 1, 0),
+         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
+                                          CC18_325b == 2 ~ 0))
+
+rich_support &lt;- CCES %&gt;% 
+  filter(rich == 1, !is.na(support_reducing_MID)) %&gt;% 
+  pull(support_reducing_MID) %&gt;% 
+  sample(n1)
+  
+non_rich_support &lt;- CCES %&gt;% 
+  filter(rich == 0, !is.na(support_reducing_MID)) %&gt;% 
+  pull(support_reducing_MID) %&gt;% 
+  sample(n2)
+
+mean(rich_support)
+```
+
+```
+[1] 0.588
+```
+
+```r
+mean(non_rich_support)
+```
+
+```
+[1] 0.644
+```
+---
+
+# Function
+
+
+```r
+difference_in_proportions &lt;- function(population, n1, n2){
+  
+  # proportion who support reducing MID from a random sample of size n1
+  rich_proportion &lt;- population %&gt;% 
+    pull(support_reducing_MID) %&gt;% 
+    sample(n1) %&gt;% 
+    mean
+  
+  # proportion who support reducing MID from a random sample of size n1
+  non_rich_proportion &lt;- population %&gt;% 
+    pull(support_reducing_MID) %&gt;% 
+    sample(n2) %&gt;% 
+    mean
+  
+  # return the difference in proportions
+  rich_proportion - non_rich_proportion
+  
+}
+```
+
+---
+
+## Monte Carlo
+
+
+```r
+observed &lt;- mean(rich_support) - mean(non_rich_support)
+CCES &lt;- CCES %&gt;% filter(!is.na(support_reducing_MID))
+draws &lt;- replicate(20000, difference_in_proportions(CCES, n1 = 500, n2 = 500))
+
+sum(abs(draws) &gt; abs(observed)) / length(draws)
+```
+
+```
+[1] 0.0564
+```
+
+```r
+# sampling distribution
+tibble(draws) %&gt;% 
+  ggplot() + 
+  geom_histogram(aes(x=draws), color = 'black') +
+  labs(x = 'Difference in Proportions', y = 'Count') +
+  theme_bw() + 
+  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
+```
+
+&lt;img src="07-Probability_files/figure-html/proportion monte carlo-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Proportion Test
+
+
+```r
+prop.test(x = c(sum(rich_support), sum(non_rich_support)),
+          n = c(n1,n2),
+          correct = FALSE) 
+```
+
+```
+
+	2-sample test for equality of proportions without continuity
+	correction
+
+data:  c(sum(rich_support), sum(non_rich_support)) out of c(n1, n2)
+X-squared = 3.3144, df = 1, p-value = 0.06868
+alternative hypothesis: two.sided
+95 percent confidence interval:
+ -0.116188448  0.004188448
+sample estimates:
+prop 1 prop 2 
+ 0.588  0.644 
+```
+
+```r
+# last argument is "Yates' continuity correction" don't worry about it. not with this big of a sample.
+```
+
+---
+
+
+class: center, middle
+
+# Glossary of Terms
+
+???
+
+I threw a lot of new vocabulary at you
+
+---
+
+# Glossary of Terms
+
+---
+
+### Probability Distribution Function (PDF)
+
+--
+
+A function that describes the likelihood of random events. Must be greater than or equal to zero and sum to 1.
+
+--
+
+### Expected Value
+
+--
+
+The average value of a PDF. `\(\sum xf(x)\)` or `\(\int xf(x)dx\)`
+
+--
+
+### Law of Large Numbers
+
+--
+
+As your sample size approaches infinity, the sample mean converges on the expected value. `\(\bar{X}_n \to E(X)\)`
+
+---
+
+# Glossary of Terms
+
+--
+
+### Variance
+
+--
+
+The average squared distance of a random variable from its expected value. Denoted `\(\sigma^2\)`.
+
+--
+
+### Standard Deviation
+
+--
+
+The square root of variance. Denoted `\(\sigma\)`.
+
+--
+
+### Sampling Distribution
+
+--
+
+The distribution of a test statistic from repeated resampling. (E.g. if you were to repeatedly rerun a random poll, your sampling distribution would be binomial centered around the true mean.)
+
+--
+
+### Standard Error
+
+--
+
+The standard deviation of the sampling distribution. `\(SE = \frac{\sigma}{\sqrt{N}}\)` for the mean of a sample.
+
+--
+
+### Central Limit Theorem
+
+--
+
+The sampling distribution of the mean of a large number `\((n&gt;30)\)` of independent random variables will be normally distributed around the true mean.
+
+---
+
+# Glossary of Terms
+
+--
+
+### Bernoulli Distribution
+
+`\(P(X=1) = p\)` and `\(P(X=0) = 1-p\)`
+
+--
+
+### Binomial Distribution
+
+The sum of `\(n\)` Bernoulli random variables
+
+--
+
+### Normal Distribution
+
+--
+
+A continuous, symmetric probability distribution function; 95% of the distribution falls within `\([\mu - 2\sigma, \mu + 2\sigma]\)`.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

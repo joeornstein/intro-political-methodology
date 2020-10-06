@@ -119,6 +119,8 @@ By the end of this module, you will be able to...
 
 - Make inferences about populations from sample data
 
+<TODO: say what probability and inference are. check out monogan and whitten & kellstedt>
+
 ---
 
 class: center, middle
@@ -558,7 +560,7 @@ tibble(results) %>%
        y = 'Number of Polls')
 ```
 
-That's called the **sampling distribution**. If you understand that, then you understand frequentist statistical inference.
+That's called the **sampling distribution**, the PDF you get if you repeatedly sample from a distribution and recompute the test statistic each time.
 
 ???
 
@@ -644,6 +646,8 @@ class: center, middle
 
 <br>
 
+<br>
+
 ```{r normal distribution structure, echo = FALSE}
 knitr::include_graphics('img/normal-distribution.png')
 ```
@@ -691,13 +695,17 @@ mean_age_of_sample(data = CCES, n = 100)
 
 The mean from any one sample will always be off a bit.
 
+--
+
+```{r repat mean sample ages}
+draws <- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
+```
+
 ---
 
 ## The Sampling Distribution
 
-```{r repeat mean sample ages, out.width='50%'}
-draws <- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
-
+```{r repeat mean sample ages histogram, out.width='50%'}
 tibble(draws) %>% 
   ggplot() + 
   geom_histogram(mapping = aes(x=draws), color = 'black') +
@@ -868,8 +876,183 @@ CCES %>%
             num = n())
 ```
 
+---
+
+## Hypothesis Test
+
+$H_0$: There is no difference between the average age of Republicans and Democrats.
+
+```{r sample ages democrats vs republicans}
+
+# sample 100 Republicans ages
+rep_age <- CCES %>% 
+  mutate(age = 2018 - birthyr) %>%  
+  filter(pid3 == 2) %>% 
+  pull(age) %>% 
+  sample(100)
+
+# sample 100 Democrats ages
+dem_age <- CCES %>% 
+  mutate(age = 2018 - birthyr) %>%  
+  filter(pid3 == 1) %>% 
+  pull(age) %>% 
+  sample(100)
+
+mean(rep_age)
+
+mean(dem_age)
+
+```
+
+The Republicans seem to be older on average, but is that just sampling error?
+
+--
+
+How would you test it?
 
 ---
+
+## Function: Compute Test Statistic
+
+```{r compute test statistic}
+difference_in_means <- function(population, n1 = 100, n2 = 100){
+  
+  # get the mean age of a random sample of size n1
+  mean_age_dem <- population %>%
+    pull(age) %>%
+    sample(size = n1) %>%
+    mean
+  
+  # get the mean age of a random sample of size n2
+  mean_age_rep <- population %>%
+    pull(age) %>%
+    sample(size = n2) %>%
+    mean
+  
+  # return the difference
+  mean_age_rep - mean_age_dem
+}
+
+difference_in_means(CCES, n1 = 100, n2 = 100)
+```
+
+---
+
+## Get Sampling Distribution
+
+```{r hypothesis test: ages}
+observed <- mean(rep_age) - mean(dem_age)
+draws <- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
+
+# sampling distribution
+tibble(draws) %>% 
+  ggplot() + 
+  geom_histogram(aes(x=draws), color = 'black') +
+  labs(x = 'Difference in Means', y = 'Count') +
+  theme_bw() + 
+  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
+
+# p-value
+sum(abs(draws) > observed) / length(draws)
+```
+
+---
+
+## T Test
+
+Hey good news; you can do it with one line.
+
+```{r t.test}
+t.test(rep_age, dem_age)
+```
+
+
+---
+
+## Another
+
+```{r wealth and support for reducing mortgage interest deduction}
+n1 <- 500
+n2 <- 500
+
+CCES <- CCES %>% 
+  mutate(rich = if_else(faminc_new >= 10, 1, 0),
+         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
+                                          CC18_325b == 2 ~ 0))
+
+rich_support <- CCES %>% 
+  filter(rich == 1, !is.na(support_reducing_MID)) %>% 
+  pull(support_reducing_MID) %>% 
+  sample(n1)
+  
+non_rich_support <- CCES %>% 
+  filter(rich == 0, !is.na(support_reducing_MID)) %>% 
+  pull(support_reducing_MID) %>% 
+  sample(n2)
+
+mean(rich_support)
+mean(non_rich_support)
+
+```
+---
+
+# Function
+
+```{r compute difference in proportions}
+difference_in_proportions <- function(population, n1, n2){
+  
+  # proportion who support reducing MID from a random sample of size n1
+  rich_proportion <- population %>% 
+    pull(support_reducing_MID) %>% 
+    sample(n1) %>% 
+    mean
+  
+  # proportion who support reducing MID from a random sample of size n1
+  non_rich_proportion <- population %>% 
+    pull(support_reducing_MID) %>% 
+    sample(n2) %>% 
+    mean
+  
+  # return the difference in proportions
+  rich_proportion - non_rich_proportion
+  
+}
+```
+
+---
+
+## Monte Carlo
+
+```{r proportion monte carlo}
+observed <- mean(rich_support) - mean(non_rich_support)
+CCES <- CCES %>% filter(!is.na(support_reducing_MID))
+draws <- replicate(20000, difference_in_proportions(CCES, n1 = 500, n2 = 500))
+
+sum(abs(draws) > abs(observed)) / length(draws)
+
+# sampling distribution
+tibble(draws) %>% 
+  ggplot() + 
+  geom_histogram(aes(x=draws), color = 'black') +
+  labs(x = 'Difference in Proportions', y = 'Count') +
+  theme_bw() + 
+  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
+```
+
+---
+
+## Proportion Test
+
+```{r prop.test}
+prop.test(x = c(sum(rich_support), sum(non_rich_support)),
+          n = c(n1,n2),
+          correct = FALSE) 
+
+# last argument is "Yates' continuity correction" don't worry about it. not with this big of a sample.
+```
+
+---
+
 
 class: center, middle
 
