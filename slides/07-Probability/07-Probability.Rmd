@@ -34,24 +34,6 @@ set.seed(42)
 ```
 
 
-## Outline
-
-A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way!
-
-We'll start by learning about probability distribution functions, and learn how to draw random values in `R`.
-
-We'll see how this procedure underlies **all** statistical inference.
-
-Then, I think, Central Limit Theorem. A little backwards compared to the usual approach, but trust me, let's front-load the good stuff.
-
-Random Variables and their properties: Expectation, Variance, Law of Large Numbers
-
-Multivariable PDFs: Covariance, Joint Probability, Conditional Probability, Bayes Rule
-
-As a bonus, you'll get to practice creating your own functions...very useful when you want to customize / mix-and-match the built-in functions we've learned.
-
----
-
 # Warm Up
 
 - Create an `R` project where you can keep all your code from this session.
@@ -119,7 +101,47 @@ By the end of this module, you will be able to...
 
 - Make inferences about populations from sample data
 
-<TODO: say what probability and inference are. check out monogan and whitten & kellstedt>
+---
+
+## Outline
+
+A lot of probability/statistics courses are pretty abstract; the great thing about learning `R` first is that we can introduce this in a really hands-on way!
+
+- We'll start by learning about probability distribution functions, and learn how to draw random values in `R`.
+
+- We'll see how this procedure underlies **all** statistical inference.
+
+<!-- Then, I think, Central Limit Theorem. A little backwards compared to the usual approach, but trust me, let's front-load the good stuff. -->
+
+<!-- Random Variables and their properties: Expectation, Variance, Law of Large Numbers -->
+
+<!-- Multivariable PDFs: Covariance, Joint Probability, Conditional Probability, Bayes Rule -->
+
+<!-- As a bonus, you'll get to practice creating your own functions...very useful when you want to customize / mix-and-match the built-in functions we've learned. -->
+
+--
+
+For every statistical test...
+
+--
+
+1. I'm going to first show you how it works using the random number generator in `R`. This will involve a bunch of code.
+
+--
+
+2. Then, once we're comfortable with the intuition, I will show you how you can perform the statistical test with one line of `R` code.
+
+--
+
+<br>
+
+.center[
+Please don't feel betrayed.
+]
+
+???
+
+The point is to give you a strong foundation upon which to build your understanding of statistical methods. I don't want you to leave this class with a "use this test for this kind of data" cookbook mentality, because that's where things go wrong.
 
 ---
 
@@ -179,9 +201,9 @@ Nothing has a less-than-zero chance of happening.
 
 ### Property 2
 
-$$\sum_{x} P(x) = 1$$ (discrete)
+$$\sum_{x} P(x) = 1$$
 
-$$\int_{-\infty}^{+\infty} P(x)dx = 1$$ (continuous)
+$$\int_{-\infty}^{+\infty} P(x)dx = 1$$
 
 The probability of **something** happening equals 1.
 
@@ -506,6 +528,28 @@ The probability of getting 65 or more heads from a fair coin is roughly 0.1%.
 
 ---
 
+## WARNING: P-values are widely misunderstood!
+
+--
+
+### Warning 1: You can't reverse the interpretation
+
+$p = 0.001$ means the probability of observing 65 heads is very small for a fair coin. It does **not** mean that there is a 99.9% chance the coin is unfair.
+
+--
+
+### Warning 2: A low p-value doesn't mean that the result is "strong"
+
+It just means that there's a real "pattern" that is difficult to explain as the product of chance alone.
+
+--
+
+### Warning 3: p-hacking
+
+If I flipped 1,000 fair coins, at least one of them would probably come up heads 65 times out of 100. I can't then say **AHA! A FAKE COIN!**
+
+---
+
 class: center, middle
 
 ## So What?
@@ -523,14 +567,14 @@ If 50% of all voters planned to vote for the Republican, what is the probability
 ## The Polling Problem
 
 ```{r polling problem}
-# create 100,000 random polls of 1,000 respondents each
-results <- replicate(100000, count_heads(N = 1000))
+# create 10,000 random polls of 1,000 respondents each
+results <- replicate(10000, count_heads(N = 1000))
 
 # what's the probability of getting at least 526 Democratic voters?
 sum(results >= 526) / length(results)
 ```
 
-```{r polling histogram, echo = FALSE, out.width = '65%'}
+```{r polling histogram, echo = FALSE, out.width = '45%'}
 tibble(results) %>% 
   ggplot() +
   geom_histogram(aes(x=results), color = 'black', binwidth = 5) +
@@ -539,28 +583,9 @@ tibble(results) %>%
        y = 'Number of Polls')
 ```
 
----
+--
 
-## The Polling Problem
-
-```{r polling problem 2}
-# create 100,000 random polls of 1,000 respondents each
-results <- replicate(100000, count_heads(N = 1000))
-
-# what's the probability of getting at least 526 Democratic voters?
-sum(results >= 526) / length(results)
-```
-
-```{r polling histogram 2, echo = FALSE, out.width = '45%'}
-tibble(results) %>% 
-  ggplot() +
-  geom_histogram(aes(x=results), color = 'black', binwidth = 5) +
-  geom_vline(xintercept = 526, color = 'red') +
-  labs(x = 'Support for Democrat in a Random Poll',
-       y = 'Number of Polls')
-```
-
-That's called the **sampling distribution**, the PDF you get if you repeatedly sample from a distribution and recompute the test statistic each time.
+That's called the **sampling distribution**, distribution that you would get if you repeatedly sampled from a population and recomputed the test statistic each time.
 
 ???
 
@@ -572,13 +597,15 @@ Because it's the one weird trick we use over and over and over and over again.
 
 --
 
-1. Define your Null Hypothesis $(H_0)$
+1. Specify your Null Hypothesis $(H_0)$
 
-2. Construct the **sampling distribution** of the test statistic under $H_0$
+2. Generate the **sampling distribution** of the test statistic under $H_0$
 
 3. Compare the test statistic from your observed data with the sampling distribution.
 
 --
+
+<br>
 
 Every (frequentist) hypothesis test is a variation on this! The only thing that changes is the PDF. 
 
@@ -606,7 +633,7 @@ $$E(X) = \int_{-\infty}^{+\infty} x P(x)dx$$
 
 ## Expected Value
 
-Suppose $X$ is distributed as follows:
+**Exercise**: Suppose $X$ is distributed as follows:
 
 $P(X = 0) = 1-p$ and $P(X = 1) = p$
 
@@ -618,12 +645,65 @@ $$E(X) = 0 \times (1-p) + 1 \times p = p$$
 
 ---
 
-## Properties of Expected Values
+## Expected Value
 
-$$E(aX) = aE(X)$$
-<TODO: Is this useful?>
+Why do we call it the expected value? 
+
+--
+
+Because if you take a large enough sample, we would expect that the average result will equal $E(X)$
+
+--
+
+```{r law of large numbers}
+num_draws <- 10000 # draw 10,000 Benoulli random variables
+p <- 0.4 # p = 0.4
+
+draws <- sample(c(0,1), num_draws, replace = TRUE, prob = c(1-p, p))
+
+# create a dataframe and plot sample mean as n increases
+fig <- tibble(n = 1:num_draws,
+       draws) %>% 
+  mutate(sample_mean = cumsum(draws) / n) %>% 
+  ggplot() + 
+  geom_line(mapping = aes(x = n, y = sample_mean)) + 
+  geom_hline(yintercept = p, color = 'red', linetype = 'dashed') +
+  labs(x = 'Sample Size (n)', y = 'Sample Mean')
+```
 
 ---
+
+## Expected Value
+
+```{r lln fig, echo = FALSE}
+fig
+```
+
+---
+
+class: center, middle
+
+## The Law of Large Numbers
+
+If you repeatedly draw a random variable a **large number of times**, the sample mean will converge on the expected value.
+
+$$\bar{X}_n \overset{P}{\to} E(X)$$
+
+???
+
+As we get larger and larger samples, the average value gets closer and closer to the expected value. That's why we like to have large samples. We can be more certain that our sample mean accurately captures the population mean.
+
+Quite easy to understand Law of Large Numbers once you understand CLT. In the limit, SE = 0.
+
+---
+
+
+<!-- --- -->
+
+<!-- ## Properties of Expected Values -->
+
+<!-- $$E(aX) = aE(X)$$ -->
+<!-- <TODO: Is this useful?> -->
 
 ## Variance
 
@@ -663,8 +743,14 @@ class: center, middle
 ## Import CCES
 
 ```{r load CCES, out.width = '40%'}
+# Load CCES
 CCES <- read_rds('data/CCES_2018.RDS') %>% 
-  mutate(age = 2018 - birthyr)
+  mutate(gender = if_else(gender == 1, 'Male', 'Female'),
+         age = 2018 - birthyr,
+         party = case_when(pid3 == 1 ~ 'Democrat',
+                           pid3 == 2 ~ 'Republican',
+                           pid3 == 3 ~ 'Independent')) %>% 
+  filter(!is.na(party))
 
 ggplot(data = CCES) + 
   geom_histogram(aes(x=age), color = 'black', binwidth = 2) +
@@ -697,18 +783,18 @@ The mean from any one sample will always be off a bit.
 
 --
 
-```{r repat mean sample ages}
-draws <- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
-```
-
 ---
 
 ## The Sampling Distribution
 
+<TODO: make that 10000>
+
 ```{r repeat mean sample ages histogram, out.width='50%'}
-tibble(draws) %>% 
+sampling_distribution <- replicate(1000, mean_age_of_sample(data = CCES, n = 100))
+
+tibble(sampling_distribution) %>% 
   ggplot() + 
-  geom_histogram(mapping = aes(x=draws), color = 'black') +
+  geom_histogram(mapping = aes(x=sampling_distribution), color = 'black') +
   labs(x = 'Mean Age From Sample', y = 'Count')
 ```
 
@@ -753,7 +839,7 @@ The **standard error** is the standard deviation of the sampling distribution.
 --
 
 ```{r standard error}
-sd(draws)
+sd(sampling_distribution)
 ```
 
 --
@@ -762,10 +848,12 @@ sd(draws)
 
 --
 
-```{r quadruple sample size}
-draws <- replicate(10000, mean_age_of_sample(data = CCES, n = 400))
+<TODO: make that 10000>
 
-sd(draws)
+```{r quadruple sample size}
+sampling_distribution <- replicate(1000, mean_age_of_sample(data = CCES, n = 400))
+
+sd(sampling_distribution)
 ```
 
 
@@ -777,60 +865,11 @@ Quadrupling the sample size cut the standard error in half.
 
 --
 
-That's because standard error equals:
+That's because the standard error of the mean equals:
 
 $$SE = \frac{\sigma}{\sqrt{N}}$$
---
-
-<br>
-
-What happens to the standard error as $N \to \infty$?
-
 ---
 
-
-class: center, middle
-
-## The Law of Large Numbers
-
-If you repeatedly draw a random variable a **large number of times**, the sample mean will converge on the expected value.
-
-$$\bar{X}_n \overset{P}{\to} E(X)$$
-
-???
-
-Quite easy to understand Law of Large Numbers once you understand CLT.
-
----
-
-## Let's Prove It
-
-```{r law of large numbers}
-num_draws <- 10000 # draw 10,000 Benoulli random variables
-p <- 0.4 # p = 0.4
-
-draws <- sample(c(0,1), num_draws, replace = TRUE, prob = c(1-p, p))
-
-# create a dataframe and plot sample mean as n increases
-fig <- tibble(n = 1:num_draws,
-       draws) %>% 
-  mutate(sample_mean = cumsum(draws) / n) %>% 
-  ggplot() + 
-  geom_line(mapping = aes(x = n, y = sample_mean)) + 
-  geom_hline(yintercept = p, color = 'red', linetype = 'dashed') +
-  labs(x = 'n', y = 'Sample Mean')
-```
-
----
-
-## Let's Prove It
-
-```{r lln fig, echo = FALSE}
-fig
-```
-
-
----
 
 class: center, middle
 
@@ -847,220 +886,6 @@ The 95% confidence interval:
 If you were to repeat this procedure a large number of times, the true value would lie within the confidence interval 95% of the time. 
 
 Alternatively, it is the set of values for which we can't reject the null hypothesis with $p < 0.05$.
-
----
-
-## Let's Do A Hypothesis Test
-
-```{r t test}
-CCES %>% 
-  filter(ownhome < 3,
-         !is.na(CC18_325b)) %>% 
-  mutate(ownhome = case_when(ownhome == 1 ~ 'Own',
-                             ownhome == 2 ~ 'Rent'),
-         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
-                                          CC18_325b == 2 ~ 0)) %>%
-  group_by(ownhome) %>% 
-  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
-            num = n())
-
-# respondents making over $100,000
-CCES %>% 
-  filter(faminc_new %in% 1:16,
-         !is.na(CC18_325b)) %>% 
-  mutate(rich = if_else(faminc_new >= 10, 1, 0),
-         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
-                                          CC18_325b == 2 ~ 0)) %>%
-  group_by(rich) %>% 
-  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
-            num = n())
-```
-
----
-
-## Hypothesis Test
-
-$H_0$: There is no difference between the average age of Republicans and Democrats.
-
-```{r sample ages democrats vs republicans}
-
-# sample 100 Republicans ages
-rep_age <- CCES %>% 
-  mutate(age = 2018 - birthyr) %>%  
-  filter(pid3 == 2) %>% 
-  pull(age) %>% 
-  sample(100)
-
-# sample 100 Democrats ages
-dem_age <- CCES %>% 
-  mutate(age = 2018 - birthyr) %>%  
-  filter(pid3 == 1) %>% 
-  pull(age) %>% 
-  sample(100)
-
-mean(rep_age)
-
-mean(dem_age)
-
-```
-
-The Republicans seem to be older on average, but is that just sampling error?
-
---
-
-How would you test it?
-
----
-
-## Function: Compute Test Statistic
-
-```{r compute test statistic}
-difference_in_means <- function(population, n1 = 100, n2 = 100){
-  
-  # get the mean age of a random sample of size n1
-  mean_age_dem <- population %>%
-    pull(age) %>%
-    sample(size = n1) %>%
-    mean
-  
-  # get the mean age of a random sample of size n2
-  mean_age_rep <- population %>%
-    pull(age) %>%
-    sample(size = n2) %>%
-    mean
-  
-  # return the difference
-  mean_age_rep - mean_age_dem
-}
-
-difference_in_means(CCES, n1 = 100, n2 = 100)
-```
-
----
-
-## Get Sampling Distribution
-
-```{r hypothesis test: ages}
-observed <- mean(rep_age) - mean(dem_age)
-draws <- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
-
-# sampling distribution
-tibble(draws) %>% 
-  ggplot() + 
-  geom_histogram(aes(x=draws), color = 'black') +
-  labs(x = 'Difference in Means', y = 'Count') +
-  theme_bw() + 
-  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
-
-# p-value
-sum(abs(draws) > observed) / length(draws)
-```
-
----
-
-## T Test
-
-Hey good news; you can do it with one line.
-
-```{r t.test}
-t.test(rep_age, dem_age)
-```
-
-
----
-
-## Another
-
-```{r wealth and support for reducing mortgage interest deduction}
-n1 <- 500
-n2 <- 500
-
-CCES <- CCES %>% 
-  mutate(rich = if_else(faminc_new >= 10, 1, 0),
-         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
-                                          CC18_325b == 2 ~ 0))
-
-rich_support <- CCES %>% 
-  filter(rich == 1, !is.na(support_reducing_MID)) %>% 
-  pull(support_reducing_MID) %>% 
-  sample(n1)
-  
-non_rich_support <- CCES %>% 
-  filter(rich == 0, !is.na(support_reducing_MID)) %>% 
-  pull(support_reducing_MID) %>% 
-  sample(n2)
-
-mean(rich_support)
-mean(non_rich_support)
-
-```
----
-
-# Function
-
-```{r compute difference in proportions}
-difference_in_proportions <- function(population, n1, n2){
-  
-  # proportion who support reducing MID from a random sample of size n1
-  rich_proportion <- population %>% 
-    pull(support_reducing_MID) %>% 
-    sample(n1) %>% 
-    mean
-  
-  # proportion who support reducing MID from a random sample of size n1
-  non_rich_proportion <- population %>% 
-    pull(support_reducing_MID) %>% 
-    sample(n2) %>% 
-    mean
-  
-  # return the difference in proportions
-  rich_proportion - non_rich_proportion
-  
-}
-```
-
----
-
-## Monte Carlo
-
-```{r proportion monte carlo}
-observed <- mean(rich_support) - mean(non_rich_support)
-CCES <- CCES %>% filter(!is.na(support_reducing_MID))
-draws <- replicate(20000, difference_in_proportions(CCES, n1 = 500, n2 = 500))
-
-sum(abs(draws) > abs(observed)) / length(draws)
-
-# sampling distribution
-tibble(draws) %>% 
-  ggplot() + 
-  geom_histogram(aes(x=draws), color = 'black') +
-  labs(x = 'Difference in Proportions', y = 'Count') +
-  theme_bw() + 
-  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
-```
-
----
-
-## Proportion Test
-
-```{r prop.test}
-prop.test(x = c(sum(rich_support), sum(non_rich_support)),
-          n = c(n1,n2),
-          correct = FALSE) 
-
-# last argument is "Yates' continuity correction" don't worry about it. not with this big of a sample.
-```
-
----
-
-
-class: center, middle
-
-# Glossary of Terms
-
-???
-
-I threw a lot of new vocabulary at you
 
 ---
 
@@ -1157,3 +982,145 @@ The sum of $n$ Bernoulli random variables
 --
 
 A continuous, symmetric probability distribution function; 95% of the distribution falls within $[\mu - 2\sigma, \mu + 2\sigma]$.
+
+---
+
+class: center, middle
+
+## Multivariable Probability Distributions
+
+
+---
+
+## Multivariable Probability Distributions
+
+
+
+---
+
+## Bivariate Hypothesis Testing
+
+```{r t test}
+CCES %>% 
+  filter(ownhome < 3,
+         !is.na(CC18_325b)) %>% 
+  mutate(ownhome = case_when(ownhome == 1 ~ 'Own',
+                             ownhome == 2 ~ 'Rent'),
+         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
+                                          CC18_325b == 2 ~ 0)) %>%
+  group_by(ownhome) %>% 
+  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
+            num = n())
+
+# respondents making over $100,000
+CCES %>% 
+  filter(faminc_new %in% 1:16,
+         !is.na(CC18_325b)) %>% 
+  mutate(rich = if_else(faminc_new >= 10, 1, 0),
+         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
+                                          CC18_325b == 2 ~ 0)) %>%
+  group_by(rich) %>% 
+  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
+            num = n())
+```
+
+---
+
+## Hypothesis Test
+
+$H_0$: There is no difference between the average age of Republicans and Democrats.
+
+```{r sample ages democrats vs republicans}
+
+# sample 100 Republicans ages
+rep_age <- CCES %>% 
+  mutate(age = 2018 - birthyr) %>%  
+  filter(pid3 == 2) %>% 
+  pull(age) %>% 
+  sample(100)
+
+# sample 100 Democrats ages
+dem_age <- CCES %>% 
+  mutate(age = 2018 - birthyr) %>%  
+  filter(pid3 == 1) %>% 
+  pull(age) %>% 
+  sample(100)
+
+mean(rep_age)
+
+mean(dem_age)
+
+```
+
+The Republicans seem to be older on average, but is that just sampling error?
+
+--
+
+How would you test it?
+
+---
+
+## Function: Compute Test Statistic
+
+```{r compute test statistic}
+difference_in_means <- function(population, n1 = 100, n2 = 100){
+  
+  # get the mean age of a random sample of size n1
+  mean_age_dem <- population %>%
+    pull(age) %>%
+    sample(size = n1) %>%
+    mean
+  
+  # get the mean age of a random sample of size n2
+  mean_age_rep <- population %>%
+    pull(age) %>%
+    sample(size = n2) %>%
+    mean
+  
+  # return the difference
+  mean_age_rep - mean_age_dem
+}
+
+difference_in_means(CCES, n1 = 100, n2 = 100)
+```
+
+---
+
+## Get Sampling Distribution
+
+<todo: make that 10000>
+
+```{r hypothesis test: ages}
+observed <- mean(rep_age) - mean(dem_age)
+sampling_distribution <- replicate(1000, difference_in_means(CCES, n1 = 100, n2 = 100))
+
+# sampling distribution
+tibble(sampling_distribution) %>% 
+  ggplot() + 
+  geom_histogram(aes(x=sampling_distribution), color = 'black') +
+  labs(x = 'Difference in Means', y = 'Count') +
+  theme_bw() + 
+  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
+
+# p-value
+sum(abs(sampling_distribution) > observed) / length(sampling_distribution)
+```
+
+---
+
+## T Test
+
+Hey good news; you can do it with one line.
+
+```{r t.test}
+t.test(rep_age, dem_age)
+```
+
+---
+
+
+class: center, middle
+
+# Glossary of Terms, Part 2
+
+???

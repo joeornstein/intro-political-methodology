@@ -1,3 +1,6 @@
+Single Variable --> Bivariate Hypothesis Testing; Joint Distributions, Bayes Rule, T-Tests, Chi-Square
+
+
 Warmup:
 
 Hmmm...what's the probability of rolling 1 on a six-sided die?

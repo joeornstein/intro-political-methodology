@@ -6,3 +6,4 @@
 
 pagedown::chrome_print('slides/01-Getting-Started/01-Getting-Started.Rmd')
 pagedown::chrome_print('slides/02-Data-Visualization/02-Data-Visualization.html')
+pagedown::chrome_print('slides/06-Calculus/06-Calculus.html')
