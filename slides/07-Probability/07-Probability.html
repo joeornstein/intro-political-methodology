@@ -54,7 +54,7 @@ x &lt;- 1:4
 
 --
 
-- Find the sum of your vector `x`. Find the length of your vector `x`
+- Find the sum of your vector `x`. Find the length of your vector `x`.
 
 --
 
@@ -91,25 +91,6 @@ The area under the entire curve `\(f(x)\)`, from positive to negative infinity, 
 &lt;br&gt;
 
 Keep a copy of these slides open so that you can copy-paste code into your script when needed!
-
----
-
-## Learning Objectives
-
-By the end of this module, you will be able to...
-
-- Write your own functions and generate random values in `R`
-
-- Explain several foundational concepts in probability theory
-  - Probability Distribution Functions (PDFs)
-  - Random Variables
-  - Expectation
-  - Variance
-  - Central Limit Theorem
-  - Law of Large Numbers
-  - Bayes Rule
-
-- Make inferences about populations from sample data
 
 ---
 
@@ -152,6 +133,25 @@ Please don't feel betrayed.
 ???
 
 The point is to give you a strong foundation upon which to build your understanding of statistical methods. I don't want you to leave this class with a "use this test for this kind of data" cookbook mentality, because that's where things go wrong.
+
+---
+
+## Learning Objectives
+
+By the end of this module, you will be able to...
+
+- Write your own functions and generate random values in `R`
+
+- Explain several foundational concepts in probability theory
+  - Probability Distribution Functions (PDFs)
+  - Random Variables
+  - Expectation
+  - Variance
+  - Central Limit Theorem
+  - Law of Large Numbers
+  - Bayes Rule 
+
+- Make inferences about populations from sample data
 
 ---
 
@@ -207,9 +207,9 @@ Nothing has a less-than-zero chance of happening.
 
 ### Property 2
 
-`$$\sum_{x} P(x) = 1$$` (discrete)
+`$$\sum_{x} P(x) = 1$$`
 
-`$$\int_{-\infty}^{+\infty} P(x)dx = 1$$` (continuous)
+`$$\int_{-\infty}^{+\infty} P(x)dx = 1$$`
 
 The probability of **something** happening equals 1.
 
@@ -276,6 +276,10 @@ sample(coin_outcomes, size = 30, replace = TRUE)
 [19] "Tails" "Heads" "Heads" "Heads" "Heads" "Heads" "Tails" "Heads" "Heads"
 [28] "Heads" "Heads" "Tails"
 ```
+
+--
+
+(Your values will probably be different than mine. That's good!)
 
 ---
 
@@ -742,7 +746,7 @@ fig &lt;- tibble(n = 1:num_draws,
   ggplot() + 
   geom_line(mapping = aes(x = n, y = sample_mean)) + 
   geom_hline(yintercept = p, color = 'red', linetype = 'dashed') +
-  labs(x = 'n', y = 'Sample Mean')
+  labs(x = 'Sample Size (n)', y = 'Sample Mean')
 ```
 
 ---
@@ -763,6 +767,8 @@ If you repeatedly draw a random variable a **large number of times**, the sample
 
 ???
 
+As we get larger and larger samples, the average value gets closer and closer to the expected value. That's why we like to have large samples. We can be more certain that our sample mean accurately captures the population mean.
+
 Quite easy to understand Law of Large Numbers once you understand CLT. In the limit, SE = 0.
 
 ---
@@ -774,8 +780,6 @@ Quite easy to understand Law of Large Numbers once you understand CLT. In the li
 
 &lt;!-- `$$E(aX) = aE(X)$$` --&gt;
 &lt;!-- &lt;TODO: Is this useful?&gt; --&gt;
-
----
 
 ## Variance
 
@@ -802,6 +806,10 @@ class: center, middle
 
 &lt;img src="img/normal-distribution.png" width="600" style="display: block; margin: auto;" /&gt;
 
+???
+
+"The unofficial sovereign of all statistics"
+
 ---
 
 class: center, middle
@@ -822,13 +830,20 @@ CCES &lt;- read_rds('data/CCES_2018.RDS') %&gt;%
                            pid3 == 2 ~ 'Republican',
                            pid3 == 3 ~ 'Independent')) %&gt;% 
   filter(!is.na(party))
+```
 
+---
+
+## The Population Distribution of Age
+
+
+```r
 ggplot(data = CCES) + 
   geom_histogram(aes(x=age), color = 'black', binwidth = 2) +
   labs(x = 'Age', y = 'Count')
 ```
 
-&lt;img src="07-Probability_files/figure-html/load CCES-1.png" width="40%" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-Probability_files/figure-html/age distribution-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ```r
 mean(CCES$age)
@@ -871,17 +886,13 @@ mean_age_of_sample(data = CCES, n = 100)
 
 The mean from any one sample will always be off a bit.
 
---
-
 ---
 
 ## The Sampling Distribution
 
-&lt;TODO: make that 10000&gt;
-
 
 ```r
-sampling_distribution &lt;- replicate(1000, mean_age_of_sample(data = CCES, n = 100))
+sampling_distribution &lt;- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
 
 tibble(sampling_distribution) %&gt;% 
   ggplot() + 
@@ -901,7 +912,7 @@ class: center, middle
 
 ## The Central Limit Theorem
 
-The mean of a large number of independent random variables will be (approximately) normally distributed.
+The mean of a large number of independent random variables will be (approximately) normally distributed around the true mean.
 
 ---
 
@@ -937,7 +948,7 @@ sd(sampling_distribution)
 ```
 
 ```
-[1] 1.769284
+[1] 1.791364
 ```
 
 --
@@ -946,17 +957,15 @@ sd(sampling_distribution)
 
 --
 
-&lt;TODO: make that 10000&gt;
-
 
 ```r
-sampling_distribution &lt;- replicate(1000, mean_age_of_sample(data = CCES, n = 400))
+sampling_distribution &lt;- replicate(10000, mean_age_of_sample(data = CCES, n = 400))
 
 sd(sampling_distribution)
 ```
 
 ```
-[1] 0.9072866
+[1] 0.8917132
 ```
 
 
@@ -982,19 +991,57 @@ class: center, middle
 
 ## Confidence Intervals
 
-Man, what a wacky idea.
+A **confidence interval** is the set of values for which we can't reject the null hypothesis with `\(p &lt; 1-\alpha\)`.
 
-The 95% confidence interval:
+--
+
+For example, the 95% confidence interval for a sample mean would be:
+
+`$$\left[\bar{X} - 2\frac{\sigma}{\sqrt{N}}, \bar{X} + 2\frac{\sigma}{\sqrt{N}}\right]$$`
+
+--
+
+Because 95% of the normal distribution lies within two standard deviations (technically 1.96, but two is okay as a rule of thumb).
 
 If you were to repeat this procedure a large number of times, the true value would lie within the confidence interval 95% of the time. 
 
-Alternatively, it is the set of values for which we can't reject the null hypothesis with `\(p &lt; 0.05\)`.
+---
+
+## Confidence Intervals
+
+**Exercise:** Draw a vector of 100 ages from CCES and compute a 95% confidence interval around your sample mean.
+
+--
+
+
+```r
+age_sample &lt;- sample(CCES$age, 100)
+
+confidence_interval_low &lt;- mean(age_sample) - 2 * sd(age_sample) / sqrt(100)
+
+confidence_interval_high &lt;- mean(age_sample) + 2 * sd(age_sample) / sqrt(100)
+
+confidence_interval_low
+```
+
+```
+[1] 47.43575
+```
+
+```r
+confidence_interval_high
+```
+
+```
+[1] 54.00425
+```
+
 
 ---
 
 # Glossary of Terms
 
----
+--
 
 ### Probability Distribution Function (PDF)
 
@@ -1037,6 +1084,10 @@ The average squared distance of a random variable from its expected value. Denot
 --
 
 The square root of variance. Denoted `\(\sigma\)`.
+
+---
+
+# Glossary of Terms
 
 --
 
@@ -1086,6 +1137,14 @@ The sum of `\(n\)` Bernoulli random variables
 
 A continuous, symmetric probability distribution function; 95% of the distribution falls within `\([\mu - 2\sigma, \mu + 2\sigma]\)`.
 
+
+---
+
+class: center, middle
+
+
+
+
 ---
 
 class: center, middle
@@ -1098,6 +1157,25 @@ class: center, middle
 ## Multivariable Probability Distributions
 
 
+---
+
+
+class: center, middle
+
+## Bivariate Hypothesis Testing
+
+---
+
+## Bivariate Hypothesis Testing
+
+&lt;br&gt;
+
+|                    |             | Independent Variable                |                         |
+|--------------------|-------------|-------------------------------------|-------------------------|
+|  |             | Categorical                         | Continuous              |
+|                    | Categorical | Tabular Analysis (chi-squared test) | MLE (probit/logit)      |
+|   **Dependent Variable**                 | Continuous  | Difference in Means (t-test)        | OLS (linear regression) |
+
 
 ---
 
@@ -1106,49 +1184,22 @@ class: center, middle
 
 ```r
 CCES %&gt;% 
-  filter(ownhome &lt; 3,
-         !is.na(CC18_325b)) %&gt;% 
-  mutate(ownhome = case_when(ownhome == 1 ~ 'Own',
-                             ownhome == 2 ~ 'Rent'),
-         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
-                                          CC18_325b == 2 ~ 0)) %&gt;%
-  group_by(ownhome) %&gt;% 
-  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
-            num = n())
+  group_by(party) %&gt;% 
+  summarize(mean_age = mean(age))
 ```
 
 ```
-# A tibble: 2 x 3
-  ownhome pct_supporting_reduced_MID   num
-  &lt;chr&gt;                        &lt;dbl&gt; &lt;int&gt;
-1 Own                          0.654 33583
-2 Rent                         0.638 17721
-```
-
-```r
-# respondents making over $100,000
-CCES %&gt;% 
-  filter(faminc_new %in% 1:16,
-         !is.na(CC18_325b)) %&gt;% 
-  mutate(rich = if_else(faminc_new &gt;= 10, 1, 0),
-         support_reducing_MID = case_when(CC18_325b == 1 ~ 1,
-                                          CC18_325b == 2 ~ 0)) %&gt;%
-  group_by(rich) %&gt;% 
-  summarize(pct_supporting_reduced_MID = mean(support_reducing_MID),
-            num = n())
-```
-
-```
-# A tibble: 2 x 3
-   rich pct_supporting_reduced_MID   num
-  &lt;dbl&gt;                      &lt;dbl&gt; &lt;int&gt;
-1     0                      0.664 38796
-2     1                      0.593  9927
+# A tibble: 3 x 2
+  party       mean_age
+  &lt;chr&gt;          &lt;dbl&gt;
+1 Democrat        46.6
+2 Independent     48.0
+3 Republican      52.2
 ```
 
 ---
 
-## Hypothesis Test
+## Difference In Means
 
 `\(H_0\)`: There is no difference between the average age of Republicans and Democrats.
 
@@ -1156,14 +1207,12 @@ CCES %&gt;%
 ```r
 # sample 100 Republicans ages
 rep_age &lt;- CCES %&gt;% 
-  mutate(age = 2018 - birthyr) %&gt;%  
   filter(pid3 == 2) %&gt;% 
   pull(age) %&gt;% 
   sample(100)
 
 # sample 100 Democrats ages
 dem_age &lt;- CCES %&gt;% 
-  mutate(age = 2018 - birthyr) %&gt;%  
   filter(pid3 == 1) %&gt;% 
   pull(age) %&gt;% 
   sample(100)
@@ -1172,7 +1221,7 @@ mean(rep_age)
 ```
 
 ```
-[1] 52.72
+[1] 54.97
 ```
 
 ```r
@@ -1180,7 +1229,7 @@ mean(dem_age)
 ```
 
 ```
-[1] 48.34
+[1] 48.74
 ```
 
 The Republicans seem to be older on average, but is that just sampling error?
@@ -1217,19 +1266,17 @@ difference_in_means(CCES, n1 = 100, n2 = 100)
 ```
 
 ```
-[1] -0.44
+[1] 3.72
 ```
 
 ---
 
 ## Get Sampling Distribution
 
-&lt;todo: make that 10000&gt;
-
 
 ```r
 observed &lt;- mean(rep_age) - mean(dem_age)
-sampling_distribution &lt;- replicate(1000, difference_in_means(CCES, n1 = 100, n2 = 100))
+sampling_distribution &lt;- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
 
 # sampling distribution
 tibble(sampling_distribution) %&gt;% 
@@ -1240,7 +1287,7 @@ tibble(sampling_distribution) %&gt;%
   geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
 ```
 
-&lt;img src="07-Probability_files/figure-html/hypothesis test: ages-1.png" width="600" style="display: block; margin: auto;" /&gt;
+&lt;img src="07-Probability_files/figure-html/hypothesis test: ages-1.png" width="45%" style="display: block; margin: auto;" /&gt;
 
 ```r
 # p-value
@@ -1248,12 +1295,12 @@ sum(abs(sampling_distribution) &gt; observed) / length(sampling_distribution)
 ```
 
 ```
-[1] 0.093
+[1] 0.0146
 ```
 
 ---
 
-## T Test
+## T-Test
 
 Hey good news; you can do it with one line.
 
@@ -1267,23 +1314,41 @@ t.test(rep_age, dem_age)
 	Welch Two Sample t-test
 
 data:  rep_age and dem_age
-t = 1.8302, df = 195.66, p-value = 0.06874
+t = 2.4617, df = 197.76, p-value = 0.01468
 alternative hypothesis: true difference in means is not equal to 0
 95 percent confidence interval:
- -0.3396658  9.0996658
+  1.239293 11.220707
 sample estimates:
 mean of x mean of y 
-    52.72     48.34 
+    54.97     48.74 
 ```
 
 ---
 
+class: center, middle
+
+## Okay
+
+---
 
 class: center, middle
 
-# Glossary of Terms, Part 2
+### I Confess That This Is The Point Where I Ran Out Of Course Prep Time. 
 
-???
+### I'm So Sorry. 
+
+### Let's Go To A Live Demo For The Remainder Of The Lesson.
+
+
+---
+
+## Problem Set 7
+
+Go back to your earlier work in Problem Sets 2-4. Find three examples where you described the distribution of a variable or the relationship between two variables. 
+
+For each example, formulate a hypothesis test. Is the relationship you found likely to result from chance alone, or could it be a real pattern?
+
+Since we only know t-tests and chi-squared tests, let's stick with categorical independent variables.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
