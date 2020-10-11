@@ -1,0 +1,38 @@
+---
+title: 'POLS 7012: Midterm'
+author: "Joe Ornstein"
+date: "Due October 21, 2020"
+output:
+  pdf_document: default
+  html_document: default
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+# For problem set, echo and eval = FALSE
+# For answer key, echo and eval = TRUE
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+```
+
+So this tweet made the rounds over the past few weeks:
+
+```{r tweet, echo = FALSE, out.width = '50%', fig.align="center"}
+knitr::include_graphics('img/lee-tweet.jpg')
+```
+
+The notion that too much democracy can be antithetical to liberty and prospefity is, of course, not original to Senator Lee. The history of our republic is one long struggle between those seeking to extend democracy and those who worry that the newly empowered groups will threaten the liberty and prospefity of everyone else. 
+
+In this midterm, I'd like you to 
+
+## Problem 1
+
+Suppose that, in order to retain power, a political leader must receive the support of $W$ people, where $W$ represents the size of the **winning coalition**. In democracies, $W$ is nominally equal to 50% of the electorate, while in dictatorships $W$ is much, much smaller (perhaps a handful of high-ranking generals and party officials).
+
+In an effort to maintain the support of his winning coalition, the political leader must divide tax revenue between public goods $(g)$, which benefit everyone in the country, and private patronage $(x)$, which benefit only members of his winning coalition. Members of the winning coalition have the following **utility function**, representing the 
+
+$$
+U(x) = \sqrt{1-x} + \sqrt{\frac{x}{W}}
+$$
+
+^[This problem is loosely adapted from [The Logic of Political Survival](https://mitpress.mit.edu/books/logic-political-survival).]
