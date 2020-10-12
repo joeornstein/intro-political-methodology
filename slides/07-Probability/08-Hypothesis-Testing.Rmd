@@ -1,0 +1,217 @@
+---
+title: "Probability & Inference"
+# author: "Joseph T. Ornstein"
+# date: "June 12, 2020"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightStyle: github
+      countIncrementalSlides: false
+subtitle: 'Part 2: Bivariate Hypothesis Tests'
+# institute: University of Georgia
+---
+
+<style>
+
+.center-middle {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+</style>
+
+```{r Setup, include=FALSE}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 16))
+knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
+                      fig.align = 'center', out.width = 600,
+                      message=FALSE, warning=FALSE, echo=TRUE)
+set.seed(42)
+```
+
+---
+
+class: center, middle
+
+## Previously...
+
+---
+
+## Today
+
+What if you have more than one variable, and you want to determine how they are related?
+
+--
+
+- Multivariable Probability Distribution Functions
+  - Joint Probability
+  - Conditional Probability
+  - Bayes Rule
+
+--
+
+- Two Variable (Bivariate) Hypothesis Tests
+  - T-Tests
+  - Chi-squared Tests
+
+--
+
+- Midterm Review
+
+
+---
+
+
+class: center, middle
+
+## Multivariable Probability Distributions
+
+
+---
+
+## Multivariable Probability Distributions
+
+
+---
+
+
+class: center, middle
+
+## Bivariate Hypothesis Testing
+
+---
+
+## Bivariate Hypothesis Testing
+
+<br>
+
+|                    |             | Independent Variable                |                         |
+|--------------------|-------------|-------------------------------------|-------------------------|
+|  |             | Categorical                         | Continuous              |
+|                    | Categorical | Tabular Analysis (chi-squared test) | MLE (probit/logit)      |
+|   **Dependent Variable**                 | Continuous  | Difference in Means (t-test)        | OLS (linear regression) |
+
+
+---
+
+## Bivariate Hypothesis Testing
+
+Let's import that CCES data again.
+
+```{r load that CCES}
+# Load CCES
+CCES <- read_rds('data/CCES_2018.RDS') %>% 
+  mutate(gender = if_else(gender == 1, 'Male', 'Female'),
+         age = 2018 - birthyr,
+         party = case_when(pid3 == 1 ~ 'Democrat',
+                           pid3 == 2 ~ 'Republican',
+                           pid3 == 3 ~ 'Independent')) %>% 
+  filter(!is.na(party))
+```
+
+
+---
+
+## Bivariate Hypothesis Testing
+
+```{r t test}
+CCES %>% 
+  group_by(party) %>% 
+  summarize(mean_age = mean(age))
+```
+
+---
+
+## Difference In Means
+
+$H_0$: There is no difference between the average age of Republicans and Democrats.
+
+```{r sample ages democrats vs republicans}
+
+# sample 100 Republicans ages
+rep_age <- CCES %>% 
+  filter(party == 'Democrat') %>%
+  pull(age) %>% 
+  sample(100)
+
+# sample 100 Democrats ages
+dem_age <- CCES %>% 
+  filter(party == 'Democrat') %>% 
+  pull(age) %>% 
+  sample(100)
+
+mean(rep_age)
+
+mean(dem_age)
+
+```
+
+The Republicans seem to be older on average, but is that just sampling error?
+
+--
+
+How would you test it?
+
+---
+
+## Function: Compute Test Statistic
+
+```{r compute test statistic}
+difference_in_means <- function(population, n1 = 100, n2 = 100){
+  
+  # get the mean age of a random sample of size n1
+  mean_age_dem <- population %>%
+    pull(age) %>%
+    sample(size = n1) %>%
+    mean
+  
+  # get the mean age of a random sample of size n2
+  mean_age_rep <- population %>%
+    pull(age) %>%
+    sample(size = n2) %>%
+    mean
+  
+  # return the difference
+  mean_age_rep - mean_age_dem
+}
+
+difference_in_means(CCES, n1 = 100, n2 = 100)
+```
+
+---
+
+## Get Sampling Distribution
+
+```{r hypothesis test: ages, out.width  = '45%'}
+observed <- mean(rep_age) - mean(dem_age)
+sampling_distribution <- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
+
+# sampling distribution
+tibble(sampling_distribution) %>% 
+  ggplot() + 
+  geom_histogram(aes(x=sampling_distribution), color = 'black') +
+  labs(x = 'Difference in Means', y = 'Count') +
+  theme_bw() + 
+  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
+
+# p-value
+sum(abs(sampling_distribution) > observed) / length(sampling_distribution)
+
+# confidence interval (get the middle 95%)
+sampling_distribution %>% 
+  quantile(c(0.025, 0.975))
+```
+
+---
+
+## Two Sample T-Test
+
+Hey good news! This is that two-sample t-test we were talking about. You can do this with one line too!
+
+```{r t.test}
+t.test(rep_age, dem_age)
+```

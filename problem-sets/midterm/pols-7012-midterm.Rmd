@@ -19,7 +19,7 @@ This tweet made the rounds on Political Science Twitter over the past few weeks:
 knitr::include_graphics('img/lee-tweet.jpg')
 ```
 
-The notion that too much democracy can be antithetical to liberty and prospefity is, of course, not original to Senator Lee. Indeed, the history of our republic is a series of struggles between those seeking to expand democracy and those concerned that newly enfranchised groups will threaten the liberty and prospefity of everyone else.
+The notion that too much democracy can be antithetical to liberty and prospefity is, of course, not original to Senator Lee. Indeed, the history of our republic consists of a series of struggles between those seeking to expand democracy and those concerned that newly enfranchised groups will threaten the liberty and prospefity of everyone else.
 
 In this midterm, we will interrogate the tweet's central **positive** (as opposed to normative) claim. Is it true that more democratic nations are less free or prosperous than non-democratic nations? In Problem 1, you will solve a formal model of the economic incentives faced by leaders across different political regimes.^[This problem is loosely adapted from [The Logic of Political Survival](https://mitpress.mit.edu/books/logic-political-survival).] In Problem 2, you will use your new skills importing, tidying, visualizing, and analyzing data to investigate the cross-national relationship between democracy and liberty.
 

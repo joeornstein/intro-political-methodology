@@ -797,7 +797,7 @@ The mean from any one sample will always be off a bit.
 
 ---
 
-## The Sampling Distribution
+### Now Take A **Bunch** of Samples (A Sampling Distribution)
 
 ```{r repeat mean sample ages histogram, out.width='50%'}
 sampling_distribution <- replicate(10000, mean_age_of_sample(data = CCES, n = 100))
@@ -819,16 +819,6 @@ class: center, middle
 ## The Central Limit Theorem
 
 The mean of a large number of independent random variables will be (approximately) normally distributed around the true mean.
-
----
-
-## Central Limit Theorem
-
-<iframe width="860" height="455" src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Galton_box.webm" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-???
-
-Imagine that each ball is a sample: when it goes left that means we randomly selected a person younger than the average, when it goes right that means we randomly selected a person older than the average. Most samples end up pretty close to the true mean, but sometimes you get really unlucky and draw a bunch of old people or a bunch of young people.
 
 ---
 
@@ -887,19 +877,48 @@ class: center, middle
 
 ## Confidence Intervals
 
-A **confidence interval** is the set of values for which we can't reject the null hypothesis with $p < 1-\alpha$.
+Here's another way to think about what we're doing.
+
+```{r point estimate}
+mean_age_of_sample(data = CCES, n = 100)
+```
+
+The mean of the sample is called a **point estimate**. It's our best guess at the population mean. 
 
 --
 
-For example, the 95% confidence interval for a sample mean would be:
+- The Law of Large Numbers tells us that the point estimate will be pretty close to the true value if the sample size is large enough.
+
+--
+
+- But *how close*? It would be nice to have an **interval estimate** that tells us the likely range of values for the true mean.
+
+--
+
+A **confidence interval** is that set of values.
+
+---
+
+## Confidence Intervals
+
+Thanks to the Central Limit Theorem and the normal distribution, we know that a sample mean will fall within two standard errors of the true mean 95% of the time.
+
+--
+
+So a 95% confidence interval can be constructed like this:
 
 $$\left[\bar{X} - 2\frac{\sigma}{\sqrt{N}}, \bar{X} + 2\frac{\sigma}{\sqrt{N}}\right]$$
 
 --
 
-Because 95% of the normal distribution lies within two standard deviations (technically 1.96, but two is okay as a rule of thumb).
+- (Technically 95% of the distribution falls within 1.96 standard deviations, but two is okay as a rule of thumb).
 
-If you were to repeat this procedure a large number of times, the true value would lie within the confidence interval 95% of the time. 
+- If you were to repeat this procedure a large number of times, the true value would lie within the confidence interval 95% of the time. 
+
+--
+
+Another way to think about it: the 95% confidence interval is the set of values for which we can't reject the null hypothesis with $p < 0.05$.
+
 
 ---
 
@@ -921,6 +940,15 @@ confidence_interval_low
 confidence_interval_high
 ```
 
+---
+
+## One Sample T-Test
+
+Hey, you just performed a **one sample t-test** (more on two sample t-tests next time)!
+
+```{r one sample t-test}
+t.test(age_sample)
+```
 
 ---
 
@@ -1006,11 +1034,15 @@ The sampling distribution of the mean of a large number $(n>30)$ of independent 
 
 ### Bernoulli Distribution
 
+--
+
 $P(X=1) = p$ and $P(X=0) = 1-p$
 
 --
 
 ### Binomial Distribution
+
+--
 
 The sum of $n$ Bernoulli random variables
 
@@ -1021,168 +1053,3 @@ The sum of $n$ Bernoulli random variables
 --
 
 A continuous, symmetric probability distribution function; 95% of the distribution falls within $[\mu - 2\sigma, \mu + 2\sigma]$.
-
-
----
-
-class: center, middle
-
-
-
-
----
-
-class: center, middle
-
-## Multivariable Probability Distributions
-
-
----
-
-## Multivariable Probability Distributions
-
-
----
-
-
-class: center, middle
-
-## Bivariate Hypothesis Testing
-
----
-
-## Bivariate Hypothesis Testing
-
-<br>
-
-|                    |             | Independent Variable                |                         |
-|--------------------|-------------|-------------------------------------|-------------------------|
-|  |             | Categorical                         | Continuous              |
-|                    | Categorical | Tabular Analysis (chi-squared test) | MLE (probit/logit)      |
-|   **Dependent Variable**                 | Continuous  | Difference in Means (t-test)        | OLS (linear regression) |
-
-
----
-
-## Bivariate Hypothesis Testing
-
-```{r t test}
-CCES %>% 
-  group_by(party) %>% 
-  summarize(mean_age = mean(age))
-```
-
----
-
-## Difference In Means
-
-$H_0$: There is no difference between the average age of Republicans and Democrats.
-
-```{r sample ages democrats vs republicans}
-
-# sample 100 Republicans ages
-rep_age <- CCES %>% 
-  filter(pid3 == 2) %>% 
-  pull(age) %>% 
-  sample(100)
-
-# sample 100 Democrats ages
-dem_age <- CCES %>% 
-  filter(pid3 == 1) %>% 
-  pull(age) %>% 
-  sample(100)
-
-mean(rep_age)
-
-mean(dem_age)
-
-```
-
-The Republicans seem to be older on average, but is that just sampling error?
-
---
-
-How would you test it?
-
----
-
-## Function: Compute Test Statistic
-
-```{r compute test statistic}
-difference_in_means <- function(population, n1 = 100, n2 = 100){
-  
-  # get the mean age of a random sample of size n1
-  mean_age_dem <- population %>%
-    pull(age) %>%
-    sample(size = n1) %>%
-    mean
-  
-  # get the mean age of a random sample of size n2
-  mean_age_rep <- population %>%
-    pull(age) %>%
-    sample(size = n2) %>%
-    mean
-  
-  # return the difference
-  mean_age_rep - mean_age_dem
-}
-
-difference_in_means(CCES, n1 = 100, n2 = 100)
-```
-
----
-
-## Get Sampling Distribution
-
-```{r hypothesis test: ages, out.width  = '45%'}
-observed <- mean(rep_age) - mean(dem_age)
-sampling_distribution <- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
-
-# sampling distribution
-tibble(sampling_distribution) %>% 
-  ggplot() + 
-  geom_histogram(aes(x=sampling_distribution), color = 'black') +
-  labs(x = 'Difference in Means', y = 'Count') +
-  theme_bw() + 
-  geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
-
-# p-value
-sum(abs(sampling_distribution) > observed) / length(sampling_distribution)
-```
-
----
-
-## T-Test
-
-Hey good news; you can do it with one line.
-
-```{r t.test}
-t.test(rep_age, dem_age)
-```
-
----
-
-class: center, middle
-
-## Okay
-
----
-
-class: center, middle
-
-### I Confess That This Is The Point Where I Ran Out Of Course Prep Time. 
-
-### I'm So Sorry. 
-
-### Let's Go To A Live Demo For The Remainder Of The Lesson.
-
-
----
-
-## Problem Set 7
-
-Go back to your earlier work in Problem Sets 2-4. Find three examples where you described the distribution of a variable or the relationship between two variables. 
-
-For each example, formulate a hypothesis test. Is the relationship you found likely to result from chance alone, or could it be a real pattern?
-
-Since we only know t-tests and chi-squared tests, let's stick with categorical independent variables.
