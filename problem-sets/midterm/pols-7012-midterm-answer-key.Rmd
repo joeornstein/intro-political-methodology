@@ -37,16 +37,89 @@ The first term represents utility from public goods $(1-x)$ and the second term 
 
 If the political leader wanted to **maximize** the support of his winning coalition, what fraction of tax revenue would he devote to private goods $(x)$? Is that fraction increasing or decreasing in the size of the winning coalition $(W)$?
 
+### Solution
+
+To maximize utility, set the derivative of the utility function equal to zero and solve. First, remember that $\sqrt{x} = x^\frac{1}{2}$
+
+$$
+U(x) = \left(\frac{x}{W}\right)^\frac{1}{2} + \left(1-x\right)^\frac{1}{2}
+$$
+To take the derivative, you can use the **chain rule** (or Wolfram Alpha).
+
+$$
+\frac{\partial U}{\partial x} = \frac{1}{2W}\left(\frac{x}{W}\right)^{-\frac{1}{2}} - \frac{1}{2}\left(1-x\right)^{-\frac{1}{2}} = 0
+$$
+Set equal to zero and rearrange.
+
+$$
+\frac{1}{2W}\left(\frac{x}{W}\right)^{-\frac{1}{2}} = \frac{1}{2}\left(1-x\right)^{-\frac{1}{2}}
+$$
+Cancel out some terms.
+
+$$
+\left(\frac{x}{W}\right)^{-\frac{1}{2}} = W\left(1-x\right)^{-\frac{1}{2}}
+$$
+Raise each side to the $-2$ power.
+
+$$
+\frac{x}{W} = W^{-2}(1-x)
+$$
+Rearrange the $W$s.
+
+$$
+Wx = 1-x
+$$
+
+Solve for $x$.
+
+$$
+Wx+x = 1
+$$
+$$
+(W+1)x = 1
+$$
+$$
+x = \frac{1}{W+1}
+$$
+As $W$ increases (and thus the country becomes more democratic), the share of resources going to private patronage decreases and the share going to public goods increases.
+
 ## Problem 2
 
 The [Freedom House](https://freedomhouse.org/) organization keeps a long-running dataset called **Freedom in the World** (FIW) in which experts score countries on the basis of political rights and civil liberties on a scale of 0 to 100. You can download the complete dataset [here](https://freedomhouse.org/sites/default/files/2020-02/2020_All_Data_FIW_2013-2020.xlsx), and you can find an example of how the subindices are scored [here](https://freedomhouse.org/country/afghanistan/freedom-world/2020).
 
 1. Load the FIW data into `R`.
 
+```{r load data}
+library(readxl)
+FIW <- read_xlsx(path = 'data/2020_All_Data_FIW_2013-2020.xlsx', skip = 1, sheet = 'FIW13-20')
+```
+
 2. Keep only the most recent year of data. Keep only the countries (not the territories).
 
 3. Of the 25 questions, some are about **democracy** (i.e. are political leaders elected?) and others are about **freedom/liberty** (i.e. can people practice their religion without fear of persecution? is there a free and independent media? etc.). Create one variable called `democracy_score`, equal to the sum of all the scores on questions related to democracy, and another variable called `liberty_score`, equal to the sum of all the scores on questions related to liberty.
 
+```{r filter and mutate}
+FIW <- FIW %>% 
+  filter(`C/T` == 'c',
+         Edition == 2020) %>% 
+  mutate(democracy_score = A1 + A2 + A3 + B1 + B2 + B3 + B4 + C1 + C2 + C3,
+         liberty_score = D1 + D2 + D3 + D4 + E1 + E2 + E3 + F1 + F2 + F3 + F4 + G1 + G2 + G3 + G4)
+```
+
 4. Visualize the relationship between liberty and democracy.
 
+```{r ggplot}
+ggplot(FIW) + 
+  geom_point(mapping = aes(x=democracy_score, y = liberty_score)) + 
+  geom_smooth(mapping = aes(x=democracy_score, y = liberty_score), color = 'black') +
+  theme_bw() +
+  labs(x='Democracy Score', y = 'Liberty Score')
+```
+
 5. Split the countries into democratic and non-democratic (your choice where you split) and conduct a bivariate hypothesis test. Are the democratic countries more free on average than the non-democratic countries?
+
+```{r hypothesis test}
+FIW %>% 
+  mutate(democratic = if_else(democracy_score > 20, 1, 0)) %>% 
+  t.test(liberty_score ~ democratic, data = .)
+```

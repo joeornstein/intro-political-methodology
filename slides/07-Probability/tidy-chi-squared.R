@@ -8,6 +8,8 @@
 
 
 library(tidyverse)
+library(broom)
+
 
 
 ## First, the example from Kellstedt & Whitten (Table 8.7) --------------------------
@@ -16,6 +18,9 @@ table_8_7 <- tibble(male = c(170, 204),
                     female = c(229, 208))
 
 chisq.test(table_8_7, correct = FALSE) # replicated!
+
+chisq.test(table_8_7, correct = FALSE) %>% 
+  tidy
 
 ## Suppose we had that table in a tidy tibble ------------------------------------------
 
@@ -31,6 +36,13 @@ data %>%
   select(sex, vote) %>% 
   table %>% 
   chisq.test(correct = FALSE)
+
+
+data %>% 
+  select(sex, vote) %>% 
+  table %>% 
+  chisq.test(correct = FALSE) %>% 
+  tidy
 
 
 ## Monte Carlo ------------------------------------
