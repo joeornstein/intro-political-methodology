@@ -370,7 +370,7 @@ get_null_chi_squared <- function(data, n){
   sum((null_table - expected_table)^2 / expected_table)
 }
 
-get_null_chi_squared(data = CCES, n = 1000)
+get_null_chi_squared(data = CCES_sample, n = 1000)
 ```
 
 ---
@@ -380,7 +380,7 @@ get_null_chi_squared(data = CCES, n = 1000)
 Generate the sampling distribution.
 
 ```{r chi-squared sampling distribution}
-sampling_distribution <- replicate(10000, get_null_chi_squared(data = CCES, n = 1000))
+sampling_distribution <- replicate(10000, get_null_chi_squared(data = CCES_sample, n = 1000))
 
 chisq_plot <- tibble(sampling_distribution) %>% 
   ggplot() +
@@ -416,7 +416,7 @@ sum(sampling_distribution > observed_chi_squared_statistic) / length(sampling_di
 
 ---
 
-## Chi-Squared
+## Chi-Squared Test
 
 Now, I can show you how to do it in one line...
 
@@ -435,8 +435,15 @@ CCES_sample %>%
 
 ---
 
+class: center, middle
 
-## Bivariate Hypothesis Testing
+## One Categorical and One Continuous Variable (Two Sample T-Test)
+
+---
+
+### One Categorical and One Continuous Variable (Two Sample T-Test)
+
+Also known as a **difference in means** test.
 
 ```{r t test}
 CCES %>% 
@@ -446,19 +453,16 @@ CCES %>%
 
 ---
 
-## Difference In Means
-
-$H_0$: There is no difference between the average age of Republicans and Democrats.
+## Difference in Means Test
 
 ```{r sample ages democrats vs republicans}
-
-# sample 100 Republicans ages
+# sample 1,000 Republicans ages
 rep_age <- CCES %>% 
-  filter(party == 'Democrat') %>%
+  filter(party == 'Republican') %>%
   pull(age) %>% 
   sample(100)
 
-# sample 100 Democrats ages
+# sample 1,000 Democrats ages
 dem_age <- CCES %>% 
   filter(party == 'Democrat') %>% 
   pull(age) %>% 
@@ -470,15 +474,24 @@ mean(dem_age)
 
 ```
 
-The Republicans seem to be older on average, but is that just sampling error?
-
---
-
-How would you test it?
+The Republicans seem to be older on average, but is that just sampling error? How would you test it?
 
 ---
 
-## Function: Compute Test Statistic
+
+## Difference in Means Test
+
+### Step 1: Specify the Null Hypothesis
+
+$H_0$: There is no difference between the average age of Republicans and Democrats.
+
+--
+
+### Step 2: Generate the Sampling Distribution
+
+---
+
+### Function: Draw a Sample and Compute the Difference in Means
 
 ```{r compute test statistic}
 difference_in_means <- function(population, n1 = 100, n2 = 100){
@@ -504,11 +517,11 @@ difference_in_means(CCES, n1 = 100, n2 = 100)
 
 ---
 
-## Get Sampling Distribution
+## Step 2: Get the Sampling Distribution
 
 ```{r hypothesis test: ages, out.width  = '45%'}
 observed <- mean(rep_age) - mean(dem_age)
-sampling_distribution <- replicate(1000, difference_in_means(CCES, n1 = 100, n2 = 100))
+sampling_distribution <- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
 
 # sampling distribution
 tibble(sampling_distribution) %>% 
@@ -517,21 +530,42 @@ tibble(sampling_distribution) %>%
   labs(x = 'Difference in Means', y = 'Count') +
   theme_bw() + 
   geom_vline(xintercept = observed, linetype = 'dashed', color = 'red')
-
-# p-value
-sum(abs(sampling_distribution) > observed) / length(sampling_distribution)
-
-# confidence interval (get the middle 95%)
-sampling_distribution %>% 
-  quantile(c(0.025, 0.975))
 ```
 
 ---
 
-## Two Sample T-Test
+## Step 3: Compare to Observed Test Statistic
 
-Hey good news! This is that two-sample t-test we were talking about. You can do this with one line too!
+
+```{r t-test p-values and confidence intervals}
+# p-value
+sum(abs(sampling_distribution) > observed) / length(sampling_distribution)
+```
+
+---
+
+## Difference in Means Test
+
+Now I can show you how to do a two-sample t-test in one line...
 
 ```{r t.test}
 t.test(rep_age, dem_age)
 ```
+
+---
+
+## Difference in Means Test
+
+Alternatively, you can use the "formula" syntax:
+
+```{r t.test 2}
+CCES %>% 
+  filter(party %in% c('Republican', 'Democrat')) %>% 
+  t.test(age ~ party, data = .)
+```
+
+---
+
+class: center, middle
+
+# Midterm Review

@@ -475,11 +475,11 @@ get_null_chi_squared &lt;- function(data, n){
   sum((null_table - expected_table)^2 / expected_table)
 }
 
-get_null_chi_squared(data = CCES, n = 1000)
+get_null_chi_squared(data = CCES_sample, n = 1000)
 ```
 
 ```
-[1] 10.31179
+[1] 1.275859
 ```
 
 ---
@@ -490,7 +490,7 @@ Generate the sampling distribution.
 
 
 ```r
-sampling_distribution &lt;- replicate(10000, get_null_chi_squared(data = CCES, n = 1000))
+sampling_distribution &lt;- replicate(10000, get_null_chi_squared(data = CCES_sample, n = 1000))
 
 chisq_plot &lt;- tibble(sampling_distribution) %&gt;% 
   ggplot() +
@@ -525,7 +525,7 @@ chisq_plot +
   geom_vline(xintercept = observed_chi_squared_statistic, linetype = 'dashed', color = 'red')
 ```
 
-&lt;img src="08-Hypothesis-Testing_files/figure-html/add actual-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="08-Hypothesis-Testing_files/figure-html/add actual-1.png" width="35%" style="display: block; margin: auto;" /&gt;
 
 ```r
 # p-value
@@ -533,12 +533,12 @@ sum(sampling_distribution &gt; observed_chi_squared_statistic) / length(sampling
 ```
 
 ```
-[1] 0.0791
+[1] 4e-04
 ```
 
 ---
 
-## Chi-Squared
+## Chi-Squared Test
 
 Now, I can show you how to do it in one line...
 
@@ -575,8 +575,15 @@ X-squared = 15.646, df = 2, p-value = 0.0004005
 
 ---
 
+class: center, middle
 
-## Bivariate Hypothesis Testing
+## One Categorical and One Continuous Variable (Two Sample T-Test)
+
+---
+
+### One Categorical and One Continuous Variable (Two Sample T-Test)
+
+Also known as a **difference in means** test.
 
 
 ```r
@@ -596,19 +603,17 @@ CCES %&gt;%
 
 ---
 
-## Difference In Means
-
-`\(H_0\)`: There is no difference between the average age of Republicans and Democrats.
+## Difference in Means Test
 
 
 ```r
-# sample 100 Republicans ages
+# sample 1,000 Republicans ages
 rep_age &lt;- CCES %&gt;% 
-  filter(party == 'Democrat') %&gt;%
+  filter(party == 'Republican') %&gt;%
   pull(age) %&gt;% 
   sample(100)
 
-# sample 100 Democrats ages
+# sample 1,000 Democrats ages
 dem_age &lt;- CCES %&gt;% 
   filter(party == 'Democrat') %&gt;% 
   pull(age) %&gt;% 
@@ -618,7 +623,7 @@ mean(rep_age)
 ```
 
 ```
-[1] 48.32
+[1] 53.91
 ```
 
 ```r
@@ -626,18 +631,27 @@ mean(dem_age)
 ```
 
 ```
-[1] 48.8
+[1] 44.33
 ```
 
-The Republicans seem to be older on average, but is that just sampling error?
-
---
-
-How would you test it?
+The Republicans seem to be older on average, but is that just sampling error? How would you test it?
 
 ---
 
-## Function: Compute Test Statistic
+
+## Difference in Means Test
+
+### Step 1: Specify the Null Hypothesis
+
+`\(H_0\)`: There is no difference between the average age of Republicans and Democrats.
+
+--
+
+### Step 2: Generate the Sampling Distribution
+
+---
+
+### Function: Draw a Sample and Compute the Difference in Means
 
 
 ```r
@@ -663,17 +677,17 @@ difference_in_means(CCES, n1 = 100, n2 = 100)
 ```
 
 ```
-[1] -4.66
+[1] 1.67
 ```
 
 ---
 
-## Get Sampling Distribution
+## Step 2: Get the Sampling Distribution
 
 
 ```r
 observed &lt;- mean(rep_age) - mean(dem_age)
-sampling_distribution &lt;- replicate(1000, difference_in_means(CCES, n1 = 100, n2 = 100))
+sampling_distribution &lt;- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
 
 # sampling distribution
 tibble(sampling_distribution) %&gt;% 
@@ -686,31 +700,26 @@ tibble(sampling_distribution) %&gt;%
 
 &lt;img src="08-Hypothesis-Testing_files/figure-html/hypothesis test: ages-1.png" width="45%" style="display: block; margin: auto;" /&gt;
 
+---
+
+## Step 3: Compare to Observed Test Statistic
+
+
+
 ```r
 # p-value
 sum(abs(sampling_distribution) &gt; observed) / length(sampling_distribution)
 ```
 
 ```
-[1] 1
-```
-
-```r
-# confidence interval (get the middle 95%)
-sampling_distribution %&gt;% 
-  quantile(c(0.025, 0.975))
-```
-
-```
-    2.5%    97.5% 
--4.93175  4.63225 
+[1] 1e-04
 ```
 
 ---
 
-## Two Sample T-Test
+## Difference in Means Test
 
-Hey good news! This is that two-sample t-test we were talking about. You can do this with one line too!
+Now I can show you how to do a two-sample t-test in one line...
 
 
 ```r
@@ -722,14 +731,47 @@ t.test(rep_age, dem_age)
 	Welch Two Sample t-test
 
 data:  rep_age and dem_age
-t = -0.18433, df = 197.84, p-value = 0.8539
+t = 4.036, df = 194.58, p-value = 7.812e-05
 alternative hypothesis: true difference in means is not equal to 0
 95 percent confidence interval:
- -5.615223  4.655223
+  4.898633 14.261367
 sample estimates:
 mean of x mean of y 
-    48.32     48.80 
+    53.91     44.33 
 ```
+
+---
+
+## Difference in Means Test
+
+Alternatively, you can use the "formula" syntax:
+
+
+```r
+CCES %&gt;% 
+  filter(party %in% c('Republican', 'Democrat')) %&gt;% 
+  t.test(age ~ party, data = .)
+```
+
+```
+
+	Welch Two Sample t-test
+
+data:  age by party
+t = -30.023, df = 34128, p-value &lt; 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -5.920804 -5.195107
+sample estimates:
+  mean in group Democrat mean in group Republican 
+                46.64286                 52.20081 
+```
+
+---
+
+class: center, middle
+
+# Midterm Review
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

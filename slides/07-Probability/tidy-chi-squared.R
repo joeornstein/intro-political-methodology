@@ -164,9 +164,9 @@ get_null_chi_squared <- function(data, n){
   sum((null_table - expected_table)^2 / expected_table)
 }
 
-get_null_chi_squared(data = CCES, n = 1000)
+get_null_chi_squared(data = CCES_sample, n = 1000) # note: using the CCES sample here so it's a permutation test
 
-sampling_distribution <- replicate(10000, get_null_chi_squared(data = CCES, n = 1000))
+sampling_distribution <- replicate(10000, get_null_chi_squared(data = CCES_sample, n = 1000))
 
 tibble(sampling_distribution) %>% 
   ggplot() +
@@ -177,3 +177,7 @@ tibble(sampling_distribution) %>%
 sum(sampling_distribution > observed_chi_squared_statistic) / length(sampling_distribution)
 
 observed_chi_squared_statistic
+
+chisq.test(observed_table)
+
+# TODO: Why is the result so off when I draw from the population? Check out 1977 Monte Carlo paper.
