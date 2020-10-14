@@ -7,7 +7,7 @@ output:
     nature:
       highlightStyle: github
       countIncrementalSlides: false
-subtitle: 'Part 2: Bivariate Hypothesis Tests'
+subtitle: 'Part 2: Multivariate PDFs and Hypothesis Testing'
 # institute: University of Georgia
 ---
 
@@ -33,21 +33,14 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
 set.seed(42)
 ```
 
----
+## Today's Objectives
 
-class: center, middle
-
-## Previously...
-
----
-
-## Today
-
-What if you have more than one variable, and you want to determine how they are related?
+What if you have more than one variable, and you want to test whether they are associated?
 
 --
 
-- Multivariable Probability Distribution Functions
+- Multivariate PDFs
+
   - Joint Probability
   - Conditional Probability
   - Bayes Rule
@@ -55,6 +48,7 @@ What if you have more than one variable, and you want to determine how they are 
 --
 
 - Two Variable (Bivariate) Hypothesis Tests
+
   - T-Tests
   - Chi-squared Tests
 
@@ -68,13 +62,185 @@ What if you have more than one variable, and you want to determine how they are 
 
 class: center, middle
 
-## Multivariable Probability Distributions
+## Multivariate PDFs
 
 
 ---
 
-## Multivariable Probability Distributions
+## Multivariate PDFs
 
+Now we have two variables: $X$ and $Y$. Their **joint** probability distribution function must satisfy:
+
+$$P(x,y) \geq 0$$
+
+**Discrete**:
+
+$$\sum_x \sum_y P(x,y) = 1$$
+
+**Continuous**:
+
+$$\int_x \int_y f(x,y) = 1$$
+
+
+---
+
+### Example 1: Two Categorical Random Variables
+
+```{r load that CCES}
+# Load CCES
+CCES <- read_rds('data/CCES_2018.RDS') %>% 
+  mutate(gender = if_else(gender == 1, 'Male', 'Female'),
+         age = 2018 - birthyr,
+         party = case_when(pid3 == 1 ~ 'Democrat',
+                           pid3 == 2 ~ 'Republican',
+                           pid3 == 3 ~ 'Independent')) %>% 
+  filter(!is.na(party))
+
+joint_distribution <- table(CCES$gender, CCES$party) / nrow(CCES)
+
+joint_distribution
+
+sum(joint_distribution)
+```
+
+
+---
+
+### Example 2: One Categorical and One Continuous Random Variable
+
+```{r joint pdf example 2}
+ggplot(data = CCES) +
+  geom_violin(mapping = aes(x=age, y = party)) +
+  labs(x = 'Age', y = 'Party')
+```
+
+
+---
+
+## Marginal Distributions
+
+The **marginal** distribution is the PDF one variable without considering the value of the other variable.
+
+```{r marginal dist}
+joint_distribution # joint distribution of gender and party
+
+table(CCES$party) / nrow(CCES) # marginal distribution of party
+
+table(CCES$gender) / nrow(CCES) # marginal distribution of gender
+```
+
+---
+
+
+## Marginal Distributions
+
+**Note:** "Marginalizing" a distribution is equivalent to taking the row or column sums of the joint distribution.
+
+```{r marginal dist 2}
+table(CCES$party) / nrow(CCES) 
+
+colSums(joint_distribution) # marginal distribution of party
+
+rowSums(joint_distribution)  # marginal distribution of gender
+```
+
+---
+
+## Conditional Distributions
+
+The **conditional** distribution is the PDF of one variable, holding the other variable constant.
+
+```{r conditional probability 1}
+joint_distribution
+```
+
+$$P(\text{party} | \text{gender}) = \frac{P(\text{party}, \text{gender})}{P(\text{gender})} = \frac{\text{joint}}{\text{marginal}} $$
+
+```{r conditional probability 2}
+# Conditional distribution of party given gender
+joint_distribution / rowSums(joint_distribution)
+```
+
+---
+
+## Independence
+
+Two variables are **independent** if the conditional distribution is the same as the marginal distribution.
+
+$$P(\text{party}|\text{gender}) = P(\text{party})$$
+
+--
+
+<br>
+
+**Intuition**: If men and women both have the same probability distribution over party, then we say that party is *independent* of gender.
+
+???
+
+Note for future classes: derive Bayes Rule and joint = P(A)*P(B) from those two premises.
+
+---
+
+## Bayes Rule
+
+$$P(\text{party} | \text{gender}) = \frac{P(\text{party}, \text{gender})}{P(\text{gender})}$$
+.center[and]
+
+$$P(\text{gender} | \text{party}) = \frac{P(\text{party}, \text{gender})}{P(\text{party})}$$
+
+--
+
+.center[which means...]
+
+$$P(\text{gender} | \text{party}) P(\text{party}) = P(\text{party} | \text{gender}) P(\text{gender})$$
+--
+
+<br>
+
+.center[which means...]
+
+<br>
+
+$$P(\text{gender} | \text{party}) = \frac{P(\text{party} | \text{gender}) P(\text{gender})}{P(\text{party})}$$
+---
+
+class: center, middle
+
+# Bayes Rule
+
+$$P(A|B) = P(B|A)\frac{P(A)}{P(B)}$$
+--
+
+If you know one conditional distribution, you can compute the other!
+
+---
+
+## Bayes Rule
+
+Suppose I get a positive COVID test. What's the chance I have COVID-19? I want to know $P(\text{COVID-negative} | \text{Positive Test})$.
+
+--
+
+I know the false positive rate of a COVID-19 test:
+
+$$P(\text{Positive Test} | \text{COVID-negative}) = 0.05$$
+--
+
+I know my **prior** probability that I'm COVID-negative:
+
+$$P(\text{COVID-negative}) = 0.95$$
+
+--
+
+I know the overall positivity rate in Georgia:
+
+$$P(\text{Positive Test}) = 0.1$$
+
+--
+
+So, thanks to Bayes Rule, I know my **posterior** probability:
+
+$$P(\text{COVID-negative} | \text{Positive Test}) = 0.05 \times \frac{0.95}{0.1} = 47.5\%$$
 
 ---
 
@@ -87,6 +253,8 @@ class: center, middle
 
 ## Bivariate Hypothesis Testing
 
+We have two variables and we want to know if they are **independent** of one another, or if there is an association.
+
 <br>
 
 |                    |             | Independent Variable                |                         |
@@ -98,23 +266,175 @@ class: center, middle
 
 ---
 
-## Bivariate Hypothesis Testing
+## Two Categorical Variables (Chi-Squared Test)
 
-Let's import that CCES data again.
+```{r recap that joint distribution, out.width = '35%'}
+CCES %>% 
+  select(gender, party) %>% 
+  table
 
-```{r load that CCES}
-# Load CCES
-CCES <- read_rds('data/CCES_2018.RDS') %>% 
-  mutate(gender = if_else(gender == 1, 'Male', 'Female'),
-         age = 2018 - birthyr,
-         party = case_when(pid3 == 1 ~ 'Democrat',
-                           pid3 == 2 ~ 'Republican',
-                           pid3 == 3 ~ 'Independent')) %>% 
-  filter(!is.na(party))
+ggplot(data = CCES) +
+  geom_bar(mapping = aes(x=gender,fill=party), position = 'fill')
 ```
 
+???
+
+**Step 1**: Specify the Null Hypothesis.
+
+**Step 2**: Generate the sampling distribution.
+
+**Step 3**: Compare observed outcome to sampling distribution.
 
 ---
+
+## Chi-Squared Test
+
+### Step 1: Specify the Null Hypothesis
+
+$H_0$: The two variables are **independent**.
+
+--
+
+### Step 2: Generate the sampling distribution
+
+Create a bunch of independent tables, and compute a chi-squared statistic for each.
+
+$$\sum \frac{\left(\text{observed}-\text{expected}\right)^2}{\text{expected}}$$
+--
+
+### Step 3: Compare with observed outcome
+
+Compare to the chi-squared statistic from the actual table to the sampling distribution.
+
+---
+
+## Chi-Squared Test
+
+Draw a sample and get the observed table.
+
+```{r draw a sample}
+n <- 1000
+
+CCES_sample <- CCES %>% 
+  sample_n(size = n)
+
+observed_table <- CCES_sample %>% 
+  select(gender, party) %>% 
+  table
+
+observed_table
+```
+
+---
+
+
+## Chi-Squared Test
+
+What is the **expected** table if the two variables were independent?
+
+```{r expected table}
+gender_marginal_distribution <- table(CCES_sample$gender) / nrow(CCES_sample)
+
+party_marginal_distribution <- table(CCES_sample$party) / nrow(CCES_sample)
+
+expected_table <- outer(gender_marginal_distribution, party_marginal_distribution) * nrow(CCES_sample)
+
+expected_table
+```
+
+--
+
+**Remember the definition of independence:** conditional distributions are the same as the marginal distributions.
+
+---
+
+## Chi-Squared Test
+
+```{r function}
+get_null_chi_squared <- function(data, n){
+  
+  # get a random sample of the party variable
+  party <- data %>% 
+    pull(party) %>% 
+    sample(size = n)
+  
+  # get a random sample of the gender variable
+  gender <- data %>% 
+    pull(gender) %>% 
+    sample(size = n)
+  
+  # create the table
+  null_table <- table(gender, party)
+  
+  # return the chi-squared statistic
+  sum((null_table - expected_table)^2 / expected_table)
+}
+
+get_null_chi_squared(data = CCES, n = 1000)
+```
+
+---
+
+## Chi-Squared Test
+
+Generate the sampling distribution.
+
+```{r chi-squared sampling distribution}
+sampling_distribution <- replicate(10000, get_null_chi_squared(data = CCES, n = 1000))
+
+chisq_plot <- tibble(sampling_distribution) %>% 
+  ggplot() +
+  geom_histogram(aes(x=sampling_distribution), color = 'black') +
+  theme_bw()
+```
+
+---
+
+## Chi-Squared Test
+
+Plot the sampling distribution.
+
+```{r plot chi-squared sampling distribution}
+chisq_plot
+```
+
+---
+
+## Chi-Squared Test
+
+Compare to the **actual** chi-squared statistic.
+
+```{r add actual, out.width = '35%'}
+observed_chi_squared_statistic <- sum((observed_table - expected_table)^2 / expected_table)
+
+chisq_plot +
+  geom_vline(xintercept = observed_chi_squared_statistic, linetype = 'dashed', color = 'red')
+
+# p-value
+sum(sampling_distribution > observed_chi_squared_statistic) / length(sampling_distribution)
+```
+
+---
+
+## Chi-Squared
+
+Now, I can show you how to do it in one line...
+
+--
+
+```{r one line chi-squared}
+CCES_sample %>% 
+  select(gender, party) %>% 
+  table
+
+CCES_sample %>% 
+  select(gender, party) %>% 
+  table %>% 
+  chisq.test
+```
+
+---
+
 
 ## Bivariate Hypothesis Testing
 
@@ -188,7 +508,7 @@ difference_in_means(CCES, n1 = 100, n2 = 100)
 
 ```{r hypothesis test: ages, out.width  = '45%'}
 observed <- mean(rep_age) - mean(dem_age)
-sampling_distribution <- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
+sampling_distribution <- replicate(1000, difference_in_means(CCES, n1 = 100, n2 = 100))
 
 # sampling distribution
 tibble(sampling_distribution) %>% 

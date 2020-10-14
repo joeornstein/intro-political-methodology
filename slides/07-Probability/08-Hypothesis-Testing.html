@@ -11,7 +11,7 @@
 class: center, middle, inverse, title-slide
 
 # Probability &amp; Inference
-## Part 2: Bivariate Hypothesis Tests
+## Part 2: Multivariate PDFs and Hypothesis Testing
 
 ---
 
@@ -31,24 +31,292 @@ class: center, middle, inverse, title-slide
 
 
 
+## Today's Objectives
+
+What if you have more than one variable, and you want to test whether they are associated?
+
+--
+
+- Multivariate PDFs
+
+  - Joint Probability
+  - Conditional Probability
+  - Bayes Rule
+
+--
+
+- Two Variable (Bivariate) Hypothesis Tests
+
+  - T-Tests
+  - Chi-squared Tests
+
+--
+
+- Midterm Review
+
+
+---
+
+
+class: center, middle
+
+## Multivariate PDFs
+
+
+---
+
+## Multivariate PDFs
+
+Now we have two variables: `\(X\)` and `\(Y\)`. Their **joint** probability distribution function must satisfy:
+
+`$$P(x,y) \geq 0$$`
+
+**Discrete**:
+
+`$$\sum_x \sum_y P(x,y) = 1$$`
+
+**Continuous**:
+
+`$$\int_x \int_y f(x,y) = 1$$`
+
+
+---
+
+### Example 1: Two Categorical Random Variables
+
+
+```r
+# Load CCES
+CCES &lt;- read_rds('data/CCES_2018.RDS') %&gt;% 
+  mutate(gender = if_else(gender == 1, 'Male', 'Female'),
+         age = 2018 - birthyr,
+         party = case_when(pid3 == 1 ~ 'Democrat',
+                           pid3 == 2 ~ 'Republican',
+                           pid3 == 3 ~ 'Independent')) %&gt;% 
+  filter(!is.na(party))
+
+joint_distribution &lt;- table(CCES$gender, CCES$party) / nrow(CCES)
+
+joint_distribution
+```
+
+```
+        
+          Democrat Independent Republican
+  Female 0.2536850   0.1532196  0.1581329
+  Male   0.1427463   0.1548081  0.1374081
+```
+
+```r
+sum(joint_distribution)
+```
+
+```
+[1] 1
+```
+
+
+---
+
+### Example 2: One Categorical and One Continuous Random Variable
+
+
+```r
+ggplot(data = CCES) +
+  geom_violin(mapping = aes(x=age, y = party)) +
+  labs(x = 'Age', y = 'Party')
+```
+
+&lt;img src="08-Hypothesis-Testing_files/figure-html/joint pdf example 2-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Marginal Distributions
+
+The **marginal** distribution is the PDF one variable without considering the value of the other variable.
+
+
+```r
+joint_distribution # joint distribution of gender and party
+```
+
+```
+        
+          Democrat Independent Republican
+  Female 0.2536850   0.1532196  0.1581329
+  Male   0.1427463   0.1548081  0.1374081
+```
+
+```r
+table(CCES$party) / nrow(CCES) # marginal distribution of party
+```
+
+```
+
+   Democrat Independent  Republican 
+  0.3964313   0.3080276   0.2955410 
+```
+
+```r
+table(CCES$gender) / nrow(CCES) # marginal distribution of gender
+```
+
+```
+
+   Female      Male 
+0.5650375 0.4349625 
+```
+
+---
+
+
+## Marginal Distributions
+
+**Note:** "Marginalizing" a distribution is equivalent to taking the row or column sums of the joint distribution.
+
+
+```r
+table(CCES$party) / nrow(CCES) 
+```
+
+```
+
+   Democrat Independent  Republican 
+  0.3964313   0.3080276   0.2955410 
+```
+
+```r
+colSums(joint_distribution) # marginal distribution of party
+```
+
+```
+   Democrat Independent  Republican 
+  0.3964313   0.3080276   0.2955410 
+```
+
+```r
+rowSums(joint_distribution)  # marginal distribution of gender
+```
+
+```
+   Female      Male 
+0.5650375 0.4349625 
+```
+
+---
+
+## Conditional Distributions
+
+The **conditional** distribution is the PDF of one variable, holding the other variable constant.
+
+
+```r
+joint_distribution
+```
+
+```
+        
+          Democrat Independent Republican
+  Female 0.2536850   0.1532196  0.1581329
+  Male   0.1427463   0.1548081  0.1374081
+```
+
+$$P(\text{party} | \text{gender}) = \frac{P(\text{party}, \text{gender})}{P(\text{gender})} = \frac{\text{joint}}{\text{marginal}} $$
+
+
+```r
+# Conditional distribution of party given gender
+joint_distribution / rowSums(joint_distribution)
+```
+
+```
+        
+          Democrat Independent Republican
+  Female 0.4489703   0.2711670  0.2798627
+  Male   0.3281807   0.3559113  0.3159079
+```
+
+---
+
+## Independence
+
+Two variables are **independent** if the conditional distribution is the same as the marginal distribution.
+
+`$$P(\text{party}|\text{gender}) = P(\text{party})$$`
+
+--
+
+&lt;br&gt;
+
+**Intuition**: If men and women both have the same probability distribution over party, then we say that party is *independent* of gender.
+
+???
+
+Note for future classes: derive Bayes Rule and joint = P(A)*P(B) from those two premises.
+
+---
+
+## Bayes Rule
+
+`$$P(\text{party} | \text{gender}) = \frac{P(\text{party}, \text{gender})}{P(\text{gender})}$$`
+.center[and]
+
+`$$P(\text{gender} | \text{party}) = \frac{P(\text{party}, \text{gender})}{P(\text{party})}$$`
+
+--
+
+.center[which means...]
+
+`$$P(\text{gender} | \text{party}) P(\text{party}) = P(\text{party} | \text{gender}) P(\text{gender})$$`
+--
+
+&lt;br&gt;
+
+.center[which means...]
+
+&lt;br&gt;
+
+`$$P(\text{gender} | \text{party}) = \frac{P(\text{party} | \text{gender}) P(\text{gender})}{P(\text{party})}$$`
 ---
 
 class: center, middle
 
-## Previously...
+# Bayes Rule
+
+`$$P(A|B) = P(B|A)\frac{P(A)}{P(B)}$$`
+--
+
+If you know one conditional distribution, you can compute the other!
 
 ---
 
+## Bayes Rule
 
-class: center, middle
+Suppose I get a positive COVID test. What's the chance I have COVID-19? I want to know `\(P(\text{COVID-negative} | \text{Positive Test})\)`.
 
-## Multivariable Probability Distributions
+--
 
+I know the false positive rate of a COVID-19 test:
 
----
+`$$P(\text{Positive Test} | \text{COVID-negative}) = 0.05$$`
+--
 
-## Multivariable Probability Distributions
+I know my **prior** probability that I'm COVID-negative:
 
+`$$P(\text{COVID-negative}) = 0.95$$`
+
+--
+
+I know the overall positivity rate in Georgia:
+
+`$$P(\text{Positive Test}) = 0.1$$`
+
+--
+
+So, thanks to Bayes Rule, I know my **posterior** probability:
+
+`$$P(\text{COVID-negative} | \text{Positive Test}) = 0.05 \times \frac{0.95}{0.1} = 47.5\%$$`
 
 ---
 
@@ -60,6 +328,8 @@ class: center, middle
 ---
 
 ## Bivariate Hypothesis Testing
+
+We have two variables and we want to know if they are **independent** of one another, or if there is an association.
 
 &lt;br&gt;
 
@@ -72,24 +342,239 @@ class: center, middle
 
 ---
 
-## Bivariate Hypothesis Testing
-
-Let's import that CCES data again.
+## Two Categorical Variables (Chi-Squared Test)
 
 
 ```r
-# Load CCES
-CCES &lt;- read_rds('data/CCES_2018.RDS') %&gt;% 
-  mutate(gender = if_else(gender == 1, 'Male', 'Female'),
-         age = 2018 - birthyr,
-         party = case_when(pid3 == 1 ~ 'Democrat',
-                           pid3 == 2 ~ 'Republican',
-                           pid3 == 3 ~ 'Independent')) %&gt;% 
-  filter(!is.na(party))
+CCES %&gt;% 
+  select(gender, party) %&gt;% 
+  table
 ```
 
+```
+        party
+gender   Democrat Independent Republican
+  Female    13734        8295       8561
+  Male       7728        8381       7439
+```
+
+```r
+ggplot(data = CCES) +
+  geom_bar(mapping = aes(x=gender,fill=party), position = 'fill')
+```
+
+&lt;img src="08-Hypothesis-Testing_files/figure-html/recap that joint distribution-1.png" width="35%" style="display: block; margin: auto;" /&gt;
+
+???
+
+**Step 1**: Specify the Null Hypothesis.
+
+**Step 2**: Generate the sampling distribution.
+
+**Step 3**: Compare observed outcome to sampling distribution.
 
 ---
+
+## Chi-Squared Test
+
+### Step 1: Specify the Null Hypothesis
+
+`\(H_0\)`: The two variables are **independent**.
+
+--
+
+### Step 2: Generate the sampling distribution
+
+Create a bunch of independent tables, and compute a chi-squared statistic for each.
+
+`$$\sum \frac{\left(\text{observed}-\text{expected}\right)^2}{\text{expected}}$$`
+--
+
+### Step 3: Compare with observed outcome
+
+Compare to the chi-squared statistic from the actual table to the sampling distribution.
+
+---
+
+## Chi-Squared Test
+
+Draw a sample and get the observed table.
+
+
+```r
+n &lt;- 1000
+
+CCES_sample &lt;- CCES %&gt;% 
+  sample_n(size = n)
+
+observed_table &lt;- CCES_sample %&gt;% 
+  select(gender, party) %&gt;% 
+  table
+
+observed_table
+```
+
+```
+        party
+gender   Democrat Independent Republican
+  Female      270         151        161
+  Male        142         138        138
+```
+
+---
+
+
+## Chi-Squared Test
+
+What is the **expected** table if the two variables were independent?
+
+
+```r
+gender_marginal_distribution &lt;- table(CCES_sample$gender) / nrow(CCES_sample)
+
+party_marginal_distribution &lt;- table(CCES_sample$party) / nrow(CCES_sample)
+
+expected_table &lt;- outer(gender_marginal_distribution, party_marginal_distribution) * nrow(CCES_sample)
+
+expected_table
+```
+
+```
+        
+         Democrat Independent Republican
+  Female  239.784     168.198    174.018
+  Male    172.216     120.802    124.982
+```
+
+--
+
+**Remember the definition of independence:** conditional distributions are the same as the marginal distributions.
+
+---
+
+## Chi-Squared Test
+
+
+```r
+get_null_chi_squared &lt;- function(data, n){
+  
+  # get a random sample of the party variable
+  party &lt;- data %&gt;% 
+    pull(party) %&gt;% 
+    sample(size = n)
+  
+  # get a random sample of the gender variable
+  gender &lt;- data %&gt;% 
+    pull(gender) %&gt;% 
+    sample(size = n)
+  
+  # create the table
+  null_table &lt;- table(gender, party)
+  
+  # return the chi-squared statistic
+  sum((null_table - expected_table)^2 / expected_table)
+}
+
+get_null_chi_squared(data = CCES, n = 1000)
+```
+
+```
+[1] 10.31179
+```
+
+---
+
+## Chi-Squared Test
+
+Generate the sampling distribution.
+
+
+```r
+sampling_distribution &lt;- replicate(10000, get_null_chi_squared(data = CCES, n = 1000))
+
+chisq_plot &lt;- tibble(sampling_distribution) %&gt;% 
+  ggplot() +
+  geom_histogram(aes(x=sampling_distribution), color = 'black') +
+  theme_bw()
+```
+
+---
+
+## Chi-Squared Test
+
+Plot the sampling distribution.
+
+
+```r
+chisq_plot
+```
+
+&lt;img src="08-Hypothesis-Testing_files/figure-html/plot chi-squared sampling distribution-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Chi-Squared Test
+
+Compare to the **actual** chi-squared statistic.
+
+
+```r
+observed_chi_squared_statistic &lt;- sum((observed_table - expected_table)^2 / expected_table)
+
+chisq_plot +
+  geom_vline(xintercept = observed_chi_squared_statistic, linetype = 'dashed', color = 'red')
+```
+
+&lt;img src="08-Hypothesis-Testing_files/figure-html/add actual-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+```r
+# p-value
+sum(sampling_distribution &gt; observed_chi_squared_statistic) / length(sampling_distribution)
+```
+
+```
+[1] 0.0791
+```
+
+---
+
+## Chi-Squared
+
+Now, I can show you how to do it in one line...
+
+--
+
+
+```r
+CCES_sample %&gt;% 
+  select(gender, party) %&gt;% 
+  table
+```
+
+```
+        party
+gender   Democrat Independent Republican
+  Female      270         151        161
+  Male        142         138        138
+```
+
+```r
+CCES_sample %&gt;% 
+  select(gender, party) %&gt;% 
+  table %&gt;% 
+  chisq.test
+```
+
+```
+
+	Pearson's Chi-squared test
+
+data:  .
+X-squared = 15.646, df = 2, p-value = 0.0004005
+```
+
+---
+
 
 ## Bivariate Hypothesis Testing
 
@@ -133,7 +618,7 @@ mean(rep_age)
 ```
 
 ```
-[1] 45.11
+[1] 48.32
 ```
 
 ```r
@@ -141,7 +626,7 @@ mean(dem_age)
 ```
 
 ```
-[1] 45.03
+[1] 48.8
 ```
 
 The Republicans seem to be older on average, but is that just sampling error?
@@ -178,7 +663,7 @@ difference_in_means(CCES, n1 = 100, n2 = 100)
 ```
 
 ```
-[1] 0.05
+[1] -4.66
 ```
 
 ---
@@ -188,7 +673,7 @@ difference_in_means(CCES, n1 = 100, n2 = 100)
 
 ```r
 observed &lt;- mean(rep_age) - mean(dem_age)
-sampling_distribution &lt;- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
+sampling_distribution &lt;- replicate(1000, difference_in_means(CCES, n1 = 100, n2 = 100))
 
 # sampling distribution
 tibble(sampling_distribution) %&gt;% 
@@ -207,7 +692,7 @@ sum(abs(sampling_distribution) &gt; observed) / length(sampling_distribution)
 ```
 
 ```
-[1] 0.9762
+[1] 1
 ```
 
 ```r
@@ -217,8 +702,8 @@ sampling_distribution %&gt;%
 ```
 
 ```
- 2.5% 97.5% 
--5.03  4.96 
+    2.5%    97.5% 
+-4.93175  4.63225 
 ```
 
 ---
@@ -237,13 +722,13 @@ t.test(rep_age, dem_age)
 	Welch Two Sample t-test
 
 data:  rep_age and dem_age
-t = 0.03472, df = 196.8, p-value = 0.9723
+t = -0.18433, df = 197.84, p-value = 0.8539
 alternative hypothesis: true difference in means is not equal to 0
 95 percent confidence interval:
- -4.464017  4.624017
+ -5.615223  4.655223
 sample estimates:
 mean of x mean of y 
-    45.11     45.03 
+    48.32     48.80 
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
