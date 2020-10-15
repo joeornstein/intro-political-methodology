@@ -255,6 +255,8 @@ class: center, middle
 
 We have two variables and we want to know if they are **independent** of one another, or if there is an association.
 
+<TODO: change to explanatory and outcome variable>
+
 <br>
 
 |                    |             | Independent Variable                |                         |
