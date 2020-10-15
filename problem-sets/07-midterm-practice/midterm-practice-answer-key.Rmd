@@ -1,0 +1,134 @@
+---
+title: 'POLS 7012: Practice Midterm (Answer Key)'
+author: "Joe Ornstein"
+# date: "Due October 7, 2020"
+output:
+  pdf_document: default
+  html_document: default
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+# For problem set, echo and eval = FALSE
+# For answer key, echo and eval = TRUE
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(knitr)
+```
+
+Create an R project, an R script, load tidyverse, and read in the ANES 2019 Pilot data from Problem Set 1.
+
+```{r load ANES dataset}
+# Load the ANES dataset
+load('data/anes_pilot_2019.RData')
+```
+
+## Tidy the Data
+
+1. Recode the `vote20jb` variable with the actual responses rather than the numeric codes (see the codebook).
+
+2. Recode gender as "Male" or "Female" instead of 1 or 2.
+
+3. Create a new variable called `age`, equal to 2019 minus the respondent's birth year.
+
+4. Filter out the respondents who say they will "probably not vote".
+
+5. Select only the `caseid`, `gender`, `age`, and `vote20jb` variables.
+
+6. Save the cleaned up dataset to your `data/` folder as a .csv file called `anes_2019_pilot_clean.csv`.
+
+```{r clean up the dataset}
+data <- data %>% 
+  mutate(vote20jb = case_when(vote20jb == 1 ~ 'Donald Trump',
+                              vote20jb == 2 ~ 'Joe Biden',
+                              vote20jb == 3 ~ 'Someone Else',
+                              vote20jb == 4 ~ 'Probably Not Vote'),
+         gender = if_else(gender == 1, 'Male', 'Female'),
+         age = 2019 - birthyr) %>% 
+  filter(vote20jb != 'Probably Not Vote') %>% 
+  select(caseid, gender, age, vote20jb)
+
+write_csv(data, 'data/anes_2019_pilot_clean.csv')
+```
+
+## Visualize and Summarize the Data
+
+1. Visualize the age distribution for Biden vs. Trump voters, faceting by gender. 
+
+```{r visualize data}
+figure1 <- data %>% 
+  filter(vote20jb %in% c('Donald Trump', 'Joe Biden')) %>%
+  ggplot +
+  geom_violin(mapping = aes(x=age, y=vote20jb, fill = vote20jb)) +
+  facet_wrap(~gender) +
+  labs(x = 'Age', y = 'Intended Presidential Vote (2020)') +
+  theme_minimal() +
+  theme(legend.position = 'none')
+
+figure1
+```
+
+2. Group by `vote20jb` and `gender`. What is the mean age and number of respondents for each group?
+
+```{r summarize data}
+data %>% 
+  group_by(vote20jb, gender) %>% 
+  summarize(mean_age = age %>% mean %>% round(1),
+            num = n()) %>% 
+  kable # this is just to make it look fancy in RMarkdown
+```
+
+## Make Inferences
+
+1. Compute a 95% confidence interval for the average age.
+
+```{r confidence interval}
+# Approach 1: Take the sample mean plus or minus 2 standard errors
+sample_mean <- mean(data$age)
+standard_error <- sd(data$age) / sqrt(nrow(data))
+
+confidence_interval <- c(sample_mean - 1.96 * standard_error,
+                         sample_mean + 1.96 * standard_error)
+
+confidence_interval
+
+# Approach 2: Confidence Interval reported with the t.test function
+t.test(data$age)
+```
+
+2. Is the difference in age between Trump and Biden supporters statistically significant? Compute a p-value and 95% confidence interval.
+
+```{r two-sample t-test}
+test1 <- data %>% 
+  filter(vote20jb %in% c('Donald Trump', 'Joe Biden')) %>%
+  t.test(age ~ vote20jb, data = .)
+
+test1
+
+# I didn't show you this before, but if you save the test to an object, 
+# you can extract the relevant values like so.
+test1$p.value
+
+test1$conf.int
+```
+
+3. Are men significantly more likely than women to support Trump? Compute the associated p-value.
+
+```{r chi squared test}
+test2 <- data %>% 
+  filter(vote20jb %in% c('Donald Trump', 'Joe Biden')) %>%
+  select(vote20jb, gender) %>% 
+  table %>% 
+  chisq.test
+
+test2
+
+# Here's the expected table if the two variables were independent
+test2$expected
+
+# Here's the actual table
+test2$observed
+
+# Here's the p-value
+test2$p.value
+```
