@@ -1,7 +1,8 @@
 correlation (2 weeks)
+ - linear models, matrix algebra
 
 prediction (1 week)
 
 causation (1 week)
 
-bonus weeks
+bonus weeks (2-3 weeks)

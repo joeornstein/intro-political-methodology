@@ -1,5 +1,5 @@
 ---
-title: "Correlation, Linear Models, and Matrix Algebra (Part 1?)"
+title: "Correlation, Linear Models, and Matrix Algebra (Part 1 of 2)"
 # author: "Joseph T. Ornstein"
 # date: "June 12, 2020"
 output:
@@ -48,9 +48,38 @@ set.seed(42)
 
   - Matrices: multidimensional vectors; we've been calling them `data frames`. Show a data frame. It's a matrix. Same deal. 
   - Adding and subtracting matrices is just like you would expect (elementwise), but multiplying and dividing matrices is the tricky part.
-  - Scalar multiplication vs. matrix multiplication; matrices must be *conformable* in order to multiply them; can't just multiply any two things together like you can with scalars
+  - Scalar multiplication vs. matrix multiplication; matrices must be *conformable* in order to multiply them; can't just multiply any two things together like you can with scalars; matrix transposes
   - Multivariable regression as a matrix multiplication problem. yhat = Xb; just a compact way of representing a big system of equations
   - Show that you can do those matrix multiplications in `R`; you need Wolfram Alpha to cheat on calculus, but `R` is actually designed for matrix algebra.
   - So you need to find the vector b that minimizes (y - Xb)(y-Xb)'
-  - Turns out vector calculus is just like the calculus we saw before, except instead of *dividing* matrices, you take their inverse.
-  - Quick primer on matrix inverses
+  - Turns out vector calculus is just like the calculus we saw before, except instead of *dividing* matrices, you take their inverse;  function
+  - Quick primer on matrix inverses; in scalar algebra, b/b = 1, in matrix algebra BB^(-1) = I; once again the great thing about taking a political methodology course in 2020 is that I won't teach you how to solve for a matrix inverse by hand (like I was made to do in undergrad). There is literally a function called `solve()` in `R` which inputs a matrix and returns its inverse. 
+  - yy' - Xby' - yX'b + XbX'b (minimize wrt b)
+  - -X'y - X'y + 2XbX' = 0
+  - b = (X'X)^-1(X'y)
+  
+```{r regression}
+data <- tibble(c = 1,
+            x1 = rnorm(100, 0, 1),
+            x2 = rnorm(100, 0, 1),
+            y = 2*x1 + 3*x2 + rnorm(100, 0, 1))
+
+linear_model <- lm(y ~ x1 + x2, data = data)
+
+summary(linear_model)
+
+# X matrix
+X <- data %>% 
+  select(c, x1, x2) %>% 
+  as.matrix
+
+# y vector
+y <- data %>% 
+  pull(y)
+
+# beta hat = (X'X)^-1 X'y
+beta_hat <- solve(t(X) %*% X) %*% t(X) %*% y
+
+beta_hat
+linear_model # that's where the coefficients come from; the parameter estimates that minimize the sum of squared errors
+```
