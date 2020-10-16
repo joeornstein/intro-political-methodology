@@ -1,0 +1,56 @@
+---
+title: "Correlation, Linear Models, and Matrix Algebra (Part 1?)"
+# author: "Joseph T. Ornstein"
+# date: "June 12, 2020"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightStyle: github
+      countIncrementalSlides: false
+# subtitle: 'POLS 7012: Introduction to Political Methodology'
+# institute: University of Georgia
+---
+
+<style>
+
+.center-middle {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+</style>
+
+```{r Setup, include=FALSE}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 16))
+knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
+                      fig.align = 'center', out.width = 600,
+                      message=FALSE, warning=FALSE, echo=TRUE)
+set.seed(42)
+```
+
+## Outline
+
+1. Covariance and correlation; play Guess the Correlation
+
+2. Linear Regression (Line of Best Fit)
+
+  - The Linear Model; slope/intercept parameters; yhat; estimation; Least squares; residuals
+  - `geom_smooth(method = 'lm')`
+  - `lm()`
+  - Now we want to be able to do that for MULTIPLE explanatory variables, and show that the solution is unique. For that we'll need matrix algebra.
+
+3. Matrices
+
+  - Matrices: multidimensional vectors; we've been calling them `data frames`. Show a data frame. It's a matrix. Same deal. 
+  - Adding and subtracting matrices is just like you would expect (elementwise), but multiplying and dividing matrices is the tricky part.
+  - Scalar multiplication vs. matrix multiplication; matrices must be *conformable* in order to multiply them; can't just multiply any two things together like you can with scalars
+  - Multivariable regression as a matrix multiplication problem. yhat = Xb; just a compact way of representing a big system of equations
+  - Show that you can do those matrix multiplications in `R`; you need Wolfram Alpha to cheat on calculus, but `R` is actually designed for matrix algebra.
+  - So you need to find the vector b that minimizes (y - Xb)(y-Xb)'
+  - Turns out vector calculus is just like the calculus we saw before, except instead of *dividing* matrices, you take their inverse.
+  - Quick primer on matrix inverses
