@@ -73,6 +73,10 @@ data <- tibble(X = rnorm(n, 1, 1),
                epsilon = rnorm(n, 0, 2),
                Y = a + b*X + epsilon)
 
+data %>% 
+  select(X,Y) %>% 
+  cor
+
 ggplot(data) +
   geom_point(mapping = aes(x=X,y=Y))
 ```
@@ -81,13 +85,29 @@ ggplot(data) +
 ### To make things easier, ignore the y-intercept
 
 ```{r demean}
-data <- data %>% 
+demeaned_data <- data %>% 
   mutate(Y = Y - mean(Y),
          X = X - mean(X))
-
-ggplot(data) +
-  geom_point(mapping = aes(x=X,y=Y))
 ```
+
+--
+
+.pull-left[
+```{r non-demeaned plot, out.width = '90%'}
+ggplot(data) +
+  geom_point(mapping = aes(x=X,y=Y)) +
+  labs(x='X',y='Y',title = 'Original Data')
+```
+]
+
+.pull-right[
+```{r demeaned plot, out.width='90%'}
+ggplot(demeaned_data) +
+  geom_point(mapping = aes(x=X,y=Y)) +
+  labs(x='X',y='Y',title = 'Demeaned Data')
+```
+]
+
 
 ---
 
@@ -100,13 +120,16 @@ Do calculus
 ### Slope Estimate
 
 ```{r estimate slope}
-slope_estimate <- sum(data$X * data$Y) / sum(data$X^2)
+slope_estimate <- 
+  sum(demeaned_data$X * demeaned_data$Y) /
+  sum(demeaned_data$X^2)
+
 slope_estimate
 
-linear_model_fit <- lm(Y~X, data = data) 
+linear_model_fit <- lm(Y~X, data = demeaned_data) 
 linear_model_fit # hello
 
-ggplot(data) + 
+ggplot(demeaned_data) + 
   geom_point(mapping = aes(x=X,y=Y)) +
   geom_abline(intercept = 0, slope = slope_estimate)
 ```
@@ -149,7 +172,7 @@ We have a **point estimate** of the slope. What if we want confidence intervals 
 
 When we do regression, the randomness comes from the noise term $\varepsilon$. Imagine that we repeatedly draw a new $\varepsilon$ vector with each sample.
 
-```{r sampling distribution}
+```{r sampling function}
 get_slope_estimate <- function(a = 0, b = 0, X,
                                sd_epsilon = 2){
   
@@ -164,7 +187,7 @@ get_slope_estimate <- function(a = 0, b = 0, X,
   sum(data$X * data$Y) / sum(data$X^2)
 }
 
-get_slope_estimate(X = data$X)
+get_slope_estimate(X = demeaned_data$X)
 
 ```
 ---

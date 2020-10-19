@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Correlation, Linear Models, and Matrix Algebra (Part 1 of 2)</title>
+    <meta charset="utf-8" />
+    <link href="09-Correlation_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="09-Correlation_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Correlation, Linear Models, and Matrix Algebra (Part 1 of 2)
+
+---
+
+
+&lt;style&gt;
+
+.center-middle {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+&lt;/style&gt;
+
+
+
+## Outline
+
+1. Covariance and correlation; play Guess the Correlation
+
+2. Linear Regression (Line of Best Fit)
+
+  - The Linear Model; slope/intercept parameters; yhat; estimation; Least squares; residuals
+  - `geom_smooth(method = 'lm')`
+  - `lm()`
+  - Now we want to be able to do that for MULTIPLE explanatory variables, and show that the solution is unique. For that we'll need matrix algebra.
+
+3. Matrices
+
+  - Matrices: multidimensional vectors; we've been calling them `data frames`. Show a data frame. It's a matrix. Same deal. 
+  - Adding and subtracting matrices is just like you would expect (elementwise), but multiplying and dividing matrices is the tricky part.
+  - Scalar multiplication vs. matrix multiplication; matrices must be *conformable* in order to multiply them; can't just multiply any two things together like you can with scalars; matrix transposes
+  - Multivariable regression as a matrix multiplication problem. yhat = Xb; just a compact way of representing a big system of equations
+  - Show that you can do those matrix multiplications in `R`; you need Wolfram Alpha to cheat on calculus, but `R` is actually designed for matrix algebra.
+  - So you need to find the vector b that minimizes (y - Xb)(y-Xb)'
+  - Turns out vector calculus is just like the calculus we saw before, except instead of *dividing* matrices, you take their inverse;  function
+  - Quick primer on matrix inverses; in scalar algebra, b/b = 1, in matrix algebra BB^(-1) = I; once again the great thing about taking a political methodology course in 2020 is that I won't teach you how to solve for a matrix inverse by hand (like I was made to do in undergrad). There is literally a function called `solve()` in `R` which inputs a matrix and returns its inverse. 
+  - yy' - Xby' - yX'b + XbX'b (minimize wrt b)
+  - -X'y - X'y + 2XbX' = 0
+  - b = (X'X)^-1(X'y)
+
+---
+
+## Bivariate Regression
+
+
+```r
+# Create some data where we know the true data-generating process
+n &lt;- 300
+a &lt;- 2
+b &lt;- 3
+
+data &lt;- tibble(X = rnorm(n, 1, 1),
+               epsilon = rnorm(n, 0, 2),
+               Y = a + b*X + epsilon)
+
+data %&gt;% 
+  select(X,Y) %&gt;% 
+  cor
+```
+
+```
+          X         Y
+X 1.0000000 0.8360571
+Y 0.8360571 1.0000000
+```
+
+```r
+ggplot(data) +
+  geom_point(mapping = aes(x=X,y=Y))
+```
+
+&lt;img src="09-Correlation_files/figure-html/bivariate regression-1.png" width="600" style="display: block; margin: auto;" /&gt;
+---
+
+### To make things easier, ignore the y-intercept
+
+
+```r
+demeaned_data &lt;- data %&gt;% 
+  mutate(Y = Y - mean(Y),
+         X = X - mean(X))
+```
+
+--
+
+.pull-left[
+
+```r
+ggplot(data) +
+  geom_point(mapping = aes(x=X,y=Y)) +
+  labs(x='X',y='Y',title = 'Original Data')
+```
+
+&lt;img src="09-Correlation_files/figure-html/non-demeaned plot-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+```r
+ggplot(demeaned_data) +
+  geom_point(mapping = aes(x=X,y=Y)) +
+  labs(x='X',y='Y',title = 'Demeaned Data')
+```
+
+&lt;img src="09-Correlation_files/figure-html/demeaned plot-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+
+### What's the right slope?
+
+Do calculus
+
+---
+
+### Slope Estimate
+
+
+```r
+slope_estimate &lt;- 
+  sum(demeaned_data$X * demeaned_data$Y) /
+  sum(demeaned_data$X^2)
+
+slope_estimate
+```
+
+```
+[1] 3.050803
+```
+
+```r
+linear_model_fit &lt;- lm(Y~X, data = demeaned_data) 
+linear_model_fit # hello
+```
+
+```
+
+Call:
+lm(formula = Y ~ X, data = demeaned_data)
+
+Coefficients:
+(Intercept)            X  
+ -3.346e-16    3.051e+00  
+```
+
+```r
+ggplot(demeaned_data) + 
+  geom_point(mapping = aes(x=X,y=Y)) +
+  geom_abline(intercept = 0, slope = slope_estimate)
+```
+
+&lt;img src="09-Correlation_files/figure-html/estimate slope-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Some Terminology
+
+The slope parameter `\(b\)` is called the **estimand**. It is the thing we are trying to estimate.
+
+`\(\frac{\sum X_iY_i}{\sum X_i^2}\)` is the **estimator**. It is the equation we use to produce our estimate.
+
+3.051 is our **estimate**.
+
+  - Typically, we denote estimates with little hats, like this: $\hat{b} = $ 3.051.
+
+---
+
+## Inference
+
+We have a **point estimate** of the slope. What if we want confidence intervals and p-values? 
+
+**Three Steps:**
+
+--
+
+1. Specify the Null Hypothesis `\((b = 0)\)`
+
+--
+
+2. Generate Sampling Distribution of `\(\hat{b}\)` if `\(b = 0\)`
+
+--
+
+3. Compare observed value of `\(\hat{b}\)` to the sampling distribution
+
+---
+
+## Where do we get the sampling distribution?
+
+When we do regression, the randomness comes from the noise term `\(\varepsilon\)`. Imagine that we repeatedly draw a new `\(\varepsilon\)` vector with each sample.
+
+
+```r
+get_slope_estimate &lt;- function(a = 0, b = 0, X,
+                               sd_epsilon = 2){
+  
+  n &lt;- length(X)
+  
+  # Create random dataset assuming null hypothesis (b = 0, a = 0)  
+  data &lt;- tibble(X = X,
+                 epsilon = rnorm(n, 0, sd_epsilon),
+                 Y = a + b*X + epsilon)
+  
+  # Return the slope estimate
+  sum(data$X * data$Y) / sum(data$X^2)
+}
+
+get_slope_estimate(X = demeaned_data$X)
+```
+
+```
+[1] -0.1364828
+```
+---
+
+## Generate the Sampling Distribution
+
+
+```r
+sampling_distribution &lt;- replicate(10000, get_slope_estimate(X = data$X))
+
+tibble(sampling_distribution) %&gt;% 
+  ggplot() +
+  geom_histogram(mapping = aes(x=sampling_distribution),
+                 color = 'black') +
+  labs(x='Slope Estimate (Sampling Distribution)') # a bell curved sampling distribution again! (t distribution)
+```
+
+&lt;img src="09-Correlation_files/figure-html/sampling distribution-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+---
+
+# P-value and Confidence Interval
+
+
+```r
+sum(sampling_distribution &gt; slope_estimate) # p-value effectively zero
+```
+
+```
+[1] 0
+```
+
+```r
+standard_error &lt;- sd(sampling_distribution)
+
+confidence_interval &lt;- c(slope_estimate - 1.96 * standard_error,
+                         slope_estimate + 1.96 * standard_error)
+
+summary(linear_model_fit)
+```
+
+```
+
+Call:
+lm(formula = Y ~ X, data = demeaned_data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.9546 -1.2245 -0.0698  1.3752  6.4903 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -3.346e-16  1.143e-01    0.00        1    
+X            3.051e+00  1.160e-01   26.31   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.98 on 298 degrees of freedom
+Multiple R-squared:  0.699,	Adjusted R-squared:  0.698 
+F-statistic:   692 on 1 and 298 DF,  p-value: &lt; 2.2e-16
+```
+
+```r
+confint(linear_model_fit)
+```
+
+```
+                 2.5 %    97.5 %
+(Intercept) -0.2249477 0.2249477
+X            2.8225715 3.2790339
+```
+
+---
+
+class: center, middle
+
+## Multivariate Linear Regression
+
+---
+
+## Multivariate Linear Regression
+
+
+```r
+data &lt;- tibble(c = 1,
+            x1 = rnorm(100, 0, 1),
+            x2 = rnorm(100, 0, 1),
+            y = 2*x1 + 3*x2 + rnorm(100, 0, 1))
+
+linear_model &lt;- lm(y ~ x1 + x2, data = data)
+
+summary(linear_model)
+```
+
+```
+
+Call:
+lm(formula = y ~ x1 + x2, data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.99590 -0.73201 -0.00033  0.81823  2.97492 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   0.1928     0.1228    1.57     0.12    
+x1            1.9950     0.1205   16.56   &lt;2e-16 ***
+x2            2.9873     0.1329   22.48   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.218 on 97 degrees of freedom
+Multiple R-squared:  0.8893,	Adjusted R-squared:  0.887 
+F-statistic: 389.5 on 2 and 97 DF,  p-value: &lt; 2.2e-16
+```
+
+```r
+# X matrix
+X &lt;- data %&gt;% 
+  select(c, x1, x2) %&gt;% 
+  as.matrix
+
+# y vector
+y &lt;- data %&gt;% 
+  pull(y)
+
+# beta hat = (X'X)^-1 X'y
+beta_hat &lt;- solve(t(X) %*% X) %*% t(X) %*% y
+
+beta_hat
+```
+
+```
+        [,1]
+c  0.1927664
+x1 1.9950017
+x2 2.9872817
+```
+
+```r
+linear_model # that's where the coefficients come from; the parameter estimates that minimize the sum of squared errors
+```
+
+```
+
+Call:
+lm(formula = y ~ x1 + x2, data = data)
+
+Coefficients:
+(Intercept)           x1           x2  
+     0.1928       1.9950       2.9873  
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
