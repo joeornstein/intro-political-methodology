@@ -1,5 +1,5 @@
 ---
-title: "Correlation, Linear Models, and Matrix Algebra (Part 1 of 2)"
+title: "Correlation (Part 1 of 2)"
 # author: "Joseph T. Ornstein"
 # date: "June 12, 2020"
 output:
@@ -32,6 +32,89 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
                       message=FALSE, warning=FALSE, echo=TRUE)
 set.seed(42)
 ```
+
+
+<!-- ## Recap -->
+
+<!-- -- -->
+
+<!-- #### Week 1: Introduction to `R` -->
+
+<!-- -- -->
+
+<!-- #### Week 2: Visualizing Data -->
+
+<!-- -- -->
+
+<!-- #### Week 3: Reproducible Research -->
+
+<!-- -- -->
+
+<!-- #### Weeks 4-5: Data Wrangling -->
+
+<!-- -- -->
+
+<!-- #### Week 6: Calculus -->
+
+<!-- -- -->
+
+<!-- #### Weeks 7-8: Probability and Inference -->
+
+<!-- --- -->
+
+## Preview
+
+--
+
+#### October 21 & 28: Correlation
+
+- Covariance and Linear Regression
+- Matrix Algebra
+
+--
+
+#### November 4: Prediction
+
+- Models and Machine Learning
+- Overfitting, Cross-Validation, Regularization, and Ensembles
+
+--
+
+#### November 11 & 18: Causation
+
+- Analyzing Experiments
+- Observational Causal Inference
+
+--
+
+#### November 25: Thanksgiving
+
+--
+
+#### December 2 & 9: Bonus Weeks!
+
+- *Possible Topics*: Big Data, Text-As-Data, Networks, Spatial/Geographic Data, Advanced `R`, Advanced Visualizations (Interactives/Animations)
+
+---
+
+## Correlation
+
+By the end of this module you will be able to...
+
+--
+
+1. Compute covariance and correlation coefficients between two variables.
+
+--
+
+2. Estimate the slope of a line of best fit, plus confidence intervals and p-values.
+
+--
+
+3. Fit multivariable linear models using matrix algebra.
+
+
+???
 
 ## Outline
 
@@ -113,7 +196,7 @@ ggplot(demeaned_data) +
 
 ### What's the right slope?
 
-Do calculus
+Do calculus; beta hat = cov(x,y) / var(x)
 
 ---
 
@@ -144,7 +227,7 @@ $\frac{\sum X_iY_i}{\sum X_i^2}$ is the **estimator**. It is the equation we use
 
 `r slope_estimate %>% round(3)` is our **estimate**.
 
-  - Typically, we denote estimates with little hats, like this: $\hat{b} = $ `r slope_estimate %>% round(3)`.
+  - Typically, we denote estimates with little hats, like this: $\hat{b} =$ `r slope_estimate %>% round(3)`.
 
 ---
 
@@ -194,8 +277,10 @@ get_slope_estimate(X = demeaned_data$X)
 
 ## Generate the Sampling Distribution
 
+<TODO: Bump this to 10000>
+
 ```{r sampling distribution, out.width = '70%'}
-sampling_distribution <- replicate(10000, get_slope_estimate(X = data$X))
+sampling_distribution <- replicate(500, get_slope_estimate(X = data$X))
 
 tibble(sampling_distribution) %>% 
   ggplot() +

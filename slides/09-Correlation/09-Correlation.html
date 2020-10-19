@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Correlation, Linear Models, and Matrix Algebra (Part 1 of 2)</title>
+    <title>Correlation (Part 1 of 2)</title>
     <meta charset="utf-8" />
     <link href="09-Correlation_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="09-Correlation_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
@@ -10,7 +10,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Correlation, Linear Models, and Matrix Algebra (Part 1 of 2)
+# Correlation (Part 1 of 2)
 
 ---
 
@@ -29,6 +29,89 @@ class: center, middle, inverse, title-slide
 &lt;/style&gt;
 
 
+
+
+&lt;!-- ## Recap --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- #### Week 1: Introduction to `R` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- #### Week 2: Visualizing Data --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- #### Week 3: Reproducible Research --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- #### Weeks 4-5: Data Wrangling --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- #### Week 6: Calculus --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- #### Weeks 7-8: Probability and Inference --&gt;
+
+&lt;!-- --- --&gt;
+
+## Preview
+
+--
+
+#### October 21 &amp; 28: Correlation
+
+- Covariance and The Linear Model
+- Matrix Algebra
+
+--
+
+#### November 4: Prediction
+
+- Models and Machine Learning
+- Overfitting, Cross-Validation, Regularization, and Ensembles
+
+--
+
+#### November 11 &amp; 18: Causation
+
+- Analyzing Experiments
+- Observational Causal Inference
+
+--
+
+#### November 25: Thanksgiving
+
+--
+
+#### December 2 &amp; 9: Bonus Weeks!
+
+- *Possible Topics*: Big Data, Text-As-Data, Networks, Spatial/Geographic Data, Advanced `R`, Advanced Visualizations (Interactives/Animations)
+
+---
+
+## Correlation
+
+By the end of this module you will be able to...
+
+--
+
+1. Compute covariance and correlation coefficients between two variables.
+
+--
+
+2. Estimate the slope of a line of best fit, plus confidence intervals and p-values.
+
+--
+
+3. Fit multivariable linear models using matrix algebra.
+
+
+???
 
 ## Outline
 
@@ -179,7 +262,7 @@ The slope parameter `\(b\)` is called the **estimand**. It is the thing we are t
 
 3.051 is our **estimate**.
 
-  - Typically, we denote estimates with little hats, like this: $\hat{b} = $ 3.051.
+  - Typically, we denote estimates with little hats, like this: `\(\hat{b} =\)` 3.051.
 
 ---
 
@@ -233,9 +316,11 @@ get_slope_estimate(X = demeaned_data$X)
 
 ## Generate the Sampling Distribution
 
+&lt;TODO: Bump this to 10000&gt;
+
 
 ```r
-sampling_distribution &lt;- replicate(10000, get_slope_estimate(X = data$X))
+sampling_distribution &lt;- replicate(500, get_slope_estimate(X = data$X))
 
 tibble(sampling_distribution) %&gt;% 
   ggplot() +
@@ -326,20 +411,20 @@ Call:
 lm(formula = y ~ x1 + x2, data = data)
 
 Residuals:
-     Min       1Q   Median       3Q      Max 
--2.99590 -0.73201 -0.00033  0.81823  2.97492 
+    Min      1Q  Median      3Q     Max 
+-1.9480 -0.6771 -0.0721  0.7215  2.7806 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)   0.1928     0.1228    1.57     0.12    
-x1            1.9950     0.1205   16.56   &lt;2e-16 ***
-x2            2.9873     0.1329   22.48   &lt;2e-16 ***
+(Intercept)  0.03224    0.09291   0.347    0.729    
+x1           2.12537    0.09778  21.737   &lt;2e-16 ***
+x2           2.88939    0.09750  29.634   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 1.218 on 97 degrees of freedom
-Multiple R-squared:  0.8893,	Adjusted R-squared:  0.887 
-F-statistic: 389.5 on 2 and 97 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 0.9227 on 97 degrees of freedom
+Multiple R-squared:  0.9371,	Adjusted R-squared:  0.9358 
+F-statistic: 722.8 on 2 and 97 DF,  p-value: &lt; 2.2e-16
 ```
 
 ```r
@@ -359,10 +444,10 @@ beta_hat
 ```
 
 ```
-        [,1]
-c  0.1927664
-x1 1.9950017
-x2 2.9872817
+         [,1]
+c  0.03224249
+x1 2.12536606
+x2 2.88939334
 ```
 
 ```r
@@ -376,7 +461,7 @@ lm(formula = y ~ x1 + x2, data = data)
 
 Coefficients:
 (Intercept)           x1           x2  
-     0.1928       1.9950       2.9873  
+    0.03224      2.12537      2.88939  
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
