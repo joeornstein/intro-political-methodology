@@ -57,7 +57,128 @@ set.seed(42)
   - yy' - Xby' - yX'b + XbX'b (minimize wrt b)
   - -X'y - X'y + 2XbX' = 0
   - b = (X'X)^-1(X'y)
+
+---
+
+## Bivariate Regression
+
+```{r bivariate regression}
+
+# Create some data where we know the true data-generating process
+n <- 300
+a <- 2
+b <- 3
+
+data <- tibble(X = rnorm(n, 1, 1),
+               epsilon = rnorm(n, 0, 2),
+               Y = a + b*X + epsilon)
+
+ggplot(data) +
+  geom_point(mapping = aes(x=X,y=Y))
+```
+---
+
+### To make things easier, ignore the y-intercept
+
+```{r demean}
+data <- data %>% 
+  mutate(Y = Y - mean(Y),
+         X = X - mean(X))
+
+ggplot(data) +
+  geom_point(mapping = aes(x=X,y=Y))
+```
+
+---
+
+### What's the right slope?
+
+Do calculus
+
+---
+
+### Slope Estimate
+
+```{r estimate slope}
+slope_estimate <- sum(data$X * data$Y) / sum(data$X^2)
+
+linear_model_fit <- lm(Y~X, data = data) 
+linear_model_fit # hello
+
+ggplot(data) + 
+  geom_point(mapping = aes(x=X,y=Y)) +
+  geom_abline(intercept = 0, slope = slope_estimate)
+```
+
+---
+
+## Slope p-value and confidence interval
+
+Three Steps?
+
+1. Null Hypothesis: b = 0
+
+2. Generate Sampling Distribution if b = 0
+
+3. Compare observed value to sampling distribution
+
+---
+
+## Where do we get the sampling distribution?
+
+When we do regression, the random component is that noise term $\varepsilon$. Imagine that we're repeatedly drawing a new $\varepsilon$ vector with each sample.
+
+```{r sampling distribution}
+
+get_slope_estimate <- function(a = 0, b = 0, X){
   
+  # Create data assuming null hypothesis (b = 0, a = 0)
+  n <- length(X)
+  
+  data <- tibble(X = X,
+                 epsilon = rnorm(n, 0, 2),
+                 Y = a + b*X + epsilon)
+  
+  # Return the slope estimate
+  sum(data$X * data$Y) / sum(data$X^2)
+}
+
+get_slope_estimate(X = data$X)
+
+```
+---
+
+## Generate the Sampling Distribution
+
+```{r sampling distribution}
+sampling_distribution <- replicate(10000, get_slope_estimate(X = data$X))
+
+tibble(sampling_distribution) %>% 
+  ggplot() +
+  geom_histogram(mapping = aes(x=sampling_distribution),
+                 color = 'black') +
+  labs(x='Slope Estimate (Sampling Distribution)') # a bell curved sampling distribution again! (t distribution)
+```
+---
+
+# P-value and Confidence Interval
+
+```{r p-value and confidence interval}
+sum(sampling_distribution > slope_estimate) # p-value effectively zero
+
+standard_error <- sd(sampling_distribution)
+
+confidence_interval <- c(slope_estimate - 1.96 * standard_error,
+                         slope_estimate + 1.96 * standard_error)
+
+summary(linear_model_fit)
+confint(linear_model_fit)
+```
+
+---
+
+## Multivariate Regression
+
 ```{r regression}
 data <- tibble(c = 1,
             x1 = rnorm(100, 0, 1),
