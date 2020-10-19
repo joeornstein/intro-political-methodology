@@ -65,7 +65,7 @@ class: center, middle, inverse, title-slide
 
 #### October 21 &amp; 28: Correlation
 
-- Covariance and The Linear Model
+- Covariance and Linear Regression
 - Matrix Algebra
 
 --
@@ -140,6 +140,146 @@ By the end of this module you will be able to...
 
 ---
 
+class: center, middle
+
+## Covariance and Correlation
+
+---
+
+## Covariance
+
+Recall that the **variance** of a random variable is its expected squared distance from the mean:
+
+`$$\text{Var}(X) = E[(X-E(X))^2]$$`
+
+--
+
+The **covariance** extends that definition of variance to two random variables `\(X\)` and `\(Y\)`:
+
+`$$\text{Cov}(X,Y) = E[(X-E(X))(Y-E(Y))]$$`
+--
+
+Note that:
+
+`$$\text{Cov}(X,X) = \text{Var}(X)$$`
+
+---
+
+## Covariance
+
+Covariance captures the degree of association between two variables. Does `\(X\)` tend to be high when `\(Y\)` is high?
+
+
+```r
+ggplot(data = iris) + 
+  geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length)) +
+  labs(x = 'Sepal Length', y = 'Petal Length', title = 'Flower Measurements') +
+  geom_vline(xintercept = mean(iris$Sepal.Length), linetype = 'dashed') +
+  geom_hline(yintercept = mean(iris$Petal.Length), linetype = 'dashed')
+```
+
+&lt;img src="09-Correlation_files/figure-html/covariance-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+???
+
+Notice that whenever `\(X\)` is greater than its mean, `\(Y\)` tends to be greater than its mean, and vice versa. 
+
+When two variables `\(X\)` and `\(Y\)` **covary** with one another, `\(X\)` tends to be high whenever `\(Y\)` is high, and `\(X\)` tends to be low whenever `\(Y\)` is low.
+
+---
+
+## Covariance
+
+Because petal length tends to be larger than average whenever sepal length is larger than average, and vice versa, when you take the average of all the the `\((X-\bar{X})(Y-\bar{Y})\)`, you will get a positive number.
+
+
+```r
+cov(iris$Sepal.Length, iris$Petal.Length)
+```
+
+```
+[1] 1.274315
+```
+
+When covariance is positive, `\(X\)` and `\(Y\)` tend to move together. When covariance is negative, `\(X\)` and `\(Y\)` tend to move in opposite directions.
+
+---
+
+## Correlation Coefficients
+
+The problem with covariance is that it's not easily interpretable. What does a covariance of 1.2743154 mean? How strong is that relationship?
+
+--
+
+The **correlation** coefficient solves that problem by standardizing the covariance.
+
+`$$\text{Cor}(X,Y) = \frac{\text{Cov}(X,Y)}{\sigma_X \sigma_Y}$$`
+--
+
+This yields a value between `\(-1\)` (perfectly anti-correlated) and `\(+1\)` (perfectly correlated).
+
+
+```r
+cor(iris$Sepal.Length, iris$Petal.Length)
+```
+
+```
+[1] 0.8717538
+```
+
+???
+
+Kind of like how standard deviation standardizes the variance by taking the square root.
+
+---
+
+## Let's Play "Guess The Correlation"
+
+&lt;img src="09-Correlation_files/figure-html/game 1-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+--
+
+Actual Correlation: 0.3042285
+
+---
+
+## Let's Play "Guess The Correlation"
+
+&lt;img src="09-Correlation_files/figure-html/game 2-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+--
+
+Actual Correlation: -0.7702996
+
+---
+
+## Let's Play "Guess The Correlation"
+
+&lt;img src="09-Correlation_files/figure-html/game 3-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+--
+
+Actual Correlation: 0.5387565
+
+---
+
+## Let's Play "Guess The Correlation"
+
+&lt;img src="09-Correlation_files/figure-html/game 4-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+--
+
+Actual Correlation: -0.3020019
+
+---
+
+## Let's Play "Guess The Correlation"
+
+For more fun, try [http://guessthecorrelation.com/](http://guessthecorrelation.com/)
+
+![](img/guess-the-correlation.png)
+---
+
 ## Bivariate Regression
 
 
@@ -160,8 +300,8 @@ data %&gt;%
 
 ```
           X         Y
-X 1.0000000 0.8360571
-Y 0.8360571 1.0000000
+X 1.0000000 0.8591675
+Y 0.8591675 1.0000000
 ```
 
 ```r
@@ -210,7 +350,7 @@ ggplot(demeaned_data) +
 
 ### What's the right slope?
 
-Do calculus
+Do calculus; beta hat = cov(x,y) / var(x)
 
 ---
 
@@ -226,7 +366,7 @@ slope_estimate
 ```
 
 ```
-[1] 3.050803
+[1] 2.981432
 ```
 
 ```r
@@ -241,7 +381,7 @@ lm(formula = Y ~ X, data = demeaned_data)
 
 Coefficients:
 (Intercept)            X  
- -3.346e-16    3.051e+00  
+ -1.803e-16    2.981e+00  
 ```
 
 ```r
@@ -260,9 +400,9 @@ The slope parameter `\(b\)` is called the **estimand**. It is the thing we are t
 
 `\(\frac{\sum X_iY_i}{\sum X_i^2}\)` is the **estimator**. It is the equation we use to produce our estimate.
 
-3.051 is our **estimate**.
+2.981 is our **estimate**.
 
-  - Typically, we denote estimates with little hats, like this: `\(\hat{b} =\)` 3.051.
+  - Typically, we denote estimates with little hats, like this: `\(\hat{b} =\)` 2.981.
 
 ---
 
@@ -310,7 +450,7 @@ get_slope_estimate(X = demeaned_data$X)
 ```
 
 ```
-[1] -0.1364828
+[1] -0.1364739
 ```
 ---
 
@@ -358,19 +498,19 @@ Call:
 lm(formula = Y ~ X, data = demeaned_data)
 
 Residuals:
-    Min      1Q  Median      3Q     Max 
--4.9546 -1.2245 -0.0698  1.3752  6.4903 
+   Min     1Q Median     3Q    Max 
+-5.055 -1.211 -0.010  1.345  5.295 
 
 Coefficients:
               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -3.346e-16  1.143e-01    0.00        1    
-X            3.051e+00  1.160e-01   26.31   &lt;2e-16 ***
+(Intercept) -1.803e-16  1.108e-01    0.00        1    
+X            2.981e+00  1.029e-01   28.98   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 1.98 on 298 degrees of freedom
-Multiple R-squared:  0.699,	Adjusted R-squared:  0.698 
-F-statistic:   692 on 1 and 298 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 1.919 on 298 degrees of freedom
+Multiple R-squared:  0.7382,	Adjusted R-squared:  0.7373 
+F-statistic: 840.1 on 1 and 298 DF,  p-value: &lt; 2.2e-16
 ```
 
 ```r
@@ -379,8 +519,8 @@ confint(linear_model_fit)
 
 ```
                  2.5 %    97.5 %
-(Intercept) -0.2249477 0.2249477
-X            2.8225715 3.2790339
+(Intercept) -0.2179958 0.2179958
+X            2.7790069 3.1838578
 ```
 
 ---
@@ -411,20 +551,20 @@ Call:
 lm(formula = y ~ x1 + x2, data = data)
 
 Residuals:
-    Min      1Q  Median      3Q     Max 
--1.9480 -0.6771 -0.0721  0.7215  2.7806 
+     Min       1Q   Median       3Q      Max 
+-2.17089 -0.65373  0.02031  0.69745  2.02174 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  0.03224    0.09291   0.347    0.729    
-x1           2.12537    0.09778  21.737   &lt;2e-16 ***
-x2           2.88939    0.09750  29.634   &lt;2e-16 ***
+(Intercept) -0.09143    0.09849  -0.928    0.356    
+x1           2.14595    0.10963  19.574   &lt;2e-16 ***
+x2           2.99632    0.09030  33.180   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.9227 on 97 degrees of freedom
-Multiple R-squared:  0.9371,	Adjusted R-squared:  0.9358 
-F-statistic: 722.8 on 2 and 97 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 0.9603 on 97 degrees of freedom
+Multiple R-squared:  0.9387,	Adjusted R-squared:  0.9374 
+F-statistic: 742.8 on 2 and 97 DF,  p-value: &lt; 2.2e-16
 ```
 
 ```r
@@ -445,9 +585,9 @@ beta_hat
 
 ```
          [,1]
-c  0.03224249
-x1 2.12536606
-x2 2.88939334
+c  -0.0914339
+x1  2.1459495
+x2  2.9963190
 ```
 
 ```r
@@ -461,7 +601,7 @@ lm(formula = y ~ x1 + x2, data = data)
 
 Coefficients:
 (Intercept)           x1           x2  
-    0.03224      2.12537      2.88939  
+   -0.09143      2.14595      2.99632  
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

@@ -143,6 +143,174 @@ By the end of this module you will be able to...
 
 ---
 
+class: center, middle
+
+## Covariance and Correlation
+
+---
+
+## Covariance
+
+Recall that the **variance** of a random variable is its expected squared distance from the mean:
+
+$$\text{Var}(X) = E[(X-E(X))^2]$$
+
+--
+
+The **covariance** extends that definition of variance to two random variables $X$ and $Y$:
+
+$$\text{Cov}(X,Y) = E[(X-E(X))(Y-E(Y))]$$
+--
+
+Note that:
+
+$$\text{Cov}(X,X) = \text{Var}(X)$$
+
+---
+
+## Covariance
+
+Covariance captures the degree of association between two variables. Does $X$ tend to be high when $Y$ is high?
+
+```{r covariance, out.width='50%'}
+ggplot(data = iris) + 
+  geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length)) +
+  labs(x = 'Sepal Length', y = 'Petal Length', title = 'Flower Measurements') +
+  geom_vline(xintercept = mean(iris$Sepal.Length), linetype = 'dashed') +
+  geom_hline(yintercept = mean(iris$Petal.Length), linetype = 'dashed')
+```
+
+???
+
+Notice that whenever $X$ is greater than its mean, $Y$ tends to be greater than its mean, and vice versa. 
+
+When two variables $X$ and $Y$ **covary** with one another, $X$ tends to be high whenever $Y$ is high, and $X$ tends to be low whenever $Y$ is low.
+
+---
+
+## Covariance
+
+Because petal length tends to be larger than average whenever sepal length is larger than average, and vice versa, when you take the average of all the the $(X-\bar{X})(Y-\bar{Y})$, you will get a positive number.
+
+```{r covariance computation}
+cov(iris$Sepal.Length, iris$Petal.Length)
+```
+
+When covariance is positive, $X$ and $Y$ tend to move together. When covariance is negative, $X$ and $Y$ tend to move in opposite directions.
+
+---
+
+## Correlation Coefficients
+
+The problem with covariance is that it's not easily interpretable. What does a covariance of `r cov(iris$Sepal.Length, iris$Petal.Length)` mean? How strong is that relationship?
+
+--
+
+The **correlation** coefficient solves that problem by standardizing the covariance.
+
+$$\text{Cor}(X,Y) = \frac{\text{Cov}(X,Y)}{\sigma_X \sigma_Y}$$
+--
+
+This yields a value between $-1$ (perfectly anti-correlated) and $+1$ (perfectly correlated).
+
+```{r correlation coefficient}
+cor(iris$Sepal.Length, iris$Petal.Length)
+```
+
+???
+
+Kind of like how standard deviation standardizes the variance by taking the square root.
+
+---
+
+## Let's Play "Guess The Correlation"
+
+```{r game 1, echo = FALSE}
+n <- 100
+X <- rnorm(n,0,1)
+Y <- X + rnorm(n,0,4)
+
+ggplot(tibble(X,Y)) + 
+  geom_point(aes(x=X,y=Y))
+```
+
+--
+
+Actual Correlation: `r cor(X,Y)`
+
+---
+
+## Let's Play "Guess The Correlation"
+
+```{r game 2, echo = FALSE}
+n <- 100
+X <- rnorm(n,0,1)
+Y <- -X + rnorm(n,0,1)
+
+ggplot(tibble(X,Y)) + 
+  geom_point(aes(x=X,y=Y))
+```
+
+--
+
+Actual Correlation: `r cor(X,Y)`
+
+---
+
+## Let's Play "Guess The Correlation"
+
+```{r game 3, echo = FALSE}
+n <- 100
+X <- rnorm(n,0,1)
+Y <- X + rnorm(n,0,2)
+
+ggplot(tibble(X,Y)) + 
+  geom_point(aes(x=X,y=Y))
+```
+
+--
+
+Actual Correlation: `r cor(X,Y)`
+
+---
+
+## Let's Play "Guess The Correlation"
+
+```{r game 4, echo = FALSE}
+n <- 100
+X <- rnorm(n,0,1)
+Y <- -X + rnorm(n,0,3)
+
+ggplot(tibble(X,Y)) + 
+  geom_point(aes(x=X,y=Y))
+```
+
+--
+
+Actual Correlation: `r cor(X,Y)`
+
+---
+
+## Let's Play "Guess The Correlation"
+
+For more fun, try [http://guessthecorrelation.com/](http://guessthecorrelation.com/)
+
+![](img/guess-the-correlation.png)
+
+---
+
+class: center, middle
+
+## Linear Regression
+
+---
+
+## Linear Regression
+
+Correlation coefficients are nice, but limited. <TODO: two slopes>
+
+---
+
 ## Bivariate Regression
 
 ```{r bivariate regression}
@@ -156,10 +324,15 @@ data <- tibble(X = rnorm(n, 1, 1),
                epsilon = rnorm(n, 0, 2),
                Y = a + b*X + epsilon)
 
-data %>% 
-  select(X,Y) %>% 
-  cor
+cor(data$X, data$Y)
+```
 
+
+
+---
+
+
+```{r plot bivariate regression DGP}
 ggplot(data) +
   geom_point(mapping = aes(x=X,y=Y))
 ```
