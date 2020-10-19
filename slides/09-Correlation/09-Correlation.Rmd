@@ -309,13 +309,40 @@ class: center, middle
 
 Correlation coefficients are nice, but limited. <TODO: two slopes>
 
+--
+
+Want to find the **slope** of the relationship. 
+
+  - When we increase $X$ by 1, how much does $Y$ increase or decrease, on average?
+  
+--
+
+Would also like to perform hypothesis tests and compute confidence intervals.
+
 ---
 
-## Bivariate Regression
+## Linear Regression
+
+The two-variable linear model looks like this:
+
+$$Y = a + bX + \varepsilon$$
+
+--
+
+**Terms:**
+
+- $a$ is the y-intercept 
+
+- $b$ is the slope of the relationship between $X$ and $Y$, and
+
+- $\varepsilon$ is random error
+
+---
+
+## Generate Some Data
 
 ```{r bivariate regression}
-
-# Create some data where we know the true data-generating process
+# Create some data
 n <- 300
 a <- 2
 b <- 3
@@ -327,15 +354,15 @@ data <- tibble(X = rnorm(n, 1, 1),
 cor(data$X, data$Y)
 ```
 
-
-
 ---
 
+## Generate Some Data
 
 ```{r plot bivariate regression DGP}
 ggplot(data) +
   geom_point(mapping = aes(x=X,y=Y))
 ```
+
 ---
 
 ### To make things easier, ignore the y-intercept
@@ -367,13 +394,57 @@ ggplot(demeaned_data) +
 
 ---
 
-### What's the right slope?
+## What's the right slope?
 
-Do calculus; beta hat = cov(x,y) / var(x)
+We're going to find the slope that minimizes the **sum of squared errors**.
+
+$$Y = bX + \varepsilon$$
+$$\varepsilon = Y - bX$$
+--
+
+Let's create a function called $f(b)$ equal to the sum of squared errors:
+
+$$f(b) = \sum \varepsilon_i^2 = \sum(Y_i-bX_i)^2$$
+--
+
+Distribute:
+
+$$f(b) = \sum y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$
+
+???
+
+<TODO: beta hat = cov(x,y) / var(x)>
 
 ---
 
+## What's the right slope?
+
+Three Steps of Minimizing a Function?
+
+--
+
+#### Step 1: Take the derivative
+
+$$f(b) = \sum y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$
+
+$$\frac{\partial f}{\partial b} = -2\sum X_iY_i + 2b \sum X_i^2$$
+
+--
+
+#### Step 2: Set Equal to Zero
+
+$$-2\sum X_iY_i + 2b \sum X_i^2 = 0$$
+--
+
+#### Step 3: Solve for $b$
+
+$$2\sum X_iY_i = 2b\sum X_i^2$$
+$$b = \frac{\sum X_iY_i}{\sum X_i^2}$$
+---
+
 ### Slope Estimate
+
+$$b = \frac{\sum X_iY_i}{\sum X_i^2}$$
 
 ```{r estimate slope}
 slope_estimate <- 
@@ -381,10 +452,13 @@ slope_estimate <-
   sum(demeaned_data$X^2)
 
 slope_estimate
+```
 
-linear_model_fit <- lm(Y~X, data = demeaned_data) 
-linear_model_fit # hello
+---
 
+### Slope Estimate
+
+```{r plot estimated slope}
 ggplot(demeaned_data) + 
   geom_point(mapping = aes(x=X,y=Y)) +
   geom_abline(intercept = 0, slope = slope_estimate)
@@ -452,7 +526,7 @@ get_slope_estimate(X = demeaned_data$X)
 
 <TODO: Bump this to 10000>
 
-```{r sampling distribution, out.width = '70%'}
+```{r sampling distribution, out.width = '60%'}
 sampling_distribution <- replicate(500, get_slope_estimate(X = data$X))
 
 tibble(sampling_distribution) %>% 
@@ -461,6 +535,7 @@ tibble(sampling_distribution) %>%
                  color = 'black') +
   labs(x='Slope Estimate (Sampling Distribution)') # a bell curved sampling distribution again! (t distribution)
 ```
+
 ---
 
 # P-value and Confidence Interval
@@ -473,6 +548,9 @@ standard_error <- sd(sampling_distribution)
 confidence_interval <- c(slope_estimate - 1.96 * standard_error,
                          slope_estimate + 1.96 * standard_error)
 
+
+linear_model_fit <- lm(Y~X, data = demeaned_data) 
+linear_model_fit # hello
 summary(linear_model_fit)
 confint(linear_model_fit)
 ```

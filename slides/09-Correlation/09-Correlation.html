@@ -278,13 +278,54 @@ Actual Correlation: -0.3020019
 For more fun, try [http://guessthecorrelation.com/](http://guessthecorrelation.com/)
 
 ![](img/guess-the-correlation.png)
+
 ---
 
-## Bivariate Regression
+class: center, middle
+
+## Linear Regression
+
+---
+
+## Linear Regression
+
+Correlation coefficients are nice, but limited. &lt;TODO: two slopes&gt;
+
+--
+
+Want to find the **slope** of the relationship. 
+
+  - When we increase `\(X\)` by 1, how much does `\(Y\)` increase or decrease, on average?
+  
+--
+
+Would also like to perform hypothesis tests and compute confidence intervals.
+
+---
+
+## Linear Regression
+
+The two-variable linear model looks like this:
+
+`$$Y = a + bX + \varepsilon$$`
+
+--
+
+**Terms:**
+
+- `\(a\)` is the y-intercept 
+
+- `\(b\)` is the slope of the relationship between `\(X\)` and `\(Y\)`, and
+
+- `\(\varepsilon\)` is random error
+
+---
+
+## Generate Some Data
 
 
 ```r
-# Create some data where we know the true data-generating process
+# Create some data
 n &lt;- 300
 a &lt;- 2
 b &lt;- 3
@@ -293,23 +334,25 @@ data &lt;- tibble(X = rnorm(n, 1, 1),
                epsilon = rnorm(n, 0, 2),
                Y = a + b*X + epsilon)
 
-data %&gt;% 
-  select(X,Y) %&gt;% 
-  cor
+cor(data$X, data$Y)
 ```
 
 ```
-          X         Y
-X 1.0000000 0.8591675
-Y 0.8591675 1.0000000
+[1] 0.8591675
 ```
+
+---
+
+## Generate Some Data
+
 
 ```r
 ggplot(data) +
   geom_point(mapping = aes(x=X,y=Y))
 ```
 
-&lt;img src="09-Correlation_files/figure-html/bivariate regression-1.png" width="600" style="display: block; margin: auto;" /&gt;
+&lt;img src="09-Correlation_files/figure-html/plot bivariate regression DGP-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
 ---
 
 ### To make things easier, ignore the y-intercept
@@ -348,13 +391,57 @@ ggplot(demeaned_data) +
 
 ---
 
-### What's the right slope?
+## What's the right slope?
 
-Do calculus; beta hat = cov(x,y) / var(x)
+We're going to find the slope that minimizes the **sum of squared errors**.
+
+`$$Y = bX + \varepsilon$$`
+`$$\varepsilon = Y - bX$$`
+--
+
+Let's create a function called `\(f(b)\)` equal to the sum of squared errors:
+
+`$$f(b) = \sum \varepsilon_i^2 = \sum(Y_i-bX_i)^2$$`
+--
+
+Distribute:
+
+`$$f(b) = \sum y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$`
+
+???
+
+&lt;TODO: beta hat = cov(x,y) / var(x)&gt;
 
 ---
 
+## What's the right slope?
+
+Three Steps of Minimizing a Function?
+
+--
+
+#### Step 1: Take the derivative
+
+`$$f(b) = \sum y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$`
+
+`$$\frac{\partial f}{\partial b} = -2\sum X_iY_i + 2b \sum X_i^2$$`
+
+--
+
+#### Step 2: Set Equal to Zero
+
+`$$-2\sum X_iY_i + 2b \sum X_i^2 = 0$$`
+--
+
+#### Step 3: Solve for `\(b\)`
+
+`$$2\sum X_iY_i = 2b\sum X_i^2$$`
+`$$b = \frac{\sum X_iY_i}{\sum X_i^2}$$`
+---
+
 ### Slope Estimate
+
+`$$b = \frac{\sum X_iY_i}{\sum X_i^2}$$`
 
 
 ```r
@@ -369,20 +456,10 @@ slope_estimate
 [1] 2.981432
 ```
 
-```r
-linear_model_fit &lt;- lm(Y~X, data = demeaned_data) 
-linear_model_fit # hello
-```
+---
 
-```
+### Slope Estimate
 
-Call:
-lm(formula = Y ~ X, data = demeaned_data)
-
-Coefficients:
-(Intercept)            X  
- -1.803e-16    2.981e+00  
-```
 
 ```r
 ggplot(demeaned_data) + 
@@ -390,7 +467,7 @@ ggplot(demeaned_data) +
   geom_abline(intercept = 0, slope = slope_estimate)
 ```
 
-&lt;img src="09-Correlation_files/figure-html/estimate slope-1.png" width="600" style="display: block; margin: auto;" /&gt;
+&lt;img src="09-Correlation_files/figure-html/plot estimated slope-1.png" width="600" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -469,7 +546,7 @@ tibble(sampling_distribution) %&gt;%
   labs(x='Slope Estimate (Sampling Distribution)') # a bell curved sampling distribution again! (t distribution)
 ```
 
-&lt;img src="09-Correlation_files/figure-html/sampling distribution-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="09-Correlation_files/figure-html/sampling distribution-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 ---
 
 # P-value and Confidence Interval
@@ -489,6 +566,22 @@ standard_error &lt;- sd(sampling_distribution)
 confidence_interval &lt;- c(slope_estimate - 1.96 * standard_error,
                          slope_estimate + 1.96 * standard_error)
 
+
+linear_model_fit &lt;- lm(Y~X, data = demeaned_data) 
+linear_model_fit # hello
+```
+
+```
+
+Call:
+lm(formula = Y ~ X, data = demeaned_data)
+
+Coefficients:
+(Intercept)            X  
+ -1.803e-16    2.981e+00  
+```
+
+```r
 summary(linear_model_fit)
 ```
 
