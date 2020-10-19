@@ -101,6 +101,7 @@ Do calculus
 
 ```{r estimate slope}
 slope_estimate <- sum(data$X * data$Y) / sum(data$X^2)
+slope_estimate
 
 linear_model_fit <- lm(Y~X, data = data) 
 linear_model_fit # hello
@@ -112,31 +113,51 @@ ggplot(data) +
 
 ---
 
-## Slope p-value and confidence interval
+## Some Terminology
 
-Three Steps?
+The slope parameter $b$ is called the **estimand**. It is the thing we are trying to estimate.
 
-1. Null Hypothesis: b = 0
+$\frac{\sum X_iY_i}{\sum X_i^2}$ is the **estimator**. It is the equation we use to produce our estimate.
 
-2. Generate Sampling Distribution if b = 0
+`r slope_estimate %>% round(3)` is our **estimate**.
 
-3. Compare observed value to sampling distribution
+  - Typically, we denote estimates with little hats, like this: $\hat{b} = $ `r slope_estimate %>% round(3)`.
+
+---
+
+## Inference
+
+We have a **point estimate** of the slope. What if we want confidence intervals and p-values? 
+
+**Three Steps:**
+
+--
+
+1. Specify the Null Hypothesis $(b = 0)$
+
+--
+
+2. Generate Sampling Distribution of $\hat{b}$ if $b = 0$
+
+--
+
+3. Compare observed value of $\hat{b}$ to the sampling distribution
 
 ---
 
 ## Where do we get the sampling distribution?
 
-When we do regression, the random component is that noise term $\varepsilon$. Imagine that we're repeatedly drawing a new $\varepsilon$ vector with each sample.
+When we do regression, the randomness comes from the noise term $\varepsilon$. Imagine that we repeatedly draw a new $\varepsilon$ vector with each sample.
 
 ```{r sampling distribution}
-
-get_slope_estimate <- function(a = 0, b = 0, X){
+get_slope_estimate <- function(a = 0, b = 0, X,
+                               sd_epsilon = 2){
   
-  # Create data assuming null hypothesis (b = 0, a = 0)
   n <- length(X)
   
+  # Create random dataset assuming null hypothesis (b = 0, a = 0)  
   data <- tibble(X = X,
-                 epsilon = rnorm(n, 0, 2),
+                 epsilon = rnorm(n, 0, sd_epsilon),
                  Y = a + b*X + epsilon)
   
   # Return the slope estimate
@@ -150,7 +171,7 @@ get_slope_estimate(X = data$X)
 
 ## Generate the Sampling Distribution
 
-```{r sampling distribution}
+```{r sampling distribution, out.width = '70%'}
 sampling_distribution <- replicate(10000, get_slope_estimate(X = data$X))
 
 tibble(sampling_distribution) %>% 
@@ -177,7 +198,13 @@ confint(linear_model_fit)
 
 ---
 
-## Multivariate Regression
+class: center, middle
+
+## Multivariate Linear Regression
+
+---
+
+## Multivariate Linear Regression
 
 ```{r regression}
 data <- tibble(c = 1,
