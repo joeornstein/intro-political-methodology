@@ -405,9 +405,9 @@ flower_plot +
 
 ---
 
-## Generate Some Data
+## How do we estimate the line of best fit?
 
-To see how we estimate the line of best fit, let's create some random data.
+To see how, let's first generate some random data.
 
 ```{r bivariate regression}
 n <- 300 # sample size
@@ -425,7 +425,7 @@ cor(data$X, data$Y)
 
 ---
 
-## Generate Some Data
+## How do we estimate the line of best fit?
 
 ```{r plot bivariate regression DGP}
 ggplot(data) +
@@ -434,15 +434,18 @@ ggplot(data) +
 
 ---
 
-### To make things easier, ignore the y-intercept
+## How do we estimate the line of best fit?
+
+To make things easier, we will ignore the y-intercept for now.
 
 ```{r demean}
 demeaned_data <- data %>% 
-  mutate(Y = Y - mean(Y),
-         X = X - mean(X))
+  mutate(Y = Y - mean(Y), X = X - mean(X))
 ```
 
 --
+
+The data looks the same; we've just shifted it down and to the left.
 
 .pull-left[
 ```{r non-demeaned plot, out.width = '90%'}
@@ -460,16 +463,17 @@ ggplot(demeaned_data) +
 ```
 ]
 
-The data looks the same; we've just shifted it down and to the left.
+???
 
+You'll thank me when we start doing the calculus.
 
 ---
 
-### How do we find a good slope estimate?
+## How do we estimate the line of best fit?
 
 --
 
-We're going to find the slope that minimizes the **sum of squared errors**.
+The "best" is the one that minimizes error. Specifically, we're going to find the line that minimizes the **sum of squared errors**.
 
 $$Y = bX + \varepsilon$$
 $$\varepsilon = Y - bX$$
@@ -486,9 +490,7 @@ $$f(b) = \sum Y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$
 
 ---
 
-### How do we find a good slope estimate?
-
-Three Steps of Minimizing a Function?
+## Three Steps to Minimize a Function?
 
 --
 
@@ -592,17 +594,17 @@ In a linear regression, the randomness comes from the error term $\varepsilon$. 
 --
 
 ```{r sampling function}
-null_slope_estimate <- function(a = 0, b = 0, X){
+null_slope_estimate <- function(X){
   
+  b <- 0 # null hypothesis: b = 0 
   n <- length(X)
   
-  # Create random dataset assuming null hypothesis (b = 0, a = 0)  
-  data <- tibble(X = X,
-                 epsilon = rnorm(n, 0, 2),
-                 Y = a + b*X + epsilon)
+  # Create random dataset assuming null hypothesis
+  epsilon <- rnorm(n, 0, 2)
+  Y <- b*X + epsilon
   
   # Return the slope estimate
-  sum(data$X * data$Y) / sum(data$X^2)
+  sum(X * Y) / sum(X^2)
 }
 
 null_slope_estimate(X = demeaned_data$X)
