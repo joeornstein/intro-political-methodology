@@ -359,7 +359,7 @@ The two-variable linear model looks like this:
 
 --
 
-`$$\begin{bmatrix} 4 \\ 6 \\ 10 \end{bmatrix} = 2 + 2 \times \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix} + \begin{bmatrix} 0 \\ -2 \\ 0 \end{bmatrix}$$`
+`$$\underbrace{\begin{bmatrix} 4 \\ 6 \\ 10 \end{bmatrix}}_Y = \underbrace{2 \times \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}}_a + \underbrace{2 \times \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix}}_{bX} + \underbrace{\begin{bmatrix} 0 \\ -2 \\ 0 \end{bmatrix}}_\varepsilon$$`
 
 ---
 
@@ -539,15 +539,32 @@ The slope parameter `\(b\)` is called the **estimand**. It is the thing we are t
 
   - Typically, we denote estimates with little hats, like this: `\(\hat{b} =\)` 2.936.
 
---
+---
 
-???
-
-### Footnote
+## Interesting Footnote
 
 Notice that our estimator `\(\frac{\sum X_iY_i}{\sum X_i^2}\)` is equal to `\(\frac{\sum (X_i-0)(Y_i-0)}{\sum (X_i-0)^2}\)`, which is equal to `\(\frac{\sum (X_i-\bar{X})(Y_i-\bar{Y})}{\sum (X_i-\bar{X})^2}\)` because `\(\bar{X}=0\)` and `\(\bar{Y}=0\)`.
 
 So another way of writing the estimator is `\(\hat{b} = \frac{\text{Cov}(X,Y)}{\text{Var}(X)}\)`.
+
+--
+
+
+```r
+slope_estimate
+```
+
+```
+[1] 2.936414
+```
+
+```r
+cov(demeaned_data$X, demeaned_data$Y) / var(demeaned_data$X)
+```
+
+```
+[1] 2.936414
+```
 
 ---
 
@@ -565,7 +582,7 @@ We have a **point estimate** of the slope. What if we want confidence intervals 
 
 --
 
-2. Generate Sampling Distribution of `\(\hat{b}\)`
+2. Generate Sampling Distribution of `\(\hat{b}\)` assuming `\(b = 0\)`
 
 --
 
@@ -575,20 +592,19 @@ We have a **point estimate** of the slope. What if we want confidence intervals 
 
 ### Where do we get the sampling distribution?
 
---
-
 In a linear regression, the randomness comes from the error term `\(\varepsilon\)`. Imagine that we repeatedly draw a new `\(\varepsilon\)` vector with each sample.
+
+--
 
 
 ```r
-null_slope_estimate &lt;- function(a = 0, b = 0, X,
-                               sd_epsilon = 2){
+null_slope_estimate &lt;- function(a = 0, b = 0, X){
   
   n &lt;- length(X)
   
   # Create random dataset assuming null hypothesis (b = 0, a = 0)  
   data &lt;- tibble(X = X,
-                 epsilon = rnorm(n, 0, sd_epsilon),
+                 epsilon = rnorm(n, 0, 2),
                  Y = a + b*X + epsilon)
   
   # Return the slope estimate
@@ -657,7 +673,7 @@ confidence_interval
 
 ---
 
-## The One-Line Command In `R`
+## The One-Line Built-In `R` Function
 
 The `lm()` function estimates the linear model parameters (slope + y-intercept) and computes confidence intervals and p-values.
 
@@ -686,7 +702,7 @@ X            2.6894862 3.1833418
 
 ---
 
-## The One-Line Command In `R`
+## The One-Line Built-In `R` Function
 
 
 ```r
