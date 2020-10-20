@@ -171,11 +171,13 @@ Covariance captures the degree of association between two variables. Does `\(X\)
 
 
 ```r
-ggplot(data = iris) + 
+flower_plot &lt;- ggplot(data = iris) + 
   geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length)) +
   labs(x = 'Sepal Length', y = 'Petal Length', title = 'Flower Measurements') +
   geom_vline(xintercept = mean(iris$Sepal.Length), linetype = 'dashed') +
   geom_hline(yintercept = mean(iris$Petal.Length), linetype = 'dashed')
+
+flower_plot
 ```
 
 &lt;img src="09-Correlation_files/figure-html/covariance-1.png" width="50%" style="display: block; margin: auto;" /&gt;
@@ -190,7 +192,7 @@ When two variables `\(X\)` and `\(Y\)` **covary** with one another, `\(X\)` tend
 
 ## Covariance
 
-Because petal length tends to be larger than average whenever sepal length is larger than average, and vice versa, when you take the average of all the the `\((X-\bar{X})(Y-\bar{Y})\)`, you will get a positive number.
+Because petal length tends to be larger than average whenever sepal length is larger than average (and vice versa) when you take the mean of all the the `\((X-\bar{X})(Y-\bar{Y})\)`, you get a positive number.
 
 
 ```r
@@ -289,17 +291,27 @@ class: center, middle
 
 ## Linear Regression
 
-Correlation coefficients are nice, but limited. &lt;TODO: two slopes&gt;
+
+
+Correlation coefficients are nice, but limited. Both of these have the same correlation coefficient (0.743 and 0.749).
+
+.pull-left[
+&lt;img src="09-Correlation_files/figure-html/cor1-1.png" width="600" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="09-Correlation_files/figure-html/cor2-1.png" width="600" style="display: block; margin: auto;" /&gt;
+]
 
 --
 
-Want to find the **slope** of the relationship. 
+We want to find the **slope** of the relationship. 
 
   - When we increase `\(X\)` by 1, how much does `\(Y\)` increase or decrease, on average?
   
 --
 
-Would also like to perform hypothesis tests and compute confidence intervals.
+  - We would also like to perform hypothesis tests and compute confidence intervals.
 
 ---
 
@@ -313,24 +325,70 @@ The two-variable linear model looks like this:
 
 **Terms:**
 
+- `\(Y\)` is a **vector** of outcomes
+
+- `\(X\)` is a **vector** we're using to predict the outcome
+
 - `\(a\)` is the y-intercept 
 
 - `\(b\)` is the slope of the relationship between `\(X\)` and `\(Y\)`, and
 
-- `\(\varepsilon\)` is random error
+- `\(\varepsilon\)` is **vector** of random error
+
+  - The difference between the true value of `\(Y\)` and the predicted value `\(a + bX\)`.
+
+---
+
+## Linear Regression
+
+`$$Y = a + bX + \varepsilon$$`
+
+#### Example:
+
+.pull-left[
+`\(X = \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix}\)`
+]
+
+.pull-right[
+`\(Y = \begin{bmatrix} 4 \\ 6 \\ 10 \end{bmatrix}\)`
+]
+
+&lt;br&gt;
+
+`\(a = 2\)`, `\(b = 2\)`
+
+--
+
+`$$\begin{bmatrix} 4 \\ 6 \\ 10 \end{bmatrix} = 2 + 2 \times \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix} + \begin{bmatrix} 0 \\ -2 \\ 0 \end{bmatrix}$$`
+
+---
+
+### Linear Regression Finds the "Line of Best Fit"
+
+
+```r
+flower_plot +
+  geom_smooth(aes(x=Sepal.Length, y=Petal.Length),
+              method = 'lm', se = FALSE)
+```
+
+&lt;img src="09-Correlation_files/figure-html/line of best fit-1.png" width="600" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Generate Some Data
 
+To see how we estimate the line of best fit, let's create some random data.
+
 
 ```r
-# Create some data
-n &lt;- 300
-a &lt;- 2
-b &lt;- 3
+n &lt;- 300 # sample size
+a &lt;- 2 # y-intercept
+b &lt;- 3 # slope
 
-data &lt;- tibble(X = rnorm(n, 1, 1),
+# X and epsilon are normally distributed
+# Y = a + bX + epsilon
+data &lt;- tibble(X = rnorm(n, 1, 1), 
                epsilon = rnorm(n, 0, 2),
                Y = a + b*X + epsilon)
 
@@ -338,7 +396,7 @@ cor(data$X, data$Y)
 ```
 
 ```
-[1] 0.8591675
+[1] 0.8047485
 ```
 
 ---
@@ -388,10 +446,14 @@ ggplot(demeaned_data) +
 &lt;img src="09-Correlation_files/figure-html/demeaned plot-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 ]
 
+The data looks the same; we've just shifted it down and to the left.
+
 
 ---
 
-## What's the right slope?
+### How do we find a good slope estimate?
+
+--
 
 We're going to find the slope that minimizes the **sum of squared errors**.
 
@@ -406,15 +468,11 @@ Let's create a function called `\(f(b)\)` equal to the sum of squared errors:
 
 Distribute:
 
-`$$f(b) = \sum y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$`
-
-???
-
-&lt;TODO: beta hat = cov(x,y) / var(x)&gt;
+`$$f(b) = \sum Y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$`
 
 ---
 
-## What's the right slope?
+### How do we find a good slope estimate?
 
 Three Steps of Minimizing a Function?
 
@@ -422,7 +480,7 @@ Three Steps of Minimizing a Function?
 
 #### Step 1: Take the derivative
 
-`$$f(b) = \sum y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$`
+`$$f(b) = \sum Y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$`
 
 `$$\frac{\partial f}{\partial b} = -2\sum X_iY_i + 2b \sum X_i^2$$`
 
@@ -439,7 +497,7 @@ Three Steps of Minimizing a Function?
 `$$b = \frac{\sum X_iY_i}{\sum X_i^2}$$`
 ---
 
-### Slope Estimate
+## Slope Estimate
 
 `$$b = \frac{\sum X_iY_i}{\sum X_i^2}$$`
 
@@ -453,7 +511,7 @@ slope_estimate
 ```
 
 ```
-[1] 2.981432
+[1] 2.936414
 ```
 
 ---
@@ -477,9 +535,19 @@ The slope parameter `\(b\)` is called the **estimand**. It is the thing we are t
 
 `\(\frac{\sum X_iY_i}{\sum X_i^2}\)` is the **estimator**. It is the equation we use to produce our estimate.
 
-2.981 is our **estimate**.
+2.936 is our **estimate**.
 
-  - Typically, we denote estimates with little hats, like this: `\(\hat{b} =\)` 2.981.
+  - Typically, we denote estimates with little hats, like this: `\(\hat{b} =\)` 2.936.
+
+--
+
+???
+
+### Footnote
+
+Notice that our estimator `\(\frac{\sum X_iY_i}{\sum X_i^2}\)` is equal to `\(\frac{\sum (X_i-0)(Y_i-0)}{\sum (X_i-0)^2}\)`, which is equal to `\(\frac{\sum (X_i-\bar{X})(Y_i-\bar{Y})}{\sum (X_i-\bar{X})^2}\)` because `\(\bar{X}=0\)` and `\(\bar{Y}=0\)`.
+
+So another way of writing the estimator is `\(\hat{b} = \frac{\text{Cov}(X,Y)}{\text{Var}(X)}\)`.
 
 ---
 
@@ -487,7 +555,9 @@ The slope parameter `\(b\)` is called the **estimand**. It is the thing we are t
 
 We have a **point estimate** of the slope. What if we want confidence intervals and p-values? 
 
-**Three Steps:**
+--
+
+### Three Steps
 
 --
 
@@ -495,7 +565,7 @@ We have a **point estimate** of the slope. What if we want confidence intervals 
 
 --
 
-2. Generate Sampling Distribution of `\(\hat{b}\)` if `\(b = 0\)`
+2. Generate Sampling Distribution of `\(\hat{b}\)`
 
 --
 
@@ -503,13 +573,15 @@ We have a **point estimate** of the slope. What if we want confidence intervals 
 
 ---
 
-## Where do we get the sampling distribution?
+### Where do we get the sampling distribution?
 
-When we do regression, the randomness comes from the noise term `\(\varepsilon\)`. Imagine that we repeatedly draw a new `\(\varepsilon\)` vector with each sample.
+--
+
+In a linear regression, the randomness comes from the error term `\(\varepsilon\)`. Imagine that we repeatedly draw a new `\(\varepsilon\)` vector with each sample.
 
 
 ```r
-get_slope_estimate &lt;- function(a = 0, b = 0, X,
+null_slope_estimate &lt;- function(a = 0, b = 0, X,
                                sd_epsilon = 2){
   
   n &lt;- length(X)
@@ -523,33 +595,34 @@ get_slope_estimate &lt;- function(a = 0, b = 0, X,
   sum(data$X * data$Y) / sum(data$X^2)
 }
 
-get_slope_estimate(X = demeaned_data$X)
+null_slope_estimate(X = demeaned_data$X)
 ```
 
 ```
-[1] -0.1364739
+[1] 0.1097793
 ```
 ---
 
 ## Generate the Sampling Distribution
 
-&lt;TODO: Bump this to 10000&gt;
+&lt;TODO: Bump this to 20000&gt;
 
 
 ```r
-sampling_distribution &lt;- replicate(500, get_slope_estimate(X = data$X))
+sampling_distribution &lt;- replicate(200, null_slope_estimate(X = demeaned_data$X))
 
 tibble(sampling_distribution) %&gt;% 
   ggplot() +
   geom_histogram(mapping = aes(x=sampling_distribution),
-                 color = 'black') +
+                 color = 'black', binwidth = 0.02) +
   labs(x='Slope Estimate (Sampling Distribution)') # a bell curved sampling distribution again! (t distribution)
 ```
 
 &lt;img src="09-Correlation_files/figure-html/sampling distribution-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
 ---
 
-# P-value and Confidence Interval
+## P-values
 
 
 ```r
@@ -560,26 +633,61 @@ sum(sampling_distribution &gt; slope_estimate) # p-value effectively zero
 [1] 0
 ```
 
+## Confidence Intervals
+
+
 ```r
 standard_error &lt;- sd(sampling_distribution)
+standard_error
+```
 
+```
+[1] 0.12651
+```
+
+```r
 confidence_interval &lt;- c(slope_estimate - 1.96 * standard_error,
                          slope_estimate + 1.96 * standard_error)
-
-
-linear_model_fit &lt;- lm(Y~X, data = demeaned_data) 
-linear_model_fit # hello
+confidence_interval
 ```
 
 ```
-
-Call:
-lm(formula = Y ~ X, data = demeaned_data)
-
-Coefficients:
-(Intercept)            X  
- -1.803e-16    2.981e+00  
+[1] 2.688454 3.184374
 ```
+
+---
+
+## The One-Line Command In `R`
+
+The `lm()` function estimates the linear model parameters (slope + y-intercept) and computes confidence intervals and p-values.
+
+
+```r
+linear_model_fit &lt;- lm(formula = Y ~ X, 
+                       data = demeaned_data) 
+
+coef(linear_model_fit) # get the coefficient estimates
+```
+
+```
+  (Intercept)             X 
+-2.239381e-16  2.936414e+00 
+```
+
+```r
+confint(linear_model_fit) # get the confidence intervals
+```
+
+```
+                 2.5 %    97.5 %
+(Intercept) -0.2338614 0.2338614
+X            2.6894862 3.1833418
+```
+
+---
+
+## The One-Line Command In `R`
+
 
 ```r
 summary(linear_model_fit)
@@ -591,30 +699,24 @@ Call:
 lm(formula = Y ~ X, data = demeaned_data)
 
 Residuals:
-   Min     1Q Median     3Q    Max 
--5.055 -1.211 -0.010  1.345  5.295 
+    Min      1Q  Median      3Q     Max 
+-5.3345 -1.5505 -0.1392  1.3538  7.0281 
 
 Coefficients:
               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -1.803e-16  1.108e-01    0.00        1    
-X            2.981e+00  1.029e-01   28.98   &lt;2e-16 ***
+(Intercept) -2.239e-16  1.188e-01     0.0        1    
+X            2.936e+00  1.255e-01    23.4   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 1.919 on 298 degrees of freedom
-Multiple R-squared:  0.7382,	Adjusted R-squared:  0.7373 
-F-statistic: 840.1 on 1 and 298 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 2.058 on 298 degrees of freedom
+Multiple R-squared:  0.6476,	Adjusted R-squared:  0.6464 
+F-statistic: 547.7 on 1 and 298 DF,  p-value: &lt; 2.2e-16
 ```
 
-```r
-confint(linear_model_fit)
-```
+???
 
-```
-                 2.5 %    97.5 %
-(Intercept) -0.2179958 0.2179958
-X            2.7790069 3.1838578
-```
+Reports a bunch of other statistics and diagnostics that you will learn about in 7014. I gotta leave something for Mollie to teach you.
 
 ---
 
@@ -645,19 +747,19 @@ lm(formula = y ~ x1 + x2, data = data)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--2.17089 -0.65373  0.02031  0.69745  2.02174 
+-2.61859 -0.63604 -0.02246  0.66331  2.37172 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -0.09143    0.09849  -0.928    0.356    
-x1           2.14595    0.10963  19.574   &lt;2e-16 ***
-x2           2.99632    0.09030  33.180   &lt;2e-16 ***
+(Intercept)  0.05440    0.09306   0.585     0.56    
+x1           1.96576    0.09158  21.464   &lt;2e-16 ***
+x2           2.94281    0.09314  31.595   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.9603 on 97 degrees of freedom
-Multiple R-squared:  0.9387,	Adjusted R-squared:  0.9374 
-F-statistic: 742.8 on 2 and 97 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 0.9228 on 97 degrees of freedom
+Multiple R-squared:  0.9301,	Adjusted R-squared:  0.9286 
+F-statistic: 645.1 on 2 and 97 DF,  p-value: &lt; 2.2e-16
 ```
 
 ```r
@@ -678,9 +780,9 @@ beta_hat
 
 ```
          [,1]
-c  -0.0914339
-x1  2.1459495
-x2  2.9963190
+c  0.05440201
+x1 1.96575842
+x2 2.94280837
 ```
 
 ```r
@@ -694,7 +796,7 @@ lm(formula = y ~ x1 + x2, data = data)
 
 Coefficients:
 (Intercept)           x1           x2  
-   -0.09143      2.14595      2.99632  
+     0.0544       1.9658       2.9428  
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
