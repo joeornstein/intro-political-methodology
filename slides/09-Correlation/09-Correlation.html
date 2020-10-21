@@ -267,16 +267,6 @@ Actual Correlation: 0.5387565
 
 ## Let's Play "Guess The Correlation"
 
-&lt;img src="09-Correlation_files/figure-html/game 4-1.png" width="600" style="display: block; margin: auto;" /&gt;
-
---
-
-Actual Correlation: -0.3020019
-
----
-
-## Let's Play "Guess The Correlation"
-
 For more fun, try [http://guessthecorrelation.com/](http://guessthecorrelation.com/)
 
 ![](img/guess-the-correlation.png)
@@ -293,7 +283,7 @@ class: center, middle
 
 
 
-Correlation coefficients are nice, but limited. Both of these have the same correlation coefficient (0.743 and 0.749).
+Correlation coefficients are nice, but limited. Both of these have the same correlation coefficient (0.696 and 0.696).
 
 .pull-left[
 &lt;img src="09-Correlation_files/figure-html/cor1-1.png" width="600" style="display: block; margin: auto;" /&gt;
@@ -396,7 +386,7 @@ cor(data$X, data$Y)
 ```
 
 ```
-[1] 0.8047485
+[1] 0.850003
 ```
 
 ---
@@ -513,7 +503,7 @@ slope_estimate
 ```
 
 ```
-[1] 2.936414
+[1] 3.152109
 ```
 
 ---
@@ -537,9 +527,9 @@ The slope parameter `\(b\)` is called the **estimand**. It is the thing we are t
 
 `\(\frac{\sum X_iY_i}{\sum X_i^2}\)` is the **estimator**. It is the equation we use to produce our estimate.
 
-2.936 is our **estimate**.
+3.152 is our **estimate**.
 
-  - Typically, we denote estimates with little hats, like this: `\(\hat{b} =\)` 2.936.
+  - Typically, we denote estimates with little hats, like this: `\(\hat{b} =\)` 3.152.
 
 ---
 
@@ -557,7 +547,7 @@ slope_estimate
 ```
 
 ```
-[1] 2.936414
+[1] 3.152109
 ```
 
 ```r
@@ -565,7 +555,7 @@ cov(demeaned_data$X, demeaned_data$Y) / var(demeaned_data$X)
 ```
 
 ```
-[1] 2.936414
+[1] 3.152109
 ```
 
 ---
@@ -617,7 +607,7 @@ null_slope_estimate(X = demeaned_data$X)
 ```
 
 ```
-[1] 0.1097793
+[1] -0.07552862
 ```
 ---
 
@@ -633,7 +623,7 @@ tibble(sampling_distribution) %&gt;%
   ggplot() +
   geom_histogram(mapping = aes(x=sampling_distribution),
                  color = 'black', binwidth = 0.02) +
-  labs(x='Slope Estimate (Sampling Distribution)') # a bell curved sampling distribution again! (t distribution)
+  labs(x='Slope Estimate (Sampling Distribution)') # a normally distributed sampling distribution again!
 ```
 
 &lt;img src="09-Correlation_files/figure-html/sampling distribution-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -660,7 +650,7 @@ standard_error
 ```
 
 ```
-[1] 0.12651
+[1] 0.1210715
 ```
 
 ```r
@@ -670,7 +660,7 @@ confidence_interval
 ```
 
 ```
-[1] 2.688454 3.184374
+[1] 2.914809 3.389410
 ```
 
 ---
@@ -689,7 +679,7 @@ coef(linear_model_fit) # get the coefficient estimates
 
 ```
   (Intercept)             X 
--2.239381e-16  2.936414e+00 
+-3.076740e-16  3.152109e+00 
 ```
 
 ```r
@@ -698,8 +688,8 @@ confint(linear_model_fit) # get the confidence intervals
 
 ```
                  2.5 %    97.5 %
-(Intercept) -0.2338614 0.2338614
-X            2.6894862 3.1833418
+(Intercept) -0.2196849 0.2196849
+X            2.9294117 3.3748072
 ```
 
 ---
@@ -718,18 +708,18 @@ lm(formula = Y ~ X, data = demeaned_data)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--5.3345 -1.5505 -0.1392  1.3538  7.0281 
+-5.1058 -1.2291 -0.0505  1.4577  5.4956 
 
 Coefficients:
               Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept) -2.239e-16  1.188e-01     0.0        1    
-X            2.936e+00  1.255e-01    23.4   &lt;2e-16 ***
+(Intercept) -3.077e-16  1.116e-01    0.00        1    
+X            3.152e+00  1.132e-01   27.86   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 2.058 on 298 degrees of freedom
-Multiple R-squared:  0.6476,	Adjusted R-squared:  0.6464 
-F-statistic: 547.7 on 1 and 298 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 1.934 on 298 degrees of freedom
+Multiple R-squared:  0.7225,	Adjusted R-squared:  0.7216 
+F-statistic: 775.9 on 1 and 298 DF,  p-value: &lt; 2.2e-16
 ```
 
 ???
@@ -764,20 +754,20 @@ Call:
 lm(formula = y ~ x1 + x2, data = data)
 
 Residuals:
-     Min       1Q   Median       3Q      Max 
--2.61859 -0.63604 -0.02246  0.66331  2.37172 
+    Min      1Q  Median      3Q     Max 
+-3.2456 -0.7339  0.0145  0.7302  2.1772 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  0.05440    0.09306   0.585     0.56    
-x1           1.96576    0.09158  21.464   &lt;2e-16 ***
-x2           2.94281    0.09314  31.595   &lt;2e-16 ***
+(Intercept)   0.1265     0.1060   1.194    0.236    
+x1            1.9897     0.1102  18.058   &lt;2e-16 ***
+x2            3.0345     0.1127  26.922   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 0.9228 on 97 degrees of freedom
-Multiple R-squared:  0.9301,	Adjusted R-squared:  0.9286 
-F-statistic: 645.1 on 2 and 97 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 1.033 on 97 degrees of freedom
+Multiple R-squared:  0.9133,	Adjusted R-squared:  0.9115 
+F-statistic: 511.1 on 2 and 97 DF,  p-value: &lt; 2.2e-16
 ```
 
 ```r
@@ -797,10 +787,10 @@ beta_hat
 ```
 
 ```
-         [,1]
-c  0.05440201
-x1 1.96575842
-x2 2.94280837
+        [,1]
+c  0.1264848
+x1 1.9897382
+x2 3.0344777
 ```
 
 ```r
@@ -814,7 +804,7 @@ lm(formula = y ~ x1 + x2, data = data)
 
 Coefficients:
 (Intercept)           x1           x2  
-     0.0544       1.9658       2.9428  
+     0.1265       1.9897       3.0345  
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

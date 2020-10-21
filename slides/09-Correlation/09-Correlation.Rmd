@@ -278,23 +278,6 @@ Actual Correlation: `r cor(X,Y)`
 
 ## Let's Play "Guess The Correlation"
 
-```{r game 4, echo = FALSE}
-n <- 100
-X <- rnorm(n,0,1)
-Y <- -X + rnorm(n,0,3)
-
-ggplot(tibble(X,Y)) + 
-  geom_point(aes(x=X,y=Y))
-```
-
---
-
-Actual Correlation: `r cor(X,Y)`
-
----
-
-## Let's Play "Guess The Correlation"
-
 For more fun, try [http://guessthecorrelation.com/](http://guessthecorrelation.com/)
 
 ![](img/guess-the-correlation.png)
@@ -313,8 +296,8 @@ class: center, middle
 n <- 100
 data <- tibble(X = rnorm(n,0,1),
                epsilon = rnorm(n,0,2),
-               Y1 = 0.75*X + rnorm(n,0,0.66),
-               Y2 = 3*X + rnorm(n,0,3))
+               Y1 = 0.75*X + rnorm(n,0,0.75),
+               Y2 = 3*X + rnorm(n,0,2.55))
 ```
 
 Correlation coefficients are nice, but limited. Both of these have the same correlation coefficient (`r cor(data$X, data$Y1) %>% round(3)` and `r cor(data$X, data$Y2) %>% round(3)`).
@@ -623,7 +606,7 @@ tibble(sampling_distribution) %>%
   ggplot() +
   geom_histogram(mapping = aes(x=sampling_distribution),
                  color = 'black', binwidth = 0.02) +
-  labs(x='Slope Estimate (Sampling Distribution)') # a bell curved sampling distribution again! (t distribution)
+  labs(x='Slope Estimate (Sampling Distribution)') # a normally distributed sampling distribution again!
 ```
 
 ---
