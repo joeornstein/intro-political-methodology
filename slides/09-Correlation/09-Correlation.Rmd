@@ -627,10 +627,8 @@ null_slope_estimate(X = demeaned_data$X)
 
 ## Generate the Sampling Distribution
 
-<TODO: Bump this to 20000>
-
 ```{r sampling distribution, out.width = '60%'}
-sampling_distribution <- replicate(200, null_slope_estimate(X = demeaned_data$X))
+sampling_distribution <- replicate(20000, null_slope_estimate(X = demeaned_data$X))
 
 tibble(sampling_distribution) %>% 
   ggplot() +

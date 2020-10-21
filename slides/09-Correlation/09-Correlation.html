@@ -639,11 +639,9 @@ null_slope_estimate(X = demeaned_data$X)
 
 ## Generate the Sampling Distribution
 
-&lt;TODO: Bump this to 20000&gt;
-
 
 ```r
-sampling_distribution &lt;- replicate(200, null_slope_estimate(X = demeaned_data$X))
+sampling_distribution &lt;- replicate(20000, null_slope_estimate(X = demeaned_data$X))
 
 tibble(sampling_distribution) %&gt;% 
   ggplot() +
@@ -676,7 +674,7 @@ standard_error
 ```
 
 ```
-[1] 0.1210715
+[1] 0.1166938
 ```
 
 ```r
@@ -686,7 +684,7 @@ confidence_interval
 ```
 
 ```
-[1] 2.914809 3.389410
+[1] 2.923390 3.380829
 ```
 
 ---
