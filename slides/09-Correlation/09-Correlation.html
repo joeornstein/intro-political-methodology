@@ -72,14 +72,14 @@ class: center, middle, inverse, title-slide
 
 #### November 4: Prediction
 
-- Models and Machine Learning
-- Overfitting, Cross-Validation, Regularization, and Ensembles
+- Fitting Models and Machine Learning
+- Cross-Validation, Regularization, and Ensembles
 
 --
 
 #### November 11 &amp; 18: Causation
 
-- Analyzing Experiments
+- Experimental Data
 - Observational Causal Inference
 
 --
@@ -100,7 +100,7 @@ By the end of this module you will be able to...
 
 --
 
-1. Compute covariance and correlation coefficients between two variables.
+1. Compute covariance and correlation coefficients.
 
 --
 
@@ -159,6 +159,10 @@ The **covariance** extends that definition of variance to two random variables `
 `$$\text{Cov}(X,Y) = E[(X-E(X))(Y-E(Y))]$$`
 --
 
+Covariance captures the degree of association between two variables. Does `\(X\)` tend to be high when `\(Y\)` is high?
+
+--
+
 Note that:
 
 `$$\text{Cov}(X,X) = \text{Var}(X)$$`
@@ -167,20 +171,29 @@ Note that:
 
 ## Covariance
 
-Covariance captures the degree of association between two variables. Does `\(X\)` tend to be high when `\(Y\)` is high?
-
 
 ```r
 flower_plot &lt;- ggplot(data = iris) + 
   geom_point(mapping = aes(x = Sepal.Length, y = Petal.Length)) +
-  labs(x = 'Sepal Length', y = 'Petal Length', title = 'Flower Measurements') +
-  geom_vline(xintercept = mean(iris$Sepal.Length), linetype = 'dashed') +
-  geom_hline(yintercept = mean(iris$Petal.Length), linetype = 'dashed')
-
+  labs(x = 'Sepal Length', y = 'Petal Length', title = 'Flower Measurements')
 flower_plot
 ```
 
-&lt;img src="09-Correlation_files/figure-html/covariance-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="09-Correlation_files/figure-html/covariance-1.png" width="65%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Covariance
+
+
+```r
+flower_plot &lt;- flower_plot +
+  geom_vline(xintercept = mean(iris$Sepal.Length), linetype = 'dashed') +
+  geom_hline(yintercept = mean(iris$Petal.Length), linetype = 'dashed')
+flower_plot
+```
+
+&lt;img src="09-Correlation_files/figure-html/flower plot 2-1.png" width="65%" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -283,7 +296,7 @@ class: center, middle
 
 
 
-Correlation coefficients are nice, but limited. Both of these have the same correlation coefficient (0.696 and 0.696).
+Correlation coefficients are nice, but limited. Both pairs of variables below have the same correlation coefficient (0.696 and 0.696).
 
 .pull-left[
 &lt;img src="09-Correlation_files/figure-html/cor1-1.png" width="600" style="display: block; margin: auto;" /&gt;
@@ -295,13 +308,31 @@ Correlation coefficients are nice, but limited. Both of these have the same corr
 
 --
 
-We want to find the **slope** of the relationship. 
+We want to find the **slope** of the relationship (the "line of best fit").
 
   - When we increase `\(X\)` by 1, how much does `\(Y\)` increase or decrease, on average?
   
---
+???
 
   - We would also like to perform hypothesis tests and compute confidence intervals.
+
+---
+
+## Linear Regression
+
+Correlation coefficients are nice, but limited. Both pairs of variables below have the same correlation coefficient (0.696 and 0.696).
+
+.pull-left[
+&lt;img src="09-Correlation_files/figure-html/cor3-1.png" width="600" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="09-Correlation_files/figure-html/cor4-1.png" width="600" style="display: block; margin: auto;" /&gt;
+]
+
+We want to find the **slope** of the relationship (the "line of best fit").
+
+  - When we increase `\(X\)` by 1, how much does `\(Y\)` increase or decrease, on average?
 
 ---
 
@@ -353,20 +384,9 @@ The two-variable linear model looks like this:
 
 ---
 
-### Linear Regression Finds the "Line of Best Fit"
-
-
-```r
-flower_plot +
-  geom_smooth(aes(x=Sepal.Length, y=Petal.Length),
-              method = 'lm', se = FALSE)
-```
-
-&lt;img src="09-Correlation_files/figure-html/line of best fit-1.png" width="600" style="display: block; margin: auto;" /&gt;
-
----
-
 ## How do we estimate the line of best fit?
+
+--
 
 To see how, let's first generate some random data.
 
@@ -415,8 +435,6 @@ demeaned_data &lt;- data %&gt;%
 
 --
 
-The data looks the same; we've just shifted it down and to the left.
-
 .pull-left[
 
 ```r
@@ -441,7 +459,7 @@ ggplot(demeaned_data) +
 
 ???
 
-You'll thank me when we start doing the calculus.
+The data looks the same; we've just shifted it down and to the left. You'll thank me when we start doing the calculus.
 
 ---
 
@@ -449,7 +467,7 @@ You'll thank me when we start doing the calculus.
 
 --
 
-The "best" is the one that minimizes error. Specifically, we're going to find the line that minimizes the **sum of squared errors**.
+The "best" line is the one that minimizes error. Specifically, we're going to find the line that minimizes the **sum of squared errors**.
 
 `$$Y = bX + \varepsilon$$`
 `$$\varepsilon = Y - bX$$`
@@ -562,7 +580,7 @@ cov(demeaned_data$X, demeaned_data$Y) / var(demeaned_data$X)
 
 ## Inference
 
-We have a **point estimate** of the slope. What if we want confidence intervals and p-values? 
+We have a **point estimate** of the slope ( `\(\hat{b} =\)` 3.152 ). What if we want confidence intervals and p-values? 
 
 --
 
@@ -724,17 +742,21 @@ F-statistic: 775.9 on 1 and 298 DF,  p-value: &lt; 2.2e-16
 
 ???
 
-Reports a bunch of other statistics and diagnostics that you will learn about in 7014. I gotta leave something for Mollie to teach you.
+Reports a bunch of other statistics and diagnostics that you will learn about in POLS 7014. I gotta leave something for Mollie to teach you.
 
 ---
 
 class: center, middle
 
-## Multivariate Linear Regression
+## Multivariable Linear Regression
 
 ---
 
-## Multivariate Linear Regression
+## Multivariable Linear Regression
+
+
+
+---
 
 
 ```r
@@ -794,7 +816,7 @@ x2 3.0344777
 ```
 
 ```r
-linear_model # that's where the coefficients come from; the parameter estimates that minimize the sum of squared errors
+linear_model
 ```
 
 ```
