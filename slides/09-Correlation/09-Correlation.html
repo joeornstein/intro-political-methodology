@@ -242,6 +242,14 @@ cor(iris$Sepal.Length, iris$Petal.Length)
 [1] 0.8717538
 ```
 
+```r
+cov(iris$Sepal.Length, iris$Petal.Length) / sd(iris$Sepal.Length) / sd(iris$Petal.Length)
+```
+
+```
+[1] 0.8717538
+```
+
 ???
 
 Kind of like how standard deviation standardizes the variance by taking the square root.
@@ -288,7 +296,7 @@ For more fun, try [http://guessthecorrelation.com/](http://guessthecorrelation.c
 
 class: center, middle
 
-## Linear Regression
+# Linear Regression
 
 ---
 
@@ -580,11 +588,11 @@ cov(demeaned_data$X, demeaned_data$Y) / var(demeaned_data$X)
 
 ## Inference
 
-We have a **point estimate** of the slope ( `\(\hat{b} =\)` 3.152 ). What if we want confidence intervals and p-values? 
+We have a **point estimate** of the slope ( `\(\hat{b} =\)` 3.152 ). What if we want an **interval estimate** (confidence intervals) and p-values? 
 
 --
 
-### Three Steps
+### Three Steps To Statistical Inference
 
 --
 
@@ -746,88 +754,326 @@ Reports a bunch of other statistics and diagnostics that you will learn about in
 
 ---
 
+## Exercise
+
+1. Check out the documentation for the `mtcars` dataset by typing `?mtcars`.
+
+2. What is the mean fuel efficiency of cars (`mpg`), grouped by the number of cylinders (`cyl`)?
+
+3. Do cars with a manual transmission have significantly higher/lower horsepower than those with an automatic transmission?
+
+4. What is the correlation between horsepower (`hp`) and fuel efficiency (`mpg`)? Visualize the relationship.
+
+5. Fit a linear model with horsepower as the predictor variable `\((X)\)` and fuel efficiency as the outcome variable `\((Y)\)`. What is the slope of the relationship? What is the 95% confidence interval on that slope estimate?
+
+---
+
+## Exercise (Solution)
+
+What is the mean fuel efficiency of cars (`mpg`), grouped by the number of cylinders (`cyl`)?
+
+
+```r
+mtcars %&gt;% 
+  group_by(cyl) %&gt;% 
+  summarize(mean_mpg = mean(mpg),
+            num = n())
+```
+
+```
+# A tibble: 3 x 3
+    cyl mean_mpg   num
+  &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+1     4     26.7    11
+2     6     19.7     7
+3     8     15.1    14
+```
+
+---
+
+## Exercise (Solution)
+
+Do cars with a manual transmission have significantly higher/lower horsepower than those with an automatic transmission?
+
+
+```r
+mtcars %&gt;% 
+  t.test(hp ~ am, data = .)
+```
+
+```
+
+	Welch Two Sample t-test
+
+data:  hp by am
+t = 1.2662, df = 18.715, p-value = 0.221
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -21.87858  88.71259
+sample estimates:
+mean in group 0 mean in group 1 
+       160.2632        126.8462 
+```
+
+---
+
+## Exercise (Solution)
+
+What is the correlation between horsepower (`hp`) and fuel efficiency (`mpg`)?
+
+
+```r
+ggplot(data = mtcars) +
+  geom_point(mapping = aes(x=hp, y=mpg)) +
+  labs(x = 'Horsepower', y = 'Fuel Efficiency (Miles Per Gallon)',
+       title = paste0('Correlation = ', cor(mtcars$hp, mtcars$mpg) %&gt;% round(3)))
+```
+
+&lt;img src="09-Correlation_files/figure-html/exercise 3-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Exercise (Solution)
+
+Fit a linear model with horsepower as the predictor variable `\((X)\)` and fuel efficiency as the outcome variable `\((Y)\)`. What is the slope of the relationship? What is the 95% confidence interval on that slope estimate?
+
+
+```r
+cars_linear_model &lt;- lm(mpg ~ hp, data = mtcars)
+
+coef(cars_linear_model)
+```
+
+```
+(Intercept)          hp 
+30.09886054 -0.06822828 
+```
+
+```r
+confint(cars_linear_model)
+```
+
+```
+                  2.5 %     97.5 %
+(Intercept) 26.76194879 33.4357723
+hp          -0.08889465 -0.0475619
+```
+
+---
+
+
 class: center, middle
 
-## Multivariable Linear Regression
+# Multivariable Linear Regression
 
 ---
 
 ## Multivariable Linear Regression
 
+Suppose we want to include **multiple** explanatory variables. 
+
+--
+
+`$$\text{mpg} = \alpha + \beta_1 \text{hp} + \beta_2 \text{wt} + \varepsilon$$`
+Cars with higher horsepower probably have lower fuel efficiency *and* heavier cars probably have lower fuel efficiency. We'd like to estimate the slope of both relationships simultaneously!
+
+--
+
+**Vector Representation**:
+
+`$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\alpha \times \begin{bmatrix} 1 \\ 1 \\1 \\ \vdots \\ 1 \end{bmatrix}}_\alpha + \underbrace{\beta_1 \times \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}}_{\beta_1 \text{hp}} + \underbrace{\beta_2 \times \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}}_{\beta_2 \text{wt}} + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon$$`
+---
+
+## Multivariable Linear Regression
+
+The challenge is to simultaneously estimate `\(\alpha\)`, `\(\beta_1\)`, and `\(\beta_2\)`.
+
+`$$\text{mpg} = \alpha + \beta_1 \text{hp} + \beta_2 \text{wt} + \varepsilon$$`
+--
+
+We've come as far as we can with scalar algebra. It's time you learned **matrix algebra**.
+
+---
+
+class: center, middle
+
+# Matrix Algebra
+
+---
+
+## Matrix Algebra
+
+Recall from Week 1 that a **matrix** is a bunch of vectors squished together.
+
+--
+
+.pull-left[
+`\(\text{hp} = \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}\)`
+]
+
+.pull-right[
+`\(\text{wt} = \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}\)`
+]
+
+--
+
+&lt;br&gt;
+
+`$$X = \begin{bmatrix} 110 &amp; 2.62 \\ 110 &amp; 2.875 \\ 93 &amp; 2.32 \\ \vdots &amp; \vdots \\ 109 &amp; 2.78 \end{bmatrix}$$`
+???
+
+We've been calling this a **dataframe**.
+
+---
+
+## Matrix Algebra
+
+**Adding** and **subtracting** matrices is straightforward. Just add and subtract elementwise. 
+
+.pull-left[
+`\(A = \begin{bmatrix} 1 &amp; 2 \\ 2 &amp; 3 \\ 4 &amp; 4 \end{bmatrix}\)`
+]
+
+.pull-right[
+`\(B = \begin{bmatrix} 2 &amp; 1 \\ 4 &amp; 4 \\ 8 &amp; 5 \end{bmatrix}\)`
+]
+
+--
+
+`$$A + B = \begin{bmatrix} 3 &amp; 3 \\ 6 &amp; 7 \\ 12 &amp; 9 \end{bmatrix}$$`
+--
+
+**Multiplying** and **dividing** is where it gets tricky.
+  - You can only multiply *some* matrices together (they must be **conformable**)
+  - And matrix division isn't really a thing. Instead, we multiply by the matrix's **inverse**.
 
 
 ---
 
+## Matrix Multiplication
+
+--
+
+First, let me introduce the **dot product** of two vectors.
+
+If `\(A = [3,1,2]\)` and `\(B = [1,2,3]\)`, then:
+
+`$$A \cdot B = 3 \times 1 + 1 \times 2 + 2 \times 3 = 11$$`
+--
+
 
 ```r
-data &lt;- tibble(c = 1,
-            x1 = rnorm(100, 0, 1),
-            x2 = rnorm(100, 0, 1),
-            y = 2*x1 + 3*x2 + rnorm(100, 0, 1))
+A &lt;- c(3,1,2)
+B &lt;- c(1,2,3)
 
-linear_model &lt;- lm(y ~ x1 + x2, data = data)
-
-summary(linear_model)
+# dot product
+sum(A*B)
 ```
 
 ```
+[1] 11
+```
 
-Call:
-lm(formula = y ~ x1 + x2, data = data)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--3.2456 -0.7339  0.0145  0.7302  2.1772 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)   0.1265     0.1060   1.194    0.236    
-x1            1.9897     0.1102  18.058   &lt;2e-16 ***
-x2            3.0345     0.1127  26.922   &lt;2e-16 ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 1.033 on 97 degrees of freedom
-Multiple R-squared:  0.9133,	Adjusted R-squared:  0.9115 
-F-statistic: 511.1 on 2 and 97 DF,  p-value: &lt; 2.2e-16
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+`\(A = \begin{bmatrix} 1 &amp; 2 \\ 2 &amp; 3 \end{bmatrix}\)`
+]
+
+.pull-right[
+`\(B = \begin{bmatrix} 2 &amp; 1 \\ 4 &amp; 4 \end{bmatrix}\)`
+]
+
+--
+
+&lt;br&gt;
+
+`$$AB = \begin{bmatrix} 1 \times 2 + 2 \times 4 &amp; 1 \times 1 + 2 \times 4 \\ 2 \times 2 + 3 \times 4 &amp; 2 \times 1 + 3 \times 4 \end{bmatrix} = \begin{bmatrix} 10 &amp; 9 \\ 16 &amp; 14 \end{bmatrix}$$`
+
+--
+
+&lt;br&gt;
+
+This is all very strange and confusing to get used to at first, but we'll soon see that it makes representing our multivariable linear regression problem a whole lot easier.
+
+---
+
+## Matrix Multiplication
+
+You can multiply matrices in `R` with the `%*%` command.
+
+
+```r
+A &lt;- cbind(c(1,2), c(2,3))
+A
+```
+
+```
+     [,1] [,2]
+[1,]    1    2
+[2,]    2    3
 ```
 
 ```r
-# X matrix
-X &lt;- data %&gt;% 
-  select(c, x1, x2) %&gt;% 
-  as.matrix
-
-# y vector
-y &lt;- data %&gt;% 
-  pull(y)
-
-# beta hat = (X'X)^-1 X'y
-beta_hat &lt;- solve(t(X) %*% X) %*% t(X) %*% y
-
-beta_hat
+B &lt;- cbind(c(2,4), c(1,4))
+B
 ```
 
 ```
-        [,1]
-c  0.1264848
-x1 1.9897382
-x2 3.0344777
+     [,1] [,2]
+[1,]    2    1
+[2,]    4    4
 ```
+
+--
+
 
 ```r
-linear_model
+A %*% B
 ```
 
 ```
-
-Call:
-lm(formula = y ~ x1 + x2, data = data)
-
-Coefficients:
-(Intercept)           x1           x2  
-     0.1265       1.9897       3.0345  
+     [,1] [,2]
+[1,]   10    9
+[2,]   16   14
 ```
+
+---
+
+## To Be Continued...
+
+
+
+???
+
+## Outline
+
+1. Covariance and correlation; play Guess the Correlation
+
+2. Linear Regression (Line of Best Fit)
+
+  - The Linear Model; slope/intercept parameters; yhat; estimation; Least squares; residuals
+  - `geom_smooth(method = 'lm')`
+  - `lm()`
+  - Now we want to be able to do that for MULTIPLE explanatory variables, and show that the solution is unique. For that we'll need matrix algebra.
+
+3. Matrices
+
+  - Matrices: multidimensional vectors; we've been calling them `data frames`. Show a data frame. It's a matrix. Same deal. 
+  - Adding and subtracting matrices is just like you would expect (elementwise), but multiplying and dividing matrices is the tricky part.
+  - Scalar multiplication vs. matrix multiplication; matrices must be *conformable* in order to multiply them; can't just multiply any two things together like you can with scalars; matrix transposes
+  - Multivariable regression as a matrix multiplication problem. yhat = Xb; just a compact way of representing a big system of equations
+  - Show that you can do those matrix multiplications in `R`; you need Wolfram Alpha to cheat on calculus, but `R` is actually designed for matrix algebra.
+  - So you need to find the vector b that minimizes (y - Xb)(y-Xb)'
+  - Turns out vector calculus is just like the calculus we saw before, except instead of *dividing* matrices, you take their inverse;  function
+  - Quick primer on matrix inverses; in scalar algebra, b/b = 1, in matrix algebra BB^(-1) = I; once again the great thing about taking a political methodology course in 2020 is that I won't teach you how to solve for a matrix inverse by hand (like I was made to do in undergrad). There is literally a function called `solve()` in `R` which inputs a matrix and returns its inverse. 
+  - yy' - Xby' - yX'b + XbX'b (minimize wrt b)
+  - -X'y - X'y + 2XbX' = 0
+  - b = (X'X)^-1(X'y)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
