@@ -1,0 +1,32 @@
+---
+title: 'Problem Set 7: Linear Regression'
+author: "Joe Ornstein"
+date: "Due November 4, 2020"
+output:
+  pdf_document: default
+  html_document: default
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+# For problem set, echo and eval = FALSE
+# For answer key, echo and eval = TRUE
+knitr::opts_chunk$set(echo = FALSE, eval = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+```
+
+Create an R project, an R script, load tidyverse, and import the modified Freedom In The World dataset you created for the midterm.
+
+## Line of Best Fit
+
+1. Estimate a line of best fit with `liberty_score` as the outcome and `democracy_score` as the explanatory variable.
+
+2. Visualize the line of best fit with `geom_smooth(method = 'lm')`.
+  
+3. What is the slope of the relationship? What is the p-value?
+  
+4. Are there any outliers with higher or lower liberty scores than you would expect given their democracy score? Which countries are they? (Hint: create a new variable called `residuals` in your data frame, equal to the true value minus the predicted value).
+  
+5. Merge with log GDP per capita and re-estimate estimate. 
+
+
