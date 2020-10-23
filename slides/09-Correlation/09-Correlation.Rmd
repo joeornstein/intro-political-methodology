@@ -418,71 +418,73 @@ $$\underbrace{\begin{bmatrix} 4 \\ 6 \\ 10 \end{bmatrix}}_Y = \underbrace{2 \tim
 
 ---
 
-## How do we estimate the line of best fit?
+## The Line of Best Fit
 
---
+The "line of best fit" is the one that minimizes error (specifically, the sum of squared errors).
 
-To see how, let's first generate some random data.
-
-```{r bivariate regression}
-n <- 300 # sample size
-a <- 2 # y-intercept
-b <- 3 # slope
-
-# X and epsilon are normally distributed
-# Y = a + bX + epsilon
-data <- tibble(X = rnorm(n, 1, 1), 
-               epsilon = rnorm(n, 0, 2),
-               Y = a + b*X + epsilon)
-
-cor(data$X, data$Y)
+```{r iris line of best fit, out.width='65%'}
+ggplot(data = iris) +
+  geom_point(mapping = aes(x = Petal.Width, y = Petal.Length)) + 
+  geom_smooth(mapping = aes(x= Petal.Width, y = Petal.Length),
+              method = 'lm', se = FALSE)
 ```
 
 ---
 
-## How do we estimate the line of best fit?
-
-```{r plot bivariate regression DGP}
-ggplot(data) +
-  geom_point(mapping = aes(x=X,y=Y))
-```
-
----
-
-## How do we estimate the line of best fit?
+## Estimating The Line of Best Fit
 
 To make things easier, we will ignore the y-intercept for now.
 
+  - Create new variables called $X$ and $Y$, equal to Petal Width and Petal Length minus their means.
+
 ```{r demean}
-demeaned_data <- data %>% 
-  mutate(Y = Y - mean(Y), X = X - mean(X))
+demeaned_iris <- iris %>% 
+  mutate(Y = Petal.Length - mean(Petal.Length), X = Petal.Width - mean(Petal.Width))
 ```
 
 --
 
+**Exercise**: What is the mean of $X$?
+
+```{r mean x and y}
+demeaned_iris$X %>% mean %>% round(4)
+```
+
+--
+
+You'll thank me when we start doing the calculus.
+
+---
+
+## Estimating The Line of Best Fit
+
 .pull-left[
 ```{r non-demeaned plot, out.width = '90%'}
-ggplot(data) +
-  geom_point(mapping = aes(x=X,y=Y)) +
-  labs(x='X',y='Y',title = 'Original Data')
+ggplot(iris) +
+  geom_point(mapping = aes(x=Petal.Width, y=Petal.Length)) +
+  labs(x='X',y='Y',title = 'Original Data') +
+  geom_vline(xintercept = 0) + 
+  geom_hline(yintercept = 0)
 ```
 ]
 
 .pull-right[
 ```{r demeaned plot, out.width='90%'}
-ggplot(demeaned_data) +
+ggplot(demeaned_iris) +
   geom_point(mapping = aes(x=X,y=Y)) +
-  labs(x='X',y='Y',title = 'Demeaned Data')
+  labs(x='X',y='Y',title = 'Demeaned Data') +
+  geom_vline(xintercept = 0) + 
+  geom_hline(yintercept = 0)
 ```
 ]
 
-???
+--
 
-The data looks the same; we've just shifted it down and to the left. You'll thank me when we start doing the calculus.
+The data looks the same; we've just shifted it down and to the left.
 
 ---
 
-## How do we estimate the line of best fit?
+## Estimating The Line of Best Fit
 
 --
 
@@ -532,18 +534,18 @@ $$b = \frac{\sum X_iY_i}{\sum X_i^2}$$
 
 ```{r estimate slope}
 slope_estimate <- 
-  sum(demeaned_data$X * demeaned_data$Y) /
-  sum(demeaned_data$X^2)
+  sum(demeaned_iris$X * demeaned_iris$Y) /
+  sum(demeaned_iris$X^2)
 
 slope_estimate
 ```
 
 ---
 
-### Slope Estimate
+## Slope Estimate
 
 ```{r plot estimated slope}
-ggplot(demeaned_data) + 
+ggplot(demeaned_iris) + 
   geom_point(mapping = aes(x=X,y=Y)) +
   geom_abline(intercept = 0, slope = slope_estimate)
 ```
@@ -573,18 +575,45 @@ So another way of writing the estimator is $\hat{b} = \frac{\text{Cov}(X,Y)}{\te
 ```{r another slope estimate}
 slope_estimate
 
-cov(demeaned_data$X, demeaned_data$Y) / var(demeaned_data$X)
+cov(demeaned_iris$X, demeaned_iris$Y) / var(demeaned_iris$X)
+```
+
+
+
+---
+
+## Residuals
+
+The vector of observed errors $(\hat{\varepsilon})$, also known as the **residuals**, is equal to $Y-\hat{b}X$.
+
+```{r compute errors}
+# Compute the epsilon vector
+epsilon <- demeaned_iris$Y - slope_estimate * demeaned_iris$X
+```
+
+--
+
+If we fit the line correctly, then the average error should equal zero.
+
+```{r mean epsilon}
+mean(epsilon)
 ```
 
 ---
 
-## Inference
+class: center, middle
 
-We have a **point estimate** of the slope ( $\hat{b} =$ `r slope_estimate %>% round(3)` ). What if we want an **interval estimate** (confidence intervals) and p-values? 
+## Statistical Inference
+
+---
+
+## Statistical Inference
+
+We now have a **point estimate** of the slope ( $\hat{b} =$ `r slope_estimate %>% round(3)` ). What if we want an **interval estimate** (confidence intervals) and p-values? 
 
 --
 
-### Three Steps To Statistical Inference
+### Three Steps
 
 --
 
@@ -607,33 +636,35 @@ In a linear regression, the randomness comes from the error term $\varepsilon$. 
 --
 
 ```{r sampling function}
-null_slope_estimate <- function(X){
+null_slope_estimate <- function(X, epsilon){
   
-  b <- 0 # null hypothesis: b = 0 
-  n <- length(X)
+  # Randomly sample a vector of epsilons
+  epsilon <- sample(epsilon, replace = TRUE)
   
-  # Create random dataset assuming null hypothesis
-  epsilon <- rnorm(n, 0, 2)
+  # null hypothesis: b = 0
+  b <- 0  
+  
+  # create a random dataset assuming the null hypothesis
   Y <- b*X + epsilon
   
   # Return the slope estimate
   sum(X * Y) / sum(X^2)
 }
 
-null_slope_estimate(X = demeaned_data$X)
-
+null_slope_estimate(X = demeaned_iris$X, epsilon)
 ```
+
 ---
 
 ## Generate the Sampling Distribution
 
 ```{r sampling distribution, out.width = '60%'}
-sampling_distribution <- replicate(20000, null_slope_estimate(X = demeaned_data$X))
+sampling_distribution <- replicate(20000, null_slope_estimate(X = demeaned_iris$X, epsilon))
 
 tibble(sampling_distribution) %>% 
   ggplot() +
   geom_histogram(mapping = aes(x=sampling_distribution),
-                 color = 'black', binwidth = 0.02) +
+                 color = 'black', binwidth = 0.01) +
   labs(x='Slope Estimate (Sampling Distribution)') # a normally distributed sampling distribution again!
 ```
 
@@ -665,7 +696,7 @@ The `lm()` function estimates the linear model parameters (slope + y-intercept) 
 
 ```{r lm}
 linear_model_fit <- lm(formula = Y ~ X, 
-                       data = demeaned_data) 
+                       data = demeaned_iris) 
 
 coef(linear_model_fit) # get the coefficient estimates
 
@@ -760,12 +791,12 @@ class: center, middle
 
 ## Multivariable Linear Regression
 
-Suppose we want to include **multiple** explanatory variables. 
+Suppose we want to explain the outcome as a function of **multiple** explanatory variables. 
 
 --
 
 $$\text{mpg} = \alpha + \beta_1 \text{hp} + \beta_2 \text{wt} + \varepsilon$$
-Cars with higher horsepower probably have lower fuel efficiency *and* heavier cars probably have lower fuel efficiency. We'd like to estimate the slope of both relationships simultaneously!
+Fuel efficiency probably depends on both horsepower **and** weight. More powerful and heavier cars will tend to have lower fuel efficiency. We'd like to estimate the slope of both relationships simultaneously!
 
 --
 
@@ -818,6 +849,20 @@ We've been calling this a **dataframe**.
 
 ## Matrix Algebra
 
+The **dimension** of a matrix refers to the number of rows and columns. An $m \times n$ matrix has $m$ rows and $n$ columns.
+
+--
+
+```{r matrix dimensions}
+dim(mtcars)
+```
+
+There are 32 rows and 11 columns in the mtcars data matrix.
+
+---
+
+## Matrix Algebra
+
 **Adding** and **subtracting** matrices is straightforward. Just add and subtract elementwise. 
 
 .pull-left[
@@ -840,20 +885,53 @@ $$A + B = \begin{bmatrix} 3 & 3 \\ 6 & 7 \\ 12 & 9 \end{bmatrix}$$
 
 ---
 
+class: center, middle
+
+## Matrix Multiplication
+
+---
+
 ## Matrix Multiplication
 
 --
 
-First, let me introduce the **dot product** of two vectors.
+First, let's introduce the **dot product** of two vectors.
 
-If $A = [3,1,2]$ and $B = [1,2,3]$, then:
-
-$$A \cdot B = 3 \times 1 + 1 \times 2 + 2 \times 3 = 11$$
+$$a \cdot b = \sum a_i b_i$$
 --
+
+If $a = [3,1,2]$ and $b = [1,2,3]$, then the dot product of $a$ and $b$ equals:
+
+$$a \cdot b =  3 \times 1 + 1 \times 2 + 2 \times 3 = 11$$
+--
+
+In `R`, a dot product can be computed like so:
 
 ```{r dot product}
 A <- c(3,1,2)
 B <- c(1,2,3)
+
+# dot product
+sum(A*B)
+```
+
+---
+
+## Matrix Multiplication
+
+**Exercise:** Take the dot product of $a$ and $b$.
+
+$a = [1,4,5]$ and $b = [3,2,1]$
+
+--
+
+**Answer:**
+
+$$a \cdot b =  1 \times 3 + 4 \times 2 + 5 \times 1 = 16$$
+
+```{r dot product 2}
+A <- c(1,4,5)
+B <- c(3,2,1)
 
 # dot product
 sum(A*B)
@@ -873,17 +951,22 @@ $A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
 $B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
 ]
 
+To get the entry in the first row, first column of $AB$, take the dot product of:
+
+- The first row of $A$, and
+- The first column of $B$
+
 --
 
-<br>
+Then do that for every row in $A$ and every column in $B$.
+
+--
 
 $$AB = \begin{bmatrix} 1 \times 2 + 2 \times 4 & 1 \times 1 + 2 \times 4 \\ 2 \times 2 + 3 \times 4 & 2 \times 1 + 3 \times 4 \end{bmatrix} = \begin{bmatrix} 10 & 9 \\ 16 & 14 \end{bmatrix}$$
 
 --
 
-<br>
-
-This is all very strange and confusing to get used to at first, but we'll soon see that it makes representing our multivariable linear regression problem a whole lot easier.
+This is all very strange and confusing to get used to if you've never seen it before, but we'll soon see that it makes representing our multivariable linear regression problem a whole lot easier.
 
 ---
 
@@ -907,33 +990,322 @@ A %*% B
 
 ---
 
-## To Be Continued...
+## Matrix Multiplication
 
-```{r regression, echo = FALSE, eval = FALSE}
-data <- tibble(c = 1,
-            x1 = rnorm(100, 0, 1),
-            x2 = rnorm(100, 0, 1),
-            y = 2*x1 + 3*x2 + rnorm(100, 0, 1))
+**Exercise:** Try multiplying these two matrices.
 
-linear_model <- lm(y ~ x1 + x2, data = data)
+.pull-left[
+$A = \begin{bmatrix} 4 & 1 \\ 1 & 2 \end{bmatrix}$
+]
 
-summary(linear_model)
+.pull-right[
+$B = \begin{bmatrix} 5 & 5 \\ 2 & 1 \end{bmatrix}$
+]
 
-# X matrix
-X <- data %>% 
-  select(c, x1, x2) %>% 
+--
+
+**Answer:**
+
+$$AB = \begin{bmatrix} 4 \times 5 + 1 \times 2 & 4 \times 5 + 1 \times 1 \\ 1 \times 5 + 2 \times 2 & 5 \times 1 + 1 \times 2 \end{bmatrix} = \begin{bmatrix} 22 & 21 \\ 9 & 7 \end{bmatrix}$$
+```{r matrix multiplication exercise}
+A <- cbind(c(4,1), c(1,2))
+B <- cbind(c(5,2), c(5,1))
+A %*% B
+```
+
+---
+
+## Matrix Multiplication
+
+This process -- taking the dot product of rows and columns -- means that you can only multiply two matrices $AB$ if the row vectors of $A$ are the same length as the column vectors in $B$.
+
+--
+
+- In other words, you can only multiply $AB$ if the dimension of $A$ is $m \times k$ and the dimension of $B$ is $k \times n$.
+- If this condition holds, then the two matrices are **conformable**.
+
+Multiplying an $m \times k$ matrix with a $k \times n$ matrix yields an $m \times n$ matrix.
+
+--
+
+.pull-left[
+```{r conformable matrices}
+A <- cbind(c(3,1,2), c(2,2,2))
+A
+```
+]
+
+.pull-right[
+```{r conformable matrices 2}
+B <- cbind(c(4,5), c(5,4), c(1,1))
+B
+```
+]
+
+**Exercise**: Which can you multiply: $AB$ or $BA$?
+
+---
+
+## Matrix Multiplication
+
+**Answer:**
+
+```{r conformable or non-conformable}
+A %*% B
+
+B %*% A
+```
+
+--
+
+But now try `A %*% A`. I can't do it here because `R` gets so mad it won't even render my slides.
+
+
+---
+
+## Matrix Multiplication
+
+To make matrices conformable for multiplication, sometimes you may need to take the **transpose** of a matrix. The transpose just takes the rows and turns them into columns.
+
+.pull-left[
+$$A = \begin{bmatrix} 4 & 1 \\ 1 & 2 \\ 3 & 3 \end{bmatrix}$$
+]
+
+.pull-right[
+$$A' = \begin{bmatrix} 4 & 1 & 3 \\ 1 & 2 & 3 \end{bmatrix}$$
+]
+
+```{r transpose}
+t(A)
+
+t(A) %*% A
+```
+
+---
+
+### Here's a useful thing to remember in about 10 slides... 
+
+Multiplying a vector by its transpose is the same as taking the dot product with itself:
+
+$$a = \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix}$$
+
+$$a \cdot a = a'a = 1 \times 1 + 3 \times 3 + 4 \times 4 = 26$$
+--
+
+Hey, it's the **sum of squares**! Could be useful for something...
+
+--
+
+```{r transpose multiplication}
+a <- c(1,3,4)
+
+sum(a*a)
+
+t(a) %*% a
+```
+
+---
+
+class: center, middle
+
+## Matrix Inversion
+
+---
+
+## Matrix Inversion
+
+
+
+
+---
+
+class: center, middle
+
+## Back to Multivariable Regression
+
+
+---
+
+## Multivariable Regression
+
+This is the regression problem we wanted to solve:
+
+$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\alpha \times \begin{bmatrix} 1 \\ 1 \\1 \\ \vdots \\ 1 \end{bmatrix}}_\alpha + \underbrace{\beta_1 \times \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}}_{\beta_1 \text{hp}} + \underbrace{\beta_2 \times \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}}_{\beta_2 \text{wt}} + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon$$
+
+--
+
+Notice that we can restate it as a matrix multiplication problem:
+
+$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\begin{bmatrix} 1 & 110 & 2.62 \\ 1 & 110 & 2.875 \\ 1 & 93 & 2.32 \\ \vdots & \vdots & \vdots \\ 1 & 109 & 2.78 \end{bmatrix}}_X \underbrace{\begin{bmatrix} \alpha \\ \beta_1 \\ \beta_2 \end{bmatrix}}_\beta + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon = X\beta + \varepsilon$$
+
+???
+
+How do you simultaneously estiamte $\alpha$, $\beta_1$, and $\beta_2$?
+
+---
+
+## Multivariable Regression
+
+$X\beta$ is an $n \times 1$ vector of predicted values, and $\varepsilon$ is an $n \times 1$ vector of errors.
+
+$$Y = X\beta + \varepsilon$$
+
+--
+
+Just like before, we want to minimize the sum of squared errors:
+
+$$\varepsilon \cdot \varepsilon = \varepsilon'\varepsilon = (Y - X\beta)'(Y-X\beta)$$
+--
+
+Minimizing this expression follows the same three steps we used with scalar calculus. Just be careful with the multiplication and division. Start by distributing the function:
+
+$$f(X,Y,\beta) = (Y - X\beta)'(Y-X\beta) = Y'Y - 2(X\beta)'Y + (X\beta)'X\beta$$
+---
+
+## Estimating The Regression Parameters
+
+**Step 1: Take the derivative with respect to $\beta$**
+
+$$f(X,Y,\beta) = Y'Y - 2(X\beta)'Y + (X\beta)'X\beta$$
+
+$$\frac{\partial f}{\partial \beta} = -2X'Y + 2 \beta X'X$$ 
+
+--
+
+**Step 2: Set the derivative equal to zero**
+
+$$-2X'Y - 2 \beta X'X = 0$$
+--
+
+**Step 3: Solve for $\beta$**
+
+$$2\beta X'X = 2 X'Y$$
+$$\hat{\beta} = (X'X)^{-1} X'Y$$ 
+???
+
+That's it! The holy grail!
+
+---
+
+## Estimate The Multivariable Regression
+
+```{r estimate multivariable regression}
+# create the Y vector
+Y <- mtcars$mpg
+
+# create the X matrix
+X <- mtcars %>% 
+  select(hp, wt) %>% 
+  mutate(intercept = 1) %>% 
   as.matrix
 
-# y vector
-y <- data %>% 
-  pull(y)
+head(X)
+```
 
-# beta hat = (X'X)^-1 X'y
-beta_hat <- solve(t(X) %*% X) %*% t(X) %*% y
+---
+
+## Estimate The Multivariable Regression
+
+The vector of estimates that minimizes the sum of squared errors equals $(X'X)^{-1}(X'Y)$:
+
+```{r estimate multivariable regression part 2}
+beta_hat <- solve(t(X) %*% X) %*% t(X) %*% Y
 
 beta_hat
-linear_model
 ```
+
+--
+
+```{r multivariable lm}
+lm_fit <- lm(mpg ~ hp + wt, data = mtcars)
+coef(lm_fit)
+```
+
+---
+
+## What's Going On Here?
+
+Previously, we showed that the line of best fit between `hp` and `mpg` had this slope:
+
+```{r previous slope}
+bivariate_fit <- lm(mpg ~ hp, data = mtcars)
+coef(bivariate_fit)
+```
+
+Now the slope is this half that...
+
+```{r multivariate slope}
+multivariate_fit <- lm(mpg ~ hp + wt, data = mtcars)
+coef(multivariate_fit)
+```
+
+
+---
+
+## What's Going On Here?
+
+```{r plotly, echo = FALSE, out.height='80%'}
+library(plotly)
+
+hp <- mtcars$hp
+wt <- mtcars$wt
+mpg <- mtcars$mpg
+
+scatter3d <- plot_ly(x = hp, y = wt, z = mpg, type = 'scatter3d', mode = 'markers',
+                     marker = list(size = 5, color = "black", symbol = 104)) %>% 
+  layout(scene = list(
+      xaxis = list(title = "Horsepower (hp)"),
+      yaxis = list(title = "Weight (wt)"),
+      zaxis = list(title = "Fuel Efficiency (mpg)")))
+
+scatter3d
+```
+
+???
+
+Notice that hp and wt are correlated with each other, so the bivariate slope captures both the effect of hp and the effect of wt.
+
+---
+
+## What's Going On Here?
+
+<!-- `r multivariate_fit$coef[1] %>% round(2)` + `r multivariate_fit$coef[2] %>% round(2)` $\times$ `hp` + `r multivariate_fit$coef[3] %>% round(2)` $\times$ `wt` -->
+
+```{r plotly with plane, echo = FALSE, out.height='80%'}
+
+x <- 0:round(max(hp))
+y <- 0:round(max(wt)+1)
+
+zhat <- function(x,y){
+  coef(multivariate_fit)[1] + coef(multivariate_fit)[2] * x + coef(multivariate_fit)[3] * y
+}
+
+plane_of_best_fit <- outer(x,y,zhat)
+colnames(plane_of_best_fit) <- y
+rownames(plane_of_best_fit) <- x
+
+
+p <- plot_ly(z = plane_of_best_fit, type = "surface") %>% 
+  layout(scene = list(
+      xaxis = list(title = "Weight (wt)"),
+      yaxis = list(title = "Horsepower (hp)"),
+      zaxis = list(title = "Fuel Efficiency (mpg)"))) %>% 
+  add_trace(x = wt, y = hp, z = mpg, type = 'scatter3d', mode = 'markers',
+            marker = list(size = 5, color = "black", symbol = 104))
+
+p
+```
+
+???
+
+Instead of a "line of best fit", we're now fitting a "plane of best fit".
+
+
+---
+
+# Exercise
+
+
 
 ???
 
