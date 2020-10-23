@@ -1048,7 +1048,7 @@ B
 
 ## Matrix Multiplication
 
-**Answer:**
+**Answer:** Both!
 
 ```{r conformable or non-conformable}
 A %*% B
@@ -1083,7 +1083,7 @@ t(A) %*% A
 
 ---
 
-### Here's a useful thing to remember in about 10 slides... 
+## Matrix Multiplication
 
 Multiplying a vector by its transpose is the same as taking the dot product with itself:
 
@@ -1092,7 +1092,7 @@ $$a = \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix}$$
 $$a \cdot a = a'a = 1 \times 1 + 3 \times 3 + 4 \times 4 = 26$$
 --
 
-Hey, it's the **sum of squares**! Could be useful for something...
+Hey, it's the **sum of squares**! That could be useful for something...
 
 --
 
@@ -1114,7 +1114,140 @@ class: center, middle
 
 ## Matrix Inversion
 
+Before I can teach you how to **divide** matrices, I need to tell you about a very special matrix, called the **identity matrix**.
 
+--
+
+Remember how any number times 1 just equals the original number?
+
+$$a \times 1 = a$$
+This is called the **identity property**. It's what makes $1$ a very special number.
+
+--
+
+<br>
+
+The **identity matrix** $(I)$ is basically the $1$ of matrices.
+
+$$AI = A$$
+
+You multiply any matrix by $I$ and you get the same matrix back.
+
+
+---
+
+## Matrix Inversion
+
+The identity matrix $I_n$ is an $n \times n$ matrix with ones in the diagonal and zeroes everywhere else.
+
+$$I_3 = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
+
+--
+
+**Exercise:** Try multiplying this matrix with the following matrix $A$.
+
+$$A = \begin{bmatrix} 2 & 1 & 5 \\ -2 & 8 & 100 \\ 7 & 42 & -42 \end{bmatrix}$$
+
+---
+
+## Matrix Inversion
+
+**Answer:**
+
+```{r identity matrix}
+diag(3) # Create the identity matrix in R with the `diag()` function
+
+A <- rbind(c(2, 1, 5),
+           c(-2, 8, 100),
+           c(7, 42, -2))
+
+# multiply AI
+A %*% diag(3)
+```
+
+
+---
+
+## Matrix Inversion
+
+Hey, remember how dividing $\frac{a}{b}$ is the same as multiplying $a \times \frac{1}{b}$?
+
+--
+
+$\frac{1}{b} = b^{-1}$ is called the **inverse** (or reciprocal) of $b$. 
+
+--
+
+**Exercise:** What do you get when you multiply a number by its inverse?
+
+--
+
+- **Answer:** $a \times \frac{1}{a} = a^1a^{-1} = a^0 = 1$
+
+--
+
+There is an equivalent concept in matrix algebra, called the **matrix inverse**.
+
+$$AA^{-1} = I$$
+---
+
+## Matrix Inversion
+
+Good news! It's the 21st century. No one is going to make you solve for matrix inverses by hand.
+
+--
+
+There is literally a function in R called `solve()` which will do it for you.
+
+```{r solve}
+solve(A)
+
+A %*% solve(A)
+```
+
+---
+
+## Matrix Inversion
+
+Now that we know how to multiply by an inverse, we have what we need to perform matrix algebra.
+
+**Exercise:** Solve this equation for $A$.
+
+$$AB = C$$
+
+--
+
+**Answer:** Multiply both sides by $B^{-1}$
+
+$$ABB^{-1} = CB^{-1}$$
+
+$$AI = CB^{-1}$$
+
+<br>
+
+$$A = CB^{-1}$$
+---
+
+## Matrix Inversion
+
+Watch out for conformability! With matrices, it matters whether you multiply on the right or the left.
+
+**Exercise:** Solve for $B$.
+
+$$AB = C$$
+--
+
+**Answer:**
+
+$$A^{-1}AB = A^{-1}C$$
+
+$$IB = A^{-1}C$$
+<br>
+
+$$B = A^{-1}C$$
+--
+
+$$B \neq CA^{-1}$$
 
 
 ---
@@ -1168,18 +1301,18 @@ $$f(X,Y,\beta) = (Y - X\beta)'(Y-X\beta) = Y'Y - 2(X\beta)'Y + (X\beta)'X\beta$$
 
 $$f(X,Y,\beta) = Y'Y - 2(X\beta)'Y + (X\beta)'X\beta$$
 
-$$\frac{\partial f}{\partial \beta} = -2X'Y + 2 \beta X'X$$ 
+$$\frac{\partial f}{\partial \beta} = -2X'Y + 2 X'X \beta$$ 
 
 --
 
 **Step 2: Set the derivative equal to zero**
 
-$$-2X'Y - 2 \beta X'X = 0$$
+$$-2X'Y + 2 X'X \beta = 0$$
 --
 
 **Step 3: Solve for $\beta$**
 
-$$2\beta X'X = 2 X'Y$$
+$$2 X'X \beta = 2 X'Y$$
 $$\hat{\beta} = (X'X)^{-1} X'Y$$ 
 ???
 
@@ -1305,7 +1438,13 @@ Instead of a "line of best fit", we're now fitting a "plane of best fit".
 
 # Exercise
 
+Estimate a linear regression model from the `iris` dataset using Petal Length as the outcome variable and Sepal Width, Sepal Length, and Petal Width as the explanatory variables.
 
+1. How does the coefficient on Sepal Width change from our previous bivariate regression with Petal Length and Petal Width alone? Why?
+
+2. Conduct a t-test to see if the versicolor petals are significantly longer than setosa petals.
+
+3. Try `lm(Petal.Length ~ Species, data = iris)`. Notice anything familiar?
 
 ???
 
