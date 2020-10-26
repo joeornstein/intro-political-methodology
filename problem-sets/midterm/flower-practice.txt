@@ -1,0 +1,23 @@
+1. Are sepals significantly bigger or smaller in some species compared to others?
+
+  - Visualize the relationship between species and sepal length AND width.
+  - Conduct the appropriate hypothesis test (bivariate; pick width or length)
+
+2. What's the correlation between Sepal Width and Petal Length?
+
+  - What's the slope of the relationship?x`
+
+3. What is the variance in Petal Length, grouped by species?
+
+  - i.e. is there a greater variance in petal length for some species?
+
+4. What is the *correlation* between Petal Length and Sepal Length,
+   grouped by species?
+
+  - i.e. are there any species where that strong correlation we observed
+    earlier does not hold?
+
+5. Create a new variable called "standardized_petal_width", which is equal to
+   petal width minus the mean divided by the standard deviation.
+   - What is the mean and standard deviation of this new, standardized variable?
+   - What is the correlation between this variable and the original petal width variable?
