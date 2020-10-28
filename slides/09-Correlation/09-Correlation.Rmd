@@ -494,14 +494,14 @@ $$Y = bX + \varepsilon$$
 $$\varepsilon = Y - bX$$
 --
 
-Let's create a function called $f(b)$ equal to the sum of squared errors:
+Let's create a function called $f$ equal to the sum of squared errors:
 
-$$f(b) = \sum \varepsilon_i^2 = \sum(Y_i-bX_i)^2$$
+$$f(b, X, Y) = \sum \varepsilon_i^2 = \sum(Y_i-bX_i)^2$$
 --
 
 Distribute:
 
-$$f(b) = \sum Y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$
+$$f(b, X, Y) = \sum Y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$
 
 ---
 
@@ -511,7 +511,7 @@ $$f(b) = \sum Y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$
 
 #### Step 1: Take the derivative
 
-$$f(b) = \sum Y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$
+$$f(b, X, Y) = \sum Y_i^2 - \sum 2bX_iY_i + \sum b^2 X_i^2$$
 
 $$\frac{\partial f}{\partial b} = -2\sum X_iY_i + 2b \sum X_i^2$$
 
@@ -951,22 +951,118 @@ $A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
 $B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
 ]
 
+--
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix} \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix} = \begin{bmatrix} & \\ & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} \color{red} 1 & \color{red} 2 \\ 2 & 3 \end{bmatrix} \begin{bmatrix} \color{red} 2 & 1 \\ \color{red} 4 & 4 \end{bmatrix} = \begin{bmatrix} \color{red} {10} & \\ & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} \color{red} 1 & \color{red} 2 \\ 2 & 3 \end{bmatrix} \begin{bmatrix} 2 & \color{red} 1 \\ 4 & \color{red} 4 \end{bmatrix} = \begin{bmatrix} 10 & \color{red} 9 \\ & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} \color{red} 1 & \color{red} 2 \\ 2 & 3 \end{bmatrix} \begin{bmatrix} 2 & \color{red} 1 \\ 4 & \color{red} 4 \end{bmatrix} = \begin{bmatrix} 10 & \color{red} 9 \\ & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} 1 & 2 \\ \color{red} 2 & \color{red} 3 \end{bmatrix} \begin{bmatrix} \color{red} 2 & 1 \\ \color{red} 4 &  4 \end{bmatrix} = \begin{bmatrix} 10 & 9 \\ \color{red} {16} & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} 1 & 2 \\ \color{red} 2 & \color{red} 3 \end{bmatrix} \begin{bmatrix} 2 & \color{red} 1 \\ 4 & \color{red} 4 \end{bmatrix} = \begin{bmatrix} 10 & 9 \\ 16 & \color{red}{14} \end{bmatrix}$$
+
+--
+
+<br>
+
+This is all very strange and confusing to get used to if you've never seen it before, but we'll soon see that it makes representing our multivariable linear regression problem a whole lot easier.
+
+???
+
 To get the entry in the first row, first column of $AB$, take the dot product of:
 
 - The first row of $A$, and
 - The first column of $B$
 
---
-
 Then do that for every row in $A$ and every column in $B$.
 
---
-
 $$AB = \begin{bmatrix} 1 \times 2 + 2 \times 4 & 1 \times 1 + 2 \times 4 \\ 2 \times 2 + 3 \times 4 & 2 \times 1 + 3 \times 4 \end{bmatrix} = \begin{bmatrix} 10 & 9 \\ 16 & 14 \end{bmatrix}$$
-
---
-
-This is all very strange and confusing to get used to if you've never seen it before, but we'll soon see that it makes representing our multivariable linear regression problem a whole lot easier.
 
 ---
 
@@ -1021,12 +1117,40 @@ This process -- taking the dot product of rows and columns -- means that you can
 
 --
 
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 4 & 3 \\ 1 & 8 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 7 & 2 \\ 4 & 3 \\ 1 & 2 \end{bmatrix}$
+]
+
+These matrices are not **conformable**! You can't take the dot product of the rows and columns.
+
+--
+
+### Formally
+
+You can only multiply $AB$ if the dimension of $A$ is $m \times k$ and the dimension of $B$ is $k \times n$. The result is an $m \times n$ matrix.
+
+???
+
 - In other words, you can only multiply $AB$ if the dimension of $A$ is $m \times k$ and the dimension of $B$ is $k \times n$.
 - If this condition holds, then the two matrices are **conformable**.
 
-Multiplying an $m \times k$ matrix with a $k \times n$ matrix yields an $m \times n$ matrix.
+---
 
---
+## Matrix Multiplication
+
+**Exercise**: Which can you multiply: $AB$ or $BA$?
+
+.pull-left[
+$A = \begin{bmatrix} 3 & 2 \\ 1 & 2 \\ 2 & 2 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 4 & 5 & 1 \\ 5 & 4 & 1 \end{bmatrix}$
+]
 
 .pull-left[
 ```{r conformable matrices}
@@ -1042,7 +1166,6 @@ B
 ```
 ]
 
-**Exercise**: Which can you multiply: $AB$ or $BA$?
 
 ---
 
@@ -1174,9 +1297,11 @@ Hey, remember how dividing $\frac{a}{b}$ is the same as multiplying $a \times \f
 
 --
 
-$\frac{1}{b} = b^{-1}$ is called the **inverse** (or reciprocal) of $b$. 
+ - $\frac{1}{b} = b^{-1}$ is called the **inverse** (or reciprocal) of $b$. 
 
 --
+
+<br>
 
 **Exercise:** What do you get when you multiply a number by its inverse?
 
@@ -1185,6 +1310,8 @@ $\frac{1}{b} = b^{-1}$ is called the **inverse** (or reciprocal) of $b$.
 - **Answer:** $a \times \frac{1}{a} = a^1a^{-1} = a^0 = 1$
 
 --
+
+<br>
 
 There is an equivalent concept in matrix algebra, called the **matrix inverse**.
 
@@ -1202,7 +1329,7 @@ There is literally a function in R called `solve()` which will do it for you.
 ```{r solve}
 solve(A)
 
-A %*% solve(A)
+A %*% solve(A) %>% round
 ```
 
 ---
@@ -1314,13 +1441,22 @@ $$-2X'Y + 2 X'X \beta = 0$$
 
 $$2 X'X \beta = 2 X'Y$$
 $$\hat{\beta} = (X'X)^{-1} X'Y$$ 
-???
-
-That's it! The holy grail!
 
 ---
 
-## Estimate The Multivariable Regression
+## The Ordinary Least Squares (OLS) Estimator
+
+<br>
+
+<br>
+
+<br>
+
+### $$\hat{\beta} = (X'X)^{-1} X'Y$$ 
+
+---
+
+## Now We Can Estimate...
 
 ```{r estimate multivariable regression}
 # create the Y vector
@@ -1337,7 +1473,7 @@ head(X)
 
 ---
 
-## Estimate The Multivariable Regression
+## Now We Can Estimate...
 
 The vector of estimates that minimizes the sum of squared errors equals $(X'X)^{-1}(X'Y)$:
 
@@ -1364,6 +1500,8 @@ Previously, we showed that the line of best fit between `hp` and `mpg` had this 
 bivariate_fit <- lm(mpg ~ hp, data = mtcars)
 coef(bivariate_fit)
 ```
+
+--
 
 Now the slope is this half that...
 

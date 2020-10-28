@@ -521,7 +521,7 @@ difference_in_means(CCES, n1 = 100, n2 = 100)
 
 ## Step 2: Get the Sampling Distribution
 
-```{r hypothesis test: ages, out.width  = '45%'}
+```{r hypothesis test for ages, out.width  = '45%'}
 observed <- mean(rep_age) - mean(dem_age)
 sampling_distribution <- replicate(10000, difference_in_means(CCES, n1 = 100, n2 = 100))
 
