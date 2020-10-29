@@ -120,6 +120,8 @@ ggplot(FIW) +
 
 ```{r hypothesis test}
 FIW %>% 
-  mutate(democratic = if_else(democracy_score > 20, 1, 0)) %>% 
+  #mutate(democratic = if_else(democracy_score > 20, 1, 0)) %>% 
+  mutate(democratic = case_when(democracy_score > 20 ~ 1,
+                                democracy_score <= 20 ~ 0)) %>% 
   t.test(liberty_score ~ democratic, data = .)
 ```
