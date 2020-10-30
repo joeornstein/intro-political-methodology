@@ -32,3 +32,21 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
                       message=FALSE, warning=FALSE, echo=FALSE)
 set.seed(42)
 ```
+
+## Outline
+
+What are models and what are they good for?
+
+1. Summarizing patterns and relationships in data (what we've been doing so far). Allows us to quantify the size and uncertainty of estimates.
+
+2. Make predictions about unseen data.
+
+3. Distinguish cause and effect; make **counterfactual** predictions.
+
+Today #2, then #3. 
+
+- Making predictions from an `lm()` model.
+  - Prediction error
+  - But it's not really a...prediction, is it?
+- Split sample with CCES
+  - `lm()` the feeling thermometer, maybe?
