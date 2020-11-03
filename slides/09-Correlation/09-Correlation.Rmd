@@ -1,5 +1,5 @@
 ---
-title: "Correlation (Part 1 of 2)"
+title: "Correlation"
 # author: "Joseph T. Ornstein"
 # date: "June 12, 2020"
 output:
@@ -7,7 +7,7 @@ output:
     nature:
       highlightStyle: github
       countIncrementalSlides: false
-# subtitle: 'POLS 7012: Introduction to Political Methodology'
+subtitle: 'POLS 7012: Introduction to Political Methodology'
 # institute: University of Georgia
 ---
 
