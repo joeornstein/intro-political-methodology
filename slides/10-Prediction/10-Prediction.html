@@ -30,6 +30,25 @@ class: center, middle, inverse, title-slide
 
 
 
+## What Are Models?
+
+A model is "low-dimensional" mathematical representation of the world. It takes all the messy, noisy complexity of a dataset and simplifies it. 
+
+--
+
+&lt;img src="10-Prediction_files/figure-html/unnamed-chunk-1-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+--
+
+One way to think about statistical models is that they partition the data into **signal** and **noise**.
+
+`$$Y = \underbrace{X\beta}_\text{signal} + \underbrace{\varepsilon}_\text{noise}$$`
+
+???
+
+If I've done my job right, then the noise is unrelated to the signal, the systematic relationships that I care about.
+
+
 ## Outline
 
 What are models?
@@ -62,14 +81,58 @@ Today #2, then #3.
 - Split sample with CCES
   - `lm()` the feeling thermometer, maybe?
   
+  
+  
 ---
 
-## Predicting Things!
+## Why Do We Model Data?
+
+Broadly speaking, there are three reasons social scientists build models:
+
+--
+
+1. To **summarize** patterns and relationships, and to quantify our uncertainty.
+
+--
+
+  - This is what we've been doing so far.
+  
+--
+
+2. To make **predictions** about unobserved data.
+
+--
+
+3. To distinguish between cause and effect; to make **counterfactual** predictions.
+
+--
+
+Today we discuss prediction. Next week, causal inference.
+
+---
+
+## Today's Objectives
+
+By the end of this module, you will be able to...
+
+- Make predictions using model objects in `R`
+
+- Evaluate a model's predictive accuracy
+
+- Cross-validate and regularize models to improve out-of-sample prediction
+
+---
+
+## Our Challenge Today
+
+I want to try to **predict** how ANES survey respondents feel about journalists, using observable covariates. 
 
 
 ```r
+# load the ANES pilot study
 load('data/anes_pilot_2019.RData')
 
+# recode some variables
 data &lt;- data %&gt;% 
   mutate(age = 2019 - birthyr,
          female = as.numeric(gender == 2),
@@ -77,13 +140,136 @@ data &lt;- data %&gt;%
                           race == 2 ~ 'Black',
                           race == 3 ~ 'Hispanic',
                           TRUE ~ 'Other'),
-         educ = factor(educ))
+         educ = case_when(educ == 1 ~ 'No HS',
+                          educ == 2 ~ 'High school graduate',
+                          educ == 3 ~ 'Some college',
+                          educ == 4 ~ '2-year',
+                          educ == 5 ~ '4-year',
+                          educ == 6 ~ 'Post-grad'))
 
-ggplot(data) +
+ftjournal_viz &lt;- ggplot(data) +
   geom_histogram(aes(x=ftjournal),color = 'black', binwidth = 7)
 ```
 
-&lt;img src="10-Prediction_files/figure-html/load the good old ANES pilot survey-1.png" width="600" style="display: block; margin: auto;" /&gt;
+---
+
+## Our Challenge Today
+
+
+```r
+ftjournal_viz
+```
+
+&lt;img src="10-Prediction_files/figure-html/viz ftjournal-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Exercise
+
+Estimate a linear model of `ftjournal` using observed characteristics of the respondents. What patterns do you observe?
+
+--
+
+
+```r
+data &lt;- data %&gt;% 
+  mutate(pew_religimp = case_when(pew_religimp == 1 ~ 'Very Important',
+                                  pew_religimp == 2 ~ 'Somewhat Important',
+                                  pew_religimp == 3 ~ 'Not too important',
+                                  pew_religimp == 4 ~ 'Not at all important'),
+         vote20jb = case_when(vote20jb == 1 ~ 'Trump Voter',
+                              vote20jb == 2 ~ 'Biden Voter',
+                              vote20jb == 3 ~ 'Other Voter',
+                              vote20jb == 4 ~ 'Non-Voter'))
+
+linear_model1 &lt;- lm(ftjournal ~ age + female + race + educ + pew_religimp + vote20jb, data = data)
+```
+
+
+
+---
+
+
+```r
+library(broom)
+
+tidy(linear_model1)
+```
+
+```
+# A tibble: 17 x 5
+   term                           estimate std.error statistic   p.value
+   &lt;chr&gt;                             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+ 1 (Intercept)                     75.6       2.37      32.0   1.99e-194
+ 2 age                             -0.0553    0.0268    -2.06  3.95e-  2
+ 3 female                           3.24      0.862      3.76  1.73e-  4
+ 4 raceHispanic                     1.11      1.84       0.605 5.45e-  1
+ 5 raceOther                       -4.47      2.04      -2.19  2.89e-  2
+ 6 raceWhite                        0.292     1.48       0.197 8.44e-  1
+ 7 educ4-year                       0.225     1.55       0.145 8.84e-  1
+ 8 educHigh school graduate        -1.27      1.45      -0.877 3.81e-  1
+ 9 educNo HS                       -0.919     2.40      -0.383 7.02e-  1
+10 educPost-grad                    1.90      1.74       1.09  2.75e-  1
+11 educSome college                -0.841     1.53      -0.551 5.82e-  1
+12 pew_religimpNot too important   -2.59      1.40      -1.84  6.52e-  2
+13 pew_religimpSomewhat Important  -3.14      1.27      -2.46  1.40e-  2
+14 pew_religimpVery Important      -3.54      1.22      -2.89  3.85e-  3
+15 vote20jbNon-Voter              -22.5       1.62     -13.9   8.16e- 43
+16 vote20jbOther Voter            -20.0       1.50     -13.3   2.19e- 39
+17 vote20jbTrump Voter            -44.1       1.05     -41.9   9.67e-305
+```
+
+???
+
+So the model would predict that a 50 year old male Hispanic, high school graduate...
+
+---
+
+## Making Predictions
+
+To make **predictions** using your model, use the `predict()` function!
+
+  - The first input is a model object.
+  - The second input is a dataframe that contains all the explantaory variables in your model.
+
+
+```r
+# create a new variable called ftjournal_prediction
+data &lt;- data %&gt;% 
+  mutate(ftjournal_prediction = predict(linear_model1, data))
+```
+
+---
+
+## Making Predictions
+
+
+| age| female|race     |educ                 |pew_religimp       |vote20jb    | ftjournal_prediction|
+|---:|------:|:--------|:--------------------|:------------------|:-----------|--------------------:|
+|  50|      0|Hispanic |High school graduate |Somewhat Important |Biden Voter |             69.54962|
+|  77|      0|White    |Post-grad            |Very Important     |Trump Voter |             25.92024|
+|  65|      1|White    |High school graduate |Very Important     |Biden Voter |             70.74225|
+|  40|      0|Black    |Some college         |Very Important     |Trump Voter |             24.93350|
+|  79|      1|White    |Post-grad            |Somewhat Important |Trump Voter |             29.44951|
+
+---
+
+## Model Selection
+
+How do you decide which variables to include in your model?
+
+--
+
+- It depends on the purpose of the model.
+
+- But the answer is never **ALL THE VARIABLES**, for reasons we'll discuss.
+
+--
+
+&lt;img src="img/piled-up-dishes-in-kitchen-sink.jpg" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+
 
 
 ```r
@@ -114,27 +300,27 @@ lm(formula = ftjournal ~ age + female + educ + race, data = train)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--68.973 -26.923   0.419  25.381  62.970 
+-68.187 -26.669   0.504  25.290  63.505 
 
 Coefficients:
-              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)   66.67309    4.08218  16.333  &lt; 2e-16 ***
-age           -0.21413    0.03982  -5.377 8.38e-08 ***
-female         4.39072    1.30654   3.361 0.000791 ***
-educ2          1.19824    3.24495   0.369 0.711967    
-educ3          3.01633    3.32743   0.907 0.364768    
-educ4          3.11017    3.55927   0.874 0.382311    
-educ5          7.60082    3.36552   2.258 0.024016 *  
-educ6         14.07874    3.60899   3.901 9.87e-05 ***
-raceHispanic  -8.67541    2.80445  -3.093 0.002003 ** 
-raceOther    -20.20731    3.08039  -6.560 6.68e-11 ***
-raceWhite    -14.45931    2.22072  -6.511 9.21e-11 ***
+                          Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)               69.86494    3.35722  20.810  &lt; 2e-16 ***
+age                       -0.20741    0.03988  -5.200 2.17e-07 ***
+female                     5.95122    1.30435   4.563 5.33e-06 ***
+educ4-year                 3.35757    2.37756   1.412 0.158035    
+educHigh school graduate  -3.71667    2.22725  -1.669 0.095314 .  
+educNo HS                 -3.63211    3.65253  -0.994 0.320133    
+educPost-grad              9.07989    2.66293   3.410 0.000662 ***
+educSome college          -0.58550    2.33021  -0.251 0.801634    
+raceHispanic              -9.45011    2.81245  -3.360 0.000792 ***
+raceOther                -20.75677    3.06357  -6.775 1.59e-11 ***
+raceWhite                -14.24366    2.16653  -6.574 6.08e-11 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 30.61 on 2205 degrees of freedom
-Multiple R-squared:  0.05938,	Adjusted R-squared:  0.05511 
-F-statistic: 13.92 on 10 and 2205 DF,  p-value: &lt; 2.2e-16
+Residual standard error: 30.54 on 2205 degrees of freedom
+Multiple R-squared:  0.06381,	Adjusted R-squared:  0.05956 
+F-statistic: 15.03 on 10 and 2205 DF,  p-value: &lt; 2.2e-16
 ```
 ---
 
@@ -170,7 +356,7 @@ mse
 ```
 
 ```
-[1] 951.8993
+[1] 960.8737
 ```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

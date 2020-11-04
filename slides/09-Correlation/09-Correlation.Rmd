@@ -1336,6 +1336,50 @@ A %*% solve(A) %>% round
 
 ## Matrix Inversion
 
+Just like there are some matrices you can't multiply together (**non-conformable** matrices), there are some matrices you can't invert (**non-invertible** or **singular** matrices).
+
+--
+
+$$A = \begin{bmatrix} 1 & 2 & 5 \\ 2 & 4 & 100 \\ 3 & 6 & -42 \end{bmatrix}$$
+
+Try to `solve()` this matrix in `R`. Again, I can't show it to you here because `R` yells at me...
+
+```{r singular matrix}
+A <- rbind(c(1,2,5),
+           c(2,4,100),
+           c(3,6,-42))
+
+# solve(A)
+```
+
+--
+
+Notice that the second column is a two times the first column.
+
+---
+
+## Matrix Inversion
+
+This matrix is also singular. Notice that the sum of columns 2 and 3 are a multiple of column 1. (In matrix algebra-speak, the columns are not **linearly independent**.)
+
+$$B = \begin{bmatrix} 1 & 1 & 2 \\ 2 & 4 & 2 \\ 3 & 2 & 7 \end{bmatrix}$$
+
+```{r singular matrix 2}
+B <- rbind(c(1,1,2),
+           c(2,4,2),
+           c(3,2,7))
+
+# solve(B)
+```
+
+???
+
+I bring this up, dear reader, because there will come a day when you will want to invert a matrix and you will not be able to, because your columns are perfectly correlated with each other! (It's called multicollinearity, and I'll let Mollie tell you all about it.)
+
+---
+
+## Matrix Inversion
+
 Now that we know how to multiply by an inverse, we have what we need to perform matrix algebra.
 
 **Exercise:** Solve this equation for $A$.
