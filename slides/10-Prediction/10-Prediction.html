@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Prediction</title>
+    <meta charset="utf-8" />
+    <link href="10-Prediction_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="10-Prediction_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Prediction
+
+---
+
+
+&lt;style&gt;
+
+.center-middle {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+&lt;/style&gt;
+
+
+
+## Outline
+
+What are models?
+
+1. Abstracted mathematical representations of the dataset.
+
+2. If done right, the relationships expressed in a model separate the "signal" (an interesting phenomenon or a reliable pattern that predicts your data) from the "noise" (randomness from sampling, measurement error, or a bunch of other things that are (hopefully) orthogonal to the topic you care about).
+
+The goal of a model is not to uncover truth, but to discover a simple approximation that is still useful.
+
+
+
+Observed data &amp; parameters. We fit the parameters using an *estimator*, just like we did with the linear model.
+
+
+
+What are they good for?
+
+1. Summarizing patterns and relationships in data (what we've been doing so far). Allows us to quantify the size and uncertainty of estimates.
+
+2. Make predictions about unseen data.
+
+3. Distinguish cause and effect; make **counterfactual** predictions.
+
+Today #2, then #3. 
+
+- Making predictions from an `lm()` model.
+  - Prediction error
+  - But it's not really a...prediction, is it?
+- Split sample with CCES
+  - `lm()` the feeling thermometer, maybe?
+  
+---
+
+## Predicting Things!
+
+
+```r
+load('data/anes_pilot_2019.RData')
+
+data &lt;- data %&gt;% 
+  mutate(age = 2019 - birthyr,
+         female = as.numeric(gender == 2),
+         race = case_when(race == 1 ~ 'White',
+                          race == 2 ~ 'Black',
+                          race == 3 ~ 'Hispanic',
+                          TRUE ~ 'Other'),
+         educ = factor(educ))
+
+ggplot(data) +
+  geom_histogram(aes(x=ftjournal),color = 'black', binwidth = 7)
+```
+
+&lt;img src="10-Prediction_files/figure-html/load the good old ANES pilot survey-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+```r
+# take 70% of the data as the "training set"
+train &lt;- data %&gt;% 
+  sample_frac(0.7)
+
+# the test set is whatever is left over (use anti_join)
+test &lt;- data %&gt;% 
+  anti_join(train, by = 'caseid')
+```
+
+---
+
+Now, we only train our models on the `train` set. Never on the `test` set! That's only for validation.
+
+
+```r
+lm1 &lt;- lm(ftjournal ~ age + female + educ + race, data = train)
+
+summary(lm1)
+```
+
+```
+
+Call:
+lm(formula = ftjournal ~ age + female + educ + race, data = train)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-68.973 -26.923   0.419  25.381  62.970 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   66.67309    4.08218  16.333  &lt; 2e-16 ***
+age           -0.21413    0.03982  -5.377 8.38e-08 ***
+female         4.39072    1.30654   3.361 0.000791 ***
+educ2          1.19824    3.24495   0.369 0.711967    
+educ3          3.01633    3.32743   0.907 0.364768    
+educ4          3.11017    3.55927   0.874 0.382311    
+educ5          7.60082    3.36552   2.258 0.024016 *  
+educ6         14.07874    3.60899   3.901 9.87e-05 ***
+raceHispanic  -8.67541    2.80445  -3.093 0.002003 ** 
+raceOther    -20.20731    3.08039  -6.560 6.68e-11 ***
+raceWhite    -14.45931    2.22072  -6.511 9.21e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 30.61 on 2205 degrees of freedom
+Multiple R-squared:  0.05938,	Adjusted R-squared:  0.05511 
+F-statistic: 13.92 on 10 and 2205 DF,  p-value: &lt; 2.2e-16
+```
+---
+
+# Out-Of-Sample Prediction
+
+
+```r
+test &lt;- test %&gt;% 
+  mutate(ftjournal_hat = predict(lm1, test))
+
+ggplot(test) + 
+  geom_point(aes(x=ftjournal_hat,y=ftjournal)) +
+  labs(x='Predicted Feeling Thermometer (Journalists)', 
+       y='Actual Feeling Thermometer (Journalists)') +
+  geom_abline(intercept = 0, slope = 1, linetype = 'dotted')
+```
+
+&lt;img src="10-Prediction_files/figure-html/out-of-sample prediction-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+Prediction error metrics
+
+How would you compute mean squared error?
+
+--
+
+
+```r
+mse &lt;- mean((test$ftjournal - test$ftjournal_hat)^2)
+
+mse
+```
+
+```
+[1] 951.8993
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

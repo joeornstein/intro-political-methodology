@@ -1,5 +1,5 @@
 ---
-title: ""
+title: "Prediction"
 # author: "Joseph T. Ornstein"
 # date: "June 12, 2020"
 output:
@@ -29,7 +29,7 @@ library(tidyverse)
 theme_set(theme_minimal(base_size = 16))
 knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
                       fig.align = 'center', out.width = 600,
-                      message=FALSE, warning=FALSE, echo=FALSE)
+                      message=FALSE, warning=FALSE, echo=TRUE)
 set.seed(42)
 ```
 
@@ -130,4 +130,6 @@ How would you compute mean squared error?
 
 ```{r mean squared error}
 mse <- mean((test$ftjournal - test$ftjournal_hat)^2)
+
+mse
 ```
