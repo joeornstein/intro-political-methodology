@@ -254,17 +254,33 @@ data &lt;- data %&gt;%
 
 ---
 
+## Quick Clarification 
+
+Why did I recode those education and race variables? Why not just leave them as numbers? 
+
+`lm()` needs to know whether to treat a variable as continuous or categorical. 
+ - If the variable is numeric, it will treat it as continuous 
+ - If it's a character, it will treat it as categorical
+ 
+--
+
+If we leave race coded as numeric, `lm()` will do this:
+
+&lt;img src="10-Prediction_files/figure-html/old coding-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
 ## Model Selection
 
-How do you decide which variables to include in your model?
+How do you decide which variables to include in your model? 
 
 --
 
 - It depends on the purpose of the model.
 
-- But the answer is never **ALL THE VARIABLES**, for reasons we'll discuss.
-
 --
+
+Why not **ALL THE VARIABLES**?
 
 &lt;img src="img/piled-up-dishes-in-kitchen-sink.jpg" width="75%" style="display: block; margin: auto;" /&gt;
 

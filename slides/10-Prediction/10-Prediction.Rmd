@@ -234,6 +234,53 @@ data %>%
 
 ---
 
+## Quick Clarification 
+
+Why did I recode those education and race variables? Why not just leave them as numbers? 
+
+`lm()` needs to know whether to treat a variable as continuous or categorical. 
+ - If the variable is numeric, it will treat it as continuous 
+ - If it's a character, it will treat it as categorical
+ 
+--
+
+If we leave race coded as numeric, `lm()` will do this:
+
+```{r old coding, echo = FALSE, out.width = '50%'}
+load('data/anes_pilot_2019.RData')
+
+ggplot(data %>% filter(race != 8)) +
+  geom_boxplot(aes(x=factor(race),y=ftjournal), notch = TRUE) +
+  geom_smooth(aes(x=race,y=ftjournal), method = 'lm', se = FALSE) +
+  labs(x='Race',y='Feeling Thermometer (Journalists)')
+
+# revert to the proper coding
+data <- data %>% 
+  mutate(age = 2019 - birthyr,
+         female = as.numeric(gender == 2),
+         race = case_when(race == 1 ~ 'White',
+                          race == 2 ~ 'Black',
+                          race == 3 ~ 'Hispanic',
+                          TRUE ~ 'Other'),
+         educ = case_when(educ == 1 ~ 'No HS',
+                          educ == 2 ~ 'High school graduate',
+                          educ == 3 ~ 'Some college',
+                          educ == 4 ~ '2-year',
+                          educ == 5 ~ '4-year',
+                          educ == 6 ~ 'Post-grad'),
+         pew_religimp = case_when(pew_religimp == 1 ~ 'Very Important',
+                                  pew_religimp == 2 ~ 'Somewhat Important',
+                                  pew_religimp == 3 ~ 'Not too important',
+                                  pew_religimp == 4 ~ 'Not at all important'),
+         vote20jb = case_when(vote20jb == 1 ~ 'Trump Voter',
+                              vote20jb == 2 ~ 'Biden Voter',
+                              vote20jb == 3 ~ 'Other Voter',
+                              vote20jb == 4 ~ 'Non-Voter'))
+
+```
+
+---
+
 ## Model Selection
 
 How do you decide which variables to include in your model? 
