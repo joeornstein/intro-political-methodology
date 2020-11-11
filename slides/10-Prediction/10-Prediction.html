@@ -896,35 +896,37 @@ To estimate a logistic regression in `R`, use the `glm()` function (GLM = Genera
 
 
 ```r
-logit_model &lt;- glm(pro_dream ~ ftbiden + fttrump + age, data = train)
+logit_model &lt;- glm(pro_dream ~ ftbiden + fttrump + age, data = train,
+                   family = 'binomial')
 summary(logit_model)
 ```
 
 ```
 
 Call:
-glm(formula = pro_dream ~ ftbiden + fttrump + age, data = train)
+glm(formula = pro_dream ~ ftbiden + fttrump + age, family = "binomial", 
+    data = train)
 
 Deviance Residuals: 
-     Min        1Q    Median        3Q       Max  
--1.01792  -0.39377   0.05708   0.24987   0.62994  
+    Min       1Q   Median       3Q      Max  
+-2.5838  -0.9240   0.3674   0.6463   1.5688  
 
 Coefficients:
-              Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  0.8096456  0.0334033  24.239  &lt; 2e-16 ***
-ftbiden      0.0013749  0.0003335   4.122 3.89e-05 ***
-fttrump     -0.0047945  0.0002696 -17.786  &lt; 2e-16 ***
-age          0.0011319  0.0005068   2.234   0.0256 *  
+             Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  1.432899   0.235150   6.094 1.10e-09 ***
+ftbiden      0.010475   0.002334   4.489 7.16e-06 ***
+fttrump     -0.027395   0.001872 -14.631  &lt; 2e-16 ***
+age          0.012341   0.003489   3.537 0.000405 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-(Dispersion parameter for gaussian family taken to be 0.1505925)
+(Dispersion parameter for binomial family taken to be 1)
 
-    Null deviance: 433.05  on 2133  degrees of freedom
-Residual deviance: 320.76  on 2130  degrees of freedom
-AIC: 2022
+    Null deviance: 2542.9  on 2133  degrees of freedom
+Residual deviance: 1943.9  on 2130  degrees of freedom
+AIC: 1951.9
 
-Number of Fisher Scoring iterations: 2
+Number of Fisher Scoring iterations: 5
 ```
 
 ---
@@ -942,22 +944,22 @@ But we can still make predictions just like we did before:
 test &lt;- test %&gt;% 
   mutate(pro_dream_probability = predict(logit_model, test, type = 'response'))
 
-test %&gt;% select(ftbiden, pro_dream_probability, pro_dream) %&gt;% 
+test %&gt;% select(ftbiden, fttrump, age, pro_dream_probability) %&gt;% 
   head(8)
 ```
 
 ```
-# A tibble: 8 x 3
-  ftbiden pro_dream_probability pro_dream
-    &lt;dbl&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
-1      25                 0.483         1
-2      28                 0.578         0
-3       6                 0.425         0
-4      49                 0.952         1
-5      10                 0.447         1
-6      20                 0.451         1
-7       2                 0.455         1
-8      61                 0.917         1
+# A tibble: 8 x 4
+  ftbiden fttrump   age pro_dream_probability
+    &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;                 &lt;dbl&gt;
+1      25      94    79                 0.524
+2      28      61    20                 0.575
+3       6      99    72                 0.419
+4      49       2    75                 0.944
+5      10      98    83                 0.469
+6      20      99    78                 0.473
+7       2      91    70                 0.456
+8      61      10    63                 0.929
 ```
 
 ---
@@ -980,7 +982,7 @@ classification_accuracy(truth = test$pro_dream,
 ```
 
 ```
-[1] 76.06557
+[1] 77.04918
 ```
 
 ---
@@ -1016,16 +1018,16 @@ test %&gt;% select(ftbiden, pro_dream_probability, pro_dream_probability_knn, pr
 # A tibble: 10 x 4
    ftbiden pro_dream_probability pro_dream_probability_knn pro_dream
      &lt;dbl&gt;                 &lt;dbl&gt;                     &lt;dbl&gt;     &lt;dbl&gt;
- 1      25                 0.483                     0.580         1
- 2      28                 0.578                     0.753         0
- 3       6                 0.425                     0.489         0
- 4      49                 0.952                     0.975         1
- 5      10                 0.447                     0.432         1
- 6      20                 0.451                     0.568         1
- 7       2                 0.455                     0.451         1
- 8      61                 0.917                     0.994         1
- 9      71                 0.981                     1             1
-10      94                 0.979                     0.945         1
+ 1      25                 0.524                     0.580         1
+ 2      28                 0.575                     0.753         0
+ 3       6                 0.419                     0.489         0
+ 4      49                 0.944                     0.975         1
+ 5      10                 0.469                     0.432         1
+ 6      20                 0.473                     0.568         1
+ 7       2                 0.456                     0.451         1
+ 8      61                 0.929                     0.994         1
+ 9      71                 0.953                     1             1
+10      94                 0.953                     0.945         1
 ```
 
 ---
@@ -1063,8 +1065,6 @@ Best model wins!
 --
 
 So...that's your benchmark.
-
----
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

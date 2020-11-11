@@ -793,7 +793,8 @@ ggplot(sigmoid_data) +
 To estimate a logistic regression in `R`, use the `glm()` function (GLM = Generalized Linear Models).
 
 ```{r estimate glm}
-logit_model <- glm(pro_dream ~ ftbiden + fttrump + age, data = train)
+logit_model <- glm(pro_dream ~ ftbiden + fttrump + age, data = train,
+                   family = 'binomial')
 summary(logit_model)
 ```
 
@@ -811,7 +812,7 @@ But we can still make predictions just like we did before:
 test <- test %>% 
   mutate(pro_dream_probability = predict(logit_model, test, type = 'response'))
 
-test %>% select(ftbiden, pro_dream_probability, pro_dream) %>% 
+test %>% select(ftbiden, fttrump, age, pro_dream_probability) %>% 
   head(8)
 ```
 
@@ -894,5 +895,3 @@ Best model wins!
 --
 
 So...that's your benchmark.
-
----
