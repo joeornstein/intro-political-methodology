@@ -35,21 +35,28 @@ data <- data %>%
          liveurban = case_when(liveurban == 1 ~ 'Rural',
                                liveurban == 2 ~ 'Small town',
                                liveurban == 3 ~ 'Suburban',
-                               liveurban == 4 ~ 'City')) %>% 
-  filter(ftbiden %in% 0:100)
+                               liveurban == 4 ~ 'City'),
+         pew_religimp = case_when(pew_religimp == 1 ~ 'Very Important',
+                                  pew_religimp == 2 ~ 'Somewhat Important',
+                                  pew_religimp == 3 ~ 'Not too important',
+                                  pew_religimp == 4 ~ 'Not at all important'),
+         marstat = case_when(marstat == 1 ~ 'Married',
+                             marstat == 2 ~ 'Separated',
+                             marstat == 3 ~ 'Divorced',
+                             marstat == 4 ~ 'Widowed',
+                             marstat == 5 ~ 'Never Married',
+                             marstat == 6 ~ 'Domestic Partnership'),
+         child18 = if_else(child18 == 1, 'Yes', 'No'),
+         facebook_user = if_else(socmed_1 == 1, 'Yes', 'No'),
+         twitter_user = if_else(socmed_2 == 2, 'Yes', 'No'),
+         instagram_user = if_else(socmed_3 == 2, 'Yes', 'No'),
+         reddit_user = if_else(socmed_4 == 2, 'Yes', 'No'),
+         youtube_user = if_else(socmed_5 == 2, 'Yes', 'No'),
+         snapchat_user = if_else(socmed_6 == 2, 'Yes', 'No'),
+         tiktok_user = if_else(socmed_7 == 2, 'Yes', 'No'),
+         pro_dream = as.numeric(dreamer == 2)) %>% 
+  filter(ftbiden %in% 0:100,
+         fttrump %in% 0:100,
+         !is.na(ideo5),
+         !is.na(bmi))
 
-lm_fit <- lm(ftjournal ~ age + female + liveurban + ftbiden + educ, data = data)
-summary(lm_fit)
-
-# Create predictions from the model
-data <- data %>% 
-  mutate(ftjournal_predicted = predict(lm_fit, data))
-
-# Visualize predictions
-ggplot(data) +
-  geom_point(mapping = aes(x=ftjournal_predicted, y=ftjournal),
-             alpha = 0.2) +
-  labs(x = 'Predicted Feeling Thermometer (Journalists)',
-       y = 'Actual Feeling Thermometer (Journalists)') +
-  theme_bw() +
-  geom_abline(intercept=0, slope = 1, linetype = 'dashed')

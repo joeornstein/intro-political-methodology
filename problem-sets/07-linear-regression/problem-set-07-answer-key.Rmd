@@ -108,30 +108,90 @@ write_csv(WB, 'data/cleaned_WB.csv')
 ```{r merge with FIW}
 # make sure the key variables have the same name
 WB <- WB %>% 
-  mutate(country_name = `Country Name`)
+  rename(country_name = `Country Name`)
 
 # merge with left_join
-FIW <- FIW %>% 
-  mutate(country_name = `Country/Territory`) %>% 
+data <- FIW %>% 
+  rename(country_name = `Country/Territory`) %>% 
   left_join(WB, by = 'country_name')
+
+# Which countries failed to merge?
+data %>% 
+  filter(is.na(`Country Code`)) %>% 
+  pull(country_name)
+
+# Rename those countries in the WB dataset
+WB <- WB %>% 
+  mutate(country_name = case_when(country_name == 'Bahamas, The' ~ 'Bahamas',
+                                  country_name == 'Brunei Darussalam' ~ 'Brunei',
+                                  country_name == 'Congo, Rep.' ~ 'Congo (Brazzaville)',
+                                  country_name == 'Congo, Dem. Rep.' ~ 'Congo (Kinshasa)',
+                                  country_name == 'Egypt, Arab Rep.' ~ 'Egypt',
+                                  country_name == 'Iran, Islamic Rep.' ~ 'Iran',
+                                  country_name == 'Kyrgyz Republic' ~ 'Kyrgyzstan',
+                                  country_name == 'Lao PDR' ~ 'Laos',
+                                  country_name == 'Micronesia, Fed. Sts.' ~ 'Micronesia',
+                                  country_name == 'Korea, Dem. People’s Rep.' ~ 'North Korea',
+                                  country_name == 'Russian Federation' ~ 'Russia',
+                                  country_name == 'Slovak Republic' ~ 'Slovakia',
+                                  country_name == 'Korea, Rep.' ~ 'South Korea',
+                                  country_name == 'Syrian Arab Republic' ~ 'Syria',
+                                  country_name == 'Gambia, The' ~ 'The Gambia',
+                                  country_name == 'Venezuela, RB' ~ 'Venezuela',
+                                  country_name == 'Yemen, Rep.' ~ 'Yemen',
+                                  TRUE ~ country_name))
+
+# Try the merge again
+data <- FIW %>% 
+  rename(country_name = `Country/Territory`) %>% 
+  left_join(WB, by = 'country_name')
+
+# Now only Taiwan fails to merge 
+# (there's no separate entry in the World Bank Data)
+data %>% 
+  filter(is.na(`Country Code`)) %>% 
+  pull(country_name)
 ```
 
 10. Estimate a multivariable linear model with `liberty_score` as the outcome variable and `democracy_score` and `log_gdp_per_capita` as the explanatory variables. What are the slope coefficients and 95% confidence intervals?
 
 ```{r lm2}
 lm2 <- lm(liberty_score ~ democracy_score + log_gdp_per_capita, 
-          data = FIW)
+          data = data)
 
 summary(lm2)
 ```
 
 The estimated slope coefficient for `democracy_score` is a bit smaller than it was before, but not by much. Democracies tend to be wealthier on average, and wealthier places tend to have higher Freedom House scores, but it is not enough to fully explain the relationship we found between democracy and liberty in the midterm.
 
+\newpage
+
+## Why Log GDP Per Capita?
+
 ```{r gdp and liberty}
-ggplot(FIW) + 
+# GDP per capita is right-skewed
+ggplot(data) +
+  geom_histogram(aes(x=gdp_per_capita), color = 'black')
+
+# On a log scale it's a bit more normal
+ggplot(data) +
+  geom_histogram(aes(x=gdp_per_capita), color = 'black') +
+  scale_x_log10()
+
+# Not a linear relationship!
+ggplot(data) + 
   geom_text(aes(x=gdp_per_capita, y=liberty_score, 
-                label=`Country Code`)) +
+                label=`Country Code`), size = 2) +
+  labs(x='Log GDP Per Capita',y='Liberty Score') +
+  theme_bw()
+
+# This is more plausibly linear
+ggplot(data) + 
+  geom_text(aes(x=gdp_per_capita, y=liberty_score, 
+                label=`Country Code`), size = 2) +
   scale_x_log10() +
+  geom_smooth(aes(x=gdp_per_capita, y = liberty_score),
+              method = 'lm') +
   labs(x='Log GDP Per Capita',y='Liberty Score') +
   theme_bw()
 ```
