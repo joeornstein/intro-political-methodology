@@ -212,19 +212,19 @@ coef(linear_model1)
 ```r
 # look at some predictions
 data %&gt;% 
-  select(age, female, ftbiden, ftjournal_prediction, ftjournal) %&gt;% 
+  select(age, female, ftbiden, ftjournal_prediction) %&gt;% 
   head(5)
 ```
 
 ```
-# A tibble: 5 x 5
-    age female ftbiden ftjournal_prediction ftjournal
-  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;                &lt;dbl&gt;     &lt;dbl&gt;
-1    50      0      52                 54.9        99
-2    77      0      41                 43.7        67
-3    65      1      88                 77.2        63
-4    40      0       0                 24.5        25
-5    79      1      25                 36.2        20
+# A tibble: 5 x 4
+    age female ftbiden ftjournal_prediction
+  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;                &lt;dbl&gt;
+1    50      0      52                 54.9
+2    77      0      41                 43.7
+3    65      1      88                 77.2
+4    40      0       0                 24.5
+5    79      1      25                 36.2
 ```
 
 ---
@@ -239,7 +239,7 @@ ggplot(data) +
   labs(x = 'Predicted Feeling Thermometer (Journalists)',
        y = 'Actual Feeling Thermometer (Journalists)') +
   theme_bw() +
-  geom_abline(intercept=0, slope = 1, linetype = 'dashed')
+  geom_abline(intercept=0, slope = 1, linetype = 'dashed', size = 1, color = 'red')
 ```
 
 &lt;img src="10-Prediction_files/figure-html/visualize predictions-1.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -294,7 +294,7 @@ What constitutes the "best" model depends on what you're trying to do.
 
 --
 
-Regardless of your objective, the correct answer is almost *never* a "kitchen sink model".
+Regardless of your objective, the correct answer is almost *never* the "kitchen sink model".
 
 
 ---
@@ -582,7 +582,7 @@ Repeat the partitions between `train` and `test` until every observation has bee
 ![](img/cross-validation.png)
 --
 
-If you repeat the validation process `\(k\)` times, it is called `\(k\)`-fold cross-validation.
+If you repeat the validation process `\(k\)` times, it is called `\(k\)`-fold cross-validation. If you repeat it `\(n-1\)` times, it is called "Leave Out One Cross Validation" (LOOCV).
 
 ---
 
@@ -702,7 +702,112 @@ So far we've been fitting only linear models. Can we do better with some other t
 --
 
 
+```r
+library(kknn)
+```
 
+Let's introduce a model called **k-nearest neighbors** (KNN). To make a prediction using KNN, follow
+
+--
+
+1. Find the `\(k\)` observations that are "closest" to the one you want to predict.
+
+--
+
+2. Take the average outcome from those `\(k\)` observations.
+
+--
+
+That's it!
+
+---
+
+## The Linear Model Vs. K-Nearest Neighbors
+
+.pull-left[
+&lt;img src="10-Prediction_files/figure-html/knn example-1.png" width="600" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+.pull-right[
+&lt;img src="10-Prediction_files/figure-html/knn example 2-1.png" width="600" style="display: block; margin: auto;" /&gt;
+]
+
+--
+
+KNN captures non-linearity a bit better. Fuel efficiency levels off around 15 mpg.
+
+---
+
+## Estimating KNN
+
+To make predictions with KNN, use the `kknn` package.
+
+
+```r
+# first, estimate the model object
+knn_model &lt;- kknn(ftjournal ~ fttrump + ftbiden + age,
+                  train = train,
+                  test = test, 
+                  k = 50)
+```
+
+--
+
+Compare the RMSE:
+
+
+```r
+# linear model
+rmse(truth = test$ftjournal,
+     prediction = predict(simple_lm, test))
+```
+
+```
+[1] 21.11025
+```
+
+```r
+# knn
+rmse(truth = test$ftjournal,
+     prediction = knn_model$fitted.values)
+```
+
+```
+[1] 21.20456
+```
+
+---
+
+## Cross-Validation and Regularization (KNN)
+
+We can use cross-validation and regularization to find the best KNN model too. There's a built-in function that performs LOOCV and finds the best value of `\(k\)`.
+
+
+```r
+knn_train &lt;- train.kknn(ftjournal ~ fttrump + ftbiden + age + female + ideo5,
+                        data = data, kmax = 100)
+
+# What's the best k?
+best_k &lt;- knn_train$best.parameters$k
+best_k
+```
+
+```
+[1] 73
+```
+
+```r
+# cross-validated RMSE
+knn_train$MEAN.SQU[best_k] %&gt;% sqrt
+```
+
+```
+[1] 21.16585
+```
+
+---
 
 class: center, middle
 
@@ -710,24 +815,256 @@ class: center, middle
 
 ---
 
-## A Taste of Logit
+## Binary Outcomes
 
-
-`$$P(Y = 1) = \frac{1}{1 + e^{-X\beta}}$$`
-
-It's a sigmoid function that "squishes" the output between 0 and 1.
+What if the thing you're predicting is categorical instead of continuous? For example, let's try to predict whether a respondent approves of the Dream Act.
 
 
 ```r
-sigmoid_data &lt;- tibble(x_beta = seq(-10,10,0.1),
-               prob = 1 / (1 + exp(-x_beta)))
-
-ggplot(sigmoid_data) + 
-  geom_line(aes(x=x_beta, y = prob)) +
-  labs(x = 'X * Beta', y = 'P(Y=1)')
+table(data$pro_dream)
 ```
 
-&lt;img src="10-Prediction_files/figure-html/plot sigmoid-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+```
+
+   0    1 
+ 841 2208 
+```
+
+--
+
+Can we still use linear models?
+
+--
+
+Sure. A linear model with a binary outcome is called the **linear probability model**. It's fine, but it has some weird features. Observe.
+
+--
+
+
+```r
+lpm &lt;- lm(pro_dream ~ ftbiden, data = data)
+coef(lpm)
+```
+
+```
+(Intercept)     ftbiden 
+0.508936269 0.005115031 
+```
+
+---
+
+## Binary Outcomes
+
+According to this model, about 50% of respondents that rate Biden at 0 approve of the Dream Act, and that percentage increases by 0.0051 per thermometer unit.
+
+
+```r
+ggplot(data) +
+  geom_point(aes(x=ftbiden, y=pro_dream)) +
+  geom_smooth(aes(x=ftbiden,y=pro_dream), method = 'lm', se = FALSE)
+```
+
+&lt;img src="10-Prediction_files/figure-html/ggplot lpm-1.png" width="65%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+## A Taste of Logistic Regression
+
+---
+
+## A Taste of Logistic Regression
+
+We want a model that only predicts probabilities between zero and one.
+
+--
+
+`$$P(Y = 1) = \frac{1}{1 + e^{-X\beta}}$$`
+
+This sigmoid function "squishes" `\(X\beta\)` so the resulting probability can't be greater than 1 or less than zero.
+
+--
+
+&lt;img src="10-Prediction_files/figure-html/plot sigmoid-1.png" width="55%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## A Taste of Logistic Regression
+
+To estimate a logistic regression in `R`, use the `glm()` function (GLM = Generalized Linear Models).
+
+
+```r
+logit_model &lt;- glm(pro_dream ~ ftbiden + fttrump + age, data = train)
+summary(logit_model)
+```
+
+```
+
+Call:
+glm(formula = pro_dream ~ ftbiden + fttrump + age, data = train)
+
+Deviance Residuals: 
+     Min        1Q    Median        3Q       Max  
+-1.01792  -0.39377   0.05708   0.24987   0.62994  
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.8096456  0.0334033  24.239  &lt; 2e-16 ***
+ftbiden      0.0013749  0.0003335   4.122 3.89e-05 ***
+fttrump     -0.0047945  0.0002696 -17.786  &lt; 2e-16 ***
+age          0.0011319  0.0005068   2.234   0.0256 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for gaussian family taken to be 0.1505925)
+
+    Null deviance: 433.05  on 2133  degrees of freedom
+Residual deviance: 320.76  on 2130  degrees of freedom
+AIC: 2022
+
+Number of Fisher Scoring iterations: 2
+```
+
+---
+
+## A Taste of Logistic Regression
+
+I won't teach you how to interpret those coefficients here. Suffice to say, once you squish everything, the interpretation is not as straightforward.
+
+--
+
+But we can still make predictions just like we did before:
+
+
+```r
+test &lt;- test %&gt;% 
+  mutate(pro_dream_probability = predict(logit_model, test, type = 'response'))
+
+test %&gt;% select(ftbiden, pro_dream_probability, pro_dream) %&gt;% 
+  head(8)
+```
+
+```
+# A tibble: 8 x 3
+  ftbiden pro_dream_probability pro_dream
+    &lt;dbl&gt;                 &lt;dbl&gt;     &lt;dbl&gt;
+1      25                 0.483         1
+2      28                 0.578         0
+3       6                 0.425         0
+4      49                 0.952         1
+5      10                 0.447         1
+6      20                 0.451         1
+7       2                 0.455         1
+8      61                 0.917         1
+```
+
+---
+
+## Prediction Error Metrics for Binary Outcomes
+
+Often, we use **classification accuracy** to evaluate these sorts of model predictions.
+
+What percent of observations were correctly classified?
+
+
+```r
+classification_accuracy &lt;- function(truth, predicted){
+  predicted &lt;- ifelse(predicted &gt; 0.5, 1, 0)
+  sum(truth == predicted) / length(truth) * 100
+}
+
+classification_accuracy(truth = test$pro_dream,
+                        predicted = test$pro_dream_probability)
+```
+
+```
+[1] 76.06557
+```
+
+---
+
+## KNN With Binary Outcomes
+
+The syntax for KNN doesn't even change. The model still finds the `\(k\)` closest neighbors, and computes the fraction of those neighbors that are pro-Dream Act.
+
+
+```r
+knn_model &lt;- kknn(pro_dream ~ ftbiden + fttrump + age,
+                  train = train,
+                  test = test,
+                  k = 51)
+
+test &lt;- test %&gt;% 
+  mutate(pro_dream_probability_knn = knn_model$fitted.values)
+```
+
+---
+
+## KNN With Binary Outcomes
+
+Compare those predictions with the ones we got from `glm()`.
+
+
+```r
+test %&gt;% select(ftbiden, pro_dream_probability, pro_dream_probability_knn, pro_dream) %&gt;% 
+  head(10)
+```
+
+```
+# A tibble: 10 x 4
+   ftbiden pro_dream_probability pro_dream_probability_knn pro_dream
+     &lt;dbl&gt;                 &lt;dbl&gt;                     &lt;dbl&gt;     &lt;dbl&gt;
+ 1      25                 0.483                     0.580         1
+ 2      28                 0.578                     0.753         0
+ 3       6                 0.425                     0.489         0
+ 4      49                 0.952                     0.975         1
+ 5      10                 0.447                     0.432         1
+ 6      20                 0.451                     0.568         1
+ 7       2                 0.455                     0.451         1
+ 8      61                 0.917                     0.994         1
+ 9      71                 0.981                     1             1
+10      94                 0.979                     0.945         1
+```
+
+---
+
+## Cross-Validation and Regularization
+
+We can use the same cross-validation and regularization procedure to get the best predictive models here.
+
+
+```r
+# caret yells at you if the outcome is numeric
+data &lt;- data %&gt;% 
+  mutate(pro_dream = factor(pro_dream))
+
+glm_model &lt;- train(pro_dream ~ ftbiden + fttrump + age,
+                   data = data, method = 'glm',
+                   trControl =  train.control)
+
+knn_model &lt;- train.kknn(pro_dream ~ ftbiden + fttrump + age,
+                        data = data, kmax = 100)
+```
+
+---
+
+# Problem Set 8
+
+Build a model to predict which CCES survey respondents voted for Trump in 2016 and which voted for Clinton in 2016.
+
+Best model wins!
+
+--
+
+**Note:** When I gave this challenge to my undergraduates at the beginning of the semester, their best model correctly predicted 69.6% of respondents.
+
+--
+
+So...that's your benchmark.
+
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

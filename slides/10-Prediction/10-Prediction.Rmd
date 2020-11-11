@@ -186,7 +186,7 @@ coef(linear_model1)
 
 # look at some predictions
 data %>% 
-  select(age, female, ftbiden, ftjournal_prediction, ftjournal) %>% 
+  select(age, female, ftbiden, ftjournal_prediction) %>% 
   head(5)
 ```
 
@@ -201,7 +201,7 @@ ggplot(data) +
   labs(x = 'Predicted Feeling Thermometer (Journalists)',
        y = 'Actual Feeling Thermometer (Journalists)') +
   theme_bw() +
-  geom_abline(intercept=0, slope = 1, linetype = 'dashed')
+  geom_abline(intercept=0, slope = 1, linetype = 'dashed', size = 1, color = 'red')
 ```
 
 ---
@@ -269,7 +269,7 @@ What constitutes the "best" model depends on what you're trying to do.
 
 --
 
-Regardless of your objective, the correct answer is almost *never* a "kitchen sink model".
+Regardless of your objective, the correct answer is almost *never* the "kitchen sink model".
 
 
 ---
@@ -524,7 +524,7 @@ Repeat the partitions between `train` and `test` until every observation has bee
 ![](img/cross-validation.png)
 --
 
-If you repeat the validation process $k$ times, it is called $k$-fold cross-validation.
+If you repeat the validation process $k$ times, it is called $k$-fold cross-validation. If you repeat it $n-1$ times, it is called "Leave Out One Cross Validation" (LOOCV).
 
 ---
 
@@ -608,8 +608,113 @@ So far we've been fitting only linear models. Can we do better with some other t
 
 --
 
+```{r kknn}
+library(kknn)
+```
 
+Let's introduce a model called **k-nearest neighbors** (KNN). To make a prediction using KNN, follow
 
+--
+
+1. Find the $k$ observations that are "closest" to the one you want to predict.
+
+--
+
+2. Take the average outcome from those $k$ observations.
+
+--
+
+That's it!
+
+---
+
+## The Linear Model Vs. K-Nearest Neighbors
+
+.pull-left[
+```{r knn example, echo = FALSE}
+p <- ggplot(mtcars) +
+  geom_point(aes(x=hp, y = mpg))
+
+p + geom_smooth(aes(x=hp,y=mpg), 
+                method = 'lm', se = FALSE) +
+  labs(title = 'Linear Model')
+```
+]
+
+--
+
+.pull-right[
+```{r knn example 2, echo = FALSE}
+k_choice <- 10
+
+knn_fit <- tibble(hp = seq(min(mtcars$hp),
+                           max(mtcars$hp),
+                           1))
+
+knn_model <- kknn(mpg ~ hp, train = mtcars, test = knn_fit,
+                  k = k_choice)
+
+knn_fit$knn_prediction <- knn_model$fitted.values
+
+p + geom_line(data = knn_fit,
+                aes(x=hp,y=knn_prediction),
+              color = 'blue') +
+  labs(title = paste0('KNN Model (K = ', k_choice, ')'))
+```
+]
+
+--
+
+KNN captures non-linearity a bit better. Fuel efficiency levels off around 15 mpg.
+
+---
+
+## Estimating KNN
+
+To make predictions with KNN, use the `kknn` package.
+
+```{r knn estimation}
+# first, estimate the model object
+knn_model <- kknn(ftjournal ~ fttrump + ftbiden + age,
+                  train = train,
+                  test = test, 
+                  k = 50)
+
+```
+
+--
+
+Compare the RMSE:
+
+```{r rmse knn}
+# linear model
+rmse(truth = test$ftjournal,
+     prediction = predict(simple_lm, test))
+
+# knn
+rmse(truth = test$ftjournal,
+     prediction = knn_model$fitted.values)
+```
+
+---
+
+## Cross-Validation and Regularization (KNN)
+
+We can use cross-validation and regularization to find the best KNN model too. There's a built-in function that performs LOOCV and finds the best value of $k$.
+
+```{r knn cv}
+knn_train <- train.kknn(ftjournal ~ fttrump + ftbiden + age + female + ideo5,
+                        data = data, kmax = 100)
+
+# What's the best k?
+best_k <- knn_train$best.parameters$k
+best_k
+
+# cross-validated RMSE
+knn_train$MEAN.SQU[best_k] %>% sqrt
+```
+
+---
 
 class: center, middle
 
@@ -617,14 +722,62 @@ class: center, middle
 
 ---
 
-## A Taste of Logit
+## Binary Outcomes
 
+What if the thing you're predicting is categorical instead of continuous? For example, let's try to predict whether a respondent approves of the Dream Act.
+
+```{r pro_dream}
+table(data$pro_dream)
+```
+
+--
+
+Can we still use linear models?
+
+--
+
+Sure. A linear model with a binary outcome is called the **linear probability model**. It's fine, but it has some weird features. Observe.
+
+--
+
+```{r linear probability model}
+lpm <- lm(pro_dream ~ ftbiden, data = data)
+coef(lpm)
+```
+
+---
+
+## Binary Outcomes
+
+According to this model, about 50% of respondents that rate Biden at 0 approve of the Dream Act, and that percentage increases by `r round(coef(lpm)['ftbiden'], 4)` per thermometer unit.
+
+```{r ggplot lpm, out.width = '65%'}
+ggplot(data) +
+  geom_point(aes(x=ftbiden, y=pro_dream)) +
+  geom_smooth(aes(x=ftbiden,y=pro_dream), method = 'lm', se = FALSE)
+```
+
+---
+
+class: center, middle
+
+## A Taste of Logistic Regression
+
+---
+
+## A Taste of Logistic Regression
+
+We want a model that only predicts probabilities between zero and one.
+
+--
 
 $$P(Y = 1) = \frac{1}{1 + e^{-X\beta}}$$
 
-It's a sigmoid function that "squishes" the output between 0 and 1.
+This sigmoid function "squishes" $X\beta$ so the resulting probability can't be greater than 1 or less than zero.
 
-```{r plot sigmoid, out.width = '50%'}
+--
+
+```{r plot sigmoid, out.width = '55%', echo = FALSE}
 sigmoid_data <- tibble(x_beta = seq(-10,10,0.1),
                prob = 1 / (1 + exp(-x_beta)))
 
@@ -632,3 +785,114 @@ ggplot(sigmoid_data) +
   geom_line(aes(x=x_beta, y = prob)) +
   labs(x = 'X * Beta', y = 'P(Y=1)')
 ```
+
+---
+
+## A Taste of Logistic Regression
+
+To estimate a logistic regression in `R`, use the `glm()` function (GLM = Generalized Linear Models).
+
+```{r estimate glm}
+logit_model <- glm(pro_dream ~ ftbiden + fttrump + age, data = train)
+summary(logit_model)
+```
+
+---
+
+## A Taste of Logistic Regression
+
+I won't teach you how to interpret those coefficients here. Suffice to say, once you squish everything, the interpretation is not as straightforward.
+
+--
+
+But we can still make predictions just like we did before:
+
+```{r glm predicts}
+test <- test %>% 
+  mutate(pro_dream_probability = predict(logit_model, test, type = 'response'))
+
+test %>% select(ftbiden, pro_dream_probability, pro_dream) %>% 
+  head(8)
+```
+
+---
+
+## Prediction Error Metrics for Binary Outcomes
+
+Often, we use **classification accuracy** to evaluate these sorts of model predictions.
+
+What percent of observations were correctly classified?
+
+```{r accuracy function}
+classification_accuracy <- function(truth, predicted){
+  predicted <- ifelse(predicted > 0.5, 1, 0)
+  sum(truth == predicted) / length(truth) * 100
+}
+
+classification_accuracy(truth = test$pro_dream,
+                        predicted = test$pro_dream_probability)
+```
+
+---
+
+## KNN With Binary Outcomes
+
+The syntax for KNN doesn't even change. The model still finds the $k$ closest neighbors, and computes the fraction of those neighbors that are pro-Dream Act.
+
+```{r knn with binary outcomes}
+knn_model <- kknn(pro_dream ~ ftbiden + fttrump + age,
+                  train = train,
+                  test = test,
+                  k = 51)
+
+test <- test %>% 
+  mutate(pro_dream_probability_knn = knn_model$fitted.values)
+```
+
+---
+
+## KNN With Binary Outcomes
+
+Compare those predictions with the ones we got from `glm()`.
+
+```{r compare predictions}
+test %>% select(ftbiden, pro_dream_probability, pro_dream_probability_knn, pro_dream) %>% 
+  head(10)
+```
+
+---
+
+## Cross-Validation and Regularization
+
+We can use the same cross-validation and regularization procedure to get the best predictive models here.
+
+```{r glm caret}
+# caret yells at you if the outcome is numeric
+data <- data %>% 
+  mutate(pro_dream = factor(pro_dream))
+
+glm_model <- train(pro_dream ~ ftbiden + fttrump + age,
+                   data = data, method = 'glm',
+                   trControl =  train.control)
+
+knn_model <- train.kknn(pro_dream ~ ftbiden + fttrump + age,
+                        data = data, kmax = 100)
+```
+
+---
+
+# Problem Set 8
+
+Build a model to predict which CCES survey respondents voted for Trump in 2016 and which voted for Clinton in 2016.
+
+Best model wins!
+
+--
+
+**Note:** When I gave this challenge to my undergraduates at the beginning of the semester, their best model correctly predicted 69.6% of respondents.
+
+--
+
+So...that's your benchmark.
+
+---
