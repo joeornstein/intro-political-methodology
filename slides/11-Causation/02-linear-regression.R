@@ -132,3 +132,6 @@ lm(Y~X+Z, data=data) %>% summary
 
 # unconfounded
 lm(Y~X,data=data) %>% summary
+
+
+## TODO: Add a binary treatment variable ---------------------

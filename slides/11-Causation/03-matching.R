@@ -1,81 +1,88 @@
-# Conditioning on a Collider
+# Matching Estimators
 # Author: Joe Ornstein (jornstein@uga.edu)
-# Date: November 8, 2020
+# Date: November 14, 2020
 # Version: 1.0
 
 library(tidyverse)
+set.seed(42)
 
-# Specify Data-Generating Process (DGP) ------------------------
+# What if the data-generating process is nonlinear? Do linear models produce good estimates?
 
-n <- 1000
+# sample size
+n <- 5000
 
-# X ~ Std Normal
-X <- rnorm(n, 0, 1)
+# the true causal effect; this is what we want to estimate!
+beta <- 4
 
-# X causes Y
-Y <- 3*X + rnorm(n, 0, 2)
+# X1 is distributed normally
+X1 <- rnorm(n,0,1)
 
-# X and Y jointly cause Z
-Z <- 4*X + 3*Y + rnorm(n, 0, 1)
+# X2 is distributed normally
+X2 <- rnorm(n,0,2)
 
-# create training and testing datasets
-data <- tibble(X,Y,Z)
+# Tr (the treatment) is caused by X1 and X2 in a weird nonlinear fashion
+Tr <- if_else(X1^2 + X2^2 - rnorm(n,0,4) < 4, 1, 0)
+# (more likely to be in the treatment group if X1 and X2 are both close to zero)
 
-train <- data %>% 
-  sample_frac(0.7)
+# Y is caused by Tr, X1, and X2 in a weird nonlinear fashion plus some noise
+Y <- beta*Tr + X1^3 + 3*X2^2 + rnorm(n,0,2)
 
-test <- data %>% 
-  anti_join(train)
+data <- tibble(Y,Tr,X1,X2)
 
 
-# Estimate models -------------------------------------
+## Exercise: estimate the average treatment effect with lm(), both with and without covariates
 
-# unconfounded
-lm1 <- lm(Y ~ X, data = train)
-
-# confounded
-lm2 <- lm(Y ~ X + Z, data = train)
-
+lm1 <- lm(Y~Tr,data=data)
 summary(lm1)
-summary(lm2) # Simpson's Paradox!
 
-# Prediction ---------------------------------------
+lm2 <- lm(Y~Tr+X1+X2,data=data)
+summary(lm2) # oh no, conditioning doesn't help!
 
-# Conditioning on collider bad for causal inference...
-# But is it bad for prediction?
+plot(Tr,Y)
+plot(X1,Y)
+plot(X2,Y)
 
-test <- test %>% 
-  mutate(Yhat1 = predict(lm1, test),
-         Yhat2 = predict(lm2, test))
+ggplot(data = data) +
+  geom_histogram(aes(x=X1,fill=factor(Tr)), 
+                 alpha = 0.6, position = 'identity')
+
+ggplot(data = data) +
+  geom_histogram(aes(x=X2,fill=factor(Tr)), 
+                 alpha = 0.6, position = 'identity')
+
+## What in the holy heckfire do we do?
+## Answer: condition on the confounders, but not with a linear model
+
+## Matching Estimators: find a (possibly weighted) control group where the pretreatment covariates are 
+## 'balanced' across groups (don't significantly differ). Then compare means as usual!
+
+# library(ebal)
+# X <- cbind(X1,X2)
+# eb.out <- ebalance(Treatment=Tr,
+#                    X=X)
+# 
+# apply(X[Tr==1,],2,mean)
+# apply(X[Tr==0,],2,weighted.mean,w=eb.out$w)
+# apply(X[Tr==0,],2,mean)
+# 
+# mean(Y[Tr==1])
+# weighted.mean(Y[Tr==0], eb.out$w)
 
 
-ggplot(test) + 
-  geom_point(aes(x=Yhat1,y=Y))
+library(Matching)
+m <- Match(Y = Y, Tr = Tr, X = cbind(X1,X2))
+# summary(m)
+#MatchBalance(Tr ~ X1 + X2, match.out = m)
 
-ggplot(test) + 
-  geom_point(aes(x=Yhat2,y=Y)) # prediction is better!
+matched_control_group <- data[m$index.control,]
+treatment_group <- data[m$index.treated,]
 
-sum((test$Yhat1 - test$Y)^2)
-sum((test$Yhat2 - test$Y)^2) # sum of squared errors is ~40 times lower!
+# t.test(treatment_group$X1, matched_control_group$X1)
+# t.test(treatment_group$X2, matched_control_group$X2)
+# t.test(treatment_group$Y, matched_control_group$Y)
 
+summary(m)
 
-## Let's see if we can find an empirical collider ---------------------------
-
-load('slides/10-Prediction/data/anes_pilot_2019.RData')
-
-data <- data %>% 
-  mutate(pro_impeachment = impeach1 %in% c(1,2),
-         age = 2019 - birthyr,
-         vote16 = case_when(vote16 == 1 ~ 'Trump',
-                            vote16 == 2 ~ 'Clinton',
-                            vote16 == 3 ~ 'Other')) %>% 
-  filter(fttrump %in% 0:100,
-         !is.na(vote16))
-
-# no collider
-lm3 <- lm(fttrump ~ age, data = data)
-# w/ collider
-lm4 <- lm(fttrump ~ age + pro_impeachment + vote16, data = data)
-
-summary(lm3)
-summary(lm4)
+# notes: when does this work?
+# only if you assume "selection on observables" (aka; believe the DAG)
+# and you have enough overlap on those covariates to find matches for everyone in the treatment group.
