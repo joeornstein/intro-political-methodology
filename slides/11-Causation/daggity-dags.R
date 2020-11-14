@@ -4,6 +4,7 @@
 # Version: 1.0
 
 library(tidyverse)
+library(dagitty)
 library(ggdag)
 
 dagify(y ~ x) %>% 
