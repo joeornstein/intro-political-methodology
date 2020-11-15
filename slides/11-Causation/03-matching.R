@@ -21,34 +21,44 @@ X1 <- rnorm(n,0,1)
 X2 <- rnorm(n,0,2)
 
 # Tr (the treatment) is caused by X1 and X2 in a weird nonlinear fashion
-Tr <- if_else(X1^2 + X2^2 - rnorm(n,0,4) < 4, 1, 0)
+Tr <- if_else(X1 + X2^2 - rnorm(n,0,4) < 1, 1, 0)
 # (more likely to be in the treatment group if X1 and X2 are both close to zero)
 
 # Y is caused by Tr, X1, and X2 in a weird nonlinear fashion plus some noise
-Y <- beta*Tr + X1^3 + 3*X2^2 + rnorm(n,0,2)
+Y <- beta*Tr - 2*X1^3 + 3*X2^2 + rnorm(n,0,2)
 
 data <- tibble(Y,Tr,X1,X2)
 
 
-## Exercise: estimate the average treatment effect with lm(), both with and without covariates
+'****************************************************************************
+  EXERCISE: Conduct a difference-in-means test. Is the Y value for the 
+  treatment group larger than the Y value for the control group?
+******************************************************************************'
 
 lm1 <- lm(Y~Tr,data=data)
 summary(lm1)
 
-lm2 <- lm(Y~Tr+X1+X2,data=data)
-summary(lm2) # oh no, conditioning doesn't help!
+t.test(Y~Tr, data = data)
 
-plot(Tr,Y)
-plot(X1,Y)
-plot(X2,Y)
-
+# The problem with just taking the raw difference in means: the covariates are imbalanced
 ggplot(data = data) +
   geom_histogram(aes(x=X1,fill=factor(Tr)), 
-                 alpha = 0.6, position = 'identity')
+                 alpha = 0.6, position = 'identity') +
+  labs(fill = 'Treated')
 
 ggplot(data = data) +
   geom_histogram(aes(x=X2,fill=factor(Tr)), 
-                 alpha = 0.6, position = 'identity')
+                 alpha = 0.6, position = 'identity') +
+  labs(fill = 'Treated')
+
+
+'****************************************************************************
+  EXERCISE: Condition on X1 and X2 using a linear model. Does that solve
+  the problem?
+******************************************************************************'
+
+lm2 <- lm(Y~Tr+X1+X2,data=data)
+summary(lm2) # but oh no, conditioning with lm() makes it worse!
 
 ## What in the holy heckfire do we do?
 ## Answer: condition on the confounders, but not with a linear model
