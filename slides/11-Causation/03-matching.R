@@ -10,7 +10,7 @@ library(tidyverse)
 set.seed(42)
 
 
-# ------------------- Section 1: Generate some random data -------------------------
+# ------------------- Part 1: Generate some random data -------------------------
 
 # sample size
 n <- 15000
@@ -36,7 +36,7 @@ data <- tibble(index = 1:n,
                Y,Tr,X1,X2)
 
 
-# ------------------- Section 2: Estimating beta with lm() ---------------------
+# ------------------- Part 2: Estimating beta with lm() ---------------------
 
 '****************************************************************************
   EXERCISE: Is the Y value for the treatment group significantly larger or smaller
@@ -69,7 +69,7 @@ ggplot(data = data) +
 
 
 
-# -------------- Section 3: Introducing the Matching Estimator -----------------
+# -------------- Part 3: Introducing the Matching Estimator -----------------
 
 # Motivation: We still want to condition on confounding variables, 
 # but the true relationships are not linear, so lm() performs poorly.
@@ -98,18 +98,18 @@ matched_control_group <- data[m$index.control,] # the matched control group
 treatment_group <- data[m$index.treated,] # the treatment group
 matched_data <- bind_rows(matched_control_group, treatment_group) # put them both together
 
+
 '****************************************************************************
   EXERCISE: 
     1. Look at the matched_control_group dataframe. What do you notice?
     2. Are the covariates X1 and X2 balanced in the new matched_data?
     (Summarize and visualize)
-    
 ******************************************************************************'
 
 
 
 
-# --------------- Section 4: Where matching can go wrong ------------------------
+# --------------- Part 4: Where matching can go wrong ------------------------
 
 
 # NOTE: Matching estimators recover the true causal effect under two conditions:
@@ -148,7 +148,7 @@ data <- tibble(index = 1:n,
 
 
 
-# ------------------- Section 5: An Empirical Application ----------------------
+# ------------------- Part 5: An Empirical Application ----------------------
 
 # The GerberGreenImai dataset comes bundled with the Matching() package, from these papers:
 #

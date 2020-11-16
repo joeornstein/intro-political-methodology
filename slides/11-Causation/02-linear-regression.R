@@ -1,4 +1,4 @@
-## Linear Models
+## Linear Regression
 ## Author: Joe Ornstein (jornstein@uga.edu)
 ## Date: November 14, 2020
 ## Version: 1.0
