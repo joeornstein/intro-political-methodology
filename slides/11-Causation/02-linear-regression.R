@@ -111,6 +111,7 @@ data <- tibble(X,Y,Z1,Z2,Z3)
 ******************************************************************************'
 
 
+
 # ----------------- Part 4: Conditioning on a Collider  ------------------------------
 
 # true causal effect; this is what we want to estimate!
@@ -119,34 +120,38 @@ beta <- 3
 # sample size
 n <- 1000
 
+# Z1 is distributed standard normal
+Z1 <- rnorm(n,0,1)
 
-data <- tibble(Z1 = rnorm(n,0,1), # Z1 is distributed standard normal
-               X = 2*Z1 + rnorm(n, 0, 1), # Z1 causes X (plus some noise)
-               Y = beta*X + -2*Z1 + rnorm(n, 0, 2), # X and Z1 cause Y (plus some noise)
-               Z2 = 4*X + 3*Y + rnorm(n, 0, 1)# X and Y jointly cause Z2 (plus some noise)
-)
+# Z1 causes X (plus some noise)
+X <- 2*Z1 + rnorm(n,0,1)
+
+# X and Z1 cause Y (plus some noise)
+Y <- beta*X - 2*Z1 + rnorm(n,0,2)
+
+# X and Y cause Z2 (plus some noise)
+Z2 <- 4*X + 3*Y + rnorm(n,0,1)
+
+# put it together in a dataframe
+data <- tibble(index = 1:n,
+               X,Y,Z1,Z2)
+
+'****************************************************************************
+  EXERCISE: Draw a DAG representing the data we created above.
+    - What should we condition on to close the backdoor paths?
+    - Fit the correctly specified model *and* a kitchen sink model. Compare.
+******************************************************************************'
 
 
 
+'****************************************************************************
+  EXERCISE: Is conditioning on a collider bad for predictive accuracy?
+    - Split the data into train and test sets
+    - Fit the "correct" model and the kitchen sink model on the train set.
+    - Compare the predictions on the test set.
+******************************************************************************'
 
-# Exercise: Draw a DAG representing the data we created above; what should we condition on to close
-# the backdoor paths? Try the correctly specified model *and* a kitchen sink model. Compare. -------------------------------------
 
-# unconfounded
-lm1 <- lm(Y ~ X + Z1, data = data)
-
-# confounded
-lm2 <- lm(Y ~ X + Z1 + Z2, data = data)
-
-summary(lm1)
-summary(lm2)
-
-# Prediction ---------------------------------------
-
-# Conditioning on collider bad for causal inference...
-# But is it bad for prediction?
-
-# create training and testing datasets
 train <- data %>% 
   sample_frac(0.7)
 
@@ -154,27 +159,10 @@ test <- data %>%
   anti_join(train)
 
 
-lm1 <- lm(Y~X+Z1, data = train)
-lm2 <- lm(Y~X + Z1 + Z2, data = train)
+# ----------------- Part 5: An Empirical Example  ------------------------------
 
-test <- test %>% 
-  mutate(Yhat1 = predict(lm1, test),
-         Yhat2 = predict(lm2, test))
-
-
-ggplot(test) + 
-  geom_point(aes(x=Yhat1,y=Y))
-
-ggplot(test) + 
-  geom_point(aes(x=Yhat2,y=Y)) # prediction is better!
-
-sum((test$Yhat1 - test$Y)^2)
-sum((test$Yhat2 - test$Y)^2) # sum of squared errors is ~40 times lower!
-
-
-## Let's see if we can find some empirical colliders ---------------------------
-
-load('../10-Prediction/data/anes_pilot_2019.RData')
+## Let's load and clean the ANES pilot data. For old times sake.
+load('data/anes_pilot_2019.RData')
 
 data <- data %>% 
   mutate(pro_impeachment = impeach1 %in% c(1,2),
@@ -185,31 +173,39 @@ data <- data %>%
   filter(fttrump %in% 0:100,
          !is.na(vote16))
 
-# no collider
-lm3 <- lm(fttrump ~ age, data = data)
-# w/ collider
-lm4 <- lm(fttrump ~ age + pro_impeachment, data = data)
+'****************************************************************************
+  EXERCISE: Which of these models is likely to yield a better estimate of 
+  the effect of age on Trump support? Why?
+******************************************************************************'
 
-summary(lm3)
-summary(lm4)
+# Model 1
+model1 <- lm(fttrump ~ age, data = data)
+# Model 2
+model2 <- lm(fttrump ~ age + pro_impeachment + vote16, data = data)
 
-
-## Mediators ---------------------------------------
-
-data <- tibble(X = rnorm(n,0,1),
-               Z = 2*X + rnorm(n,0,1),
-               Y = 2*Z + rnorm(n,0,1))
-
-# Exercise: Draw the DAG. What is the true causal effect of X on Y? 
-# (If you increase X by 1, what happens to Y?)
-# How do you specify an lm() model to recover that true causal effect?
-# ----------------------
-
-# confounded
-lm(Y~X+Z, data=data) %>% summary
-
-# unconfounded
-lm(Y~X,data=data) %>% summary
+summary(model1)
+summary(model2)
 
 
-## TODO: Add a binary treatment variable ---------------------
+# ----------------- Part 6: Mediators  ------------------------------
+
+# sample size
+n <- 3000
+
+# X is Bernoulli random
+X <- sample(c(0,1), size = n, replace = TRUE)
+
+# X causes Z plus some noise
+Z <- 2*X + rnorm(n,0,1)
+
+# Z causes Y plus some noise
+Y <- 2*Z + rnorm(n,0,1)
+
+# put it together in a dataframe
+data <- tibble(X,Y,Z)
+
+'****************************************************************************
+  EXERCISE: Draw the DAG. What is the true causal effect of X on Y? 
+    - (Hint: If you increase X by 1, what happens to Y?)
+    - What specification of lm() recovers the true causal effect?
+******************************************************************************'
