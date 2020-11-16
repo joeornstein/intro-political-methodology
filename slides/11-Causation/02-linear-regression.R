@@ -39,11 +39,21 @@ data <- tibble(X,Y,Z)
 ******************************************************************************'
 
 
+'****************************************************************************
+  EXERCISE: Estimate an lm() model with both X and Z as covariates.
+    - What is the new coefficient on X?
+******************************************************************************'
 
-# ------------------- Section 2: What is lm() doing? --------------------------
+
+
+
+# ------------------- Section 2: What is lm() doing? ---------------------------
 
 ## The 3D plots help with my intuition. Here's how to build one:
 library(plotly)
+plot_ly(x = X, y = Y, z = Z, type = 'scatter3d', mode = 'markers',
+                     marker = list(size = 5, color = "black", symbol = 104))
+
 
 
 
