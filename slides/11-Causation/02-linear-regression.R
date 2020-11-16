@@ -3,15 +3,16 @@
 ## Date: November 14, 2020
 ## Version: 1.0
 
-## In this script, we discuss lm() as a tool for estimating causal effects.
+## In this script, we discuss lm() as a tool for estimating causal effects
+## from observational data.
 
 library(tidyverse)
 set.seed(42)
 
-# ---------------- Section 1: Generate Some Fake Data ------------------
+# ---------------- Part 1: Generate Some Fake Data ------------------
 
 ## Just like we did in 01-experiments.R, we'll generate some fake data,
-## but this time the treatment variable (Tr) won't be assigned randomly!
+## but this time the treatment variable (Tr) won't be assigned at random!
 
 # the true causal effect; this is what we want to estimate.
 beta <- 2
@@ -47,40 +48,70 @@ data <- tibble(X,Y,Z)
 
 
 
-# ------------------- Section 2: What is lm() doing? ---------------------------
+# ------------------- Part 2: What is lm() doing? ---------------------------
 
-## The 3D plots help with my intuition. Here's how to build one:
+## First, the geometric intuition:
+
+## 3D plots help with my intuition. 
+## If they help with yours too, here's how to build one:
 library(plotly)
 plot_ly(x = X, y = Y, z = Z, type = 'scatter3d', mode = 'markers',
                      marker = list(size = 5, color = "black", symbol = 104))
+## Notice how, ignoring Z, it looks like X and Y are inversely correlated. 
+## That's because X is strongly correlated with Z, which is strongly negatively
+## correlated with Y.
+
+
+## Second, the calculus-style intuition:
+
+## Once you have a linear model, you can "hold Z constant" by taking a partial derivative.
+
+'****************************************************************************
+  EXERCISE: If Y = b1*X + b2*Z + alpha, then what is dY/dX?
+******************************************************************************'
+
+
+# ----------------- Part 3: A More Complicated DAG  ------------------------------
+
+# the true causal effect; this is what we want to estimate.
+beta <- 3
+
+# sample size
+n <- 3000
+
+# Z1 is standard normal
+Z1 <- rnorm(n,0,1)
+
+# Z2 is caused by Z1 plus some noise
+Z2 <- 4*Z1 + rnorm(n,0,2)
+
+# Z3 is caused by Z1 plus some noise
+Z3 <- 5*Z1 + rnorm(n,0,1)
+
+# X is caused by Z1 plus some noise
+X <- 3*Z1 + rnorm(n,0,3)
+
+# Y is caused by X, Z2, Z3, and some noise
+Y <- beta*X - 5*Z2 - 6*Z3 + rnorm(n,0,2)
+
+# Put it together in a dataframe
+data <- tibble(X,Y,Z1,Z2,Z3)
+
+'****************************************************************************
+  EXERCISE: Estimate the linear effect of X on Y without adding covariates.
+    - Does the coefficient recover the true effect?
+******************************************************************************'
 
 
 
-
-# --------- Section New ---------
-
-
-data <- tibble(Z1 = rnorm(n,0,1), # Z1 is distributed normally
-               Z2 = rnorm(n,0,2), # Z2 is distributed normally
-               X = Z1 + Z2 + rnorm(n,0,2), # Z1 and Z2 cause X (plus some noise)
-               Y = beta*X + -5*Z1 + -6*Z2 + rnorm(n,0,1) # X, Z1, and Z2 cause Y (plus some noise)
-               )
+'****************************************************************************
+  EXERCISE: Draw a DAG of the data we just created.
+    - Which set of variables should we condition on to close the backdoor paths?
+    - Re-estimate the lm() with the correct set of variables.
+******************************************************************************'
 
 
-## Exercise 1: Estimate the linear effect of X on Y without adding covariates ----------------
-## Does the coefficient recover the true effect?
-
-ggplot(data,aes(x=X,y=Y)) + geom_point()
-lm(Y~X, data=data) %>% summary()
-
-
-## Exercise 2: Draw a DAG of the data we just created. What variables must we condition on to close the
-## backdoor paths? Add them to the lm() ------------------------------------------------
-
-lm(Y~X+Z1+Z2,data=data) %>% summary
-
-
-## Conditioning on Colliders -----------------------
+# ----------------- Part 4: Conditioning on a Collider  ------------------------------
 
 # true causal effect; this is what we want to estimate!
 beta <- 3

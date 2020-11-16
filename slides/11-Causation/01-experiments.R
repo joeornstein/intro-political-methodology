@@ -12,7 +12,7 @@ library(tidyverse)
 set.seed(42)
 
 
-# ----------------- Section 1: Generate Some Random Data ---------------------
+# ----------------- Part 1: Generate Some Random Data ---------------------
 
 # sample size
 n <- 3000
@@ -60,7 +60,7 @@ summary(lm1)
 
 
 
-# --------------------- Section 2: An Empirical Example -----------------------
+# --------------------- Part 2: An Empirical Example -----------------------
 
 '****************************************************************************
   EXERCISE: Summarize and visualize the built-in ToothGrowth dataset.
