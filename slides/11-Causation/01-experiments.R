@@ -1,81 +1,68 @@
-# Conditioning on a Collider
-# Author: Joe Ornstein (jornstein@uga.edu)
-# Date: November 8, 2020
-# Version: 1.0
+##
+## Analyzing Experimental Data
+## Author: Joe Ornstein (jornstein@uga.edu)
+## Date: November 16, 2020
+## Version: 1.0
+##
+
+## The nice thing about experimental data is that we already have the
+## tools we need to estimate causal effects! Come with me on a journey!
 
 library(tidyverse)
-
-# Specify Data-Generating Process (DGP) ------------------------
-
-n <- 1000
-
-# X ~ Std Normal
-X <- rnorm(n, 0, 1)
-
-# X causes Y
-Y <- 3*X + rnorm(n, 0, 2)
-
-# X and Y jointly cause Z
-Z <- 4*X + 3*Y + rnorm(n, 0, 1)
-
-# create training and testing datasets
-data <- tibble(X,Y,Z)
-
-train <- data %>% 
-  sample_frac(0.7)
-
-test <- data %>% 
-  anti_join(train)
+set.seed(42)
 
 
-# Estimate models -------------------------------------
+# ----------------- Section 1: Generate Some Random Data ---------------------
 
-# unconfounded
-lm1 <- lm(Y ~ X, data = train)
+# sample size
+n <- 3000
 
-# confounded
-lm2 <- lm(Y ~ X + Z, data = train)
+# true treatment effect (this is what we want to estimate!)
+beta <- 3
 
+# the treatment (Tr) is assigned randomly
+Tr <- sample(c(0,1), size = n, replace = TRUE)
+
+# X1 is a random variable
+X1 <- rnorm(n,0,1)
+
+# X2 is caused by X1 plus some noise
+X2 <- 0.5*X1 + rnorm(n,0,1)
+
+# Y (the outcome) is caused by the treatment, X1, and X2
+Y <- beta*Tr + X1 - 2*X2 + rnorm(n,0,1) 
+
+# X3 is caused by Tr (the treatment) and Y (the outcome)
+X3 <- 2*Tr - 3*Y + rnorm(n,0,1)
+
+# Put it all together in a dataframe
+data <- tibble(Y,Tr,X1,X2,X3)
+
+
+'****************************************************************************
+  EXERCISE: Draw a DAG representing our data. Are there any backdoor paths?
+******************************************************************************'
+
+
+## If there are no backdoor paths between treatment and outcome, then the 
+## observed correlation is an unbiased estimate of the true causal effect.
+t.test(Y ~ Tr, data = data)
+
+lm1 <- lm(Y~Tr,data=data)
 summary(lm1)
-summary(lm2) # Simpson's Paradox!
 
-# Prediction ---------------------------------------
+## That's it!
 
-# Conditioning on collider bad for causal inference...
-# But is it bad for prediction?
-
-test <- test %>% 
-  mutate(Yhat1 = predict(lm1, test),
-         Yhat2 = predict(lm2, test))
+'****************************************************************************
+  EXERCISE: Estimate a kitchen sink linear model. 
+  - What happens to the coefficient on Tr?
+******************************************************************************'
 
 
-ggplot(test) + 
-  geom_point(aes(x=Yhat1,y=Y))
 
-ggplot(test) + 
-  geom_point(aes(x=Yhat2,y=Y)) # prediction is better!
+# --------------------- Section 2: An Empirical Example -----------------------
 
-sum((test$Yhat1 - test$Y)^2)
-sum((test$Yhat2 - test$Y)^2) # sum of squared errors is ~40 times lower!
-
-
-## Let's see if we can find an empirical collider ---------------------------
-
-load('slides/10-Prediction/data/anes_pilot_2019.RData')
-
-data <- data %>% 
-  mutate(pro_impeachment = impeach1 %in% c(1,2),
-         age = 2019 - birthyr,
-         vote16 = case_when(vote16 == 1 ~ 'Trump',
-                            vote16 == 2 ~ 'Clinton',
-                            vote16 == 3 ~ 'Other')) %>% 
-  filter(fttrump %in% 0:100,
-         !is.na(vote16))
-
-# no collider
-lm3 <- lm(fttrump ~ age, data = data)
-# w/ collider
-lm4 <- lm(fttrump ~ age + pro_impeachment + vote16, data = data)
-
-summary(lm3)
-summary(lm4)
+'****************************************************************************
+  EXERCISE: Summarize and visualize the built-in ToothGrowth dataset.
+  - Does 2 mg/day of vitamin C significantly increase the tooth length of guinea pigs?
+******************************************************************************'

@@ -1,17 +1,54 @@
-## Under what conditions do linear models yield causal estimates?
+## Linear Models
 ## Author: Joe Ornstein (jornstein@uga.edu)
 ## Date: November 14, 2020
 ## Version: 1.0
 
+## In this script, we discuss lm() as a tool for estimating causal effects.
+
 library(tidyverse)
+set.seed(42)
 
-## Generate Some Fake Data -----------------------------------
+# ---------------- Section 1: Generate Some Fake Data ------------------
 
-# true causal effect; this is what we want to estimate!
+## Just like we did in 01-experiments.R, we'll generate some fake data,
+## but this time the treatment variable (Tr) won't be assigned randomly!
+
+# the true causal effect; this is what we want to estimate.
 beta <- 2
 
 # sample size
-n <- 5000
+n <- 1000
+
+# Z is distributed normally
+Z <- rnorm(n,0,1)
+
+# X is caused by Z (plus some noise)
+X <- 2*Z + rnorm(n,0,1)
+
+# Y is caused by X and Z (plus some noise)
+Y <- beta*X + -8*Z + rnorm(n,0,1)
+
+# Put it together in a dataframe
+data <- tibble(X,Y,Z)
+
+
+'****************************************************************************
+  EXERCISE: 
+  1. Draw a DAG representing this data. Are there any backdoor paths?
+  2. What is the bivariate relationship between X and Y?
+******************************************************************************'
+
+
+
+# ------------------- Section 2: What is lm() doing? --------------------------
+
+## The 3D plots help with my intuition. Here's how to build one:
+library(plotly)
+
+
+
+# --------- Section New ---------
+
 
 data <- tibble(Z1 = rnorm(n,0,1), # Z1 is distributed normally
                Z2 = rnorm(n,0,2), # Z2 is distributed normally
