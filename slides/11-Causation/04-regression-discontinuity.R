@@ -1,4 +1,4 @@
-## Regression Discontinuity Designs
+## Regression Discontinuity (RD)
 ## Author: Joe Ornstein (jornstein@uga.edu)
 ## Date: November 16, 2020
 ## Version: 1.0
@@ -7,70 +7,128 @@ library(readstata13)
 library(tidyverse)
 set.seed(42)
 
-# Load Hall & Thompson data 
-ht <- read.dta13('data/rd_analysis_hs.dta')
+## The techniques from the last three scripts required some pretty strong assumptions.
+## Either you (1) manipulate the treatment yourself or 
+##            (2) you have God-like knowledge of the true causal structure.
 
 
-# Visualize the relationship
-# The running variable is rv
-# the outcome variable is turnout_party_share
+## Now, let's introduce a method for causal inference on 
+## observational data that requires somewhat weaker assumptions.
 
-library(rdrobust)
+## Regression Discontinuity (RD) takes advantage of a sharp "cutoff" in
+## treatment assignment. If the treatment suddenly changes but nothing else
+## change, then we can confidently say that any difference in outcomes was
+## caused by the treatment.
 
-ggplot(data = ht) +
-  geom_point(aes(x=rv,y=turnout_party_share))
-
-rdplot(y=ht$turnout_party_share, x=ht$rv)
-
-rd1 <- rdrobust(y=ht$turnout_party_share, x=ht$rv)
-summary(rd1)
+## Here's an example...
 
 
+# -------------------- Part 1: A Morbid Empirical Example -----------------------
 
-# Load Klasjna-Titiunik
-kt <- read.dta13('data/KlasnjaTitiunik-LAcountries-data.dta')
-
-kt %>% 
-  filter(country == 'Brazil') %>% 
-  ggplot() +
-  geom_point(aes(x=mv_incumbent, y = post_winning_incumbent_unc)) +
-  geom_smooth(aes(x=mv_incumbent, y = post_winning_incumbent_unc))
-
-rdplot(y = kt %>% filter(country == 'Brazil') %>% pull(post_winning_incumbent_unc),
-       x = kt %>% filter(country == 'Brazil') %>% pull(mv_incumbent))
-
-# data: https://github.com/jrnold/masteringmetrics/tree/master/masteringmetrics/data
-
+# Let's load a dataset about the causes of mortality among American youths
+# I got it here: https://github.com/jrnold/masteringmetrics/tree/master/masteringmetrics/data
 load('data/mlda.rda')
 
-mlda %>% 
-  ggplot(aes(x = agecell, y = mva)) + 
-  geom_point() +
-  #geom_vline(xintercept = 21, linetype = 'dashed') + 
-  labs(y = "Deaths in Moving Vehicle Accidents", x = "Age")
 
-# placebo test
-mlda %>% 
-  ggplot(aes(x = agecell, y = drugs)) + 
-  geom_point() +
-  geom_vline(xintercept = 21, linetype = 'dashed') + 
-  labs(y = "Drug-Related Deaths", x = "Age")
-
-rdplot(y=mlda$mva,x=mlda$agecell, c=21)
-rdrobust(y=mlda$mva,x=mlda$agecell, c=21) %>% summary
+'****************************************************************************
+  EXERCISE: Plot the relationship between age (agecell) and the death rate from
+  motor vehicle accidents (mva). 
+  - Save the plot as an object called p1.
+  - What do you notice?
+******************************************************************************'
 
 
-kt %>% 
-  filter(country == 'Brazil') %>% 
-  mutate(mv_bin = cut_number(mv_incumbent, 100)) %>% 
-  group_by(mv_bin) %>% 
-  summarize(pct_incumbent_win = mean(post_winning_incumbent_unc))
+## You may remember this as an example from our week on Data Visualization!
 
-# ---------------- Part X: An Empirical Example ------------------------------
+
+'****************************************************************************
+  EXERCISE: Now plot the relationship between age (agecell) and drug-related 
+  deaths (drugs).
+******************************************************************************'
+
+## You can think of this as a sort of "placebo test".
+
+
+
+# ----------------------- Part 2: RD Estimation -----------------------------
+
+
+## To estimate the causal effect, we'll follow a three step process:
+##
+## 1. Keep the data that is "close" to the cutoff.
+## 2. Estimate two linear models: one on the left and one on the right.
+## 3. Compare the difference in their predictions.
+##
+## It looks a little something...like this:
+
+p1 + 
+  geom_smooth(data = mlda %>% filter(agecell > 20.5, agecell < 21),
+              mapping = aes(x=agecell, y=mva),
+              method = 'lm', se = FALSE) + # linear model fit on the left
+  geom_smooth(data = mlda %>% filter(agecell > 21, agecell < 21.5),
+              mapping = aes(x=agecell, y=mva),
+              method = 'lm', se = FALSE) # linear model fit on the right
+  
+
+
+## Naturally, there is a function that performs all of those steps for us.
+## Install and load the rdrobust package
+library(rdrobust)
+
+## The rdrobust() function takes three inputs.
+## y = the outcome variable
+## x = the running variable
+## c = the cutoff in treatment assignment
+rd_fit <- rdrobust(y=mlda$mva,
+                   x=mlda$agecell, 
+                   c=21)
+
+summary(rd_fit)
+
+
+'****************************************************************************
+  EXERCISE: Using rdrobust(), estimate the "placebo effect" of turning 21 on 
+  drug-related deaths.
+******************************************************************************'
+
+
+# ------------------- Part 3: How It Works -------------------------------------
+
+
+# the sample size
+n <- 500
+
+# the true treatment effect
+beta <- 1.5
+
+# Z1 is a sinister unobserved confounder
+Z1 <- rnorm(n,0,1)
+
+# Z2 is another sinister unobserved confounder. Egads they're everywhere!
+Z2 <- rnorm(n,0,1)
+
+# X is our running variable. It is caused by Z1 and Z2 plus some noise 
+X <- 2*Z1 - 2*Z2 + rnorm(n,0,1)
+
+# The treatment is assigned if and only if X is greater than 1
+Tr <- as.numeric(X > 1)
+
+# Y (the outcome) is caused by the treatment, Z1, Z2, and heck it's even caused by X, too!
+Y <- beta * Tr + X - Z1  - Z2 + rnorm(n,0,3)
+
+# put it all into a dataframe
+data = tibble(X,Y,Tr,Z1,Z2)
+
+plot(X,Y)
+lm(Y~X+Tr,data=data) %>% summary
+rdrobust(y=Y,x=X,c=1) %>% summary
+
+
+# ---------------- Part 4: Another Empirical Example ------------------------------
 
 # Eggers & Spirling (2017) estimate incumbency effects in the UK with an RD design
-# Compare districts where Conservatives barely won election to Parliament with those
-# where they barely lost, and observe how Conservatives perform in the following election
+# comparing districts where Conservatives barely won election to Parliament with those
+# where they barely lost, and observing how Conservatives perform in the following election
 
 ## Load and clean up the Eggers & Spirling (2017) dataset
 load('data/combined_data_to_2010_all_20150128.RData')
@@ -80,15 +138,17 @@ data <- x %>%
          X.con.rv_counterparty_was_lib. == T)
 rm(x)
 
-ggplot(data) +
-  geom_point(aes(x=X.con.rv.,y=X.con.vote_share.),
-             alpha = 0.2) + 
-  geom_smooth(data = data %>% filter(X.con.rv. < 0),
-              aes(x=X.con.rv., y=X.con.vote_share.)) +
-  geom_smooth(data = data %>% filter(X.con.rv. > 0),
-              aes(x=X.con.rv., y=X.con.vote_share.)) +
+'****************************************************************************
+  EXERCISE: 
   
-rdplot(y=data$X.con.vote_share.,x=data$X.con.rv.)
-rdrobust(y=data$X.con.vote_share.,x=data$X.con.rv.) %>% summary
-
-ggplot()
+  1. Plot the relationship between the Conservative margin of victory (X.con.rv.) 
+  and Conservative vote share in the following election (X.con.vote_share.)
+  
+  2. What is the average vote share (X.con.vote_share.) for Conservative 
+  candidates who *barely* won the previous election (X.con.rv. > 0, X.con.rv. < 1)? 
+  What about Conservative candidates who barely *lost* the previous election?
+  
+  3. Estimate the "incumbency effect" -- the causal effect of winning office on 
+  subsequent vote share -- using the rdrobust() function.
+  
+******************************************************************************'
