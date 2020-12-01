@@ -13,6 +13,7 @@ urlcolor: blue
 # For answer key, echo and eval = TRUE
 knitr::opts_chunk$set(echo = TRUE, eval = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
+set.seed(4242)
 ```
 
 First, load the labeled training data.
@@ -54,8 +55,16 @@ model2 <- kknn(democratic2016 ~ region + gender + educ + race +
 model3 <- lm(democratic2016 ~ .,
              data = train)
 
-# kitchen sink logistic
-model4 <- glm(democratic2016 ~ .,
+# lm keeping only the strongest predictor variables
+model4 <- lm(democratic2016 ~ region + gender + sexuality +
+                educ + race + employ + pew_religimp + religpew + 
+                urbancity + milstat_5,
+              data = train)
+
+# logistic
+model5 <- glm(democratic2016 ~ region + gender + sexuality +
+                educ + race + employ + pew_religimp + religpew + 
+                urbancity + milstat_5,
               data = train,
               family = 'binomial')
 
@@ -72,24 +81,27 @@ classification_accuracy <- function(truth, predicted){
 }
 
 classification_accuracy(truth = test$democratic2016,
-                        predicted = predict(model1, test, type = 'response'))
+                        predicted = predict(model1, test))
 
 classification_accuracy(truth = test$democratic2016,
                         predicted = model2$fitted.values)
 
 classification_accuracy(truth = test$democratic2016,
-                        predicted = predict(model3, test, type = 'response'))
+                        predicted = predict(model3, test))
 
 classification_accuracy(truth = test$democratic2016,
-                        predicted = predict(model4, test, type = 'response'))
+                        predicted = predict(model4, test))
+
+classification_accuracy(truth = test$democratic2016,
+                        predicted = predict(model5, test, type = 'response'))
 
 ```
 
-The kitchen sink wins! Plot the fit:
+The kitchen sink is pretty good, but removing some of the least significant variables does better. A logistic model (see the slides; it forces the prediction between zero and one) does even better. Plot the fit:
 
 ```{r plot predictions}
 test %>% 
-  mutate(democratic2016_prediction = predict(model4, 
+  mutate(democratic2016_prediction = predict(model5, 
                                              test, type = 'response')) %>% 
   ggplot() + 
   geom_smooth(aes(x=democratic2016_prediction, y=democratic2016)) +
@@ -101,12 +113,10 @@ Now make predictions on the test set:
 ```{r make predictions}
 data <- read_csv('data/CCES-Test-POLS-7012.csv') %>% 
   mutate(age = 2018 - birthyr,
-         id = 1:n(),
-         immstat = factor(immstat),
-         faminc_new = factor(faminc_new))
+         id = 1:n())
 
 data <- data %>% 
-  mutate(p_democrat = predict(model4, data, type = 'response'))
+  mutate(p_democrat = predict(model5, data, type = 'response'))
 
-write_csv(data, 'data/predictions.csv')
+write_csv(data, 'submissions/ornstein.csv')
 ```
