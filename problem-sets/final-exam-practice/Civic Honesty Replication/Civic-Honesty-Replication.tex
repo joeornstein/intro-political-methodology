@@ -63,7 +63,7 @@
 % Part for setting citation format package: biblatex
 
 % Part for indenting CSL refs
-
+% Pandoc citation processing
 % Pandoc header
 
 \begin{document}
@@ -78,7 +78,7 @@
 
 \abstract{}
 
-\date{December 04, 2020}
+\date{December 07, 2020}
 
 \keywords{}
 
@@ -156,10 +156,6 @@ As an extra challenge, you can:
 \StringTok{  }\KeywordTok{group_by}\NormalTok{(Country,}
 \NormalTok{           cond) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{pct_reported =} \KeywordTok{mean}\NormalTok{(response)) }\OperatorTok{%>%}
-\StringTok{  }\CommentTok{# # sort by reporting rate}
-\StringTok{  }\CommentTok{# ungroup %>% }
-\StringTok{  }\CommentTok{# arrange(pct_reported) %>% }
-\StringTok{  }\CommentTok{# mutate(Country = factor(Country, levels = unique(Country))) %>% }
 \StringTok{  }\CommentTok{# plot}
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{pct_reported, }\DataTypeTok{y=}\NormalTok{Country, }\DataTypeTok{color =} \KeywordTok{factor}\NormalTok{(cond))) }\OperatorTok{+}
@@ -188,19 +184,22 @@ As an extra challenge, you can:
 \StringTok{  }\CommentTok{# pivot_wider to make those line segments}
 \StringTok{  }\NormalTok{ungroup }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{pivot_wider}\NormalTok{(}\DataTypeTok{names_from =}\NormalTok{ cond, }\DataTypeTok{values_from =}\NormalTok{ pct_reported) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\CommentTok{# sort by NoMoney reporting rate}
-\StringTok{  }\KeywordTok{arrange}\NormalTok{(NoMoney) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Country =} \KeywordTok{factor}\NormalTok{(Country, }\DataTypeTok{levels =} \KeywordTok{unique}\NormalTok{(Country))) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# reorder Country by the NoMoney reporting rate }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Country =} \KeywordTok{fct_reorder}\NormalTok{(Country, NoMoney)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# compute label position, near minimum reporting rate}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{label_position =} \KeywordTok{pmin}\NormalTok{(Money, NoMoney) }\OperatorTok{-}\StringTok{ }\KeywordTok{nchar}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(Country))}\OperatorTok{/}\FloatTok{3.5} \OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# begin ggplot}
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_segment}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{Money, }\DataTypeTok{xend=}\NormalTok{NoMoney, }\DataTypeTok{y=}\NormalTok{Country, }\DataTypeTok{yend=}\NormalTok{Country),}
                \DataTypeTok{color =} \StringTok{'gray'}\NormalTok{, }\DataTypeTok{size =} \FloatTok{0.5}\NormalTok{) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{Money,}\DataTypeTok{y=}\NormalTok{Country), }\DataTypeTok{color =} \StringTok{'red'}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{NoMoney,}\DataTypeTok{y=}\NormalTok{Country), }\DataTypeTok{color =} \StringTok{'#F6BE00'}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{NoMoney}\DecValTok{-3}\NormalTok{, }\DataTypeTok{y=}\NormalTok{Country, }\DataTypeTok{label =}\NormalTok{ Country), }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_text}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{label_position, }\DataTypeTok{y=}\NormalTok{Country, }\DataTypeTok{label =}\NormalTok{ Country), }\DataTypeTok{size =} \DecValTok{2}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{'Reporting rate (%)'}\NormalTok{, }\DataTypeTok{y =} \StringTok{''}\NormalTok{, }\DataTypeTok{color =} \StringTok{'Condition'}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme_classic}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.y =} \KeywordTok{element_blank}\NormalTok{(),}
-        \DataTypeTok{axis.ticks.y =} \KeywordTok{element_blank}\NormalTok{())}
+        \DataTypeTok{axis.ticks.y =} \KeywordTok{element_blank}\NormalTok{(),}
+        \DataTypeTok{axis.line.y =} \KeywordTok{element_blank}\NormalTok{())}
   
   
 

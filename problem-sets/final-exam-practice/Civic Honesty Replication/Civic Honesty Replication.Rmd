@@ -66,10 +66,6 @@ fig1 <- data %>%
   group_by(Country,
            cond) %>% 
   summarize(pct_reported = mean(response)) %>%
-  # # sort by reporting rate
-  # ungroup %>% 
-  # arrange(pct_reported) %>% 
-  # mutate(Country = factor(Country, levels = unique(Country))) %>% 
   # plot
   ggplot() +
   geom_point(aes(x=pct_reported, y=Country, color = factor(cond))) +
@@ -91,25 +87,27 @@ fig1a <- data %>%
   # pivot_wider to make those line segments
   ungroup %>% 
   pivot_wider(names_from = cond, values_from = pct_reported) %>% 
-  # sort by NoMoney reporting rate
-  arrange(NoMoney) %>% 
-  mutate(Country = factor(Country, levels = unique(Country))) %>% 
+  # reorder Country by the NoMoney reporting rate 
+  mutate(Country = fct_reorder(Country, NoMoney)) %>% 
+  # compute label position, near minimum reporting rate
+  mutate(label_position = pmin(Money, NoMoney) -
+           nchar(as.character(Country))/3.5 - 1) %>% 
+  # begin ggplot
   ggplot() +
   geom_segment(aes(x=Money, xend=NoMoney, y=Country, yend=Country),
                color = 'gray', size = 0.5) + 
   geom_point(aes(x=Money,y=Country), color = 'red') +
   geom_point(aes(x=NoMoney,y=Country), color = '#F6BE00') +
-  geom_text(aes(x=NoMoney-3, y=Country, label = Country), size = 2) +
+  geom_text(aes(x=label_position, y=Country, label = Country), size = 2) +
   labs(x = 'Reporting rate (%)', y = '', color = 'Condition') +
   theme_classic() +
   theme(axis.text.y = element_blank(),
-        axis.ticks.y = element_blank())
+        axis.ticks.y = element_blank(),
+        axis.line.y = element_blank())
   
   
 
 fig1a
-  
-
 ```
 
 # References
