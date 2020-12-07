@@ -25,14 +25,14 @@ library(tidyverse)
 
 # Introduction
 
-In this paper, we will replicate the results from "Civic Honesty Around the Globe" [@cohnCivicHonestyGlobe2019]. Anything I call an "extra challenge" is available for the intrepid among you, but is not required.
+In this paper, we will replicate the results from "Civic Honesty Around the Globe" [@cohnCivicHonestyGlobe2019]. In that paper, the research team drops literally thousands of wallets in cities across the globe to see how many of them get returned. They find, interestingly, that wallets with money in them are *more* likely to be returned than wallets without money, which is all very nice and pleasant.
 
-To submit your final exam, knit this `.Rmd` to a PDF and post the PDF to eLC.
+Before you begin, skim over the paper and its Supplementary Materials, included in the `papers/` folder. To replicate the findings, follow the instructions in each section below, writing your code in the chunks provided. Anything I call an "extra challenge" is available to you if you'd like to give it a try, but is not required. To submit your final exam, knit this `.Rmd` to a PDF and post that PDF to eLC.
 
 
 # Data
 
-Replication files are available [here](https://dataverse.harvard.edu/dataverse/honesty), and I have already downloaded them into the `data/` folder. Let's load the behavioral data.
+Replication files are available [here](https://dataverse.harvard.edu/dataverse/honesty), and I have taken the liberty of downloading them into the `data/` folder. The dataset we'll need for this replication is called the behavioral data. Let's start by loading it.
 
 ```{r load data}
 data <- read_csv('data/behavioral data (csv file).csv')
@@ -44,18 +44,19 @@ data <- read_csv('data/behavioral data (csv file).csv')
 
 ## Replicating Figure 1
 
-First, let's replicate the left-hand side of Figure 1. To do so, we need to perform the following steps:
+Our first task is to replicate the left-hand side of Figure 1. To do so, we need to perform the following steps:
 
-- Keep only the Money and NoMoney conditions.
+- Keep only the observations in the Money and NoMoney conditions.
 - Recode the `cond` variable as "Money" and "NoMoney".
 - Compute the average reporting rate, grouped by country and condition.
-- Plot a scatter with average reporting rate on the x-axis, country on the y-axis, and colored by monetary condition.  
+- Build a scatter plot with average reporting rate on the x-axis, country on the y-axis, and colored by monetary condition.  
 
-As an extra challenge, you can do any combination of the following:
+\noindent As an extra challenge, you can do any combination of the following:
 
 - Rearrange the y-axis so that the countries with the lowest reporting rate appear at the bottom and those with the highest reporting rate appear at the top.
-- Include the line segments between points from the original figure
+- Include line segments between points as in the original figure
 - Use the colors from the original figure
+- Use `geom_text()` to add floating labels for each country like in the original figure. This is an extra, *extra* challenge, but man is it satisfying when you get it right!
 
 ```{r Figure 1, fig.cap='Share of wallets reported in the NoMoney and Money conditions, by country.'}
 
@@ -121,7 +122,7 @@ Now replicate Figure 2. To do so, we need to perform the following steps:
 - Plot a scatter with condition on the x-axis, reporting rate on the y-axis, and colored by country.
 - Add a `geom_line()` layer with the same aesthetics (also include `group = Country` as an aesthetic).
 
-As an extra challenge, you can do any combination of the following:
+\noindent As an extra challenge, you can do any combination of the following:
 
 - Use original colors from the paper
 - Use the ggplot theme that best matches the theme from the paper
@@ -145,8 +146,7 @@ data %>%
                            color = Country)) + 
   geom_line(mapping = aes(x = cond, y = reporting_rate,
                           group = Country, color = Country)) + 
-  labs(x = '', y = 'Reporting Rate (%)') +
-  theme_classic()
+  labs(x = '', y = 'Reporting Rate (%)')
 
 library(directlabels)
 
@@ -175,6 +175,89 @@ data %>%
   theme_classic() +
   theme(legend.position = 'none')
 ```
+## The Effect of Money
+
+In paragraph 3 of page 2, the authors claim that citizens are "overwhelmingly more likely to report lost wallets containing money than those without". Let's replicate that finding. To do so, we must:
+
+- Keep the observations in the Money and NoMoney conditions
+- Compute the percent of subjects that reported wallets without money. Save that value, rounded to the nearest percent, as the object `no_money_reporting_rate`.
+- Compute the percent of subjects that reported wallets with money. Save that value, rounded to the nearest percent, as the object `money_reporting_rate`.
+
+```{r difference in means, echo = FALSE}
+money_reporting_rate <- 0
+no_money_reporting_rate <- 0
+
+money_reporting_rate <- data %>% 
+  filter(cond == 1) %>% 
+  pull(response) %>% 
+  mean %>% 
+  round
+
+no_money_reporting_rate <- data %>% 
+  filter(cond == 0) %>% 
+  pull(response) %>% 
+  mean %>% 
+  round
+```
+
+On average, adding money to the wallet increased the likelihood of being reported from `r no_money_reporting_rate`% in the NoMoney condition to `r money_reporting_rate`% in the Money condition.
+
+Next, conduct a hypothesis test to determine the strength of that result. Our null hypothesis is that there is no difference in reporting rates between the Money and NoMoney groups. Note that the explanatory variable (money or no money) and outcome variable (report or not report) are both categorical. Report the p-value associated with your null hypothesis test.
+
+```{r hypothesis test}
+data %>% 
+  filter(cond %in% c(0,1)) %>% 
+  select(cond, response) %>% 
+  table %>% 
+  chisq.test(correct = FALSE)
+```
+
+### Replicating Table S8
+
+In the Supplementary Materials, the authors extend the bivariate hypothesis test we just did by estimating two linear models that include other subject characterstics as covariates. To replicate that finding, we must:
+
+- Create a variable called `Money`, equal to 1 if the subject's wallet contained money and 0 otherwise.
+- Create a variable called `BigMoney`, equal to 1 if the subject's wallet contained **lots** of money and 0 otherwise.
+- Create a variable called `MoneyNoKey`, equal to 1 if they subject's wallet contained money but no key and 0 otherwise.
+- To include "Institution and City Fixed Effects", make sure that the city and type of institution are coded as characters or factors.
+- Estimate your first model, `lm1`, including the treatment variables you created plus the institution and city fixed effects.
+- In the second model `lm2`, add the binary variables mentioned in the notes of Table S8.
+- Don't worry if your standard errors don't exactly match up. You'll learn more about "robust" standard errors next semester.
+
+```{r estimate models}
+lm1 <- lm(response ~ male, data = data)
+lm2 <- lm(response ~ male, data = data)
+
+data <- data %>% 
+  mutate(Money = if_else(cond == 1, 1, 0),
+         BigMoney = if_else(cond == 2, 1, 0),
+         MoneyNoKey = if_else(cond == 3, 1, 0),
+         institution = factor(institution),
+         city = factor(city))
+
+lm1 <- lm(response ~ Money + BigMoney + MoneyNoKey + institution + city, data = data)
+lm2 <- lm(response ~ Money + BigMoney + MoneyNoKey + institution + city +
+            male + above40 + computer + coworkers + other_bystanders, data = data)
+```
+
+The following code chunk outputs a pretty table like the one in Table S8. I provide it to you free of charge. All you need to do is make sure that `lm1` and `lm2` are correctly specified.
+
+```{r table S8, echo = FALSE, results = 'asis'}
+library(stargazer)
+stargazer(lm1,lm2,
+          title = 'Reporting rates in the Money and NoMoney condition',
+          # omits the city, institution, and treatment dummy variables
+          omit = c('city', 'institution', 'BigMoney', 'MoneyNoKey'), 
+          omit.stat = c('rsq', 'f', 'ser'), # omits a few summary statistics
+          star.cutoffs = c(0.05, 0.01, 0.001), # put one star next to p < 0.05, two stars next to p < 0.01
+          header = FALSE,
+          dep.var.labels.include = FALSE,
+          dep.var.caption = "")
+```
+
+# Conclusion
+
+Hey people are more likely to try to return wallets they find if they have money in them. Isn't that nice?
 
 # References
 

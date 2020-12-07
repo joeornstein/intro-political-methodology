@@ -90,19 +90,27 @@
 \section{Introduction}\label{introduction}}
 
 In this paper, we will replicate the results from ``Civic Honesty Around
-the Globe'' (Cohn et al. 2019). Anything I call an ``extra challenge''
-is available for the intrepid among you, but is not required.
+the Globe'' (Cohn et al. 2019). In that paper, the research team drops
+literally thousands of wallets in cities across the globe to see how
+many of them get returned. They find, interestingly, that wallets with
+money in them are \emph{more} likely to be returned than wallets without
+money, which is all very nice and pleasant.
 
-To submit your final exam, knit this \texttt{.Rmd} to a PDF and post the
-PDF to eLC.
+Before you begin, skim over the paper and its Supplementary Materials,
+included in the \texttt{papers/} folder. To replicate the findings,
+follow the instructions in each section below, writing your code in the
+chunks provided. Anything I call an ``extra challenge'' is available to
+you if you'd like to give it a try, but is not required. To submit your
+final exam, knit this \texttt{.Rmd} to a PDF and post that PDF to eLC.
 
 \hypertarget{data}{%
 \section{Data}\label{data}}
 
 Replication files are available
 \href{https://dataverse.harvard.edu/dataverse/honesty}{here}, and I have
-already downloaded them into the \texttt{data/} folder. Let's load the
-behavioral data.
+taken the liberty of downloading them into the \texttt{data/} folder.
+The dataset we'll need for this replication is called the behavioral
+data. Let's start by loading it.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -116,23 +124,24 @@ behavioral data.
 \hypertarget{replicating-figure-1}{%
 \subsection{Replicating Figure 1}\label{replicating-figure-1}}
 
-First, let's replicate the left-hand side of Figure 1. To do so, we need
-to perform the following steps:
+Our first task is to replicate the left-hand side of Figure 1. To do so,
+we need to perform the following steps:
 
 \begin{itemize}
 \tightlist
 \item
-  Keep only the Money and NoMoney conditions.
+  Keep only the observations in the Money and NoMoney conditions.
 \item
   Recode the \texttt{cond} variable as ``Money'' and ``NoMoney''.
 \item
   Compute the average reporting rate, grouped by country and condition.
 \item
-  Plot a scatter with average reporting rate on the x-axis, country on
-  the y-axis, and colored by monetary condition.
+  Build a scatter plot with average reporting rate on the x-axis,
+  country on the y-axis, and colored by monetary condition.
 \end{itemize}
 
-As an extra challenge, you can do any combination of the following:
+\noindent As an extra challenge, you can do any combination of the
+following:
 
 \begin{itemize}
 \tightlist
@@ -141,9 +150,13 @@ As an extra challenge, you can do any combination of the following:
   rate appear at the bottom and those with the highest reporting rate
   appear at the top.
 \item
-  Include the line segments between points from the original figure
+  Include line segments between points as in the original figure
 \item
   Use the colors from the original figure
+\item
+  Use \texttt{geom\_text()} to add floating labels for each country like
+  in the original figure. This is an extra, \emph{extra} challenge, but
+  man is it satisfying when you get it right!
 \end{itemize}
 
 \begin{Shaded}
@@ -237,7 +250,8 @@ steps:
   include \texttt{group\ =\ Country} as an aesthetic).
 \end{itemize}
 
-As an extra challenge, you can do any combination of the following:
+\noindent As an extra challenge, you can do any combination of the
+following:
 
 \begin{itemize}
 \tightlist
@@ -269,8 +283,7 @@ As an extra challenge, you can do any combination of the following:
                            \DataTypeTok{color =}\NormalTok{ Country)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ cond, }\DataTypeTok{y =}\NormalTok{ reporting_rate,}
                           \DataTypeTok{group =}\NormalTok{ Country, }\DataTypeTok{color =}\NormalTok{ Country)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{''}\NormalTok{, }\DataTypeTok{y =} \StringTok{'Reporting Rate (%)'}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_classic}\NormalTok{()}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{''}\NormalTok{, }\DataTypeTok{y =} \StringTok{'Reporting Rate (%)'}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -312,6 +325,155 @@ As an extra challenge, you can do any combination of the following:
 \begin{figure}[p]
 \includegraphics[width=1\linewidth]{Civic-Honesty-Replication_files/figure-latex/Figure 2-2} \caption{Reporting rates as a function of monetary stakes}\label{fig:Figure 2-2}
 \end{figure}
+
+\hypertarget{the-effect-of-money}{%
+\subsection{The Effect of Money}\label{the-effect-of-money}}
+
+In paragraph 3 of page 2, the authors claim that citizens are
+``overwhelmingly more likely to report lost wallets containing money
+than those without''. Let's replicate that finding. To do so, we must:
+
+\begin{itemize}
+\tightlist
+\item
+  Keep the observations in the Money and NoMoney conditions
+\item
+  Compute the percent of subjects that reported wallets without money.
+  Save that value, rounded to the nearest percent, as the object
+  \texttt{no\_money\_reporting\_rate}.
+\item
+  Compute the percent of subjects that reported wallets with money. Save
+  that value, rounded to the nearest percent, as the object
+  \texttt{money\_reporting\_rate}.
+\end{itemize}
+
+On average, adding money to the wallet increased the likelihood of being
+reported from 40\% in the NoMoney condition to 51\% in the Money
+condition.
+
+Next, conduct a hypothesis test to determine the strength of that
+result. Our null hypothesis is that there is no difference in reporting
+rates between the Money and NoMoney groups. Note that the explanatory
+variable (money or no money) and outcome variable (report or not report)
+are both categorical. Report the p-value associated with your null
+hypothesis test.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(cond }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(cond, response) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{table }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{chisq.test}\NormalTok{(}\DataTypeTok{correct =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  .
+## X-squared = 201.21, df = 1, p-value < 2.2e-16
+\end{verbatim}
+
+\hypertarget{replicating-table-s8}{%
+\subsubsection{Replicating Table S8}\label{replicating-table-s8}}
+
+In the Supplementary Materials, the authors extend that bivariate
+hypothesis test by estimating two linear models that include other
+subject characterstics as covariates. To replicate that table, we must:
+
+\begin{itemize}
+\tightlist
+\item
+  Create a variable called \texttt{Money}, equal to 1 if the subject's
+  wallet contained money and 0 otherwise.
+\item
+  Create a variable called \texttt{BigMoney}, equal to 1 if the
+  subject's wallet contained \textbf{lots} of money and 0 otherwise.
+\item
+  Create a variable called \texttt{MoneyNoKey}, equal to 1 if they
+  subject's wallet contained money but no key and 0 otherwise.
+\item
+  To include ``Institution and City Fixed Effects'', make sure that the
+  city and type of institution are coded as characters or factors.
+\item
+  Estimate your first model, \texttt{lm1}, including the treatment
+  variables you created plus the institution and city fixed effects.
+\item
+  In the second model \texttt{lm2}, add the binary variables mentioned
+  in the notes of Table S8.
+\item
+  Don't worry if your standard errors don't exactly match up. You'll
+  learn more about ``robust'' standard errors next semester.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(response }\OperatorTok{~}\StringTok{ }\NormalTok{male, }\DataTypeTok{data =}\NormalTok{ data)}
+\NormalTok{lm2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(response }\OperatorTok{~}\StringTok{ }\NormalTok{male, }\DataTypeTok{data =}\NormalTok{ data)}
+
+\NormalTok{data <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Money =} \KeywordTok{if_else}\NormalTok{(cond }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+         \DataTypeTok{BigMoney =} \KeywordTok{if_else}\NormalTok{(cond }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+         \DataTypeTok{MoneyNoKey =} \KeywordTok{if_else}\NormalTok{(cond }\OperatorTok{==}\StringTok{ }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{),}
+         \DataTypeTok{institution =} \KeywordTok{factor}\NormalTok{(institution),}
+         \DataTypeTok{city =} \KeywordTok{factor}\NormalTok{(city))}
+
+\NormalTok{lm1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(response }\OperatorTok{~}\StringTok{ }\NormalTok{Money }\OperatorTok{+}\StringTok{ }\NormalTok{BigMoney }\OperatorTok{+}\StringTok{ }\NormalTok{MoneyNoKey }\OperatorTok{+}\StringTok{ }\NormalTok{institution }\OperatorTok{+}\StringTok{ }\NormalTok{city, }\DataTypeTok{data =}\NormalTok{ data)}
+\NormalTok{lm2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(response }\OperatorTok{~}\StringTok{ }\NormalTok{Money }\OperatorTok{+}\StringTok{ }\NormalTok{BigMoney }\OperatorTok{+}\StringTok{ }\NormalTok{MoneyNoKey }\OperatorTok{+}\StringTok{ }\NormalTok{institution }\OperatorTok{+}\StringTok{ }\NormalTok{city }\OperatorTok{+}
+\StringTok{            }\NormalTok{male }\OperatorTok{+}\StringTok{ }\NormalTok{above40 }\OperatorTok{+}\StringTok{ }\NormalTok{computer }\OperatorTok{+}\StringTok{ }\NormalTok{coworkers }\OperatorTok{+}\StringTok{ }\NormalTok{other_bystanders, }\DataTypeTok{data =}\NormalTok{ data)}
+\end{Highlighting}
+\end{Shaded}
+
+The following code chunk outputs a pretty table like the one in Table S8
+in the original paper's Supplementary Materials. I provide it to you
+free of charge. All you need to do is make sure that \texttt{lm1} and
+\texttt{lm2} are correctly specified.
+
+\begin{table}[!htbp] \centering 
+  \caption{Reporting rates in the Money and NoMoney condition} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & (1) & (2)\\ 
+\hline \\[-1.8ex] 
+ Money & 10.828$^{***}$ & 10.791$^{***}$ \\ 
+  & (0.716) & (0.713) \\ 
+  & & \\ 
+ male &  & $-$2.076$^{**}$ \\ 
+  &  & (0.740) \\ 
+  & & \\ 
+ above40 &  & $-$2.030$^{**}$ \\ 
+  &  & (0.737) \\ 
+  & & \\ 
+ computer &  & 6.874$^{***}$ \\ 
+  &  & (0.975) \\ 
+  & & \\ 
+ coworkers &  & 4.675$^{***}$ \\ 
+  &  & (0.771) \\ 
+  & & \\ 
+ other\_bystanders &  & $-$3.900$^{***}$ \\ 
+  &  & (0.798) \\ 
+  & & \\ 
+ Constant & 34.620$^{**}$ & 33.302$^{**}$ \\ 
+  & (10.687) & (10.720) \\ 
+  & & \\ 
+\hline \\[-1.8ex] 
+Observations & 17,303 & 17,295 \\ 
+Adjusted R$^{2}$ & 0.178 & 0.185 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{2}{r}{$^{*}$p$<$0.05; $^{**}$p$<$0.01; $^{***}$p$<$0.001} \\ 
+\end{tabular} 
+\end{table}
+
+\hypertarget{conclusion}{%
+\section{Conclusion}\label{conclusion}}
+
+Hey people are more likely to try to return wallets they find if they
+have money in them. Isn't that nice?
 
 \hypertarget{references}{%
 \section*{References}\label{references}}
