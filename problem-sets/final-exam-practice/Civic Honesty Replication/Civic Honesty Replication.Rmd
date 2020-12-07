@@ -1,5 +1,5 @@
 ---
-title: Final Exam Practice
+title: POLS 7012 Final Exam
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 authors:
   - name: YOUR NAME HERE
@@ -27,7 +27,7 @@ library(tidyverse)
 
 In this paper, we will replicate the results from "Civic Honesty Around the Globe" [@cohnCivicHonestyGlobe2019]. Anything I call an "extra challenge" is available for the intrepid among you, but is not required.
 
-To submit your final exam, knit this `.Rmd` to a PDF and post it to eLC.
+To submit your final exam, knit this `.Rmd` to a PDF and post the PDF to eLC.
 
 
 # Data
@@ -46,18 +46,20 @@ data <- read_csv('data/behavioral data (csv file).csv')
 
 First, let's replicate the left-hand side of Figure 1. To do so, we need to perform the following steps:
 
-- Keep only the `Money` and `NoMoney` conditions.
+- Keep only the Money and NoMoney conditions.
 - Recode the `cond` variable as "Money" and "NoMoney".
-- Compute the average response rate, grouped by country and condition.
-- Plot a scatter with reporting rate on the x-axis, country on the y-axis, and colored by monetary condition.  
+- Compute the average reporting rate, grouped by country and condition.
+- Plot a scatter with average reporting rate on the x-axis, country on the y-axis, and colored by monetary condition.  
 
-As an extra challenge, you can:
+As an extra challenge, you can do any combination of the following:
 
 - Rearrange the y-axis so that the countries with the lowest reporting rate appear at the bottom and those with the highest reporting rate appear at the top.
 - Include the line segments between points from the original figure
 - Use the colors from the original figure
 
 ```{r Figure 1, fig.cap='Share of wallets reported in the NoMoney and Money conditions, by country.'}
+
+# Here's the basic version
 fig1 <- data %>% 
   filter(cond %in% c(0,1)) %>% 
   mutate(cond = case_when(cond == 1 ~ 'Money', 
@@ -74,8 +76,7 @@ fig1 <- data %>%
 
 fig1
 
-
-# Here's the challenging one
+# Here's the challenging version
 fig1a <- data %>% 
   filter(cond %in% c(0,1)) %>% 
   mutate(cond = case_when(cond == 1 ~ 'Money', 
@@ -89,7 +90,7 @@ fig1a <- data %>%
   pivot_wider(names_from = cond, values_from = pct_reported) %>% 
   # reorder Country by the NoMoney reporting rate 
   mutate(Country = fct_reorder(Country, NoMoney)) %>% 
-  # compute label position, near minimum reporting rate
+  # compute label position, left of the minimum reporting rate
   mutate(label_position = pmin(Money, NoMoney) -
            nchar(as.character(Country))/3.5 - 1) %>% 
   # begin ggplot
@@ -104,10 +105,76 @@ fig1a <- data %>%
   theme(axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         axis.line.y = element_blank())
-  
-  
 
 fig1a
 ```
 
+
+## Replicating Figure 2
+
+Now replicate Figure 2. To do so, we need to perform the following steps:
+
+- Keep only the data from Poland, the United Kingdom, and the United States
+- Keep only the NoMoney, Money, and BigMoney conditions
+- Recode the `cond` variable as "NoMoney", "Money" and "BigMoney"
+- Compute the average response rate, grouped by country and condition.
+- Plot a scatter with condition on the x-axis, reporting rate on the y-axis, and colored by country.
+- Add a `geom_line()` layer with the same aesthetics (also include `group = Country` as an aesthetic).
+
+As an extra challenge, you can do any combination of the following:
+
+- Use original colors from the paper
+- Use the ggplot theme that best matches the theme from the paper
+- Reorder the `cond` variable so it appears in the same order as the original Figure 2
+- Include country labels as in the paper with `geom_dl()` from the `directlabels` package, and remove the legend
+
+
+```{r Figure 2, fig.cap='Reporting rates as a function of monetary stakes'}
+
+# Basic version
+data %>% 
+  filter(Country %in% c('Poland', 'UK', 'USA'),
+         cond %in% 0:2) %>% 
+  mutate(cond = case_when(cond == 0 ~ 'NoMoney',
+                          cond == 1 ~ 'Money',
+                          cond == 2 ~ 'BigMoney')) %>% 
+  group_by(Country, cond) %>% 
+  summarize(reporting_rate = mean(response)) %>% 
+  ggplot() + 
+  geom_point(mapping = aes(x = cond, y = reporting_rate,
+                           color = Country)) + 
+  geom_line(mapping = aes(x = cond, y = reporting_rate,
+                          group = Country, color = Country)) + 
+  labs(x = '', y = 'Reporting Rate (%)') +
+  theme_classic()
+
+library(directlabels)
+
+# Harder version
+data %>% 
+  filter(Country %in% c('Poland', 'UK', 'USA'),
+         cond %in% 0:2) %>% 
+  mutate(Country = case_when(Country == 'UK' ~ 'United Kingdom',
+                             Country == 'USA' ~ 'United States',
+                             TRUE ~ Country),
+         cond = case_when(cond == 0 ~ 'NoMoney',
+                          cond == 1 ~ 'Money',
+                          cond == 2 ~ 'BigMoney')) %>% 
+  group_by(Country, cond) %>% 
+  summarize(reporting_rate = mean(response)) %>% 
+  mutate(cond = factor(cond, levels = c('NoMoney', 'Money', 'BigMoney'))) %>% 
+  ggplot() + 
+  geom_point(mapping = aes(x = cond, y = reporting_rate,
+                           color = Country)) + 
+  geom_line(mapping = aes(x = cond, y = reporting_rate,
+                          group = Country, color = Country)) + 
+  geom_dl(mapping = aes(x=cond, y=reporting_rate, label = Country),
+          method = list(dl.trans(x = x + 0.2), 'last.points', cex = 0.75)) +
+  scale_color_manual(values = c('#8b1b1e', '#f23524', '#f98f1c')) +
+  labs(x = '', y = 'Reporting Rate (%)') +
+  theme_classic() +
+  theme(legend.position = 'none')
+```
+
 # References
+

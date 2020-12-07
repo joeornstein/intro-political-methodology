@@ -68,7 +68,7 @@
 
 \begin{document}
 
-\title{Final Exam Practice}
+\title{POLS 7012 Final Exam}
 
 \author{%
 \name{YOUR NAME HERE}\address{University of Georgia}\email{\href{mailto:email@email.email}{email@email.email}}
@@ -93,8 +93,8 @@ In this paper, we will replicate the results from ``Civic Honesty Around
 the Globe'' (Cohn et al. 2019). Anything I call an ``extra challenge''
 is available for the intrepid among you, but is not required.
 
-To submit your final exam, knit this \texttt{.Rmd} to a PDF and post it
-to eLC.
+To submit your final exam, knit this \texttt{.Rmd} to a PDF and post the
+PDF to eLC.
 
 \hypertarget{data}{%
 \section{Data}\label{data}}
@@ -122,17 +122,17 @@ to perform the following steps:
 \begin{itemize}
 \tightlist
 \item
-  Keep only the \texttt{Money} and \texttt{NoMoney} conditions.
+  Keep only the Money and NoMoney conditions.
 \item
   Recode the \texttt{cond} variable as ``Money'' and ``NoMoney''.
 \item
-  Compute the average response rate, grouped by country and condition.
+  Compute the average reporting rate, grouped by country and condition.
 \item
-  Plot a scatter with reporting rate on the x-axis, country on the
-  y-axis, and colored by monetary condition.
+  Plot a scatter with average reporting rate on the x-axis, country on
+  the y-axis, and colored by monetary condition.
 \end{itemize}
 
-As an extra challenge, you can:
+As an extra challenge, you can do any combination of the following:
 
 \begin{itemize}
 \tightlist
@@ -148,6 +148,7 @@ As an extra challenge, you can:
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\CommentTok{# Here's the basic version}
 \NormalTok{fig1 <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{filter}\NormalTok{(cond }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{cond =} \KeywordTok{case_when}\NormalTok{(cond }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{~}\StringTok{ 'Money'}\NormalTok{, }
@@ -172,7 +173,7 @@ As an extra challenge, you can:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Here's the challenging one}
+\CommentTok{# Here's the challenging version}
 \NormalTok{fig1a <-}\StringTok{ }\NormalTok{data }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{filter}\NormalTok{(cond }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{cond =} \KeywordTok{case_when}\NormalTok{(cond }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{~}\StringTok{ 'Money'}\NormalTok{, }
@@ -186,8 +187,9 @@ As an extra challenge, you can:
 \StringTok{  }\KeywordTok{pivot_wider}\NormalTok{(}\DataTypeTok{names_from =}\NormalTok{ cond, }\DataTypeTok{values_from =}\NormalTok{ pct_reported) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\CommentTok{# reorder Country by the NoMoney reporting rate }
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Country =} \KeywordTok{fct_reorder}\NormalTok{(Country, NoMoney)) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\CommentTok{# compute label position, near minimum reporting rate}
-\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{label_position =} \KeywordTok{pmin}\NormalTok{(Money, NoMoney) }\OperatorTok{-}\StringTok{ }\KeywordTok{nchar}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(Country))}\OperatorTok{/}\FloatTok{3.5} \OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\CommentTok{# compute label position, left of the minimum reporting rate}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{label_position =} \KeywordTok{pmin}\NormalTok{(Money, NoMoney) }\OperatorTok{-}
+\StringTok{           }\KeywordTok{nchar}\NormalTok{(}\KeywordTok{as.character}\NormalTok{(Country))}\OperatorTok{/}\FloatTok{3.5} \OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\CommentTok{# begin ggplot}
 \StringTok{  }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_segment}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{Money, }\DataTypeTok{xend=}\NormalTok{NoMoney, }\DataTypeTok{y=}\NormalTok{Country, }\DataTypeTok{yend=}\NormalTok{Country),}
@@ -200,8 +202,6 @@ As an extra challenge, you can:
 \StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{axis.text.y =} \KeywordTok{element_blank}\NormalTok{(),}
         \DataTypeTok{axis.ticks.y =} \KeywordTok{element_blank}\NormalTok{(),}
         \DataTypeTok{axis.line.y =} \KeywordTok{element_blank}\NormalTok{())}
-  
-  
 
 \NormalTok{fig1a}
 \end{Highlighting}
@@ -209,6 +209,108 @@ As an extra challenge, you can:
 
 \begin{figure}[p]
 \includegraphics[width=1\linewidth]{Civic-Honesty-Replication_files/figure-latex/Figure 1-2} \caption{Share of wallets reported in the NoMoney and Money conditions, by country.}\label{fig:Figure 1-2}
+\end{figure}
+
+\hypertarget{replicating-figure-2}{%
+\subsection{Replicating Figure 2}\label{replicating-figure-2}}
+
+Now replicate Figure 2. To do so, we need to perform the following
+steps:
+
+\begin{itemize}
+\tightlist
+\item
+  Keep only the data from Poland, the United Kingdom, and the United
+  States
+\item
+  Keep only the NoMoney, Money, and BigMoney conditions
+\item
+  Recode the \texttt{cond} variable as ``NoMoney'', ``Money'' and
+  ``BigMoney''
+\item
+  Compute the average response rate, grouped by country and condition.
+\item
+  Plot a scatter with condition on the x-axis, reporting rate on the
+  y-axis, and colored by country.
+\item
+  Add a \texttt{geom\_line()} layer with the same aesthetics (also
+  include \texttt{group\ =\ Country} as an aesthetic).
+\end{itemize}
+
+As an extra challenge, you can do any combination of the following:
+
+\begin{itemize}
+\tightlist
+\item
+  Use original colors from the paper
+\item
+  Use the ggplot theme that best matches the theme from the paper
+\item
+  Reorder the \texttt{cond} variable so it appears in the same order as
+  the original Figure 2
+\item
+  Include country labels as in the paper with \texttt{geom\_dl()} from
+  the \texttt{directlabels} package, and remove the legend
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Basic version}
+\NormalTok{data }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Country }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Poland'}\NormalTok{, }\StringTok{'UK'}\NormalTok{, }\StringTok{'USA'}\NormalTok{),}
+\NormalTok{         cond }\OperatorTok{%in%}\StringTok{ }\DecValTok{0}\OperatorTok{:}\DecValTok{2}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{cond =} \KeywordTok{case_when}\NormalTok{(cond }\OperatorTok{==}\StringTok{ }\DecValTok{0} \OperatorTok{~}\StringTok{ 'NoMoney'}\NormalTok{,}
+\NormalTok{                          cond }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{~}\StringTok{ 'Money'}\NormalTok{,}
+\NormalTok{                          cond }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{~}\StringTok{ 'BigMoney'}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Country, cond) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{reporting_rate =} \KeywordTok{mean}\NormalTok{(response)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ cond, }\DataTypeTok{y =}\NormalTok{ reporting_rate,}
+                           \DataTypeTok{color =}\NormalTok{ Country)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ cond, }\DataTypeTok{y =}\NormalTok{ reporting_rate,}
+                          \DataTypeTok{group =}\NormalTok{ Country, }\DataTypeTok{color =}\NormalTok{ Country)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{''}\NormalTok{, }\DataTypeTok{y =} \StringTok{'Reporting Rate (%)'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_classic}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[p]
+\includegraphics[width=1\linewidth]{Civic-Honesty-Replication_files/figure-latex/Figure 2-1} \caption{Reporting rates as a function of monetary stakes}\label{fig:Figure 2-1}
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(directlabels)}
+
+\CommentTok{# Harder version}
+\NormalTok{data }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{filter}\NormalTok{(Country }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{'Poland'}\NormalTok{, }\StringTok{'UK'}\NormalTok{, }\StringTok{'USA'}\NormalTok{),}
+\NormalTok{         cond }\OperatorTok{%in%}\StringTok{ }\DecValTok{0}\OperatorTok{:}\DecValTok{2}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Country =} \KeywordTok{case_when}\NormalTok{(Country }\OperatorTok{==}\StringTok{ 'UK'} \OperatorTok{~}\StringTok{ 'United Kingdom'}\NormalTok{,}
+\NormalTok{                             Country }\OperatorTok{==}\StringTok{ 'USA'} \OperatorTok{~}\StringTok{ 'United States'}\NormalTok{,}
+                             \OtherTok{TRUE} \OperatorTok{~}\StringTok{ }\NormalTok{Country),}
+         \DataTypeTok{cond =} \KeywordTok{case_when}\NormalTok{(cond }\OperatorTok{==}\StringTok{ }\DecValTok{0} \OperatorTok{~}\StringTok{ 'NoMoney'}\NormalTok{,}
+\NormalTok{                          cond }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{~}\StringTok{ 'Money'}\NormalTok{,}
+\NormalTok{                          cond }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{~}\StringTok{ 'BigMoney'}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Country, cond) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{reporting_rate =} \KeywordTok{mean}\NormalTok{(response)) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{cond =} \KeywordTok{factor}\NormalTok{(cond, }\DataTypeTok{levels =} \KeywordTok{c}\NormalTok{(}\StringTok{'NoMoney'}\NormalTok{, }\StringTok{'Money'}\NormalTok{, }\StringTok{'BigMoney'}\NormalTok{))) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ cond, }\DataTypeTok{y =}\NormalTok{ reporting_rate,}
+                           \DataTypeTok{color =}\NormalTok{ Country)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ cond, }\DataTypeTok{y =}\NormalTok{ reporting_rate,}
+                          \DataTypeTok{group =}\NormalTok{ Country, }\DataTypeTok{color =}\NormalTok{ Country)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_dl}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{cond, }\DataTypeTok{y=}\NormalTok{reporting_rate, }\DataTypeTok{label =}\NormalTok{ Country),}
+          \DataTypeTok{method =} \KeywordTok{list}\NormalTok{(}\KeywordTok{dl.trans}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x }\OperatorTok{+}\StringTok{ }\FloatTok{0.2}\NormalTok{), }\StringTok{'last.points'}\NormalTok{, }\DataTypeTok{cex =} \FloatTok{0.75}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{scale_color_manual}\NormalTok{(}\DataTypeTok{values =} \KeywordTok{c}\NormalTok{(}\StringTok{'#8b1b1e'}\NormalTok{, }\StringTok{'#f23524'}\NormalTok{, }\StringTok{'#f98f1c'}\NormalTok{)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{''}\NormalTok{, }\DataTypeTok{y =} \StringTok{'Reporting Rate (%)'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_classic}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme}\NormalTok{(}\DataTypeTok{legend.position =} \StringTok{'none'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[p]
+\includegraphics[width=1\linewidth]{Civic-Honesty-Replication_files/figure-latex/Figure 2-2} \caption{Reporting rates as a function of monetary stakes}\label{fig:Figure 2-2}
 \end{figure}
 
 \hypertarget{references}{%
