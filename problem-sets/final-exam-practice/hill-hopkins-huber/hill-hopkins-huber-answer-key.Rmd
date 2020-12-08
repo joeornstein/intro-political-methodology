@@ -1,5 +1,5 @@
 ---
-title: POLS 7012 Final Exam Practice
+title: POLS 7012 Final Exam Practice (Answer Key)
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 authors:
   - name: YOUR NAME HERE
@@ -37,7 +37,8 @@ library(tidyverse)
 The precinct-level data is a Stata file called "PrecinctData.dta". I downloaded it [here](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/J5GCZQ). Start by reading the data file into memory. Consult the codebook for variable definitions.
 
 ```{r load data}
-
+library(readstata13)
+data <- read.dta13('data/PrecinctData.dta')
 ```
 
 # Results
@@ -54,13 +55,69 @@ Figure 1 plots the relationship between changes in Hispanic population and chang
 \noindent For an extra challenge, you can complete any combination of the following:
 
 - Before creating each subplot, filter the data so that it only includes only the interior 5% to 95% quantiles of the x variable. (They mention this step in a footnote on page 4. Sneaky sneaky.) The `quantile()` function is useful here.
-- Draw a random sample of 2,000 precincts for the scatter plot, like in the original figure (but keep the LOESS fit for the full dataset).
+- Draw a random sample of 2,000 precincts for the scatter plot, like in the original figure (but the keep the LOESS fit for the full dataset).
 - Make the points semi-transparent
 
 ```{r create plots}
 # here are some placeholders
 p1 <- ggplot(mtcars) + geom_point(aes(x=mpg, y=disp))
 p2 <- p3 <- p4 <- p1
+
+p1 <- ggplot(mapping = aes(x=d1611_hispanic, y=gop_propvote_change)) + 
+  geom_point(data = data %>%
+               filter(d1611_hispanic > quantile(d1611_hispanic, 0.05, na.rm = TRUE),
+                      d1611_hispanic < quantile(d1611_hispanic, 0.95, na.rm = TRUE)) %>% 
+               sample_n(2000),
+             alpha = 0.2) +
+  geom_smooth(data = data %>%
+               filter(d1611_hispanic > quantile(d1611_hispanic, 0.05, na.rm = TRUE),
+                      d1611_hispanic < quantile(d1611_hispanic, 0.95, na.rm = TRUE)),
+              color = 3, se = FALSE) +
+  theme_minimal() +
+  labs(x = 'Change in population share Hispanic, 2011 to 2016',
+       y = 'Change in GOP share, 2012 to 2016')
+
+p2 <- ggplot(mapping = aes(x=d1600_hispanic, y=gop_propvote_change)) + 
+  geom_point(data = data %>%
+               filter(d1600_hispanic > quantile(d1600_hispanic, 0.05, na.rm = TRUE),
+                      d1600_hispanic < quantile(d1600_hispanic, 0.95, na.rm = TRUE)) %>% 
+               sample_n(2000),
+             alpha = 0.2) +
+  geom_smooth(data = data %>%
+               filter(d1600_hispanic > quantile(d1600_hispanic, 0.05, na.rm = TRUE),
+                      d1600_hispanic < quantile(d1600_hispanic, 0.95, na.rm = TRUE)),
+              color = 3, se = FALSE) +
+  theme_minimal() +
+  labs(x = 'Change in population share Hispanic, 2000 to 2016',
+       y = 'Change in GOP share, 2012 to 2016')
+
+p3 <- ggplot(mapping = aes(x=dprop1611_hispanic_notopcode, y=gop_propvote_change)) + 
+  geom_point(data = data %>%
+               filter(dprop1611_hispanic_notopcode > quantile(dprop1611_hispanic_notopcode, 0.05, na.rm = TRUE),
+                      dprop1611_hispanic_notopcode < quantile(dprop1611_hispanic_notopcode, 0.95, na.rm = TRUE)) %>% 
+               sample_n(2000),
+             alpha = 0.2) +
+  geom_smooth(data = data %>%
+               filter(dprop1611_hispanic_notopcode > quantile(dprop1611_hispanic_notopcode, 0.05, na.rm = TRUE),
+                      dprop1611_hispanic_notopcode < quantile(dprop1611_hispanic_notopcode, 0.95, na.rm = TRUE)),
+              color = 3, se = FALSE) +
+  theme_minimal() +
+  labs(x = 'Proportional change in population Hispanic, 2011 to 2016',
+       y = 'Change in GOP share, 2012 to 2016')
+
+p4 <- ggplot(mapping = aes(x=dprop1600_hispanic_notopcode, y=gop_propvote_change)) + 
+  geom_point(data = data %>%
+               filter(dprop1600_hispanic_notopcode > quantile(dprop1600_hispanic_notopcode, 0.05, na.rm = TRUE),
+                      dprop1600_hispanic_notopcode < quantile(dprop1600_hispanic_notopcode, 0.95, na.rm = TRUE)) %>% 
+               sample_n(2000),
+             alpha = 0.2) +
+  geom_smooth(data = data %>%
+               filter(dprop1600_hispanic_notopcode > quantile(dprop1600_hispanic_notopcode, 0.05, na.rm = TRUE),
+                      dprop1600_hispanic_notopcode < quantile(dprop1600_hispanic_notopcode, 0.95, na.rm = TRUE)),
+              color = 3, se = FALSE) +
+  theme_minimal() +
+  labs(x = 'Proportional change in population Hispanic, 2000 to 2016',
+       y = 'Change in GOP share, 2012 to 2016')
 ```
 
 The `patchwork` library helps stitch together a bunch of ggplots into a grid, like in the original paper.^[I previously showed you `cowplot`. That would work too, but I wanted to try something new here.] If you created `p1`, `p2`, `p3`, and `p4` correctly, the included code chunk will recreate Figure 1.
@@ -78,7 +135,7 @@ library(patchwork)
 
 In Table 1, the authors estimate a series of eight linear models to test whether the relationships from Figure 1 remain after conditioning on potential confounders. In each model, change in Hispanic share is negatively associated with change in Republican vote share from 2012 to 2016. We'll replicate the first three columns of that table. To do so, take the following steps:
 
-- The first model, `lm1`, is a linear model with the change in GOP vote share as the outcome variable and change in the share of Hispanic population between 2011 and 2016 as the explanatory variable.
+- The first model, `lm1`, is a linear model with the change in GOP vote share as the outcome variable and change in the share of Hispanic population between 2011 and 2016 as the explanatory variable. I've taken the liberty of specifying that model in the code chunk below.
 - The second model, `lm2`, includes "County Fixed Effects". This just means including a indicator (dummy) variable for each county. Recode `countyid` as a character or factor and include it in the model. 
 - `lm2` also includes a set of "Additional Census Controls" and "Controls For Levels". The full list of variables is on page 4; cross-reference the codebook for variable names.
 - The third model, `lm3`, includes all the covariates as `lm2`, plus a set of indicator variables measuring the Republican 2012 vote share decile.
@@ -86,8 +143,28 @@ In Table 1, the authors estimate a series of eight linear models to test whether
 - Don't worry if your standard errors don't exactly match up. You'll learn more about "robust" standard errors next semester.
 
 ```{r estimate the linear models}
-# Just some placeholder models. Replace them with the real models.
-lm1 <- lm2 <- lm3 <- lm(hp ~ wt, weights = mpg, data = mtcars)
+lm1 <- lm(gop_propvote_change ~ d1611_hispanic, 
+          weights = weight, data = data)
+
+lm2 <- lm3 <- lm1
+
+lm2 <- lm(gop_propvote_change ~ d1611_hispanic + l11_hispanic +
+            d1611_poor + d1611_unemp + d1611_mfg + d1611_rent +
+            d1611_rent_income + d1611_housing_150 + d1611_pop +
+            l11_poor + l11_unemp + l11_mfg + l11_rent + 
+            l11_rent_income + l11_housing_150 + l11_density +
+            l11_black + l11_educba + factor(countyid),
+          weights = weight, data = data)
+
+lm3 <- lm(gop_propvote_change ~ d1611_hispanic + l11_hispanic +
+            d1611_poor + d1611_unemp + d1611_mfg + d1611_rent +
+            d1611_rent_income + d1611_housing_150 + d1611_pop +
+            l11_poor + l11_unemp + l11_mfg + l11_rent + 
+            l11_rent_income + l11_housing_150 + l11_density +
+            l11_black + l11_educba + factor(countyid) +
+            rv12d_2 + rv12d_3 + rv12d_4 + rv12d_5 + rv12d_6 +
+            rv12d_7 + rv12d_8 + rv12d_9 + rv12d_10,
+          weights = weight, data = data)
 ```
 
 The following code chunk uses the `stargazer` package to output a pretty regression table like the one in Table 1. I provide it to you free of charge. All you need to do is make sure that the model objects `lm1` through `lm3` are correctly specified. For an extra challenge, you can do any combination of the following:

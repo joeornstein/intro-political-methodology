@@ -159,7 +159,7 @@
     \vskip 2em%
         \@abstract%
     \vskip0em%
-        \noindent\@keywords
+%        \noindent\@keywords
   \par}
   \vskip 1.5em}
 \fi
