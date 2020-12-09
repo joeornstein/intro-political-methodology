@@ -658,11 +658,11 @@ df %>%
 
 class: center, middle
 
-# Week 9-10: Matrix Algebra & Linear Models
+## Week 9-10: Matrix Algebra & Linear Models
 
 ---
 
-# Week 9-10: Matrix Algebra & Linear Models
+## Week 9-10: Matrix Algebra & Linear Models
 
 By fitting a **linear model** to our data, we can represent the relationships between multiple variables simultaneously. 
 
@@ -676,7 +676,7 @@ $$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatri
 
 ---
 
-# Week 9-10: Matrix Algebra & Linear Models
+## Week 9-10: Matrix Algebra & Linear Models
 
 But to solve that system of equations, we needed to learn **matrix algebra**.
 
@@ -698,7 +698,7 @@ $$AB = \begin{bmatrix} 1 & 2 \\ \color{red} 2 & \color{red} 3 \end{bmatrix} \beg
 
 ---
 
-# Week 9-10: Matrix Algebra & Linear Models
+## Week 9-10: Matrix Algebra & Linear Models
 
 But to solve that system of equations, we needed to learn **matrix algebra**.
 
@@ -714,7 +714,7 @@ $$A' = \begin{bmatrix} 4 & 1 & 3 \\ 1 & 2 & 3 \end{bmatrix}$$
 
 ---
 
-# Week 9-10: Matrix Algebra & Linear Models
+## Week 9-10: Matrix Algebra & Linear Models
 
 But to solve that system of equations, we needed to learn **matrix algebra**.
 
@@ -732,7 +732,7 @@ solve(A)
 
 ---
 
-# Week 9-10: Matrix Algebra & Linear Models
+## Week 9-10: Matrix Algebra & Linear Models
 
 Now this problem...
 
@@ -744,7 +744,7 @@ $$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatri
 
 ---
 
-# Week 9-10: Matrix Algebra & Linear Models
+## Week 9-10: Matrix Algebra & Linear Models
 
 And when we *minimized* the sum of squared errors (using calculus!), we got this beautiful baby:
 
@@ -760,7 +760,7 @@ lm1 <- lm(mpg ~ hp + wt, data = mtcars)
 
 ---
 
-# Week 9-10: Matrix Algebra & Linear Models
+## Week 9-10: Matrix Algebra & Linear Models
 
 ```{r plotly, echo = FALSE, out.height='80%'}
 library(plotly)
@@ -879,4 +879,4 @@ knitr::include_graphics('img/rd21.png')
 
 class: center, middle
 
-![](img/adventuretime.png)
+![](img/adventuretime.gif)
