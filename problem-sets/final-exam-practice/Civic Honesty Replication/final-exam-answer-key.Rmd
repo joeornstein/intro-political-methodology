@@ -1,5 +1,5 @@
 ---
-title: POLS 7012 Final Exam
+title: POLS 7012 Final Exam (Answer Key)
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 authors:
   - name: YOUR NAME HERE
@@ -25,14 +25,14 @@ library(tidyverse)
 
 # Introduction
 
-In this paper, we will replicate the results from "Civic Honesty Around the Globe" [@cohnCivicHonestyGlobe2019]. In that paper, the research team drops literally thousands of wallets in cities across the globe to see how many of them get returned. They find, interestingly, that wallets with money in them are *more* likely to be returned than wallets without money, which is all very nice and pleasant.
+In this paper, we will replicate the results from "Civic Honesty Around the Globe" [@cohnCivicHonestyGlobe2019]. In that paper, the research team dropped literally thousands of wallets in cities across the globe to see how many of them get returned. They find, interestingly, that wallets with money in them are *more* likely to be returned than wallets without money, which is all very nice and pleasant.
 
-Before you begin, skim over the paper and its Supplementary Materials, included in the `papers/` folder. To replicate the findings, follow the instructions in each section below, writing your code in the chunks provided. Anything I call an "extra challenge" is available to you if you'd like to give it a try, but is not required. To submit your final exam, knit this `.Rmd` to a PDF and post that PDF to eLC.
+Before you begin, skim over the paper and its Supplementary Materials, included in the `papers/` folder. To replicate the findings, follow the instructions in each section below, writing your code in the chunks provided. Anything I call an "extra challenge" is available to you if you'd like to give it a try, but is not required. To submit your final exam, knit this `.Rmd` to a PDF and post both files (`.Rmd` and PDF) to eLC.
 
 
 # Data
 
-Replication files are available [here](https://dataverse.harvard.edu/dataverse/honesty), and I have taken the liberty of downloading them into the `data/` folder. The dataset we'll need for this replication is called the behavioral data. Let's start by loading it.
+Replication files are available [here](https://dataverse.harvard.edu/dataverse/honesty), and I have taken the liberty of downloading them into the `data/` folder. The dataset we'll need for this replication is called the behavioral data. Let's start by loading it. Consult the codebook for variable definitions.
 
 ```{r load data}
 data <- read_csv('data/behavioral data (csv file).csv')

@@ -68,7 +68,7 @@
 
 \begin{document}
 
-\title{POLS 7012 Final Exam}
+\title{POLS 7012 Final Exam (Answer Key)}
 
 \author{%
 \name{YOUR NAME HERE}\address{University of Georgia}\email{\href{mailto:email@email.email}{email@email.email}}
@@ -78,7 +78,7 @@
 
 \abstract{}
 
-\date{December 07, 2020}
+\date{December 09, 2020}
 
 \keywords{}
 
@@ -90,7 +90,7 @@
 \section{Introduction}\label{introduction}}
 
 In this paper, we will replicate the results from ``Civic Honesty Around
-the Globe'' (Cohn et al. 2019). In that paper, the research team drops
+the Globe'' (Cohn et al. 2019). In that paper, the research team dropped
 literally thousands of wallets in cities across the globe to see how
 many of them get returned. They find, interestingly, that wallets with
 money in them are \emph{more} likely to be returned than wallets without
@@ -101,7 +101,8 @@ included in the \texttt{papers/} folder. To replicate the findings,
 follow the instructions in each section below, writing your code in the
 chunks provided. Anything I call an ``extra challenge'' is available to
 you if you'd like to give it a try, but is not required. To submit your
-final exam, knit this \texttt{.Rmd} to a PDF and post that PDF to eLC.
+final exam, knit this \texttt{.Rmd} to a PDF and post both files
+(\texttt{.Rmd} and PDF) to eLC.
 
 \hypertarget{data}{%
 \section{Data}\label{data}}
@@ -181,7 +182,7 @@ following:
 \end{Shaded}
 
 \begin{figure}[p]
-\includegraphics[width=1\linewidth]{Civic-Honesty-Replication_files/figure-latex/Figure 1-1} \caption{Share of wallets reported in the NoMoney and Money conditions, by country.}\label{fig:Figure 1-1}
+\includegraphics[width=1\linewidth]{final-exam-answer-key_files/figure-latex/Figure 1-1} \caption{Share of wallets reported in the NoMoney and Money conditions, by country.}\label{fig:Figure 1-1}
 \end{figure}
 
 \begin{Shaded}
@@ -221,7 +222,7 @@ following:
 \end{Shaded}
 
 \begin{figure}[p]
-\includegraphics[width=1\linewidth]{Civic-Honesty-Replication_files/figure-latex/Figure 1-2} \caption{Share of wallets reported in the NoMoney and Money conditions, by country.}\label{fig:Figure 1-2}
+\includegraphics[width=1\linewidth]{final-exam-answer-key_files/figure-latex/Figure 1-2} \caption{Share of wallets reported in the NoMoney and Money conditions, by country.}\label{fig:Figure 1-2}
 \end{figure}
 
 \hypertarget{replicating-figure-2}{%
@@ -288,7 +289,7 @@ following:
 \end{Shaded}
 
 \begin{figure}[p]
-\includegraphics[width=1\linewidth]{Civic-Honesty-Replication_files/figure-latex/Figure 2-1} \caption{Reporting rates as a function of monetary stakes}\label{fig:Figure 2-1}
+\includegraphics[width=1\linewidth]{final-exam-answer-key_files/figure-latex/Figure 2-1} \caption{Reporting rates as a function of monetary stakes}\label{fig:Figure 2-1}
 \end{figure}
 
 \begin{Shaded}
@@ -323,7 +324,7 @@ following:
 \end{Shaded}
 
 \begin{figure}[p]
-\includegraphics[width=1\linewidth]{Civic-Honesty-Replication_files/figure-latex/Figure 2-2} \caption{Reporting rates as a function of monetary stakes}\label{fig:Figure 2-2}
+\includegraphics[width=1\linewidth]{final-exam-answer-key_files/figure-latex/Figure 2-2} \caption{Reporting rates as a function of monetary stakes}\label{fig:Figure 2-2}
 \end{figure}
 
 \hypertarget{the-effect-of-money}{%
@@ -379,9 +380,10 @@ hypothesis test.
 \hypertarget{replicating-table-s8}{%
 \subsubsection{Replicating Table S8}\label{replicating-table-s8}}
 
-In the Supplementary Materials, the authors extend that bivariate
-hypothesis test by estimating two linear models that include other
-subject characterstics as covariates. To replicate that table, we must:
+In the Supplementary Materials, the authors extend the bivariate
+hypothesis test we just did by estimating two linear models that include
+other subject characterstics as covariates. To replicate that finding,
+we must:
 
 \begin{itemize}
 \tightlist
@@ -426,10 +428,9 @@ subject characterstics as covariates. To replicate that table, we must:
 \end{Highlighting}
 \end{Shaded}
 
-The following code chunk outputs a pretty table like the one in Table S8
-in the original paper's Supplementary Materials. I provide it to you
-free of charge. All you need to do is make sure that \texttt{lm1} and
-\texttt{lm2} are correctly specified.
+The following code chunk outputs a pretty table like the one in Table
+S8. I provide it to you free of charge. All you need to do is make sure
+that \texttt{lm1} and \texttt{lm2} are correctly specified.
 
 \begin{table}[!htbp] \centering 
   \caption{Reporting rates in the Money and NoMoney condition} 

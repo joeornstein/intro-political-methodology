@@ -1,0 +1,147 @@
+---
+title: POLS 7012 Final Exam
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+authors:
+  - name: YOUR NAME HERE
+    email: email@email.email
+    address: University of Georgia
+  - name: Joseph T. Ornstein
+    email: jornstein@uga.edu
+    address: University of Georgia
+
+bibliography: refs.bib
+output: rticles::oup_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE) # hide the code, warnings, and errors
+knitr::opts_chunk$set(fig.pos = 'p') # Places figures on pages separate from text
+knitr::opts_chunk$set(out.width = '100%', dpi=300) # Figure resolution and size
+knitr::opts_chunk$set(fig.env="figure") # Latex figure environment
+
+# include packages here!
+library(tidyverse)
+```
+
+# Introduction
+
+In this paper, we will replicate the results from "Civic Honesty Around the Globe" [@cohnCivicHonestyGlobe2019]. In that paper, the research team dropped literally thousands of wallets in cities across the globe to see how many of them get returned. They find, interestingly, that wallets with money in them are *more* likely to be returned than wallets without money, which is all very nice and pleasant.
+
+Before you begin, skim over the paper and its Supplementary Materials, included in the `papers/` folder. To replicate the findings, follow the instructions in each section below, writing your code in the chunks provided. Anything I call an "extra challenge" is available to you if you'd like to give it a try, but is not required. To submit your final exam, knit this `.Rmd` to a PDF and post both files (`.Rmd` and PDF) to eLC.
+
+
+# Data
+
+Replication files are available [here](https://dataverse.harvard.edu/dataverse/honesty), and I have taken the liberty of downloading them into the `data/` folder. The dataset we'll need for this replication is called the behavioral data. Let's start by loading it.
+
+```{r load data}
+
+```
+
+
+# Results
+
+
+## Replicating Figure 1
+
+Our first task is to replicate the left-hand side of Figure 1. To do so, we need to perform the following steps:
+
+- Keep only the observations in the Money and NoMoney conditions.
+- Recode the `cond` variable as "Money" and "NoMoney".
+- Compute the average reporting rate, grouped by country and condition.
+- Build a scatter plot with average reporting rate on the x-axis, country on the y-axis, and colored by monetary condition.  
+
+\noindent As an extra challenge, you can do any combination of the following:
+
+- Rearrange the y-axis so that the countries with the lowest reporting rate appear at the bottom and those with the highest reporting rate appear at the top.
+- Include line segments between points as in the original figure
+- Use the colors from the original figure
+- Use `geom_text()` to add floating labels for each country like in the original figure. This is an extra, *extra* challenge, but man is it satisfying when you get it right!
+
+```{r Figure 1, fig.cap='Share of wallets reported in the NoMoney and Money conditions, by country.'}
+
+```
+
+
+## Replicating Figure 2
+
+Now replicate Figure 2. To do so, we need to perform the following steps:
+
+- Keep only the data from Poland, the United Kingdom, and the United States
+- Keep only the NoMoney, Money, and BigMoney conditions
+- Recode the `cond` variable as "NoMoney", "Money" and "BigMoney"
+- Compute the average response rate, grouped by country and condition.
+- Plot a scatter with condition on the x-axis, reporting rate on the y-axis, and colored by country.
+- Add a `geom_line()` layer with the same aesthetics (also include `group = Country` as an aesthetic).
+
+\noindent As an extra challenge, you can do any combination of the following:
+
+- Use original colors from the paper
+- Use the ggplot theme that best matches the theme from the paper
+- Reorder the `cond` variable so it appears in the same order as the original Figure 2
+- Include country labels as in the paper with `geom_dl()` from the `directlabels` package, and remove the legend
+
+
+```{r Figure 2, fig.cap='Reporting rates as a function of monetary stakes'}
+
+```
+## The Effect of Money
+
+In paragraph 3 of page 2, the authors claim that citizens are "overwhelmingly more likely to report lost wallets containing money than those without". Let's replicate that finding. To do so, we must:
+
+- Keep the observations in the Money and NoMoney conditions
+- Compute the percent of subjects that reported wallets without money. Save that value, rounded to the nearest percent, as the object `no_money_reporting_rate`.
+- Compute the percent of subjects that reported wallets with money. Save that value, rounded to the nearest percent, as the object `money_reporting_rate`.
+
+```{r difference in means, echo = FALSE}
+money_reporting_rate <- 0
+no_money_reporting_rate <- 0
+```
+
+On average, adding money to the wallet increased the likelihood of being reported from `r no_money_reporting_rate`% in the NoMoney condition to `r money_reporting_rate`% in the Money condition.
+
+Next, conduct a hypothesis test to determine the strength of that result. Our null hypothesis is that there is no difference in reporting rates between the Money and NoMoney groups. Note that the explanatory variable (money or no money) and outcome variable (report or not report) are both categorical. Report the p-value associated with your null hypothesis test.
+
+```{r hypothesis test}
+
+```
+
+### Replicating Table S8
+
+In the Supplementary Materials, the authors extend the bivariate hypothesis test we just did by estimating two linear models that include other subject characterstics as covariates. To replicate that finding, we must:
+
+- Create a variable called `Money`, equal to 1 if the subject's wallet contained money and 0 otherwise.
+- Create a variable called `BigMoney`, equal to 1 if the subject's wallet contained **lots** of money and 0 otherwise.
+- Create a variable called `MoneyNoKey`, equal to 1 if they subject's wallet contained money but no key and 0 otherwise.
+- To include "Institution and City Fixed Effects", make sure that the city and type of institution are coded as characters or factors.
+- Estimate your first model, `lm1`, including the treatment variables you created plus the institution and city fixed effects.
+- In the second model `lm2`, add the binary variables mentioned in the notes of Table S8.
+- Don't worry if your standard errors don't exactly match up. You'll learn more about "robust" standard errors next semester.
+
+```{r estimate models}
+lm1 <- lm(mpg ~ wt, data = mtcars)
+lm2 <- lm(mpg ~ hp, data = mtcars)
+
+```
+
+The following code chunk outputs a pretty table like the one in Table S8. I provide it to you free of charge. All you need to do is make sure that `lm1` and `lm2` are correctly specified.
+
+```{r table S8, echo = FALSE, results = 'asis'}
+library(stargazer)
+stargazer(lm1,lm2,
+          title = 'Reporting rates in the Money and NoMoney condition',
+          # omits the city, institution, and treatment dummy variables
+          omit = c('city', 'institution', 'BigMoney', 'MoneyNoKey'), 
+          omit.stat = c('rsq', 'f', 'ser'), # omits a few summary statistics
+          star.cutoffs = c(0.05, 0.01, 0.001), # put one star next to p < 0.05, two stars next to p < 0.01
+          header = FALSE,
+          dep.var.labels.include = FALSE,
+          dep.var.caption = "")
+```
+
+# Conclusion
+
+Hey people are more likely to try to return wallets they find if they have money in them. Isn't that nice?
+
+# References
+
