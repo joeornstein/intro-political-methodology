@@ -1,0 +1,16 @@
+
+# get the city variable
+city <- data$city
+
+# code city as a character
+city <- as.character(city)
+
+# estimate linear model
+lm1 <- lm(y ~ x + city, data = data)
+
+summary(lm1)
+
+(OR SOME VARIATION)
+
+Why is this happening?
+A. 

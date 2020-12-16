@@ -64,6 +64,32 @@
 
 % Part for indenting CSL refs
 % Pandoc citation processing
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+% for Pandoc 2.8 to 2.10.1
+\newenvironment{cslreferences}%
+  {}%
+  {\par}
+% For Pandoc 2.11+
+\newenvironment{CSLReferences}[3] % #1 hanging-ident, #2 entry sp
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set line spacing
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#3\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc} % for \widthof, \maxof
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\maxof{\widthof{#1}}{\csllabelwidth}}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth}{#1}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 % Pandoc header
 
 \begin{document}
@@ -71,14 +97,16 @@
 \title{POLS 7012 Final Exam}
 
 \author{%
-\name{YOUR NAME HERE}\address{University of Georgia}\email{\href{mailto:email@email.email}{email@email.email}}
+\name{YOUR NAME HERE}\address{University of
+Georgia}\email{\href{mailto:email@email.email}{email@email.email}}
 \and
-\name{Joseph T. Ornstein}\address{University of Georgia}\email{\href{mailto:jornstein@uga.edu}{jornstein@uga.edu}}
+\name{Joseph T. Ornstein}\address{University of
+Georgia}\email{\href{mailto:jornstein@uga.edu}{jornstein@uga.edu}}
 }
 
 \abstract{}
 
-\date{December 09, 2020}
+\date{December 15, 2020}
 
 \keywords{}
 
@@ -127,7 +155,7 @@ we need to perform the following steps:
 \item
   Keep only the observations in the Money and NoMoney conditions.
 \item
-  Recode the \texttt{cond} variable as ``Money'' and ``NoMoney''.
+  Recode the \texttt{cond} variable as ``Money'' and ``NoMoney.''
 \item
   Compute the average reporting rate, grouped by country and condition.
 \item
@@ -168,7 +196,7 @@ steps:
 \item
   Keep only the NoMoney, Money, and BigMoney conditions
 \item
-  Recode the \texttt{cond} variable as ``NoMoney'', ``Money'' and
+  Recode the \texttt{cond} variable as ``NoMoney,'' ``Money'' and
   ``BigMoney''
 \item
   Compute the average response rate, grouped by country and condition.
@@ -202,7 +230,7 @@ following:
 
 In paragraph 3 of page 2, the authors claim that citizens are
 ``overwhelmingly more likely to report lost wallets containing money
-than those without''. Let's replicate that finding. To do so, we must:
+than those without.'' Let's replicate that finding. To do so, we must:
 
 \begin{itemize}
 \tightlist
@@ -249,7 +277,7 @@ we must:
   Create a variable called \texttt{MoneyNoKey}, equal to 1 if they
   subject's wallet contained money but no key and 0 otherwise.
 \item
-  To include ``Institution and City Fixed Effects'', make sure that the
+  To include ``Institution and City Fixed Effects,'' make sure that the
   city and type of institution are coded as characters or factors.
 \item
   Estimate your first model, \texttt{lm1}, including the treatment
@@ -303,10 +331,13 @@ have money in them. Isn't that nice?
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
 \leavevmode\hypertarget{ref-cohnCivicHonestyGlobe2019}{}%
 Cohn, Alain, Michel André Maréchal, David Tannenbaum, and Christian
-Lukas Zünd. 2019. ``Civic Honesty Around the Globe.'' \emph{Science} 365
-(6448): 70--73. \url{https://doi.org/10.1126/science.aau8712}.
+Lukas Zünd. 2019. {``Civic Honesty Around the Globe.''} \emph{Science}
+365 (6448): 70--73. \url{https://doi.org/10.1126/science.aau8712}.
+
+\end{CSLReferences}
 
 
 

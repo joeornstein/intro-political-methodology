@@ -1,0 +1,9 @@
+In each GitHub repo folder, include a bunch of practice problems:
+ - Debugging problems (unfuck this code)
+ - Scaffolded problems (modify this code to make it do another thing)
+"The only way to get better is to practice a lot, fall flat on your face, and practice some more. Each year I add more practice problems to the library. I suggest completing these problems each week; feel free to ask others in the class for help, but *try* them first, put it away, come back fresh, etc."
+
+Slides on Common Mistakes and formative MCQ (the sort of things to include in debugging exercises)
+
+Add chain rule to calculus slides
+Anti-derivative practice slides (you've got an extra 25 minutes on that day)
