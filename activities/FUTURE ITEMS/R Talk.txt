@@ -1,0 +1,1 @@
+A segment in the class where students describe bugs, and we try to fix them.
