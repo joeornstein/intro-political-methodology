@@ -7,3 +7,18 @@ Slides on Common Mistakes and formative MCQ (the sort of things to include in de
 
 Add chain rule to calculus slides
 Anti-derivative practice slides (you've got an extra 25 minutes on that day)
+
+
+Intro Day slide on Grading Scheme
+A: Did the work and did it well.
+A-: Did the work and fell flat on your face a bunch.
+B+ and below: Gave up and stopped doing the work.
+In grad school, Feedback >>> Grades! You're trying to learn a skill, and I won't penalize you for failing. Because failing and adjusting is how we learn.
+
+What distinguishes high performers from average performers is *deliberate practice*:
+1. Structured activities designed to identify and improve weaknesses
+2. Rapid feedback
+
+When introducing probability, maybe dice? binom.test for confidence interval.
+Two key concepts: the **statistic** and the **sampling distribution**. How weird would it be to get a statistic of this size if...?
+What's the range of hypotheses such that this *wouldn't* be weird? That's a 95% confidence interval. 

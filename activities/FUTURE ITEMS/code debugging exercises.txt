@@ -1,0 +1,7 @@
+- No quotation marks around characters
+- Quotation marks around variables
+- Equals instead of double equals
+- Double equals instead of equals
+- Commas on the next line
+- Pipes on the next line
+POLS 7012 needs a class on "reading error messages". AKA "R Talk".

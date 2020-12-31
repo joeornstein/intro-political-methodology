@@ -225,9 +225,6 @@ In the Supplementary Materials, the authors extend the bivariate hypothesis test
 - Don't worry if your standard errors don't exactly match up. You'll learn more about "robust" standard errors next semester.
 
 ```{r estimate models}
-lm1 <- lm(response ~ male, data = data)
-lm2 <- lm(response ~ male, data = data)
-
 data <- data %>% 
   mutate(Money = if_else(cond == 1, 1, 0),
          BigMoney = if_else(cond == 2, 1, 0),
@@ -253,6 +250,26 @@ stargazer(lm1,lm2,
           header = FALSE,
           dep.var.labels.include = FALSE,
           dep.var.caption = "")
+```
+
+
+```{r matching}
+library(MatchIt)
+
+# filter out NAs and other conditions
+d <- data %>% 
+  filter(cond %in% 0:1,
+         !is.na(other_bystanders),
+         !is.na(computer))
+
+m <- matchit(Money ~ institution + city + male + above40 + 
+               computer + coworkers + other_bystanders,
+             data = d,
+             exact = ~ institution + city)
+
+matched_data <- get_matches(m, data = d, id = 'index')
+
+lm3 <- lm(response ~ Money, data = matched_data)
 ```
 
 # Conclusion

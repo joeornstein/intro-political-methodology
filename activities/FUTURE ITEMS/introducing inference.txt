@@ -1,0 +1,16 @@
+Motivate with sampling beans from a jar (voters from the population) instead of coin flipping.
+That way segueing to the *sampling distribution* becomes quite natural.
+
+Start with probability, then do inference?
+
+"You've got a jar with 10,000 beans: 55% red balls and 45% red balls."
+
+Let's sample from the jar. my_sample <- jar %>% sample_n(100).
+
+Create code to find the pct_blue from your sample. ()
+
+Give students a dataset to import, then have them each do sample. See what the variation looks like.
+
+If we conducted a bunch of polls, drawing random samples of 100 balls from the jar, what would the *sampling distribution* look like?
+
+Collect data, compute a statistic. How *unusual* would that statistic be if...?

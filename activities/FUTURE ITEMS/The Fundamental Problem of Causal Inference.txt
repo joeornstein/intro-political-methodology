@@ -1,0 +1,7 @@
+No amount of fancy statistical footwork gets you around the FUNDAMENTAL PROBLEM OF CAUSAL INFERENCE
+
+We believe that Y_i = f(X_i). Each observation not only has the *observed* outcomes, but also a bunch of *potential* outcomes depending on the value of X_i. We say that X causes Y if assigning i a different X would yield a different Y, on average. The Fundamental Problem of Causal Inference is that we can never observe all of an individual's potential outcomes. We only see one!
+
+So that's why we like datasets with more than one observation. We get to observe outcomes for units with different values of X and see if there's a relationship.
+
+But once we start comparing outcomes across observations, we confront a new problem: CONFOUNDING. To understand confounding, lets first learn about DAGs.
