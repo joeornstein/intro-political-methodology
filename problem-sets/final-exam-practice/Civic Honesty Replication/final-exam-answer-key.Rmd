@@ -253,6 +253,15 @@ stargazer(lm1,lm2,
 ```
 
 
+
+# Conclusion
+
+Hey people are more likely to try to return wallets they find if they have money in them. Isn't that nice?
+
+# Appendix
+
+Does the result hold with matching?
+
 ```{r matching}
 library(MatchIt)
 
@@ -272,9 +281,41 @@ matched_data <- get_matches(m, data = d, id = 'index')
 lm3 <- lm(response ~ Money, data = matched_data)
 ```
 
-# Conclusion
 
-Hey people are more likely to try to return wallets they find if they have money in them. Isn't that nice?
+How strongly does civic honesty correlate with GDP per capita?
+
+```{r gdp per capita}
+library(janitor)
+
+gdp <- read_csv('data/cleaned_WB.csv') %>% 
+  clean_names() %>% 
+  select(Country = country_name,
+         gdp_per_capita) %>% 
+  mutate(Country = case_when(Country == 'United States' ~ 'USA',
+                             Country == 'United Kingdom' ~ 'UK',
+                             Country == 'United Arab Emirates' ~ 'UAE',
+                             Country == 'Russian Federation' ~ 'Russia',
+                             TRUE ~ Country))
+  
+
+return_rates <- data %>% 
+  filter(cond == 1) %>% 
+  group_by(Country) %>% 
+  summarize(return_rate = mean(response)) %>% 
+  left_join(gdp, by = 'Country')
+
+ggplot(return_rates) + 
+  geom_text(mapping = aes(x=gdp_per_capita, y = return_rate,
+                          label = Country), size = 2) +
+  geom_smooth(mapping = aes(x=gdp_per_capita, y = return_rate),
+              method = 'lm') + 
+  scale_x_log10() + 
+  theme_bw() +
+  labs(x = 'GDP Per Capita', y = 'Wallet Return Rate')
+
+gdp_lm <- lm(return_rate ~ log2(gdp_per_capita), data = return_rates)
+summary(gdp_lm) # doubling gdp per capita on average yields a 14pp increase in return rates
+```
 
 # References
 

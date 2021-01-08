@@ -14,3 +14,10 @@ Give students a dataset to import, then have them each do sample. See what the v
 If we conducted a bunch of polls, drawing random samples of 100 balls from the jar, what would the *sampling distribution* look like?
 
 Collect data, compute a statistic. How *unusual* would that statistic be if...?
+
+The statistic we computed is from just one possible sample! The sampling distribution considers the universe of possible samples,
+to determine if what you observed could be the result of mere random chance.
+
+KEY:
+Every probability distribution is motivated by sampling.
+And then the next day is inference. Okay. I've taken away the population. All we have is the sample. What do we know?
