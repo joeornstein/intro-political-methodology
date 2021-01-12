@@ -1,1 +1,4 @@
 A segment in the class where students describe bugs, and we try to fix them.
+
+Every time you encounter an error, record it! Restart R. It will clean your memory, so you can be sure that the code in your script is the only code you run
+(Record script, the line of code that caused the error, and the error message)
