@@ -1,0 +1,3 @@
+give them PRE-TIDIED survey data. what's the matter with you?
+
+start with the fun stuff; they should know how to summarize a dataset day 1. then messy data to tidy data, like, day 3.

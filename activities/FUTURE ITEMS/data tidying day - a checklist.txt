@@ -1,0 +1,6 @@
+Import Data:
+- [] Look at it with View() or glimpse(); did something go wrong? (headers are missing, variables don't look right)
+- [] Make sure the data is *tidy*: each row is an observation (and the unit of observation is correct), each column is a variable
+     pivot_wider() or pivot_longer() if not.
+- [] Make sure each row has a unique identifier. If not create an `id` variable `mutate(id = 1:n())`
+- [] Where is there missing data? Is it supposed to be missing? If not, what went wrong? If yes, make sure it's coded NA and not some 999 nonsense.
