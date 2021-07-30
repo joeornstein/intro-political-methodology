@@ -1,0 +1,3 @@
+This course is best paired with POLS 7010: Research Methods in Political Science. In that class, you learn the philosophy of science
+and how to actually develop your research program. I teach you the tools; POLS 7010 teaches you how to *use them responsibly*. I'll
+try to include some of that here, of course, but sometimes I get too excited about `R` code and forget. Take both classes.
