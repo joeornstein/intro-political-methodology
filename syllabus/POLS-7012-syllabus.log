@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.11) (preloaded format=pdflatex 2020.12.15)  30 JUL 2021 08:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.11) (preloaded format=pdflatex 2020.12.15)  5 AUG 2021 15:57
 entering extended mode
 **./POLS-7012-syllabus.tex
 (POLS-7012-syllabus.tex
@@ -663,9 +663,9 @@ This may cause the page layout to be inconsistent, however.
 [1
 
 {C:/Users/jornstein/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map} <./img/e
-xistence_proof_2x.png>] [2] [3] 
+xistence_proof_2x.png>] [2] 
 AED: lastpage setting LastPage
-[4]
+[3]
 
 Package caption Warning: Unused \captionsetup[lstlisting] on input line 32.
 See the caption package documentation for explanation.
@@ -675,27 +675,26 @@ Package rerunfilecheck Info: File `POLS-7012-syllabus.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 10287 strings out of 479697
- 163584 string characters out of 2863296
- 480989 words of memory out of 3000000
- 27201 multiletter control sequences out of 15000+200000
- 409011 words of font info for 46 fonts, out of 3000000 for 9000
+ 10279 strings out of 479697
+ 163497 string characters out of 2863296
+ 481989 words of memory out of 3000000
+ 27200 multiletter control sequences out of 15000+200000
+ 408843 words of font info for 45 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 91i,11n,98p,638b,447s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 91i,11n,98p,638b,381s stack positions out of 5000i,500n,10000p,200000b,50000s
  <C:\Users\jornstein\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi
 600\tcrm1095.pk><C:/Users/jornstein/AppData/Local/Programs/MiKTeX 2.9/fonts/typ
 e1/public/amsfonts/cm/cmbx10.pfb><C:/Users/jornstein/AppData/Local/Programs/MiK
 TeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/jornstein/AppData/L
 ocal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Users/j
-ornstein/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmitt
-10.pfb><C:/Users/jornstein/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public
-/amsfonts/cm/cmr10.pfb><C:/Users/jornstein/AppData/Local/Programs/MiKTeX 2.9/fo
-nts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/jornstein/AppData/Local/Progra
-ms/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/jornstein/App
-Data/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on POLS-7012-syllabus.pdf (4 pages, 192978 bytes).
+ornstein/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10
+.pfb><C:/Users/jornstein/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmr12.pfb><C:/Users/jornstein/AppData/Local/Programs/MiKTeX 2.9/font
+s/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/jornstein/AppData/Local/Program
+s/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on POLS-7012-syllabus.pdf (3 pages, 187509 bytes).
 PDF statistics:
- 110 PDF objects out of 1000 (max. 8388607)
- 28 named destinations out of 1000 (max. 500000)
+ 99 PDF objects out of 1000 (max. 8388607)
+ 22 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
