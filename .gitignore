@@ -41,14 +41,16 @@ vignettes/*.pdf
 # dross folders
 _dross/
 _R/
+resources/
+
+# TeX intermediaries
+*.out
+*.gz
+*.aux
+*.log
 
 # selected data files
 data/students.csv
-
-
-# dross folder
-resources/
-.Rproj.user
 
 # subfolder with its own git
 problem-sets/rticles-demo/
