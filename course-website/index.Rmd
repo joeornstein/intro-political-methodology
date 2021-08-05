@@ -40,4 +40,4 @@ This semester, we'll be using a **social annotation** platform called [Hypothesi
 
 ![](img/hypothesis-tutorial/extension-setup.png)
 
-5.  Go to the [syllabus](syllabus/POLS-3230-syllabus.pdf) and add your questions/comments/memes. Whenever you annotate a reading, just make sure that you are posting to the Group instead of Public (see the dropdown menu at the top of the extension).
+5.  Go to the [syllabus](syllabus/POLS-7012-syllabus.pdf) and add your questions/comments/memes. Whenever you annotate a reading, just make sure that you are posting to the Group instead of Public (see the dropdown menu at the top of the extension).
