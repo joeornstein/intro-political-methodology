@@ -1,3 +1,0 @@
-Give them the whole POLS-7012 repository, and an opening bit explaining the file structure
- - and why you should use a structure like this for all of your projects
- - data/ folder, code/ folder, figs/, misc/, plus R project

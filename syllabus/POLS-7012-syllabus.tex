@@ -19,7 +19,7 @@
 \fancyhf{}
 \lhead{ \fancyplain{}{Introduction to Political Methodology} }
 %\chead{ \fancyplain{}{} }
-\rhead{ \fancyplain{}{Fall 2020} }%\today
+\rhead{ \fancyplain{}{Fall 2021} }%\today
 %\rfoot{\fancyplain{}{page \thepage\ of \pageref{LastPage}}}
 \fancyfoot[RO, LE] {page \thepage\ of \pageref{LastPage} }
 \thispagestyle{plain}
@@ -71,16 +71,16 @@ morekeywords={__global__, __device__},  % CUDA specific keywords
 {\Large \textsc{POLS 7012: Introduction to Political Methodology}}
 \end{center}
 \begin{center}
-{\large Fall 2020}
+{\large Fall 2021}
 \end{center}
 
 \begin{center}
 \rule{6.5in}{0.4pt}
 \begin{minipage}[t]{.96\textwidth}
 \begin{tabular}{llcccll}
-\textbf{Professor:} & Joe Ornstein & & &  & \textbf{Time:} & W 6:30 -- 9:15pm \\
-\textbf{Email:} &  \href{mailto:jornstein@uga.edu}{jornstein@uga.edu} & & & & \textbf{Place:} & 102 Baldwin Hall\\
-\textbf{Website:} & \href{https://uga.view.usg.edu/d2l/home/2058721}{https://uga.view.usg.edu/d2l/home/2058721} & & & & &
+\textbf{Professor:} & Joe Ornstein & & &  & \textbf{Time:} & W 4:00 -- 6:45pm \\
+\textbf{Email:} &  \href{mailto:jornstein@uga.edu}{jornstein@uga.edu} & & & & \textbf{Place:} & 101D Baldwin Hall\\
+\textbf{Website:} & \href{https://joeornstein.github.io/pols-7012}{https://joeornstein.github.io/pols-7012} & & & & &
 \end{tabular}
 \end{minipage}
 \rule{6.5in}{0.4pt}
@@ -100,18 +100,22 @@ morekeywords={__global__, __device__},  % CUDA specific keywords
 %	--Charlie Munger (investor, vice chairman of Berkshire Hathaway)
 %\end{quotation}
 
-\noindent So you want to be a political scientist? Cool! It's a fun and fulfilling profession. But before you can eat your cake, you need to eat your vegetables. In this analogy, cake is political science, and vegetables is math. Because a lot of modern political science is heavily quantitative, and in order to fruitfully engage with the ongoing scientific conversation, you will need to understand the language. 
+\noindent So you want to be a political scientist? Cool! It's a fun and fulfilling profession. But before you can eat your cake, you need to eat your vegetables. In this analogy, cake is political science, and vegetables is math. Because modern political science is heavily quantitative, and in order to fruitfully engage with the ongoing scientific conversation, you will need to understand the language. 
 
-I intend for this class to be a very \textit{practical} introduction to the mathematical and computational skills you'll want to have as a professional political scientist. You'll learn how to manipulate, describe, and visualize data. You'll learn how to tell the difference between patterns in data and random noise. You'll learn how to fit models and make predictions. And when we're done, you'll have the fundamentals you need to tackle the advanced material that makes up the rest of the methods sequence. 
+I intend for this class to be a very practical introduction to the mathematical and computational skills you'll want to have as a professional political scientist. In the first half of the course, you'll learn the tools you need to explore, visualize, and tidy up datasets. In the second half, you'll learn how to build statistical models to help interpret the data you have. In essence, you'll learn how to tell the difference between patterns in data and random noise. And when we're done, you'll have the fundamentals you need to tackle the advanced material that makes up the rest of the methods sequence. 
 
 \section*{Course Objectives}
 %\vskip.15in
 %\noindent\textbf{Course Objectives:}  
 By the end of this course, you will be able to:
 \begin{itemize}
-	\item Confidently work with data and create beautiful visualizations using the \texttt{R} programming language
+	\item Confidently work with data using the \texttt{R} programming language
+	\item Create beautiful and informative data visualizations
 	\item Organize your work so that it is transparent and reproducible
-	\item Explain the fundamental mathematics behind the statistical methods we use in political science (probability and inference, matrix algebra, and optimization).
+	\item Build basic statistical models and estimate their parameters from data
+	\item Communicate the uncertainty around your estimates
+	\item Design research that can credibly identify causation (not just correlation)
+%	\item Explain the fundamental mathematics behind the statistical methods we use in political science (probability and inference, matrix algebra, and optimization).
 %	\item Manipulate, wrangle, and clean datasets using the \texttt{R} programming language
 %	\item Create beautiful data visualizations
 %	\item Organize your work so that it is transparent and reproducible
@@ -120,16 +124,17 @@ By the end of this course, you will be able to:
 %	\item Perform hypothesis tests and fit models to data
 \end{itemize}
 
-\section*{Course Structure}
+%\section*{Course Structure}
+%
+%This will be a weird semester, and I expect that there will be more than the usual share of setbacks and hardships. Please don't hesitate to ask questions or reach out to me with your concerns. 
+%
+%If you show any \href{https://www.google.com/search?q=covid-19+symptoms}{symptoms of COVID-19} or have been exposed to someone who tests positive for COVID-19, don't come to class. Obviously. I do not grade class attendance, and every piece of material that you need to succeed on assignments and tests will be made available online. I plan to simulcast our class sessions over Zoom and post recordings to the course website, and I will hold regular virtual office hours if you have questions that aren't covered in those places. 
+%
+%When you come to class, please wear a mask. The University System of Georgia (USG) requires all faculty, students, and staff to wear appropriate face coverings while inside campus buildings. Reasonable accommodations may be made for those who are unable to wear a face covering for documented health reasons. Students seeking an accommodation related to face coverings should contact Disability Services at \href{https://drc.uga.edu/}{https://drc.uga.edu/}. For more information on the University of Georgia's coronavirus response, visit \href{https://coronavirus.uga.edu/}{https://coronavirus.uga.edu/}. 
+%
+%Our classroom will have a limited capacity this semester (14 students), but that should be sufficient to have all enrolled students attend in person. Following the Thanksgiving break, all remaining class sessions will be held online. 
 
-This will be a weird semester, and I expect that there will be more than the usual share of setbacks and hardships. Please don't hesitate to ask questions or reach out to me with your concerns. 
-
-If you show any \href{https://www.google.com/search?q=covid-19+symptoms}{symptoms of COVID-19} or have been exposed to someone who tests positive for COVID-19, don't come to class. Obviously. I do not grade class attendance, and every piece of material that you need to succeed on assignments and tests will be made available online. I plan to simulcast our class sessions over Zoom and post recordings to the course website, and I will hold regular virtual office hours if you have questions that aren't covered in those places. 
-
-When you come to class, please wear a mask. The University System of Georgia (USG) requires all faculty, students, and staff to wear appropriate face coverings while inside campus buildings. Reasonable accommodations may be made for those who are unable to wear a face covering for documented health reasons. Students seeking an accommodation related to face coverings should contact Disability Services at \href{https://drc.uga.edu/}{https://drc.uga.edu/}. For more information on the University of Georgia's coronavirus response, visit \href{https://coronavirus.uga.edu/}{https://coronavirus.uga.edu/}. 
-
-Our classroom will have a limited capacity this semester (14 students), but that should be sufficient to have all enrolled students attend in person. Following the Thanksgiving break, all remaining class sessions will be held online. 
-
+% TODO update assignments
 \section*{Assignments \& Grading}
 
 Each week, I will assign a problem set. Feel free to work with your classmates, but please submit your answers individually. 70\% of your grade will come from these problem sets, and 15\% each from a midterm and final exam. The midterm and final exam will both be online and open-book.
@@ -137,12 +142,12 @@ Each week, I will assign a problem set. Feel free to work with your classmates, 
 %\vskip.15in
 %\noindent\textbf{Office Hours:} 
 \section*{Office Hours}
-Every Wednesday from noon to 1pm I will hold Virtual Office Hours over Zoom. I will put a sign-up spreadsheet on the course website. I'm also available before and after class to chat.
+I will be available for meetings every Wednesday from 2pm to 4pm, either in my office (delta variant permitting) or Zoom. You can sign up for 15 minute appointments \href{https://calendly.com/jornstein/15min}{here}.
 
 %\vskip.15in
 %\noindent\textbf{Textbook:} %\footnotemark
 \section*{Recommended Books}
-I will not require you to purchase any books for this class, but here is a list of books you might find very useful:
+I try to make my courses as cheap as possible, so all of the assigned readings for this class will be available free online (including a few of the textbooks listed below). However, if you're the sort of person that prefers reading hard copies, I recommend these books!
 
 \begin{itemize}
 \item \href{https://r4ds.had.co.nz/}{Wickham, H., \& Grolemund, G. (2016). \textit{R For Data Science: import, tidy, transform, visualize, and model data}. O'Reilly Media, Inc.}
@@ -157,7 +162,9 @@ I will not require you to purchase any books for this class, but here is a list 
 
 \section*{Tentative Course Outline}
 
-Von Moltke writes that no battle plan survives first contact with the enemy. The same is true for syllabi. The following schedule is a rough outline that I may need to adjust on the fly. For instance, can I teach you everything you need to know about calculus in one week? Maybe! But if not, I've built in some Bonus Weeks towards the end of the semester that we can use for catch up. If everything goes according to plan, then we can cover extra topics during those weeks by popular demand.
+Moltke the Elder writes that no battle plan survives first contact with the enemy. The same is doubly true for course outlines. We may need to be flexible, and deviate from the plan if some topics require more or less attention, or we think of something completely unexpected that we want to do, and it takes up a few weeks. Caveats aside, here is what I have planned! %I've built in some Bonus Weeks towards the end of the semester that we can use for catch up. If everything goes according to plan, then we can cover extra topics during those weeks by popular demand.
+
+\subsection*{PART 1: LOOK AT YOUR DATA}
 
 %\begin{center} 
 %\begin{minipage}{6in}
@@ -165,30 +172,38 @@ Von Moltke writes that no battle plan survives first contact with the enemy. The
 %Chapter 1 \dotfill ~$\approx$ 3 days \\
 %{\color{darkgreen}{\Rectangle}} ~A little of probability theory and graph theory	
 \subsubsection*{Week 1: Getting Started}
-\textit{Pre-Class Survey, Overcoming Fear, Notation, Setting up R and RStudio, Tidy Data, Basic Programming}
+\textit{Pre-Class Survey, Overcoming Fear, Setting Up R and RStudio, Zotero, Tidy Data, Basic Programming}
 
-\subsubsection*{Week 2: Visualizing Data}
-\textit{ggplot2, Tufte's Principles, Distributions, Correlations, Faceting}
+\subsubsection*{Weeks 2-3: Visualizing Data}
+\textit{ggplot2, Distributions, Correlations, Facets, RMarkdown}
 
-\subsubsection*{Week 3: Tools for Reproducible Research}
-\textit{Workflow, Documentation, File Structure, RMarkdown, \LaTeX, Zotero/Mendeley, \texttt{git} and GitHub}
+%\subsubsection*{Week 3: Transforming Data}
+%\textit{Measurement, RMarkdown}
 
-\subsubsection*{Week 4: Tidying, Transforming, and Describing Data}
-\textit{\texttt{tidyverse}, Merging, Filtering, Grouping}
+%\subsubsection*{Week 3: Tools for Reproducible Research}
+%\textit{Workflow, Documentation, File Structure, RMarkdown, \LaTeX, Zotero/Mendeley, \texttt{git} and GitHub}
 
-\subsubsection*{Week 5: Functions}
-\textit{Summation, Products, Logarithms, Exponentials, Writing Better Code, Flow Control}
+\subsubsection*{Week 4-6: Tidying, Transforming, and Describing Data}
+\textit{Importing, Merging, Tidying, Summary Statistics}
 
-\subsubsection*{Week 6: All The Calculus You Need}
+%\subsubsection*{Week 5: Functions}
+%\textit{Summation, Products, Logarithms, Exponentials, Writing Better Code, Flow Control}
+
+\subsubsection*{Week 7: Bonus Week}
+\textit{}
+
+\subsection*{PART 2: BUILD MODELS}
+
+\subsubsection*{Week 7-8: Estimation}
 \textit{Limits, Derivatives, Optimization, Integrals, Fundamental Theorem of Calculus}
 
-\subsubsection*{Week 7: Probability}
-\textit{Combinatorics, Random Variables, Expectation, Variance, Covariance, Conditional Probability, Bayes Rule, Law of Large Numbers}
+\subsubsection*{Week 9: Inference}
+\textit{Probability, Random Variables, Expectation, Variance, Covariance, Conditional Probability, Bayes Rule, Law of Large Numbers}
 
-\subsubsection*{Week 8: Inference}
+\subsubsection*{Week 10: More Inference}
 \textit{PDFs and CDFs, Central Limit Theorem, Hypothesis Testing}
 
-\subsubsection*{Week 9: Review \& Catchup}
+\subsubsection*{Week 11: Review \& Catchup}
 \textit{Midterm Exam}
 
 \subsubsection*{Week 10: Matrix Algebra and OLS}

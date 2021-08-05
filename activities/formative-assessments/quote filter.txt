@@ -1,2 +1,0 @@
-data2<- behavioral_data_csv_file_ %>%
-  filter('Country' %in% c('Poland','UK','USA')) 

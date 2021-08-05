@@ -1,1 +1,0 @@
-Take out all of the indexing / non-tidyverse data-cleaning steps. If you're saving data cleaning for week 3, then introduce it then, and start with pre-tidied data.

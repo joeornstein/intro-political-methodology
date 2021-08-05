@@ -1,5 +1,0 @@
-Import
-Tidy (pivot? merge?)
-Filter
-Mutate
-Group By and Summarize
