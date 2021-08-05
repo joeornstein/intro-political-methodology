@@ -1,0 +1,43 @@
+---
+title: "Intro to Political Methodology"
+author:
+  - name: Joseph T. Ornstein 
+    url: https://joeornstein.github.io/
+    affiliation: University of Georgia
+    affiliation_url: https://spia.uga.edu/departments-centers/department-of-political-science/
+    orcid_id: 0000-0002-5704-2098
+description: |
+  A PhD-level course on understanding data
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Learn more about creating websites with Distill at:
+# https://rstudio.github.io/distill/website.html
+
+```
+
+Hello! Welcome to our class website. 
+
+## Getting Started
+
+Here's everything you need to get started.
+
+### `R`
+
+For starters, you'll need `R`. The most current version is available [here](https://cloud.r-project.org/). To download, click link for your operating system (i.e. Mac, Windows, Linux), then click
+
+### Hypothesis
+
+This semester, we'll be using a **social annotation** platform called [Hypothesis](https://web.hypothes.is/). That way, everyone will be able to post comments/questions/concerns/memes directly into the reading assignments. Follow these steps to get started:
+
+1.  Click the book icon in the top-right corner of the course website. This will take you to our [Hypothesis Group Page](https://hypothes.is/groups/eE6yBNm8/test-group).
+2.  If you don't already have an account, you will be prompted to create one. Make your username something like `firstname_lastname` so we know who is posting!
+3.  Hypothesis works best with Google Chrome. If you don't have it, install it [here](https://www.google.com/chrome/).
+4.  Install the [Chrome extension](https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek?hl=en). When you do, it should take you to a welcome page with instructions on how to log in, pin the extension, and start annotating pages!
+
+![](img/hypothesis-tutorial/extension-setup.png)
+
+5.  Go to the [syllabus](syllabus/POLS-3230-syllabus.pdf) and add your questions/comments/memes. Whenever you annotate a reading, just make sure that you are posting to the Group instead of Public (see the dropdown menu at the top of the extension).

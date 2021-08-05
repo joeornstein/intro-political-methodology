@@ -1,0 +1,22 @@
+name: "course-website"
+title: "Introduction to Political Methodology"
+favicon: img/favicon_io/favicon.ico
+theme: theme.css
+description: |
+  Introduction to Political Methodology
+output_dir: "../../../projects/joeornstein.github.io/pols-7012/" # kludgily direct the output to your GitHub pages
+navbar:
+  right:
+    - text: "Home"
+      href: index.html
+    - text: "Syllabus"
+      href: syllabus/POLS-7012-syllabus.pdf
+    - text: "Content"
+      href: about.html
+    - icon: fas fa-book-open
+      href: "https://hypothes.is/groups/eE6yBNm8/test-group"
+    - icon: fab fa-github
+      href: "https://github.com/joeornstein/intro-political-methodology"
+output:
+  distill::distill_article:
+    toc: true
