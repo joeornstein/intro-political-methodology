@@ -33,7 +33,7 @@ For starters, you'll need `R`. The most current version is available [here](http
 
 This semester, we'll be using a **social annotation** platform called [Hypothesis](https://web.hypothes.is/). That way, everyone will be able to post comments/questions/concerns/memes directly into the reading assignments. Follow these steps to get started:
 
-1.  Click the book icon in the top-right corner of the course website. This will take you to our [Hypothesis Group Page](https://hypothes.is/groups/eE6yBNm8/test-group).
+1.  Click the book icon in the top-right corner of the course website. This will take you to our [Hypothesis Group Page](https://hypothes.is/groups/g7pXazQj/pols-7012-fall-2021).
 2.  If you don't already have an account, you will be prompted to create one. Make your username something like `firstname_lastname` so we know who is posting!
 3.  Hypothesis works best with Google Chrome. If you don't have it, install it [here](https://www.google.com/chrome/).
 4.  Install the [Chrome extension](https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek?hl=en). When you do, it should take you to a welcome page with instructions on how to log in, pin the extension, and start annotating pages!
