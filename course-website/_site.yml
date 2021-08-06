@@ -11,8 +11,12 @@ navbar:
       href: index.html
     - text: "Syllabus"
       href: syllabus/POLS-7012-syllabus.pdf
-    - text: "Content"
-      href: about.html
+    - text: "Schedule"
+      menu:
+        - text: "Week 1: Getting Started"
+          href: week-01.html
+    - icon: fas fa-calendar-plus
+      href: https://calendly.com/jornstein/15min
     - icon: fas fa-book-open
       href: "https://hypothes.is/groups/g7pXazQj/pols-7012-fall-2021"
     - icon: fab fa-github

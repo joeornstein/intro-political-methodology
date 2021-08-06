@@ -1,0 +1,28 @@
+---
+title: "Week 1"
+description: |
+  Getting all the software up and running
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+This week, we will make sure that everything we need is installed and working on our computers. Make sure you've completed everything from the [Getting Started](index.html#getting-started) section on the home page.
+
+## Reading Assignments
+
+Before Week 2, please read and annotate the following:
+
+- [Healy Preface](https://socviz.co/index.html#preface) (and complete the package installation instructions at the bottom)
+- [Healy Chapter 2](https://socviz.co/gettingstarted.html#gettingstarted)
+- [Healy Chapter 3](https://socviz.co/makeplot.html#makeplot)
+
+## Problem Set
+
+Find the file `R/week-01/problem-set-1.Rmd` in our GitHub repository. Open it and make the following changes:
+
+1. Edit the metadata so that you are the author.
+2. Follow the instructions in the comments of each code chunk.
+3. Knit to PDF.
+4. Submit the knitted PDF document to eLC by our next class.
