@@ -40,29 +40,9 @@ vignettes/*.pdf
 
 # dross folders
 _dross/
-_R/
-resources/
 
 # TeX intermediaries
 *.out
 *.gz
 *.aux
 *.log
-
-# selected data files
-data/students.csv
-
-# subfolder with its own git
-problem-sets/rticles-demo/
-
-# big dataset
-problem-sets/03-rmarkdown/data/
-
-# submissions for ps5
-problem-sets/05-data-wrangling/submissions/
-
-# polls-2020 activity
-activities/polls-2020/
-
-# all-answer-key duplicate folder
-problem-sets/all-answer-keys/
