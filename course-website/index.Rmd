@@ -20,7 +20,11 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
-Hello! Welcome to our class website.
+## Overview
+
+In this course, you will learn the math and coding skills you need to conduct quantitative social science research. In the first half of the semester, we'll get comfortable working with data: cleaning it up, visualizing it, and summarizing it. In the second half of the semester, we'll build statistical models to help us interpret our data, communicate uncertainty, and make causal claims. A key theme of the course is that, to deeply understand your data, you must do both.
+
+All the course materials you need will be available on this website. Check the Schedule tab for an overview of each week's topics and assignments. On the navbar, you can also find links to [read the syllabus](syllabus/POLS-7012-syllabus.pdf), [schedule an office hours appointment](https://calendly.com/jornstein/15min), [read your classmates' comments on the readings](https://hypothes.is/groups/g7pXazQj/pols-7012-fall-2021), and [visit the code repository](https://github.com/joeornstein/intro-political-methodology).
 
 ## Getting Started
 
@@ -50,11 +54,15 @@ Using `git` to track changes in your code involves a bit of struggle on the fron
 
 This software makes it blindingly simple to keep track of and format your citations. It also plays really nicely with RStudio. Download it [here](https://www.zotero.org/) and follow the setup instructions. The [Chrome extension](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc?hl=en) is particularly useful; anything you find on the Internet can be saved to your library with one click.
 
+### Announcements and Discussion: GroupMe
+
+Please [join our class GroupMe](https://groupme.com/join_group/62874918/MTotOtTJ) to to receive announcements and participate in class discussions.
+
 ### Social Annotation: Hypothesis
 
 This semester, we'll be using a **social annotation** platform called [Hypothesis](https://web.hypothes.is/). That way, everyone will be able to post comments/questions/concerns/memes directly into the reading assignments. Follow these steps to get started:
 
-1.  Click the book icon in the top-right corner of the course website. This will take you to our [Hypothesis Group Page](https://hypothes.is/groups/oEioeZW4/pols-3230-fall-2021).
+1.  Click the book icon in the top-right corner of the course website. This will take you to our [Hypothesis Group Page](https://hypothes.is/groups/g7pXazQj/pols-7012-fall-2021).
 2.  If you don't already have an account, you will be prompted to create one. Make your username something like `firstname_lastname` so we know who is posting!
 3.  Hypothesis works best with Google Chrome. If you don't have it, install it [here](https://www.google.com/chrome/).
 4.  Install the [Chrome extension](https://chrome.google.com/webstore/detail/hypothesis-web-pdf-annota/bjfhmglciegochdpefhhlphglcehbmek?hl=en). When you do, it should take you to a welcome page with instructions on how to log in, pin the extension, and start annotating pages!

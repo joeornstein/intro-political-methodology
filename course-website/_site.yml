@@ -13,8 +13,15 @@ navbar:
       href: syllabus/POLS-7012-syllabus.pdf
     - text: "Schedule"
       menu:
+        - text: "PART 1: LOOK AT YOUR DATA"
         - text: "Week 1: Getting Started"
           href: week-01.html
+        - text: "Week 2: Basic Data Visualization"
+          href: week-02.html
+        - text: "Week 3: Advanced Data Visualization"
+          href: week-03.html
+        - text: "---"
+        - text: "PART 2: BUILD MODELS"
     - icon: fas fa-calendar-plus
       href: https://calendly.com/jornstein/15min
     - icon: fas fa-book-open
