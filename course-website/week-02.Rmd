@@ -1,0 +1,39 @@
+---
+title: "Week 2"
+description: |
+  How to make effective data visualizations
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+In its raw form, data is completely unintelligible to the human mind.[^1] It's just a bunch of numbers. So, over time, we humans have developed three techniques to help make sense of data: visualizations, summaries, and models. We're going to start hte course with visualization, because it is the most intuitive of the three. This week and next, we discuss what makes an informative, compelling data visualization, and learn how to construct them ourselves in `R`.
+
+[^1]: Yes, I know that the word "data" is technically plural, but the sentence "In their raw form, data are completely unintelligible" seemed...unintelligible to me.
+
+![](img/ross.png)
+
+The human mind is hardwired to detect patterns in images, and a well-crafted data visualization can take advantage of that fact to communicate lots of information in an aesthetically pleasing way. And it's about more than communication. Charts can reveal patterns in data that summary statistics alone might miss, as the [Datasaurus Dozen](https://www.autodesk.com/research/publications/same-stats-different-graphs) artfully reveals...
+
+![](img/datasaurus-dozen.gif)
+
+This week, we start building our own visualizations using the `ggplot2` package (a part of the `tidyverse`). It will take some time to learn all of the function syntax, so be patient with yourself. Once you get the hang of it, you'll have an endlessly flexible tool for exploring and communicating patterns in your data. Let's get started.
+
+## Reading Assignments
+
+Before Week 3, please read and annotate the following:
+
+-   [Healy Chapter 4](https://socviz.co/groupfacettx.html)
+-   [Healy Chapter 5](https://socviz.co/workgeoms.html)
+-   [Healy Chapter 8](https://socviz.co/refineplots.html)
+
+Optional:
+
+-   If you want to learn how to make maps in `ggplot`, [Healy Chapter 7](https://socviz.co/maps.html) is a great resource.
+-   For more practice with `ggplot`, this [chapter](https://r4ds.had.co.nz/data-visualisation.html) in Hadley Wickham's book is a nice resource.[^2]
+
+[^2]: Hadley is the author of `ggplot`, so he knows a trick or two.
+
+## Problem Set
+
