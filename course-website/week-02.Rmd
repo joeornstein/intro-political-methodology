@@ -37,3 +37,11 @@ Optional:
 
 ## Problem Set
 
+Using one of the datasets we've been working with in class, submit create a data visualization using `ggplot`. Your submission should:
+
+1. Communicate some interesting result
+2. Use more than one aesthetic
+3. Be easy to interpret at a glance (you can include a short caption -- `labs(caption = ...)` -- if you would like). 
+4. Be *reproducible*; submit your figure as a `.png` file, plus the `.R` script that produced it.
+
+Consider this a friendly competition! I will look through the sumbmissions and pick my favorites, and their creators will receive honor, glory, and adoration.
