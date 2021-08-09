@@ -41,6 +41,9 @@ vignettes/*.pdf
 # dross folders
 _dross/
 
+# ignore big data files
+data/ces-2020/
+
 # TeX intermediaries
 *.out
 *.gz
