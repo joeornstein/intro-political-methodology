@@ -48,7 +48,7 @@ Using `git` to track changes in your code involves a bit of struggle on the fron
 
 ### Reference Management: Zotero
 
-This software makes it blindingly simple to keep track of and format your citations. It also plays really nicely with RStudio. Download it [here](<https://www.zotero.org/>) and follow the setup instructions. The [Chrome extension](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc?hl=en) is particularly useful; anything you find on the Internet can be saved to your library with one click.
+This software makes it blindingly simple to keep track of and format your citations. It also plays really nicely with RStudio. Download it [here](https://www.zotero.org/) and follow the setup instructions. The [Chrome extension](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc?hl=en) is particularly useful; anything you find on the Internet can be saved to your library with one click.
 
 ### Social Annotation: Hypothesis
 
