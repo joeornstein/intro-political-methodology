@@ -22,7 +22,7 @@ Next week we'll start learning how to tidy up messy datasets. In preparation, pl
 
 Optional:
 
-- I'm assigning what I think are the crucial chapters of R4DS, but if you really want to get deep into `R` programming, feel free to look over the chapters we skipped. In particular, the chapter on "Strings" if you want to work with text data. 
+- I'm assigning what I think are the crucial chapters of R4DS, but if you really want to get deep into `R` programming, feel free to look over the chapters we skipped. In particular, the chapter on "Strings" if you want to work with text data, and "Dates & Times" if you want to work with time series.
 
 ## Problem Set
 

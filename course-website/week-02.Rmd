@@ -24,9 +24,10 @@ This week, we start building our own visualizations using the `ggplot2` package 
 
 Next week, we'll build some more intricate visualizations, and consider what to do if your dataset isn't formatted exactly that way you need it to be prior to visualizing. Please read and annotate the following before next week:
 
+- [Wrangling Penguins](https://allisonhorst.shinyapps.io/dplyr-learnr/)
 -   [Healy Chapter 4](https://socviz.co/groupfacettx.html)
 -   [Healy Chapter 5](https://socviz.co/workgeoms.html)
--   [R4DS Chapter 5: Data Transformation](https://r4ds.had.co.nz/transform.html)
+
 
 Optional:
 
