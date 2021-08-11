@@ -8,7 +8,7 @@ description: |
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-In its raw form, data is completely unintelligible to the human mind.[^1] It's just a bunch of numbers. So, over time, we humans have developed three techniques to help make sense of data: visualizations, summaries, and models. We're going to start hte course with visualization, because it is the most intuitive of the three. This week and next, we discuss what makes an informative, compelling data visualization, and learn how to construct them ourselves in `R`.
+In its raw form, data is completely unintelligible to the human mind.[^1] It's just a bunch of numbers. So, over time, we humans have developed three techniques to help make sense of data: visualizations, summaries, and models. We're going to start the course with visualization, because it is the most intuitive of the three. Over the next few weeks, we'll discuss what makes an informative, compelling data visualization, and learn how to construct them ourselves in `R`.
 
 [^1]: Yes, I know that the word "data" is technically plural, but the sentence "In their raw form, data are completely unintelligible" seemed...unintelligible to me.
 
