@@ -73,7 +73,7 @@ This semester, we'll be using a **social annotation** platform called [Hypothesi
 
 ### Memory Aid: Anki
 
-Take 20 minutes and play through @case2018. If you're convinced, download [Anki](https://apps.ankiweb.net/). It's not the prettiest spaced repetition software out there, but it is free, streamlined, highly customizable, and has a large, dedicated fanbase.
+A lot of grad school -- particularly the methods courses -- involves rote memorization of things like formulas and code syntax. This is the boring and frustrating part, but there are ways to make it somewhat less boring and frustrating. Do yourself a favor and take 20 minutes and play through @case2018. If you're convinced, download [Anki](https://apps.ankiweb.net/). It's not the prettiest spaced repetition software out there, but it is free, streamlined, highly customizable, and has a large, dedicated fanbase.
 
 ### Note-Taking Software (Optional)
 

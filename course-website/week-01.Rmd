@@ -17,10 +17,11 @@ Before Week 2, please read and annotate the following:
 - [Healy Preface](https://socviz.co/index.html#preface) (and complete the package installation instructions at the bottom)
 - [Healy Chapter 2](https://socviz.co/gettingstarted.html)
 - [Healy Chapter 3](https://socviz.co/makeplot.html#makeplot)
+- [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/index.html) (Intro to R module)
 
 Optional:
 
-- [Healy Chapter 1](https://socviz.co/lookatdata.html)
+- [Healy Chapter 1](https://socviz.co/lookatdata.html): A nice review of the evidence on what makes an effective visualization.
 
 ## Problem Set
 
