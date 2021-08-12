@@ -20,6 +20,8 @@ navbar:
           href: week-02.html
         - text: "Week 3: Advanced Data Visualization"
           href: week-03.html
+        - text: "Week 4: Data Wrangling"
+          href: week-04.html
         - text: "---"
         - text: "PART 2: BUILD MODELS"
     - icon: fas fa-calendar-plus
