@@ -43,6 +43,7 @@ _dross/
 
 # ignore big data files
 data/ces-2020/
+data/
 
 # TeX intermediaries
 *.out
