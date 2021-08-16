@@ -10,6 +10,18 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 
 This week, we will familiarize ourselves with a suite of software that will make life as a social scientist so much nicer -- tools for managing your data, your references, and your knowledge. Make sure you've completed everything from the [Getting Started](index.html#getting-started) section on the home page.
 
+## Introductions
+
+On our first day, we will be collecting and analyzing some data about the class itself. Please complete the following survey.[^survey]
+
+[^survey]: If the embedded survey isn't working for some reason, click [here](https://docs.google.com/forms/d/e/1FAIpQLScvfmmeiPeg4Qudq4E7P-Qiyb7h8mF0CrfusOns4hTGoTdOyQ/viewform?usp=sf_link).
+
+```{r survey}
+knitr::include_url('https://docs.google.com/forms/d/e/1FAIpQLScvfmmeiPeg4Qudq4E7P-Qiyb7h8mF0CrfusOns4hTGoTdOyQ/viewform?usp=sf_link')
+```
+
+The results will be available [here](https://docs.google.com/spreadsheets/d/1BTVFoZQjRNB63Pyg_z-hjGICpP_vlcokRy0-SSGX-10/).
+
 ## Reading Assignments
 
 Before Week 2, please read and annotate the following:
