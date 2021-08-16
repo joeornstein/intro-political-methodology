@@ -25,11 +25,18 @@ Optional:
 
 ## Problem Set
 
-Find the file `R/week-01/problem-set-1.Rmd` in our GitHub repository. Open it and make the following changes:
+Our first problem set will ensure that all the software is functioning on your machine. If you can complete all of the following steps, then you're in good shape!
 
-1. Edit the metadata so that you are the author.
-2. Follow the instructions in the comments of each code chunk.
-3. Knit to PDF.
-4. Submit the knitted PDF document to eLC by our next class.[^1]
+1. Open `intro-to-political-methodology.Rproj` and pull the latest updates from the GitHub repository.
+
+2. Open `R/week-01/problem-set-01.Rmd`.
+
+3. Edit the metadata so that you are the author.
+
+4. Add an in-text citation to something from your Zotero library.
+
+5. Knit to PDF (note: you will need to install the `tinytex` library first).
+
+6. Submit the knitted PDF document to eLC by our next class.[^1]
 
 [^1]: All problem sets due by the *following* week's class (so this one is due before our second class). Feel free to work together on problem sets, but I encourage you to type out the solutions yourself instead of copying-pasting from others. You can't learn this stuff without doing it. 
