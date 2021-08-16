@@ -17,6 +17,7 @@ This is an RMarkdown document, which blends text and code into a single document
 For example, the following code chunk will produce a chart of socioeconomic indicators from 1888 in forty-seven Swiss provinces.
 
 ```{r pressure, echo=FALSE}
+# this creates a ggplot() object, using the swiss dataset that comes pre-packaged with R
 ggplot(data = swiss) +
   # add points, where x-axis is mapped to Agriculture and y-axis is mapped to Education 
   geom_point(mapping = aes(x = Agriculture, 
