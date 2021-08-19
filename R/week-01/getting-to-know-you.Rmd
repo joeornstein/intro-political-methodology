@@ -47,19 +47,19 @@ d <- read_csv(here('data/getting-to-know-you/students.csv')) %>%
 zip_geocodes <- geocode_zip(d$zipcode)
 d <- left_join(d, zip_geocodes, by = 'zipcode')
 
-# # if no zip code provided, check coordinates field
-# d <- d %>% 
-#   mutate(lng = if_else(is.na(lng), 
-#                        str_split(hometown_coordinates_if_you_dont_have_a_home_zip_code,
-#                                  pattern = ', ', simplify = TRUE)[,2] %>% 
-#                          as.numeric,
-#                        lng),
-#          lat = if_else(is.na(lat), 
-#                        str_split(hometown_coordinates_if_you_dont_have_a_home_zip_code,
-#                                  pattern = ', ', simplify = TRUE)[,1] %>% 
-#                          as.numeric,
-#                        lat),
-#          full_name = paste(first_name, last_name))
+# if no zip code provided, check coordinates field
+if(sum(is.na(d$lng)) > 0){
+  d <- d %>%
+  mutate(lng = if_else(is.na(lng),
+                       str_split(hometown_coordinates_if_you_dont_have_a_home_zip_code,
+                                 pattern = ', ', simplify = TRUE)[,2] %>% as.numeric,
+                       lng),
+         lat = if_else(is.na(lat),
+                       str_split(hometown_coordinates_if_you_dont_have_a_home_zip_code,
+                                 pattern = ', ', simplify = TRUE)[,1] %>%
+                         as.numeric,
+                       lat))
+}
 
 # give some variables shorter names
 d <- d %>% 
@@ -116,7 +116,7 @@ The median student in POLS 7012 is `r median(d$distance_to_athens_km) %>% floor 
 
 ## Personal Characteristics
 
-On average, we are `r floor(mean(d$height_inches) / 12)` feet, `r floor(mean(d$height_inches) %% 12)` inches tall. `r sum(d$cats_or_dogs == 'Dogs') / nrow(d) * 100 %>% floor`% of us prefer dogs over cats. `r sum(d$beach_or_mountains == 'Beach') / nrow(d) * 100 %>% floor`% of us prefer beaches over mountains. Here is one way to visualize all that information.
+On average, we are `r (d$height_inches %>% na.omit %>% mean / 12) %>% floor` feet, `r (d$height_inches %>% na.omit %>% mean %>% floor) %% 12` inches tall. `r sum(d$cats_or_dogs == 'Dogs') / nrow(d) * 100 %>% floor`% of us prefer dogs over cats. `r sum(d$beach_or_mountains == 'Beach') / nrow(d) * 100 %>% floor`% of us prefer beaches over mountains. Here is one way to visualize all that information.
 
 ```{r personal-characteristics, fig.cap="Distribution of personal characteristics in POLS 7012. I don't know if this is the *best* way to plot this data, but it is one way.", fig.width=8, fig.height=5}
 ggplot(data = d) +
