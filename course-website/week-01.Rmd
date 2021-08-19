@@ -27,9 +27,10 @@ The results will be available [here](https://docs.google.com/spreadsheets/d/1BTV
 Before Week 2, please read and annotate the following:
 
 - [Healy Preface](https://socviz.co/index.html#preface) (and complete the package installation instructions at the bottom)
+- [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/index.html) (Intro to R module)
 - [Healy Chapter 2](https://socviz.co/gettingstarted.html)
 - [Healy Chapter 3](https://socviz.co/makeplot.html#makeplot)
-- [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/index.html) (Intro to R module)
+
 
 Optional:
 
@@ -47,8 +48,15 @@ Our first problem set will ensure that all the software is functioning on your m
 
 4. Add an in-text citation to something from your Zotero library.
 
-5. Knit to PDF (note: you will need to install the `tinytex` library first).
+5. Make sure you have the `tinytex` package installed. This is the library you need to convert RMarkdown documents into PDFs. To install, enter these two lines into your RStudio console.
 
-6. Submit the knitted PDF document to eLC by our next class.[^1]
+```{r install-tinytex, eval = FALSE, echo = TRUE}
+install.packages('tinytex')
+tinytex::install_tinytex()
+```
+
+6. Knit to PDF.
+
+7. Submit the knitted PDF document to [eLC](https://uga.view.usg.edu/d2l/le/content/2356038/Home) by our next class.[^1]
 
 [^1]: All problem sets due by the *following* week's class (so this one is due before our second class). Feel free to work together on problem sets, but I encourage you to type out the solutions yourself instead of copying-pasting from others. You can't learn this stuff without doing it. 
