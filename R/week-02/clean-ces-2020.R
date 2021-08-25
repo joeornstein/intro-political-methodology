@@ -47,7 +47,18 @@ d <- ces_raw %>%
                                               cc20_309c_4 == 1 |
                                               cc20_309c_5 == 1 |
                                               cc20_309c_6 == 1, 
-                                          'Yes', 'No'))
+                                          'Yes', 'No'),
+         social_media_24h = if_else(cc20_300_1 == 1, 'Yes', 'No'),
+         tv_news_24h = if_else(cc20_300_2 == 1, 'Yes', 'No'),
+         newspaper_24h = if_else(cc20_300_3 == 1, 'Yes', 'No'),
+         radio_news_24h = if_else(cc20_300_4 == 1, 'Yes', 'No'),
+         assault_rifle_ban = if_else(cc20_330a == 1, 'Support', 'Oppose'),
+         increase_border_patrols = if_else(cc20_331b == 1, 'Support', 'Oppose'),
+         china_tariffs = if_else(cc20_338a == 1, 'Support', 'Oppose'),
+         pew_religimp = case_when(pew_religimp == 1 ~ 'Very important',
+                                  pew_religimp == 2 ~ 'Somewhat important',
+                                  pew_religimp == 3 ~ 'Not too important',
+                                  pew_religimp == 4 ~ 'Not at all important'))
 
 # inputstate is a fips code. merge with maps::state.fips to get state names
 state_names <- maps::state.fips %>% 
@@ -66,7 +77,10 @@ d <- d %>%
   # select the variables you want
   select(caseid, gender, educ, race, age, abb, national_economy,
          someone_diagnosed_with_covid, lost_work_during_covid,
-         trump_approval) %>% 
+         trump_approval,
+         social_media_24h, tv_news_24h, newspaper_24h, radio_news_24h,
+         assault_rifle_ban, increase_border_patrols, china_tariffs,
+         pew_religimp) %>% 
   # order the factor variables
   mutate(national_economy = factor(national_economy,
                                    levels = c('Not sure', 'Gotten much worse',
