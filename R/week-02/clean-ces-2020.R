@@ -14,7 +14,7 @@ ces_raw <- read_csv('data/raw/ces-2020/CES20_Common_OUTPUT_vv.csv') %>%
   # clean up the names (janitor function)
   clean_names()
 
-d <- ces_raw %>%
+ces <- ces_raw %>%
   # recode some variables
   mutate(gender = if_else(gender == 1, 'Male', 'Female'),
          educ = case_when(educ == 1 ~ 'No HS',
@@ -71,7 +71,7 @@ state_names <- maps::state.fips %>%
   unique %>% 
   arrange(fips)
 
-d <- d %>% 
+ces <- ces %>% 
   mutate(fips = inputstate) %>% 
   left_join(state_names, by = 'fips') %>% 
   # select the variables you want
@@ -91,4 +91,4 @@ d <- d %>%
                                             'Not sure', 'Somewhat approve', 'Strongly approve')))
 
 # write cleaned dataset to file
-save(d, file = 'data/ces-2020/cleaned-CES.RData')
+save(ces, file = 'data/ces-2020/cleaned-CES.RData')
