@@ -77,4 +77,4 @@ d <- d %>%
                                             'Not sure', 'Somewhat approve', 'Strongly approve')))
 
 # write cleaned dataset to file
-save(d, file = 'data/ces-2020.RData')
+save(d, file = 'data/ces-2020/cleaned-CES.RData')
