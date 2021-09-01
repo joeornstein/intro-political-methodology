@@ -15,9 +15,8 @@ Next week we'll start learning how to tidy up messy datasets. In preparation, pl
 
 - [R4DS Chapter 1: Introduction](https://r4ds.had.co.nz/introduction.html)
 -   [R4DS Chapter 9: Wrangle](https://r4ds.had.co.nz/wrangle-intro.html)
--   [R4DS Chapter 11: Import](https://socviz.co/refineplots.html) (skip sections 11.3 and 11.4)
+-   [R4DS Chapter 11: Import](https://r4ds.had.co.nz/data-import.html) (skip sections 11.3 and 11.4)
 - [R4DS Chapter 12: Tidy Data](https://r4ds.had.co.nz/tidy-data.html)
-- [R4DS Chapter 13: Relational Data](https://r4ds.had.co.nz/relational-data.html) (skip sections 13.5-13.7)
 -   [Healy Chapter 8](https://socviz.co/refineplots.html)
 
 Optional:
