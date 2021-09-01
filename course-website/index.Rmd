@@ -62,6 +62,8 @@ Using `git` to track changes in your code involves a bit of struggle on the fron
 
 This software makes it blindingly simple to keep track of and format your citations. It also plays really nicely with RStudio. Download it [here](https://www.zotero.org/) and follow the setup instructions. The [Chrome extension](https://chrome.google.com/webstore/detail/zotero-connector/ekhagklcjbdpajgpjgmbionohlpdbjgc?hl=en) is particularly useful; anything you find on the Internet can be saved to your library with one click.
 
+After Zotero is installed, create a username and password (if you click the green sync button at the top right, it will prompt you to create an account).
+
 ### Announcements and Discussion: GroupMe
 
 Please [join our class GroupMe](https://groupme.com/join_group/62874918/MTotOtTJ) to to receive announcements and participate in class discussions.
