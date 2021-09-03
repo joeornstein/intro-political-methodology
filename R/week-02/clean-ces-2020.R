@@ -52,7 +52,7 @@ ces <- ces_raw %>%
          tv_news_24h = if_else(cc20_300_2 == 1, 'Yes', 'No'),
          newspaper_24h = if_else(cc20_300_3 == 1, 'Yes', 'No'),
          radio_news_24h = if_else(cc20_300_4 == 1, 'Yes', 'No'),
-         assault_rifle_ban = if_else(cc20_330a == 1, 'Support', 'Oppose'),
+         assault_rifle_ban = if_else(cc20_330b == 1, 'Support', 'Oppose'),
          increase_border_patrols = if_else(cc20_331b == 1, 'Support', 'Oppose'),
          china_tariffs = if_else(cc20_338a == 1, 'Support', 'Oppose'),
          pew_religimp = case_when(pew_religimp == 1 ~ 'Very important',
