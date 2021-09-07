@@ -1,0 +1,87 @@
+---
+title: An RMarkdown Template For Papers
+author: 
+  - Joseph T. Ornstein^[University of Georgia]
+  - Henry Armitage^[Miskatonic University]
+date: September 7, 2021
+output:
+  pdf_document:
+    number_sections: yes
+urlcolor: blue
+abstract: lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+# this line tells RMarkdown not to include code or warning messages in the final PDF.
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# load libraries here
+library(tidyverse)
+library(here)
+library(knitr)
+```
+
+\newpage
+
+# Introduction
+
+First, we must load the data. Note that I put this `.Rmd` file in the `R/week-03/` folder, so by default it will look for files in that folder. But if your data is saved somewhere else in your project folder -- say `data/ces-2020/cleaned-CES.RData` -- then the `here()` function is useful.
+
+```{r load-ces}
+load(
+  here('data', 'ces-2020', 'cleaned-CES.RData')
+)
+```
+
+# Embedding Figures
+
+To create a figure with a caption, include `fig.cap` in the chunk options.
+
+```{r figure1, fig.cap='Age distribution by media use, Cooperative Election Study (2020)'}
+ces %>% 
+  mutate(tv_news_24h = if_else(tv_news_24h == 'Yes',
+                               'TV News 24h: Yes',
+                               'TV News 24h: No'),
+         social_media_24h = if_else(social_media_24h == 'Yes',
+                                    'Social Media 24h: Yes',
+                                    'Social Media 24h: No')) %>% 
+  ggplot(mapping = aes(x=age)) +
+  geom_histogram(color = 'black', fill = 'blue', alpha = 0.3) +
+  facet_grid(social_media_24h ~ tv_news_24h) +
+  theme_minimal() +
+  labs(x = 'Age', y='Frequency')
+```
+
+For more on RMarkdown, see [@wickham2016] and the [RStudio cheat sheets](https://www.rstudio.com/resources/cheatsheets/).
+
+# Tables
+
+The `kable()` function creates pretty tables.
+
+```{r table1}
+ces %>% 
+  
+  # filter out the missing values
+  filter(!is.na(trump_approval),
+         !is.na(pew_religimp)) %>% 
+  
+  # group by religious importance
+  group_by(pew_religimp) %>% 
+  
+  # percent who approve Trump is the total number who approve divided by n()
+  summarize(pct_approve = sum(trump_approval %in% c('Somewhat approve', 'Strongly approve')) / n() * 100) %>% 
+  
+  # pipe to a kable() function
+  kable(col.names = c('Religious Importance', 'Percent Who Approve Trump'),
+        caption = 'Trump Approval by Religious Importance',
+        digits = 1)
+```
+
+# Equations
+
+You can typeset equations using [\LaTeX](https://davidhamann.de/2017/06/12/latex-cheat-sheet/) syntax. Surround the equation with `$`. $$
+\frac{\partial f}{\partial x} = 2x^3 + 8x - 2
+$$
+
+# References
