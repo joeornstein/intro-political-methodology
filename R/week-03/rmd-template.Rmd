@@ -38,7 +38,7 @@ load(
 
 To create a figure with a caption, include `fig.cap` in the chunk options.
 
-```{r figure1, fig.cap='Age distribution by media use, Cooperative Election Study (2020)'}
+```{r figure1, fig.cap='Age distribution by media use, Cooperative Election Study (2020)', fig.height=5, fig.width = 8}
 ces %>% 
   mutate(tv_news_24h = if_else(tv_news_24h == 'Yes',
                                'TV News 24h: Yes',
@@ -53,7 +53,7 @@ ces %>%
   labs(x = 'Age', y='Frequency')
 ```
 
-For more on RMarkdown, see [@wickham2016] and the [RStudio cheat sheets](https://www.rstudio.com/resources/cheatsheets/).
+For more on RMarkdown, see @wickham2016 and the [RStudio cheat sheets](https://www.rstudio.com/resources/cheatsheets/).
 
 # Tables
 
