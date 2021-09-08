@@ -1,0 +1,105 @@
+---
+title: "A Western Democratic Problem of Will"
+author: "Chris Lyells"
+date: "Sept 06, 2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(gapminder)
+library(socviz)
+library(RColorBrewer)
+library(here)
+load(here('data', 'raw', "WVS_Cross-National_Wave_7_R_v2_0.rdata"))
+```
+
+## A Problem of Will
+
+With the much acknowledged and discussed return of "Great Power Competition" between the US and what have been labeled the revisionist powers of China and Russia, it is useful to ask, to what degree will the citizens of the US and it's presumed coalition members support escalation against Russia and China? And, to what degree would the revisionist power's citizens support them in a conflict against the West? To measure this willingness to commit the state to war, we shall use the responses from the 2017 World Values Survey question asking: "Of course, we all hope that there will not be another war, but if it were to come to that, would you be willing to fight for your country?" For clarity we have broken down the respondents by age according to decade.
+
+```{r pressure, echo=FALSE}
+d <- `WVS_Cross-National_Wave_7_v2_0` %>%
+  #selct specific data and rename it
+  select(country = C_COW_ALPHA, will_to_fight = Q151, birth_year = Q261) %>%
+  #get rid of the erroneous data input by no answers and lost answers
+  filter(birth_year >= 1930, will_to_fight >= 1) %>%
+  #invert the will to fight catagory since 2 was a "no" and 1 was "yes"
+  mutate(fight_for_country = 1 / will_to_fight) %>% 
+  #group years into new variables of decades
+  mutate(decade_of_birth = case_when(birth_year < 1940 ~ '1930s',
+                                     birth_year < 1950 ~ '1940s',
+                                     birth_year < 1960 ~ '1950s',
+                                     birth_year < 1970 ~ '1960s',
+                                     birth_year < 1980 ~ '1970s',
+                                     birth_year < 1990 ~ '1980s',
+                                     birth_year < 2000 ~ '1990s',
+                                     birth_year < 2010 ~ "2000s")) %>% 
+  # organize data set by decade and by country
+  group_by(decade_of_birth, country) %>% 
+  # summarize compresses the data
+  summarize(mean_will_to_fight = mean(fight_for_country), 
+            count = n()) %>% 
+  filter(country %in% c("USA", "AUL", "ROK", "CHN", "JPN") ) %>% 
+  ggplot(mapping = aes(x= decade_of_birth , y= mean_will_to_fight, group = country, color = country)) +
+  geom_line ()+ 
+  scale_color_brewer(palette = "Set1")+
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))+
+  scale_y_continuous(labels = c(0, 20, 40, 60, 80, 100)) +
+  labs (x = "Decade of Birth" , 
+        y = "% of Respondants Willing to Fight", 
+        title = "Pacific Coalition vs. China",
+        colour = "Country")
+d
+
+```
+
+```{r chart, echo=FALSE}
+w <- `WVS_Cross-National_Wave_7_v2_0` %>%
+  #selct specific data and rename it
+  select(country = C_COW_ALPHA, will_to_fight = Q151, birth_year = Q261) %>%
+  #get rid of the erroneous data input by no answers and lost answers
+  filter(birth_year >= 1930, will_to_fight >= 1) %>%
+  #invert the will to fight catagory since 2 was a "no" and 1 was "yes"
+  mutate(fight_for_country = 1 / will_to_fight) %>% 
+  #group years into new variables of decades
+  mutate(decade_of_birth = case_when(birth_year < 1940 ~ '1930s',
+                                     birth_year < 1950 ~ '1940s',
+                                     birth_year < 1960 ~ '1950s',
+                                     birth_year < 1970 ~ '1960s',
+                                     birth_year < 1980 ~ '1970s',
+                                     birth_year < 1990 ~ '1980s',
+                                     birth_year < 2000 ~ '1990s',
+                                     birth_year < 2010 ~ "2000s")) %>% 
+  # organize data set by decade and by country
+  group_by(decade_of_birth, country) %>% 
+  # summarize compresses the data
+  summarize(mean_will_to_fight = mean(fight_for_country), 
+            count = n()) %>% 
+  filter(country %in% c("USA", "RUS", "GMY", "UKR") ) %>% 
+  ggplot(mapping = aes(x= decade_of_birth , y= mean_will_to_fight, group = country, color = country)) +
+  geom_line ()+ 
+  theme_minimal() +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))+
+  scale_color_brewer(palette = "Set1") +
+  scale_y_continuous(breaks = c(0.5,0.6, 0.7, 0.8, 0.9, 1),
+                     labels = c(0, 20,40, 60, 80, 100)) +
+  expand_limits(y = 1) +
+  labs (x = "Decade of Birth" , 
+        y = "% of Respondants Willing to Fight", 
+        title = "European Coalition vs. Russia" ,
+        colour = "Country")
+w
+```
+
+The two charts demonstrate a distinct generational divide in the US and it's key allies. The older generations are far more likely to be willing to fight, while the younger generations who would actually be called upon to fight are much more ambivalent, or, in the case of Japan and Germany, completely opposed to participation in combat. This could have two consequences for the US and its allies. The first being that any near term major conflict requiring a significant increase in military manpower may require initiating selective service to overcome hesitancy on the part of its military age citizens. The second being that as Great Power Competition continues, the demographics of the US and its allies could change to the point that the elderly "fighting" generation is replaced by the younger pacifist voters, and their preferences will constrain the foreign policy options of their democratically elected leaders.
+
+## References
+
+[@haerpfer2020]

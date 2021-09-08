@@ -1,0 +1,59 @@
+---
+title: "Ideologies of Personal Responsibility by Income Level"
+author: "Jennifer Hickey"
+date: "9/7/2021"
+output: pdf_document
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(here)
+```
+
+This study seeks to examine the relationship between income level and attitudes about personal responsibility for economic well-being in neoliberal countries. In the United States, the political dominance of neoliberal ideology has resulted in staggering income inequality. At the same time, neoliberal ideals of individual responsibility operate to place the blame for poverty squarely on the poor, absolving the state of responsibility for the well-being of its citizens. This study examines attitudes about government versus individual responsibility across self-reported economic class (acting as a proxy for income level) to determine patterns in social adoption of neoliberal ideologies.
+
+# Background
+
+Neoliberalism, the dominant political theory in the United States, is based on the principle that "human well-being can best be advanced by liberating individual entrepreneurial freedoms and skills within an institutional framework characterized by strong private property rights, free markets, and free trade" [@harvey2007]. The primary and arguably singular role of the neoliberal state is to protect the free market and enable competition, the mechanisms which promote economic growth and individual freedom and choice [@mirowski2009]. Otherwise, neoliberalism champions a restrained state with no obligation to provide social services and no ability to enact any sort of economic regulation in favor of social good [@harvey2007]. Such coercive acts are viewed as impermissible restraints on individual liberty [@harvey2007].
+
+Neoliberalism's focus on individual agency and freedom within the market ideologically repositions citizens as wealth-maximizing consumers. This celebration of individual freedom and concomitant individual responsibility not only forecloses state intervention, it actively isolates individuals from any notion of collective welfare [@moyn2018].
+
+Neoliberal philosophy not only recognizes that the elevation of individual liberty will result in economic inequality, it embraces this inequality as necessary to achieve individual success and economic growth. The only notion of equality acceptable to the neoliberal agenda is formal equality, or equality of opportunity, seen as fundamental to ensuring that all individuals can freely participate in the market [@macnaughton2018]. State interference to ensure substantive equality, or equality of outcome, would be a "coercive" violation of individual liberty [@harvey2007].
+
+Neoliberalism has spread throughout the world since the 1970s. Today, almost all countries have adopted and incorporated some tenets of neoliberal theory [@harvey2007].
+
+# Results
+
+The graphs below demonstrate the relationship between income level and attitudes about personal responsibility in a selection of countries that have adopted a notable measure of neoliberalism. Data was taken from Wave 7 of the World Values Survey, which took place between 2017 and 2020. Respondents were asked to rate their attitudes on a scale of 1 to 10, with 1 signifying "Government should take more responsibility to ensure that everyone is provided for" and 10 signifying "People should
+take more responsibility to provide for themselves." The graphs show the average response to this question across self-reported economic class in each country.
+
+```{r plot, echo=FALSE}
+
+load(here('./data/WVS_Cross-National_Wave_7_R_v2_0.rdata'))
+
+# Load country, individual responsibility and economic class responses, filter negative values, calculate mean individual responsibility value, filter by a subset of neoliberal countries
+by_country <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA, individual_responsibility=Q108, econ_class=Q287) %>%
+  filter (individual_responsibility > 0, econ_class > 0) %>%
+  group_by(econ_class, country) %>%
+  summarize(mean_individual_responsibility = mean(individual_responsibility), 
+            count=n()) %>%
+  filter(country %in% c('USA', 'AUL', 'BRA', 'GMY', 'CHN', 'MEX'))
+  
+# Line graph faceted by country
+ggplot(by_country, mapping = aes(x=econ_class, y=mean_individual_responsibility, group=country)) +
+  geom_line() +
+  scale_x_discrete(limits=c("1","2","3","4","5"), labels=c("Upper", "U. Mid", "L. Mid", "Working", "Lower")) +
+  theme_minimal() +
+  facet_wrap(~country, ncol=2) +
+  labs(x='Economic Class', y='Importance of Personal Responsibility')
+
+```
+
+Across each country, those at the highest income level valued personal responsibility more than those at the lowest. The contrast was most pronounced in Brazil, where the importance of personal responsibility declined dramatically from the Upper to Lower Middle Class, where it then remained stagnant. Brazil also had both the minimum and maximum average ratings among the countries. China exhibited the least amount of variance between economic classes, possibly due to the debated extent of neoliberal influence on its Communist government.
+
+The data confirm the adoption of neoliberal ideologies of personal responsibility among the upper classes. It is relatively unsurprising that those in higher economic classes would place more importance on individual responsibility for economic well-being. There was, however, an unexpected upward trend in ideology of personal responsibility among the lower classes in Germany. This may have something to do with neoliberalism's origins in Germany.
+
+## References

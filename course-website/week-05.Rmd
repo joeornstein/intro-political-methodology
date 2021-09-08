@@ -1,0 +1,19 @@
+---
+title: "Week 5"
+description: |
+  Summary Statistics
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+Over the next few weeks, we'll learn some of the most important functions in the `tidyverse` for data importing, wrangling, and summarizing. We'll introduce the essential **summary statistics** that we use to describe central tendency, variation, and correlation.
+
+## Reading Assignments
+
+Take a break from reading (or catch up on the reading you missed in previous weeks)!
+
+## Problem Set
+
+For the midterm
