@@ -1,14 +1,19 @@
 ---
 title: "Week 5"
 description: |
-  Summary Statistics
+  Describing Your Data
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-Over the next few weeks, we'll learn some of the most important functions in the `tidyverse` for data importing, wrangling, and summarizing. We'll introduce the essential **summary statistics** that we use to describe central tendency, variation, and correlation.
+This week we review the essential **summary statistics** that social scientists use to describe their data, including measures of central tendency, dispersion, and correlation.
+
+```{r img, fig.cap='Artwork by Allison Horst'}
+knitr::include_graphics('img/horst-normal.png')
+```
 
 ## Reading Assignments
 
@@ -16,4 +21,6 @@ Take a break from reading (or catch up on the reading you missed in previous wee
 
 ## Problem Set
 
-For the midterm
+For the midterm mini-conference next week, please prepare a 10 minute presentation about a dataset you find interesting (feel free to use one of the datasets we've looked at in class, or strike out on your own). Your presentation should describe each step in your analysis pipe: importing, tidying, summarizing, and visualizing. Submit the code you used in your analysis to eLC (R Markdown or standard R scripts are both fine).
+
+Please send me the title of your presentation at least two days in advance so I can create the mini-conference program.

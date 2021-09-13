@@ -1,0 +1,23 @@
+---
+title: "Week 6"
+description: |
+  Midterm Mini-Conference
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+## Reading Assignments
+
+Next week, we start building mathematical models to help us understand what's going on in our data. Before then, please read:[^link]
+
+- [The Joy of X](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559), Chapters 17 and 18.
+- [Moore & Siegel](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618), Chapter 5.
+
+## Problem Set
+
+No problem set!
+
+[^link]: Both links take you to the ebook version hosted by the UGA library. Log in to your library account and they should work. Hypothesis highlights don't play  nicely with the library ebooks, but you can leave page notes if you have questions.

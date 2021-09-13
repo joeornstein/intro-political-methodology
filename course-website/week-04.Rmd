@@ -1,7 +1,7 @@
 ---
 title: "Week 4"
 description: |
-  Wrangle that data into shape
+  Wrangling Your Data
 ---
 
 ```{r setup, include=FALSE}

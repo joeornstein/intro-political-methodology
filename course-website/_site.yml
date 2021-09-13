@@ -16,12 +16,16 @@ navbar:
         - text: "PART 1: LOOK AT YOUR DATA"
         - text: "Week 1: Getting Started"
           href: week-01.html
-        - text: "Week 2: Basic Data Visualization"
+        - text: "Week 2: Visualize Your Data"
           href: week-02.html
-        - text: "Week 3: Advanced Data Visualization"
+        - text: "Week 3: Tidy Your Data"
           href: week-03.html
-        - text: "Week 4: Data Wrangling"
+        - text: "Week 4: Wrangle Your Data"
           href: week-04.html
+        - text: "Week 5: Describe Your Data"
+          href: week-05.html
+        - text: "Week 6: Midterm Mini-Conference"
+          href: week-06.html
         - text: "---"
         - text: "PART 2: BUILD MODELS"
     - icon: fas fa-calendar-plus
