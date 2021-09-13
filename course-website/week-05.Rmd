@@ -2,7 +2,6 @@
 title: "Week 5"
 description: |
   Describing Your Data
-bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}

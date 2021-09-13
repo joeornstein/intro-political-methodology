@@ -2,7 +2,6 @@
 title: "Week 6"
 description: |
   Midterm Mini-Conference
-bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
