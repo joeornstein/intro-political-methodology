@@ -1,0 +1,148 @@
+---
+title: "Probability Distributions"
+author: "Joe Ornstein"
+date: "9/15/2021"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+# What is a probability distribution?
+
+A **probability distribution** assigns a number from 0 to 1 to every possible value that a variable can take. All of the values in the distribution must sum to 1.
+
+To illustrate, let's look the CES:
+
+```{r load-ces}
+library(tidyverse)
+library(here)
+
+load(
+  here('data/ces-2020/cleaned-CES.RData')
+)
+```
+
+## Discrete Variables
+
+Discrete variables can take only a given set of values.
+
+Binary variables are a special type of discrete variable that only takes 2 values.
+
+```{r gender}
+
+ces %>% 
+  count(gender) %>% 
+  # probability is the total number of people in a category divided by the total number of people in all categories
+  mutate(probability = n / sum(n)) 
+
+```
+
+Each probability value tells you - if you were to draw a survey respondent at random - what's the chance they would be female or male?
+
+## Categorical Variables
+
+Categorical variables are a discrete variable that could take multiple values.
+
+```{r race}
+
+ces %>% 
+  count(race) %>% 
+  mutate(probability = n / sum(n))
+
+```
+
+## Ordinal Variables
+
+An ordinal variable is a categorical variable, but there is some ordering. We know the order, but not the relative distances between the values.
+
+```{r ordinal}
+
+ces %>% 
+  filter(!is.na(trump_approval)) %>% 
+  count(trump_approval) %>% 
+  mutate(probability = n / sum(n))
+
+# plot that
+ces %>% 
+  filter(!is.na(trump_approval)) %>% 
+  count(trump_approval) %>% 
+  mutate(probability = n / sum(n)) %>% 
+  ggplot(mapping = aes(x = trump_approval, y = probability)) + 
+  geom_col()
+```
+
+## Continuous Variables
+
+A continuous variable could, in principle, take any numeric value.
+
+```{r age}
+
+# *could* do it this way
+ces %>% 
+  count(age) %>% 
+  mutate(probability = n / sum(n))
+
+# instead of computing the probability in each category, we typically summarize by binning values together
+ggplot(data = ces,
+       mapping = aes(x = age)) +
+  geom_histogram(color = 'black',
+                 binwidth = 5)
+
+# instead of a histogram, you could use a density plot
+ggplot(data = ces,
+       mapping = aes(x = age)) +
+  geom_density(alpha = 0.5, fill = 'gray') +
+  theme_classic()
+```
+
+# Joint Distributions
+
+```{r joint-distribution}
+
+joint_distribution <- ces %>% 
+  count(gender, educ) %>% 
+  mutate(probability = n / sum(n))
+
+sum(joint_distribution$probability)
+```
+
+Joint probability: $P(A, B)$
+
+Probability of observing (in the CES) a female with a 2-year degree: $P(female, 2 year) = 0.0635$.
+
+# Conditional Probability
+
+If joint probability told us the probability of observing someone who is female *and* has a two year degree...
+
+Conditional probability tells us the probability that *if* we observe someone who has a 2-year degree, what's the chance they're a female? Or, conversely, *if* we observe a female, what's the chance she has a two-year degree?
+
+The way we denote conditional probability is with a vertical bar:
+
+$P(A|B)$
+
+And it's related to joint probability this way:
+
+$P(A|B) = P(A, B) / P(B)$
+
+```{r conditional-probability}
+# P(educ | gender)
+conditional_probability1 <- ces %>% 
+  group_by(gender, educ) %>% 
+  summarize(freq = n()) %>% 
+  mutate(conditional_probability = freq / sum(freq))
+
+conditional_probability1
+
+# P(gender | educ)
+conditional_probability2 <- ces %>% 
+  group_by(educ, gender) %>% 
+  summarize(freq = n()) %>% 
+  mutate(conditional_probability = freq / sum(freq))
+
+conditional_probability2
+```
