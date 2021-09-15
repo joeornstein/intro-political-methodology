@@ -146,3 +146,19 @@ conditional_probability2 <- ces %>%
 
 conditional_probability2
 ```
+
+## Bayes Rule
+
+$P(A|B)$ is not the same as $P(B|A)$, but if you know one you can compute the other.
+
+Bayes Rule: $P(A|B) = P(B|A) * P(A) / P(B)$
+
+Probability that I'm infected with COVID-19 if I get a positive COVID-19 test.
+
+P(positive test \| COVID) = 0.9
+
+P(COVID) = 0.01
+
+P(positive test) = 0.01 \* 0.9 + 0.99 \* 0.05 = 0.0585
+
+P(COVID \| positive test) = 0.9 \* 0.01 / 0.0585 = roughly 15%

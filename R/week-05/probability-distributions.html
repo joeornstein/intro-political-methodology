@@ -411,6 +411,16 @@ conditional_probability2</code></pre>
 ## 10 Post-grad            Male    4220                   0.504
 ## 11 Some college         Female  7671                   0.575
 ## 12 Some college         Male    5659                   0.425</code></pre>
+<div id="bayes-rule" class="section level2">
+<h2>Bayes Rule</h2>
+<p><span class="math inline">\(P(A|B)\)</span> is not the same as <span class="math inline">\(P(B|A)\)</span>, but if you know one you can compute the other.</p>
+<p>Bayes Rule: <span class="math inline">\(P(A|B) = P(B|A) * P(A) / P(B)\)</span></p>
+<p>Probability that I’m infected with COVID-19 if I get a positive COVID-19 test.</p>
+<p>P(positive test | COVID) = 0.9</p>
+<p>P(COVID) = 0.01</p>
+<p>P(positive test) = 0.01 * 0.9 + 0.99 * 0.05 = 0.0585</p>
+<p>P(COVID | positive test) = 0.9 * 0.01 / 0.0585 = roughly 15%</p>
+</div>
 </div>
 
 
