@@ -1,0 +1,24 @@
+---
+title: "Week 7"
+description: |
+  Building our first statistical model, plus all the calculus you need to make it go
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+![You'll laugh later](img/newton_and_leibniz.png)
+
+## Reading Assignments
+
+Next week we discuss the art of causal inference. Our guide is *The Effect*, by Nick Huntington-Klein. The whole book is great, but start with:
+
+- [Chapter 6: Causal Diagrams](https://theeffectbook.net/ch-CausalDiagrams.html)
+- [Chapter 7: Drawing Causal Diagrams](https://theeffectbook.net/ch-DrawingCausalDiagrams.html)
+- [Chapter 8: Closing Back Doors](https://theeffectbook.net/ch-CausalPaths.html)
+
+
+## Problem Set
+
+Practice a bit with calculus [here](problem-sets/problem-set-06.pdf). Complete and submit to eLC in any format you like.
