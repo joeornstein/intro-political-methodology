@@ -1,0 +1,108 @@
+---
+title: "A Century of Militarized Compellence"
+author: "Chris Lyells"
+date: "Sept 20, 2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(gapminder)
+library(socviz)
+library(RColorBrewer)
+mil_coercion <- read_csv(here("data/midterm/mct_dataset_v09.csv"))
+```
+
+## The Prospect of Winning Without Fighting
+
+The idea that a state can accomplish its goals with just the threat of of war is compelling for state leaders. War is costly in a myriad of ways, and if state interests can be met at a lower cost then leaders will surely pursue these alternate means. To evaluate the efficacy of militarized compellent threats, I have used the "Militarized Compellent Threat" data set created by Todd S. Sechser at the University of Virginia.
+
+Sechser defines his variables in the following way:
+
+Military Compellent Threat: "an explicit demand by one state (the challenger) that another state (the target) alter the status quo in some material way, backed by a threat of military force if the target does not comply."
+
+Mobilization: "the challenger employed demonstrations or shows of force or conspicuous military mobilizations in conjunction with the compellent demand."
+
+Military Action: "violent military force was used by the challenger at any point during the threat episode."
+
+Success: "target's level of voluntary (i.e., non-forcible) compliance with the challenger's demands."\*
+
+\*for our purposes we have categorized any compliance on the part of the target state as a success for the challenging state
+
+I have compressed Sechser's data into five year sections and compared compellent threats against success's, annotating how often the target state escalated from a pure threat to include military mobilization or the actual use of force.
+
+```{r pressure}
+#, echo=FALSE} # keep in case I want to get rid of my code
+
+coercion <- mil_coercion %>% 
+  #create a new column comp1 translating compliance into a 1 or 0 vs a 1,2 or 0
+  mutate(comp1 = case_when(compliance >= 1 ~ 1, compliance <1 ~ 0)) %>% 
+  #create a new 5 year variable since single years looks crazy
+  mutate(decade = case_when(year <= 1920 ~ '1918-20', year <= 1925 ~ '1921-25',
+                            year <= 1930 ~ '1926-30', year <= 1935 ~ '1931-35',
+                            year <= 1940 ~ '1936-40', year <= 1945 ~ '1941-45',
+                            year <= 1950 ~ '1946-50', year <= 1955 ~ '1951-55',
+                            year <= 1960 ~ '1956-60', year <= 1965 ~ '1961-65',
+                            year <= 1970 ~ '1966-70', year <= 1975 ~ '1971-75',
+                            year <= 1980 ~ '1976-80', year <= 1985 ~ '1981-85',
+                            year <= 1990 ~ '1986-90', year <= 1995 ~ '1991-95',
+                            year <= 2000 ~ '1996-20', year >= 2001 ~ "2000-01")) %>% 
+  group_by(decade) %>% 
+  #I want to first create a new column that captures ttl coercion attempts per 
+  #5 yrs, then I want to add up all the other variables that occured in that 
+  #time span
+  summarize(attempt = n(), tgt_comply = sum(comp1), 
+            inflict_casualties = sum(target_fatalities), 
+            demo_force = sum(demonstration), mil_action = sum(force)) %>% 
+  #calculate the percentage of successful coercion attempts
+  mutate(success_rate  = tgt_comply / attempt * 100) %>% 
+  #create a plot
+  ggplot(mapping = aes(x = decade, y = attempt))+
+  #baseline graph is years against coercion attempts. the stat function allows the x axis
+  #to assume the decade variable, graphically represent the rate of success in the bar chart
+  geom_bar(aes(fill = success_rate), stat = 'identity', position = 'dodge')+ 
+  #add in 3 scatter plots, showing the methods of coercion and success
+  geom_point(mapping = aes(x = decade , y = mil_action), 
+             color = 'blue', size = 2)+
+  geom_point(mapping = aes(x = decade, y = demo_force), color = 'green') +
+  geom_point(mapping = aes(x = decade, y = tgt_comply), color = 'yellow') +
+  theme_dark()+
+  #adjust the fill to be more intuitive
+  scale_fill_distiller(palette = 'Reds', direction = 1) +
+  #add a manual legend for the scatter plots
+  annotate('text', x = 10, y = 35, label = 'blue = military action', 
+           size = 3, color = 'blue')+
+  annotate('text', x = 10, y = 33, label = 'green = mobilization',
+           size = 3, color = 'green')+
+  annotate('text', x = 10, y = 31, label = 'yellow = coersion success', 
+           size = 3, color = 'yellow')+
+  #center the title
+  theme(plot.title = element_text(hjust =0.5))+
+  #rotate the x axis labels 90 degrees so they are readable
+  theme(axis.text.x = element_text(angle = 90)) +
+  #add labels
+  labs(title = 'A Century of Militarized Compellence',
+       x = '5-year Totals',
+       y = 'Compellent Attempts & Sub Actions',
+       fill = '% Success Rate')
+
+  coercion
+
+```
+
+The chart above illustrates the limits of military coercion. The compilation of coercion attempts via threat, with amplifying data specifying escalation from threat to both the mobilization of forces and taking military action, juxtaposed against target compliance, paint a decidedly mixed picture. Only 3 general periods break above the 50% success mark, several years after WWI, during WWII, and the height of the militarized Cold War when the US was involved in Korea and Vietnam.
+
+The mobilization of forces does not seem to have any effect on the success rate, with most coercive attempts being accompanied by military mobilizations.
+
+Military action is employed as a coercive technique far less until after 1975, but also seems to be de-correlated from success.
+
+The data introduces the idea that a state's ability to compel another is dependant on external factors, and militarized compellent threats need to be employed more carefully.
+
+## References
+
+[@todds.sechser2011]
