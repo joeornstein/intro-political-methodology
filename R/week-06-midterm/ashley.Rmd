@@ -1,0 +1,156 @@
+---
+title: "Midterm Presentation"
+author: "Ashley Pieper"
+date: "9/20/2021"
+output: pdf_document
+bibliography: references.bib 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(here)
+library(janitor)
+library(ggrepel)
+library(readstata13)
+library(haven)
+library(foreign)
+
+```
+
+```{r load-ches, echo=FALSE}
+
+# load original data
+ches_raw <- read_csv('data/raw data/1999-2019_CHES_dataset_means(v2).csv') %>% 
+# clean up the names (janitor function)
+  clean_names()
+
+```
+
+## Introduction
+
+This presentation explores the counter-intuitive left-right party ideology in Post-Communist European countries using the 1999-2019 Chapel Hill Expert Survey (CHES) dataset.[^1] The CHES estimates the relative placement of national parties on an ideological scale. Parties are assigned scores for various categories based on their overall stances on European integration, several EU policies, and left/right positioning on general, economic, and social issues. The 2019 survey includes all EU member states, as well as parties in Norway, Switzerland, and Turkey.
+
+[^1]: @bakkerryanliesbethooghesethjollygarymarksjonathanpolkjanrovnymarcosteenbergenandmiladaannavachudova2020
+
+First, overall left/right economic policy preferences (coded as LRECON) are ranked from 0 to 10 with 0 representing the extreme left, 5 representing the center, and 10 representing the extreme right. As the CHES trend file codebook explains, parties on the economic left favor heavy government involvement in the economy, while "parties on the economic right emphasize a reduced economic role for government: privatization, lower taxes, less regulation, less government spending, and a leaner welfare state."[^2]
+
+[^2]: Bakker et al., "Codebook: 1999 − 2019 Chapel Hill Expert Survey," 19.  
+
+GAL/TAN party positions will also be considered using the CHES data which ranks parties on a scale of 0 to 10, with 0 representing Libertarian/Postmaterialist, 5 representing the center, and 10 representing Traditional/Authoritarian. "Libertarian" or "postmaterialist" (GAL) parties are traditionally more aligned on the left side of the political spectrum regarding social issues on the GAL/TAN scale. They value "expanded personal freedoms" such as "access to abortion, active euthanasia, same-sex marriage, or greater democratic participation." "Traditional" or "authoritarian" (TAN) parties, however, "value order, tradition, and stability, and believe that the government should be a firm moral authority on social and cultural issues."[^3]
+
+[^3]: Ibid.
+
+```{r recode-ches}
+ches <- ches_raw %>% 
+    # recode some variables
+mutate(eastwest = if_else(eastwest == 0, 'east', 'west'),
+       eumember = if_else(eumember == 0, 'No', 'Yes'),
+       family = case_when(family == 1 ~ 'Radical Right',
+                          family == 2 ~ 'Conservatives',
+                          family == 3 ~ 'Liberal',
+                          family == 4 ~ 'Christian-Democratic',
+                          family == 5 ~ 'Socialist',
+                          family == 6 ~ 'Radical Left',
+                          family == 7 ~ 'Green',
+                          family == 8 ~ 'Regionalist',
+                          family == 9 ~ 'No family',
+                          family == 10 ~ 'Confessional',
+                          family == 11 ~ 'Agrarian/Center'),
+      country = case_when(country == 1 ~ 'Belgium',
+                    country == 2 ~ 'Denmark',
+                    country == 3 ~ 'Germany',
+                    country == 4 ~ 'Greece',
+                    country == 5 ~ 'Spain',
+                    country == 6 ~ 'France',
+                    country == 7 ~ 'Ireland',
+                    country == 8 ~ 'Italy',
+                    country == 10 ~ 'Netherlands',
+                    country == 11 ~ 'United Kingdom',
+                    country == 12 ~ 'Portugal',
+                    country == 13 ~ 'Austria',
+                    country == 14 ~ 'Finland',
+                    country == 16 ~ 'Sweden',
+                    country == 20 ~ 'Bulgaria',
+                    country == 21 ~ 'Czech Republic',
+                    country == 22 ~ 'Estonia',
+                    country == 23 ~ 'Hungary',
+                    country == 24 ~ 'Latvia', 
+                    country == 25 ~ 'Lithuania',
+                    country == 26 ~ 'Poland',
+                    country == 27 ~ 'Romania',
+                    country == 28 ~ 'Slovakia',
+                    country == 29 ~ 'Slovenia',
+                    country == 31 ~ 'Croatia',
+                    country == 35 ~ 'Norway',
+                    country == 36 ~ 'Switzerland',
+                    country == 37 ~ 'Malta',
+                    country == 38 ~ 'Luxembourg',
+                    country == 40 ~ 'Cyprus'))
+
+```
+
+## Reversed Fiscal Policy in Eastern/Central Europe
+
+```{r figure1, echo=FALSE, fig.height=10}
+#scatterplot
+p_title <- "Party Left-Right Positions: Eastern/Central vs Western Europe"
+p_caption <- "Data Source: 1999-2019 Chapel Hill Expert Survey (CHES)."
+x_label <- "Social Left–Right"
+y_label <- "Economic Left-Rights"
+p <- ggplot(data = ches,
+            mapping = aes(x = galtan, y = lrecon,
+                          label = party))
+p + geom_point() + 
+   geom_text_repel() +
+  geom_smooth(method = "lm")+
+ facet_wrap(~ eastwest, nrow = 2) +
+  scale_x_continuous(breaks = c(0, 5, 10),
+                   labels = c("Libertarian/Postmaterialist", "center", "Traditional/Authoritarian")) +
+  scale_y_continuous(breaks = c(0, 5, 10),
+                   labels = c("extreme left", "center", "extreme right")) +
+labs(x = x_label, y = y_label, title = p_title,
+     caption = p_caption)
+```
+
+# Eastern Europe by Country
+
+```{r figure2, echo=FALSE, fig.height=10, fig.width=8}
+
+by_country <- ggplot(data = subset(ches, eastwest %in% "east"),
+                       mapping = aes(x = galtan, y = lrecon,
+                                     label = party))
+  by_country + geom_point() + 
+  geom_text_repel() +
+  geom_smooth(method = "lm")+
+  facet_wrap(~ country) +
+  scale_x_continuous(breaks = c(0, 5, 10),
+                     labels = c("Lib/Post", "center", "Trad/Auth")) +
+  scale_y_continuous(breaks = c(0, 5, 10),
+                     labels = c("extreme left", "center", "extreme right")) +
+  labs(x = 'Social', y = 'Economic', title = 'Party Left-Right Positions by Country', subtitle = 'Eastern/Central Europe')
+```
+
+## Analysis
+
+One possible explanation for this is party positions on European Integration. Since most leftist parties in Eastern Europe are highly Eurosceptic, they are perhaps more likely to oppose the pro-market/neo-liberal policies of the EU. In contract rightist parties in Eastern Europe are generally pro-European Integration, and therefore, more likely to align their economic policies with those of the EU.
+
+Notice in the figure above, most of the countries with the opposite trend are not members of the EU.
+
+# Economic Position as a Function of EU Support
+
+```{r figure 3, echo=FALSE, fig.width=10}
+
+eu_support <- ggplot(data = subset(ches, eastwest %in% "east"),
+                       mapping = aes(x = eu_position, y = lrecon,
+                                     label = party))
+  eu_support + geom_point() + 
+  geom_text_repel() +
+  geom_smooth(method = "lm")+
+  scale_x_continuous(breaks=c(1,2,3,4,5,6,7), labels=c("Strongly opposed", "Opposed", "Somewhat Opposed", "Neutral", "Somewhat in favor", "In favor","Strongly in favor")) +
+  scale_y_continuous(breaks = c(0, 5, 10),
+                     labels = c("extreme left", "center", "extreme right")) +
+  labs(x = 'EU Support', y = 'Economic Left-Right', title = 'Party Left-Right Positions by EU Support', subtitle = 'Eastern/Central Europe')
+
+```

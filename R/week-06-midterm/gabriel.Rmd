@@ -1,0 +1,224 @@
+---
+title: "Soybean expansion in Brazilian Cerrado and Matopiba Region"
+author: "Gabriel Soyer"
+date: "17/09/2021"
+output:
+  pdf_document: default
+  html_document: default
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+## Loading the libraries
+library(geobr)
+library(tidyverse)
+library(ggplot2)
+library(sf)
+library(dplyr)
+library(readxl)
+library(dplyr)
+library(tidyverse)
+```
+
+## Introduction
+
+```{r, include=FALSE}
+## Loading the data for all of Brazilian States
+
+states <- read_state(year=2020)
+## Loading the data for all the Brazilian Biomes to get Cerrado code
+## Loading the data specifically for Cerrado using the filter()
+all_biomes <- read_biomes(year = 2019) %>%
+  filter(code_biome == 3)
+all_biomes
+## Ploting the data
+
+# Remove plot axis
+no_axis <- theme(axis.title=element_blank(),
+                 axis.text=element_blank(),
+                 axis.ticks=element_blank())
+
+
+
+
+## Ploting the all of Brazilian States and the Cerrado Biome as the object brazil_cerrado
+brazil_cerrado <- ggplot() +
+  geom_sf(data=states, fill="#2D3E50", color="#FEBF57", size=.15, show.legend = FALSE) +
+  geom_sf(data=all_biomes, fill="green", color="green", size=.15, show.legend = FALSE) +
+  labs(subtitle="Cerrado biome", size=8,
+       caption = "Source:  Brazilian Institute of Geography and Statistics") +
+  theme_minimal() +
+  no_axis
+brazil_cerrado
+```
+
+The Brazilian Cerrado is one of the world's biodiversity hotspot[@strassburg2017]. In the last 4 decades, this important biome been transformed into pasture and agricultural lands for commodity production and cattle ranching. For instance, this is the geographical area that I intend to focus my research. My primary goal here is twofold. First, to create maps to visualize the region. Second, to import, tidy, and then plot charts about the soybean expansion in the Brazil, and specifically within the Matopiba Region.
+
+## Cerrado biome
+
+```{r, include = TRUE}
+plot(brazil_cerrado)
+```
+
+My focus on soybean is due of its importance for Brazil's balance of payments and role in the development of Brazilian agribusiness[@oliveira2016]. Soybean became the major driver of intensive crop production in the Cerrado after the introduction of technological advances in the late 1970s[@nehring2016] .
+
+## Matopiba region
+
+```{r, include=FALSE}
+## Loading each micro regions to gather the name of the micro regions that I will use
+all_micro_region <- read_micro_region(year = 2020)
+## Loading the data for each all of the 31 micro_regions in the Matopiba
+
+## All of the micro regions in the State of Tocantins
+bico_do_papagaio <- read_micro_region(code_micro = 17001, year = 2020)
+araguaina <- read_micro_region(code_micro = 17002, year = 2020)
+miracema_do_tocantins <- read_micro_region(code_micro = 17003, year = 2020)
+rio_formoso <- read_micro_region(code_micro = 17004, year = 2020)
+gurupi <- read_micro_region(code_micro = 17005, year = 2020)
+porto_nacional <- read_micro_region(code_micro = 17006, year = 2020)
+jalapao <- read_micro_region(code_micro = 17007, year = 2020)
+dianapolis <- read_micro_region(code_micro = 17008, year = 2020)
+
+
+## All of the micro regions in the State of Maranhão
+lencois_maranhenses <- read_micro_region(code_micro = 21004, year = 2020)
+itapecuru_mirim <- read_micro_region(code_micro = 21006, year = 2020)
+imperatriz <- read_micro_region(code_micro = 21009, year = 2020)
+medio_mearim <- read_micro_region(code_micro = 21010, year = 2020)
+alto_mearim_and_grajau <- read_micro_region(code_micro = 21011, year = 2020)
+presidente_dutra <- read_micro_region(code_micro = 21012, year = 2020)
+baixo_parnaiba_maranhense <- read_micro_region(code_micro = 21013, year = 2020)
+chapadinha <- read_micro_region(code_micro = 21014, year = 2020)
+codo <- read_micro_region(code_micro = 21015, year = 2020)
+coelho_neto <- read_micro_region(code_micro = 21016, year = 2020)
+caxias <- read_micro_region(code_micro = 21017, year = 2020)
+chapadas_do_alto_itapecuru <- read_micro_region(code_micro = 21018, year = 2020)
+porto_franco <- read_micro_region(code_micro = 21019, year = 2020)
+gerais_de_balsas <- read_micro_region(code_micro = 21020, year = 2020)
+chapadas_das_mangabeiras <- read_micro_region(code_micro = 21021, year = 2020)
+
+## All of the micro regions in the State of Piaui
+alto_parnaiba_pi <- read_micro_region(code_micro = 22007, year = 2020)
+bertolinia <- read_micro_region(code_micro = 22008, year = 2020)
+alto_medio_gurgeia <- read_micro_region(code_micro = 22010, year = 2020)
+chapadas_do_extremo_sul_pi <- read_micro_region(code_micro = 22012, year = 2020)
+
+## All of the micro regions in the State of Bahia
+barreiras_micro <- read_micro_region(code_micro = 29001, year = 2020)
+cotegipe <- read_micro_region(code_micro = 29002, year = 2020)
+santa_maria <- read_micro_region(code_micro = 29003 , year = 2020)
+bom_jesus_da_lapa <- read_micro_region(code_micro = 29007, year = 2020)
+
+
+
+## Function to find the municipality code
+##lookup_muni()
+## Loadind the data for each municipality using the function read_municipality, I want to focus on these municipalities later
+
+barreiras <- read_municipality( code_muni = 2903201 , year=2010)
+balsas <- read_municipality( code_muni = 2101400 , year=2010)
+bom_jesus <- read_municipality(code_muni = 2201903 , year=2010)
+luis_eduardo_magalhaes <- read_municipality(code_muni = 2919553 , year=2010)
+urucui <- read_municipality(code_muni = 2211209, year = 2010 )
+porto_nacional_mun <-read_municipality(code_muni =  1718204, year = 2010 )
+
+## Ploting the data
+
+# Remove plot axis
+no_axis <- theme(axis.title=element_blank(),
+                 axis.text=element_blank(),
+                 axis.ticks=element_blank())
+
+
+
+## Ploting the all of Brazilian States, the Cerrado Biome and the Matopiba Region
+brazil <- ggplot() +
+  geom_sf(data=states, fill="#2D3E50", color="#FEBF57", size=.15, show.legend = FALSE) +
+  geom_sf(data=all_biomes, fill="green", color="green", size=.15, show.legend = FALSE) +
+  labs(subtitle="Cerrado biome", size=8) +
+  theme_minimal() +
+  no_axis
+brazil
+a <- ggplot() +
+geom_sf(data=states, fill="#2D3E50", color="ghostwhite", size=.15, show.legend = FALSE) +
+  geom_sf(data=all_biomes, fill="green", color="green", size=.15, show.legend = FALSE) +
+ ## All of the micro regions in the State of Tocantins
+   geom_sf(data=bico_do_papagaio, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=araguaina, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=miracema_do_tocantins, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=rio_formoso, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=jalapao, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=porto_nacional, fill="red", color="red", size=.15, show.legend = FALSE) +
+   geom_sf(data=gurupi, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=dianapolis, fill="red", color="red", size=.15, show.legend = FALSE) +
+  
+  
+ ## All of the Regions in the State of Maranhão 
+  geom_sf(data=lencois_maranhenses, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=itapecuru_mirim, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=imperatriz, fill="red", color="red", size=.15, show.legend = FALSE) +geom_sf(data=lencois_maranhenses, fill="red", color="red", size=.15, show.legend = FALSE) +geom_sf(data=lencois_maranhenses, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=medio_mearim, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=alto_mearim_and_grajau, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=presidente_dutra, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=baixo_parnaiba_maranhense, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=presidente_dutra, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=chapadinha, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=codo, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=coelho_neto, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=caxias, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=chapadas_do_alto_itapecuru, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=porto_franco, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=gerais_de_balsas, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=chapadas_das_mangabeiras, fill="red", color="red", size=.15, show.legend = FALSE) +
+  
+  ## All of the Regions in the State of Piaui
+  geom_sf(data=alto_parnaiba_pi, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=bertolinia, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=alto_medio_gurgeia, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=chapadas_do_extremo_sul_pi, fill="red", color="red", size=.15, show.legend = FALSE) +
+  
+  ## All of the Regions in the State of Piaui
+  geom_sf(data=barreiras_micro, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=cotegipe, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=santa_maria, fill="red", color="red", size=.15, show.legend = FALSE) +
+  geom_sf(data=bom_jesus_da_lapa, fill="red", color="red", size=.15, show.legend = FALSE) +
+  labs(subtitle="Matopiba", size=8) +
+  no_axis
+
+plot(a)
+
+
+```
+
+```{r, include=TRUE}
+
+plot(a)
+
+```
+
+Matopiba is an acronym that uses the first two letters of the four brazilian states, namely southern Maranhão (MA), Tocantins (TO), southern Piauí (PI), and western Bahia (BA). It is commonly referred as the Brazil's new agriculture frontier. For instance, Agricultural frontier expansion in the Matopiba is changing rural livelihoods and leading to socio-ecological conflicts evolving around issues such as the application of pesticides/herbicides close to settled areas, the privatization of land, and the displacement of small-scale farmers[@dearaújo2019]. [@bragança2018] Found that agricultural production started to increase faster in municipalities inside the Cerrado since the 1990s.
+
+## Soybean expansion in Brazil
+
+Based on the chart below, we can see that soybean production in Brasil has drastically increased in the last 3 decades. The area here is measured in hectares, the standard metric for land in Brazil. Each single hectare corresponds to 2.471 acres in the United States Customary measure.
+
+```{r, echo=FALSE}
+
+Prod_soja_Brasil <- read_excel("C:/Users/gabri/Documents/R/data/data_working_7012.xlsx")
+
+
+national_production <- ggplot(data = Prod_soja_Brasil, aes(x = Year, y = Area, group=1)) +
+  geom_line() +
+  theme_gray() +
+  theme_bw(base_size = 10) +
+  theme(axis.text.x=element_text(angle=45,hjust=1)) 
+
+
+```
+
+```{r, include=TRUE}
+plot(national_production)
+
+```
+
+## References

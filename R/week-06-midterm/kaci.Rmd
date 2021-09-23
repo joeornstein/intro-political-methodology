@@ -1,0 +1,174 @@
+---
+title: "Trends in Global Terrorism"
+author: "Kaci Sharpe"
+date: "September 20, 2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+library(gridExtra)
+
+globalterrorismdb_0221dist <- read_excel("~/Downloads/globalterrorismdb_0221dist.xlsx")
+```
+
+## Taking a Look at Global Terrorism
+
+**Introduction**
+
+Terrorism is something the affects the world in a multitude of ways. Studying terrorism is important because, in order to prevent something, we must understand how it works. If we study why terrorist groups behave the way they do, then maybe we can stop them before they get the chance to launch an attack. This review of terrorism is very surface-level, and there are many more trends to be explored within this dataset.
+
+I chose to compare regions around the world and some specific nations in terms of types of attacks, and types of targets. After examining the overall trend in terrorist attacks' frequency over time, I will examine specific countries and regions.
+
+**Global Terrorism Database**
+
+Using the Global Terrorism Database (GTD), we will explore trends in global terrorism. The GTD provides information on domestic and international terrorist attacks around the world since 1970 until 2019 (over 200,000 events). For every event, it includes information such as the location, date, type of weapon used, etc.
+
+The GTD included all events that fit two of the following three criteria:
+
+1.  The act must be executed with the intent of attaining a political, economic, religious, or social goal,
+
+2.  There must be evidence that the group/individual is attempting to convey a message to a larger audience than just the direct target, and
+
+3.  The action must be outside the parameters of legitimate warfare activities (international humanitarian law) (GTD 2009)
+
+The GTD excludes incidents considered "state-sanctioned" or "state-led." The data is limited to only non-state actors as the perpetrators of terrorist attacks.
+
+The GTD defines "terrorism" as **"The threatened or actual use of illegal force and violence by a non-state actor to attain a political, economic, religious, or social goal through fear, coercion, or intimidation."** Following this definition, we will examine global terrorism trends that occurred between 2000-2019.
+
+In the graph below, we can see the overall fluctuation of terrorist events from 2000-2019.
+
+```{r pressure, echo=FALSE, fig.height=5.0, fig.width=10}
+# this creates a ggplot() object, using the swiss dataset that comes pre-packaged with R
+ #object for only select columns for the years 2000-2019
+gtd_select_2000 <- globalterrorismdb_0221dist %>% select(iyear, country, country_txt, region, region_txt, success, attacktype1, attacktype1_txt, targtype1, targtype1_txt,corp1,target1, natlty1, natlty1_txt, nkill, city) %>% filter(globalterrorismdb_0221dist$iyear >= 2000)
+#histogram of attacks over the 21st century 
+c <- ggplot(gtd_select_2000, aes(iyear))
+c+geom_histogram(binwidth=1, color= "firebrick4", fill="firebrick3") + labs(x= "Year", y= "Count", title = "Global Terrorist Attacks Over Time", subtitle = "Reported global incidents of terrorist attacks from 2000 - 2019") + stat_bin(binwidth = 1, geom='text', color='white', aes(label=..count..),position=position_stack(vjust=.5))
+
+
+
+
+
+```
+
+Reported terrorist attacks remained at a proportionally lower level until around 2011, when they began to drastically increase until their peak in 2014, at 16,959 reported incidents of terrorism. Since then, we have observed a gradual decline in incidents, with the data ending in 2019 with 8,495 reported incidents of terrorist attacks. However, it is essential to note that these incidents of terrorist activities are limited to the "conventional" methods of terrorism, therefore excluding cyber-terrorism attacks.
+
+```{r fig.height=15, fig.width=15}
+
+#2004 types of attacks break down
+lessattacks <-  gtd_select_2000 %>% filter(iyear== 2004) 
+p1 <- count(lessattacks, region_txt, attacktype1_txt) %>% ggplot(aes(x=reorder(region_txt, -n), y=n, fill=attacktype1_txt)) + geom_col() + labs(x= "Region", y= "Count", title = "2004 Global Terrorist Attacks by Region", guide = "Type of Attack")+theme(axis.text.x=element_text(angle =45,hjust=1))+guides(fill=guide_legend(title="Type of Attack"))+scale_y_continuous(expand = c(0,0))
+
+#the same for 2014
+moreattacks <-  gtd_select_2000 %>% filter(iyear== 2014)
+p2 <- count(moreattacks, region_txt, attacktype1_txt) %>% ggplot(aes(x=reorder(region_txt, -n), y=n, fill=attacktype1_txt)) + geom_col() + labs(x= "Region", y= "Count", title = "2014 Global Terrorist Attacks by Region", guide = "Type of Attack")+theme(axis.text.x=element_text(angle =45,hjust=1))+guides(fill=guide_legend(title="Type of Attack"))+scale_y_continuous(expand = c(0,0))
+
+#comparative chart... note that values of 0 are missing so Australasia and Oceania are not graphed for 2004
+grid.arrange(p1,p2, ncol=1)
+
+
+```
+
+The graphs above compare terrorist activity over different regions in 2004 (the year with the least reported incidents) and 2014 (the year with the most reported incidents). In both years, the proportion of terrorist attacks remains relatively similar, except in Sub-Saharan Africa, which experienced a proportional increase in terrorist attacks from 2004 to 2014. Sub-Saharan Africa's regional breakdown is pictured below:
+
+\
+
+```{r fig.height=15, fig.width=15}
+ssa.gtd.2004 <- lessattacks %>% filter (region_txt == "Sub-Saharan Africa")
+p8 <- count(ssa.gtd.2004, country_txt, attacktype1_txt) %>% ggplot(aes(x=reorder(country_txt, -n), y=n, fill=attacktype1_txt)) + geom_col()+theme(axis.text.x=element_text(angle =45,hjust=1))+ labs(x= "Country", y= "Count", title = "Types of Attacks in Sub-Saharan Africa (2004)")+ guides(fill=guide_legend(title="Type of Attack"))+scale_y_continuous(expand = c(0,0))
+
+
+ssa.gtd.2014 <- moreattacks %>% filter (region_txt == "Sub-Saharan Africa")
+
+p9 <- count(ssa.gtd.2014, country_txt, attacktype1_txt) %>% ggplot(aes(x=reorder(country_txt, -n), y=n, fill=attacktype1_txt)) + geom_col()+theme(axis.text.x=element_text(angle =45,hjust=1))+ labs(x= "Country", y= "Count", title = "Types of Attacks in Sub-Saharan Africa (2014)")+ guides(fill=guide_legend(title="Type of Attack"))+scale_y_continuous(expand = c(0,0))
+
+grid.arrange(p8,p9, ncol=1)
+```
+
+Here, we can see that many more countries experienced terrorist attacks in Sub-Saharan Africa in 2014 than in 2004. Not only this, but types of attacks also became significantly more diverse. This jump in terrorist attacks in the decade between 2004-2014 may be due to several things. In 2008, Al Shabaab (Somalia) announced its integration with Al Qaeda (Busher 2014). Their partnership allowed Al Shabaab's reach to extend from primarily domestic attacks to international attacks. In 2009, Nigerian forces severely hit Boko Haram (Nigeria) militants, killing hundreds, including their leader. Counter-productively, some see this attack as a catalyst for Boko Haram's massive escalation of attacks, considering the group was largely non-violent until this point. People also speculate that Boko Haram is covertly funded by corrupt Nigerian politicians, who use the group to advance their political agendas (Adelaja et al., 2018). If this is true, financial assistance would also give them the resources they need to expand their reach across national borders. 
+
+Next, I examine the region with the highest amount of terrorist activity in both years: the Middle East and North Africa.
+
+\
+\
+
+\
+
+```{r fig.height=15, fig.width=15}
+#2004 middle east and na object
+mena.gtd.2004 <- lessattacks %>% filter (region_txt == "Middle East & North Africa")
+p10 <- count(mena.gtd.2004, country_txt, attacktype1_txt) %>% ggplot(aes(x=reorder(country_txt, -n), y=n, fill=attacktype1_txt)) + geom_col()+theme(axis.text.x=element_text(angle =45,hjust=1))+ labs(x= "Country", y= "Count", title = "Types of Attacks in the Middle East & North Africa (2004)")+ guides(fill=guide_legend(title="Type of Attack"))+scale_y_continuous(expand = c(0,0))
+#2014 ME NA
+mena.gtd.2014 <- moreattacks %>% filter (region_txt == "Middle East & North Africa")
+p11 <- count(mena.gtd.2014, country_txt, attacktype1_txt) %>% ggplot(aes(x=reorder(country_txt, -n), y=n, fill=attacktype1_txt)) + geom_col()+ theme(axis.text.x=element_text(angle =45,hjust=1)) + labs(x= "Country", y= "Count", title = "Types of Attacks in the Middle East & North Africa (2014)")+scale_y_continuous(expand = c(0,0))
+
+grid.arrange(p10,p11, ncol=1)
+
+```
+
+In both 2004 and 2014, Iraq experienced many more terrorist attacks than its neighbors. In terms of types of attacks used in Iraq, they have also proportionally remained the same over time. The methods of choice in Iraq, and primarily across the board, seem to be bombings/explosions and sometimes armed attacks. The GTD's definition of bombing/explosion includes all types of bombs except nuclear. The category also discludes attacks that involve bombs and firearms or other weapons. These instances are classified under "armed assault." Armed assault does not include "less than lethal" weapons, such as fists, rocks, and sticks.
+
+Both of these methods of violence are low-cost. With both bombings and armed attacks, the individual's identity can remain largely anonymous. This aspect might appeal to perpetrators who have a "second life," meaning they separate their personal and terrorist lives. In these attacks, the perpetrator likely will survive the attack, or, in an instance of a suicide attack, the group will lose minimal members. These methods are also literally low-cost. Bombs and firearms, knives, or any object used in an armed assault are considerably cheaper than facilitating a hostage situation or hijacking.
+
+Although terrorist's methods in Iraq largely remained consistent between 2004-2014, their choice of targets has slightly shifted over time. 
+
+\
+
+```{r fig.height=10, fig.width=15}
+#fousing in on the middle east and north africa because they were the highest comparatively for both years
+
+#creating the objects for each year
+mena.gtd.2014 <- moreattacks %>% filter (region_txt == "Middle East & North Africa")
+mena.gtd.2004 <- lessattacks %>% filter (region_txt == "Middle East & North Africa")
+mena.gtd.2014.iraq<- mena.gtd.2014 %>% filter(country_txt == "Iraq")
+mena.gtd.2004.iraq<- mena.gtd.2004 %>% filter(country_txt == "Iraq")
+
+#comparative chart... note that:: no NGOs were reported to be attacked in 2014, no maritime attacks in 2014, no food or water supply attacks in 2004, no tourist attacks in 2014, so the variables do not match completely
+
+p3 <- count(mena.gtd.2004.iraq, targtype1_txt) %>% ggplot(aes(x=reorder(targtype1_txt, -n), y=n, fill=targtype1_txt)) + geom_col() +labs(x= "Target Types", y= "Count", title = "Types of Targets of Attacks in Iraq (2004)") +theme(axis.text.x=element_text(angle =45,hjust=1))+guides(fill=FALSE)+scale_y_continuous(expand = c(0,0))
+p4 <- count(mena.gtd.2014.iraq, targtype1_txt) %>% ggplot(aes(x=reorder(targtype1_txt, -n), y=n, fill=targtype1_txt)) + geom_col() +labs(x= "Target Types", y= "Count", title = "Types of Targets of Attacks in Iraq (2014)") +theme(axis.text.x=element_text(angle =45,hjust=1))+guides(fill=FALSE)+scale_y_continuous(expand = c(0,0))
+grid.arrange(p3,p4, ncol=2)
+
+
+
+
+```
+
+In 2004, the primary targets of terrorist attacks in Iraq were the military, police, and government. In 2014, their focus shifted slightly to prioritize private property and civilians as targets, followed by the police and military. The GTD defines a military target as an attack against military units, patrols, barracks, convoys, jeeps, and aircraft. It also includes recruiting sites, soldiers engaged in internal policing, and peacekeeping units that conduct military operations. It does not include non-state militias and guerrillas (this is coded as "Terrorist/Non-state Militias). The GTD's "private citizen & property" category includes attacks on individuals, the public in general, or attacks in public areas including markets, commercial streets, busy intersections, and pedestrian malls, however, it does not include casualties in restaurants, cafes, or movie theaters (these incidents are coded as "Business"). This category also includes weddings and funerals. The GTD categorizes attacks on students as victims in this category as well, as long as the attack was not carried out in an educational setting or was explicitly against a school or university. This shift in tactic is odd, considering targeting civilians has been deemed less effective at reaching end-goals than targeting a military location (Abrams 2012). A possible explanation for the shift from military to private citizens as the top target might be the US presence in Iraq in 2004. More military presence adds more military to the pool of possible targets, especially when they have declared war on terrorism. Also, in 2004, we saw the Islamic State (ISIS, ISIL) emerge from the remnants of al Qaeda in Iraq (AQI) (Wilson Center 2019). ISIS's presence in Iraq fluctuated for a few years following its emergence in 2004. However, as Iraq and Syria became weak and destabilized, the group gained popularity by carrying out attacks against their enemies. 
+
+A possible reason for the increase in attacks on civilians in Iraq in 2014 might be jihadist groups lashing out at easy targets. By 2014, ISIS had gained significant strength and popularity; however, their capabilities are not equal to a fully established democratic nation, like the US. The groups may recognize this and pick an easier target that would produce more media coverage.
+
+Terrorism is widely recognized as the "strategy of the weak," due to their lack of popular support and ability to materialize their visions (Schmid 2007). A group's reliance on explosives in public places where they can blend in and slip away is a testament to this statement. The low cost associated with bombings/explosives combined with the lower risk of targeting civilians versus more high profile targets is portrayed in all of these visualizations above.
+
+However, some critical piece of data that is missing from the GTD is the frequency of cyber-attacks. We have observed a decline in terrorist attacks over time; however, without data on cyber-attacks by terrorist groups, we may be missing the real trend in the frequency of incidents over time. Research on cyber-attacks in terrorism is minimal and lacks an accepted definition (Dvir et al. 2020). As technology becomes a more integral part of society (especially in Western cultures), cyber-attacks inevitably interest terrorist organizations. It is possible that small-scale attacks go unreported or written off as a lone-wolf hack attempt rather than a terrorist organizaiton. Our lack of research and present knowledge on cyber attacks as a weapon of terrorism severely limits our perceptions of trends in terrorist activities. 
+
+\
+
+\
+
+## References {#references}
+
+"Access the GTD \| GTD." Accessed September 20, 2021. <https://www.start.umd.edu/gtd/access/>.
+
+Adelaja, Adesoji O, Abdullahi Labo, and Eva Penar. "Public Opinion on the Root Causes of Terrorism and Objectives of Terrorists: A Boko Haram Case Study" 12, no. 3 (2018): 15.
+
+Busher, Joel. "Introduction: Terrorism and Counter-Terrorism in Sub-Saharan Africa." *Contemporary Voices: St Andrews Journal of International Relations* 5, no. 1 (February 10, 2014). <https://doi.org/10.15664/jtr.824>.
+
+"Codebook.Pdf." Accessed September 18, 2021. <https://www.start.umd.edu/gtd/downloads/Codebook.pdf>.
+
+"Dvir et al Unpacking Public Perceptions of Terrorism Does Type of Attack Matter - INTL8291 Terrorism Fall 2021 49882." Accessed September 22, 2021. <https://uga.view.usg.edu/d2l/le/content/2364798/viewContent/36421484/View>.
+
+"GTD \| Global Terrorism Database." Accessed September 20, 2021. <https://www.start.umd.edu/gtd/>.
+
+Council on Foreign Relations. "The Iraq War." Accessed September 22, 2021. <https://www.cfr.org/timeline/iraq-war>.
+
+"The Political Effectiveness of Terrorism Revisited - Max Abrahms, 2012." Accessed September 22, 2021. <https://journals.sagepub.com/doi/full/10.1177/0010414011433104?casa_token=8if7_UHSSYkAAAAA%3AGs3k5jF3t_Pgcnews4DI8kQuany3BNEtZyRcwEe7l2VkfHZj59o5tV1XTZW1MHpECIjkSEd4m2OB>.
+
+"Timeline: The Rise, Spread, and Fall of the Islamic State \| Wilson Center." Accessed September 22, 2021. <https://www.wilsoncenter.org/article/timeline-the-rise-spread-and-fall-the-islamic-state>.

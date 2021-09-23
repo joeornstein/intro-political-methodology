@@ -1,0 +1,94 @@
+---
+title: "Case Backlogs and the Rule of Law in the U.S."
+author: "Sidney Shank"
+date: "9/15/2021"
+output:
+  pdf_document: default
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library("readxl")
+library(stringr)
+```
+
+**Abstract:** *Courts in the United States have long focused on clearing case backlogs as a way of improving the experience of citizens involved in judicial proceedings in hopes that speedy justice will strengthen the people's positive perceptions of the rule of law. This research suggests the opposite: citizens appear relatively content with the current speed of case closings, citing instead significant concerns in areas of bias, discrimination, and legal costs. In fact, data from the World Justice Project 2020 Rule of Law Index shows citizens concerns to be strongest relating to the citizen experience of the judiciary, with significantly less concern in areas traditionally relating to how well or poorly funded a court may be. This suggests that courts (and the legislatures that fund them) should place less emphasis on judges closing cases at a fast pace and instead focus their efforts on increasing the equality and fairness of the justice available.*
+
+**Replication Materials:** The World Justice Project 2020 Rule of Law Index can be found at <https://worldjusticeproject.org/our-work/research-and-data/wjp-rule-law-index-2020>.
+
+## Introduction
+
+One of the most common concerns cited by judges and academics alike is that the ever-increasing backlog of cases left open or unaddressed at the end of every year is a significant detriment to the access to justice that a citizen can expect. Over the last year, as the U.S. has struggled against the COVID-19 pandemic, the backlog concern have appeared to be reaching crisis levels, with many courts forced to limit in-person activities. Trial courts have been struck particularly hard, with many forced to close entirely because of an inability to gather a jury under state pandemic restrictions. In Georgia, for example, emergency judicial orders from the Supreme Court Chief Justice, Harold Melton, kept trial courts closed from March 14, 2020, to June 30, 2021, with district chief judges issuing their own emergency orders as needed during and after this period (@adminc, see "Original Order" through "Fifteenth Extension Order"). By February 2021-well before he lifted the emergency orders-the Chief Justice acknowledged that the case backlog was already "meaningfully bad" [@lowry]. At the federal level, case data published by the U.S. Courts indicates that while the Courts of Appeals saw a 6.3% decline in the case backlog between June 30, 2020, and June 30, 2021, the District Courts saw an increase of 20.2% in the civil case backlog and 12.9% in the criminal case backlog, totaling to a staggering 115,988 cases [@tablejc].
+
+It is quite clear that court backlogs are, in fact, a problem; the more important question is, are backlogs actually a problem for *citizens*? Does a longer case time, start to finish, translate into lower citizen confidence in the rule of law?
+
+## Analysis
+
+The display below shows shows the Rule of Law Index scores for the U.S., drawn from citizen and expert responses to a variety of questions regarding the state of the rule of law in the country (for methodology specifics, see @methodolb). The U.S. scored 0.72 on average, represented by the solid line through the middle of the graph.
+
+```{r us-factors-all, echo=FALSE}
+rol_data_us <- read_excel("data/World-Justice-Project-Rule-of-Law.xlsx",
+                          sheet = "SES 2020 Transposed 2")
+rol_data_us %>%
+  ggplot(mapping = aes(x = Factor_type, y = Score)) + geom_point(alpha = 0.4) +
+  geom_hline(yintercept = 0.72, alpha = 0.4) + theme_bw() +
+  scale_x_discrete(name = NULL, labels = function(x) str_wrap(x, width = 10)) +
+  labs(title = "Citizen Confidence in the Rule of Law",
+       subtitle = "May to October 2019")
+```
+
+The questions with scores at or below 0.50 are of concern for the rule of law in the U.S. In particular, that the three lowest scores are in civil and criminal justice is a strong indicator that a significant proportion of survey respondents felt that something needs to change in the court system itself.
+
+```{r us_judicial_all, echo=FALSE}
+rol_data_jud <- read_excel("data/World-Justice-Project-Rule-of-Law.xlsx",
+                          sheet = "SES 2020 Transposed 3")
+rol_data_jud %>%
+  ggplot(mapping = aes(x = Factor_type, y = Score)) + geom_point(alpha = 0.4) +
+  geom_hline(yintercept = 0.72, alpha = 0.4) + theme_bw() +
+  labs(title = "Judicial Impact on the Rule of Law", subtitle = "May to October 2019") +
+  scale_x_discrete(name = NULL, labels = function(x) str_wrap(x, width = 10))
+```
+
+Filtering out the questions dealing with other branches of government, government agencies, or non-governmental organizations shows that citizens are most concerned with Civil Justice, Criminal Justice, and Fundamental Rights as they relate to the court system. Summarized below are the scores for the judiciary that fall below the country's overall average score.
+
++----------------------------------------------------------------+--------------------+-------+
+| Factor                                                         | Factor Type        | Score |
++================================================================+====================+=======+
+| Civil justice is free of improper government influence         | Civil Justice      | 0.70  |
++----------------------------------------------------------------+--------------------+-------+
+| Civil justice is effectively enforced                          | Civil Justice      | 0.68  |
++----------------------------------------------------------------+--------------------+-------+
+| Criminal adjudication system is timely and effective           | Criminal Justice   | 0.68  |
++----------------------------------------------------------------+--------------------+-------+
+| Due process of the law and rights of the accused               | Criminal Justice   | 0.63  |
++----------------------------------------------------------------+--------------------+-------+
+| Due process of the law and rights of the accused               | Fundamental Rights | 0.63  |
++----------------------------------------------------------------+--------------------+-------+
+| Civil justice is not subject to unreasonable delay             | Civil Justice      | 0.62  |
++----------------------------------------------------------------+--------------------+-------+
+| Fundamental labor rights are effectively guaranteed            | Fundamental Rights | 0.56  |
++----------------------------------------------------------------+--------------------+-------+
+| Correctional system is effective in reducing criminal behavior | Criminal Justice   | 0.53  |
++----------------------------------------------------------------+--------------------+-------+
+| Equal treatment and absence of discrimination                  | Fundamental Rights | 0.51  |
++----------------------------------------------------------------+--------------------+-------+
+| People can access and afford civil justice                     | Civil Justice      | 0.45  |
++----------------------------------------------------------------+--------------------+-------+
+| Civil justice is free of discrimination                        | Civil Justice      | 0.39  |
++----------------------------------------------------------------+--------------------+-------+
+| Criminal justice system is impartial                           | Criminal Justice   | 0.37  |
++----------------------------------------------------------------+--------------------+-------+
+
+The difference between the scores for citizen concerns related to the backlog and the very lowest score is large: 0.31 for "Criminal adjudication system is timely and effective" and 0.25 for "Civil justice is not subject to unreasonable delay." Moreover, the lowest four scores are all related to the citizen experience of the justice system, emphasizing concerns about bias, discrimination, and rising court costs. It is not until the fifth lowest score that citizens report concerns related in any form to judiciary bureaucracy, and the subfactor language "correctional system" makes the score difficult to interpret due to variations between federal and state courts (and even variations between different court systems in different states). Overall, citizens appear fairly confident that the courts are structured in theory to dispense unbiased justice as they should; the problem is whether or not any given individual will be afforded with that same unbiased justice. In other words, citizens appear more concerned by the human bias of the courts, not their bureaucratic efficiency.
+
+## Discussion
+
+It is not difficult to imagine why the large backlog of unaddressed cases at most U.S. courts generates concern among judicial officials. However, courts--and the legislatures that fund them--that hope to increase American confidence in the rule of law by clearing backlogs are misguided. These data indicate that citizens to have much stronger concerns about whether or not they will be treated fairly by the court system during their time participating--if they can even afford to participate. To address citizen concerns of bias and discrimination, judiciary employees at all levels could be required to attend more frequent and more rigorous anti-discrimination training. Increases to the pay structure of public defenders offices would help attract and retain diverse talent, allowing minority clients better opportunities to be represented by attorneys who may understand their struggles on a more personal level. An office culture that reacts with reproach to discrimination and bias could be created or strengthened by clarifying internal policies defining discrimination and outlining the punishments for those who violate those policies. Although addressing the rising costs of legal representation as a barrier to justice is a multifaceted issue, hiring more public defenders and increasing funding for pro bono and pro se programs are a few of the many options that have the potential to help.
+
+However, beyond general suggestions for improving diversity and equity, the value of this analysis is fairly limited. As a study focused on the rule of law around the globe, the factors and subfactors created by the World Justice Project lack U.S.-specific nuance that would increase clarity surrounding citizen concerns. Suggestions for further research would begin with the replication of this study, adjusting the survey question language to be tailored specifically to the U.S. Respondent demographic information that would aid analysis would include state of residence, which would allow researchers more leverage to analyze attitudes towards specific federal districts and specific state courts. Subsequent replications of this modified survey could be devoted only to state courts, only to federal courts, or perhaps only to one specific type of court, like federal bankruptcy court.
+
+Finally, the value of this research would increase if the judges themselves were surveyed to determine more precisely why they are unnerved by the case backlog. The most obvious answer seems more influenced by their judgeship as a job rather than as an arbiter of justice: employees with ever-increasing backlogs of unaddressed work may naturally feel that their job performance will be seen as steadily decreasing regardless of their actual effort to address the workload, effectively tipping their workload from a challenge stressor to a hindrance stressor (@cavanaugh2000; see @horan2020 for a modern evaluation of the theory). If judges have concerns about the impact of the case backlog on their workload and performance evaluations, they deserve to have those concerns addressed, regardless of whether citizens are affected by the backlog or not.
+
+## References

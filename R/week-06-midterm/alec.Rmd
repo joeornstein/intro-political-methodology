@@ -1,0 +1,225 @@
+---
+title: "Immigrant Attitudes Towards Their New Country and Other Immigrants"
+author: "Alec Zimmerman"
+date: "9/22/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggthemes)
+library(here)
+load(here('data/raw/WVS_Cross-National_Wave_7_R_v2_0.rdata'))
+```
+
+Immigration is one of the most hotly contested political issues of the 21st century. While immigration has been argued about back and forth by native citizens through think tanks, opinion pieces, and on legislative floors, how often have immigrants been asked how they feel about immigration? Do these immigrants feel closeness to their new country of residence? And how do they feel about other immigrants? My paper seeks to address these three questions using responses to the World Values Survey given by immigrants.
+
+Scholars of immigration have generated some valuable literature that helps inform my hypotheses. With regards to how close immigrants feel about their host country, research by Cárdenas and Verkuyten (2020) suggests that suggest that when immigrants use the national language of a country, it helps immigrants identify more closely with their new home. Logically, it follows that older immigrants who have lived longer in their new country are more likely to have spent more time practicing their new language as opposed to younger immigrants or those who have arrived more recently. Therefore, I expect older immigrants to more closely identify with their host country.
+
+One might expect that those who have migrated from one country to another would likely hold a higher opinion of immigration than those who have never immigrated, and research by Becker (2019) confirms this, though with the caveat that 1st generation immigrants are more likely to have a positive view of immigration than 2nd or 3rd generation immigrants. Interestingly, Becker’s research does not tell the full story of immigrant attitudes towards immigration. The work of Just and Anderson (2015) shows that while immigrants support immigration more so than native citizens, immigrants who have received citizenship in their new country actually hold less positive attitudes towards immigration and its effects than immigrants who have not obtained citizenship. I have personally witnessed this, as a former high school soccer teammate of mine who immigrated legally from Honduras expressed frustration with undocumented immigrants for not “doing things the right way.” He is not the only immigrant with such feelings – the Southern Poverty Law Center designates Nicaraguan immigrant Amapola Hansberger’s “Legal Immigrants for America” as an anti-immigrant hate group (Southern Poverty Law Center). Therefore, while I believe that immigrants should display generally strong positive feelings towards immigration and their fellow immigrants, there is a small likelihood of seeing some negative opinions of immigration by immigrants.
+
+I have chosen to use responses from immigrants collected by the World Values Survey for my data set. The data I use contains information on respondents’ immigration status, citizenship, how close they feel to their country, their willingness to have immigrants as neighbors, whether they believe employers should prioritize native citizens over immigrants, how they think immigrants affect the development of a country, and how much immigration they believe should be allowed. I have chosen to look at data specific to the five countries of the United States, Germany, Canada, Andorra, and Hong Kong, since they had higher numbers of immigrant respondents when compared to other countries included in the survey. They also tended to have a higher number of immigrants over time, including respondents whose birth decades span from the 1930s to 2000s, meaning that no country’s data relies on an outlier burst of immigration from one decade.
+
+The following graph shows simply how many immigrants to each country are a citizen or not.  
+
+```{r figure 1, fig.height = 6, fig.width = 10, echo=FALSE}
+citizenship_status <-   `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         citizenship = Q269,
+         immigration_status = Q263) %>% 
+  filter(immigration_status == 2) %>% 
+  filter(country %in% c('USA', 'GMY', 'CAN', 'AND', 'HKG')) %>% 
+  filter(citizenship >= 1) %>% 
+  mutate(citizen = case_when(citizenship == 1 ~ 'Citizen',
+                             citizenship == 2 ~ 'Not a Citizen')) %>% 
+  count(citizen, country) %>% 
+  ggplot(mapping = aes(x = citizen, y = n, group = country)) +
+  geom_bar(stat = 'identity') +
+  facet_wrap(~country) +
+  theme_fivethirtyeight() +
+  labs(x = 'Citizenship Status', y = 'Number of Respondents', title = 'Immigrants & Their Citizenship Status',
+       caption = 'Data Source: World Values Survey 7')
+
+print(citizenship_status)
+```
+
+
+As you can see, the potential of an immigrant's citizenship varies quite a bit depending on the country on which they have moved to. Andorra has by far the largest proportion of immigrants who are not citizens of Andorra, possibly due to the country's (perceived) reputation as a tax haven. In stark contrast, Hong Kong has the highest proportion of immigrants who have become citizens. This could be due to Hong Kong's proximity to China, as residents from the Chinese mainland could be attracted to Hong Kong's status as an economic hub and due to the freedoms it enjoys as opposed to the rest of China. Canada also has a high ratio of immigrants who have become citizens, and this could be due to their desire to take in refugees and make them a part of Canadian culture. Despite Germany status as a country who has taken in a high number of refugees, it appears that roughly half of the immigrants surveyed are not citizens. As for the US, we seem to be living up to our standard as a nation of immigrants, as about 7/10 immigrants are also citizens. 
+
+
+The following section contains the graph featuring the average closeness immigrants feel towards their new home,
+separated by decade of birth. 
+
+```{r figure 2, fig.width = 12, fig.height = 6, echo=FALSE, message=FALSE}
+  `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         closeness_to_country = Q257,
+         birthyear = Q261,
+         immigration_status = Q263) %>% 
+  filter(birthyear >= 1930) %>% 
+  mutate(decade_of_birth = case_when(birthyear < 1940 ~ '1930s',
+                                     birthyear < 1950 ~ '1940s',
+                                     birthyear < 1960 ~ '1950s',
+                                     birthyear < 1970 ~ '1960s',
+                                     birthyear < 1980 ~ '1970s',
+                                     birthyear < 1990 ~ '1980s',
+                                     birthyear < 2000 ~ '1990s',
+                                     birthyear < 2010 ~ '2000s')) %>%
+  group_by(country, decade_of_birth) %>% 
+  filter(immigration_status == 2) %>% 
+  filter(closeness_to_country >= 1) %>%
+  mutate(closeness = case_when(closeness_to_country == 1 ~ 4,
+                               closeness_to_country == 2 ~ 3,
+                               closeness_to_country == 3 ~ 2,
+                               closeness_to_country == 4 ~ 1)) %>% 
+  filter(closeness >= 1) %>% 
+  summarize(mean_closeness = mean(closeness),
+            count = n()) %>% 
+  filter(country %in% c('USA', 'GMY', 'CAN', 'AND', 'HKG')) %>% 
+  ggplot(mapping = aes(x = decade_of_birth, y = mean_closeness, group = country)) +
+  geom_line() +
+  facet_wrap(~country) +
+  theme_fivethirtyeight() +
+  labs(x = 'Decade of Birth', y = 'Closeness to Country',
+       title = 'Average Closeness to New Country Felt by Immigrants',
+       subtitle = 'Where `4` represents maximum closeness, and `1` represents minimum closeness',
+       caption = 'Data Source: World Values Survey 7')
+
+```
+
+A glance at the data shows that for each country, except Hong Kong, the average level of closeness felt by immigrants is higher by older respondents and significantly lower in younger respondents, often by nearly a full point on the scale. This finding does generally correspond with my initial hypothesis about how older immigrants would be likelier to identify as closer to their new nation than younger ones. Hong Kong's status as an outlier is particularly easy to understand when looking at the context in which the World Values Survey was conducted in. The latest iteration of the survey includes responses that were collected from 2017 to 2020, during which Chinese repression of Hong Kong has seen popular street protests attract global media attention, and which has helped forge a sense of unity amongst citizens due to the unique strife Hong Kong has faced. In this context, it is unsurprising that Hong Kong thus deviates from the other countries it is being compared to. 
+
+
+Captured below is data about the willingness of immigrants to have immigrants as neighbors. 
+
+```{r figure 3, fig.width = 10, echo=FALSE}
+immigrant_neighbor <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         neighbor_question = Q21,
+         immigration_status = Q263) %>% 
+  filter(immigration_status == 2) %>% 
+  filter(country %in% c('USA', 'GMY', 'CAN', 'AND', 'HKG')) %>% 
+  filter(neighbor_question >= 1) %>% 
+  mutate(neighbor = case_when(neighbor_question == 1 ~ 'No',
+                              neighbor_question == 2 ~ 'Yes')) %>% 
+  count(neighbor, country)%>% 
+  ggplot(mapping = aes(x = neighbor, y = n, group = country)) +
+  geom_bar(stat = 'identity') +
+  facet_wrap(~country) +
+  theme_fivethirtyeight() +
+  labs(x = 'Immigrant Neighbor: Yes or No?', y = 'Number of Respondents', title = 'Would Respondent Accept Immigrants as Neighbors?',
+       caption = 'Data Source: World Values Survey 7')
+
+print(immigrant_neighbor)
+```
+
+The results are in: only a handful of immigrants, from across a variety of different cultures, would prefer not to live with other immigrants as their neighbors. The results here are pretty conclusive, and those immigrants who would prefer not to live beside other immigrants may hold their attitudes simply due to individual quirks. Otherwise, it seems the experience of being an immigrant makes other immigrants significantly tolerant to living beside immigrants. Considering Hong Kong's tendency to break from the other countries studied, this result in particular is interesting. 
+
+Next, here's the graph featuring immigrant attitudes towards the idea of an employer giving hiring preference to native citizens of a country.
+
+```{r figure 4, fig.width = 14, fig.height = 6, echo=FALSE}
+employ_immigrants <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         employer_question = Q34,
+         immigration_status = Q263) %>% 
+  filter(immigration_status == 2) %>% 
+  filter(country %in% c('USA', 'GMY', 'CAN', 'AND', 'HKG')) %>% 
+  filter(employer_question >= 1) %>% 
+  mutate(employer_should_give_preference_to_natives = case_when(employer_question == 1 ~ 'Hard Agree',
+                                                          employer_question == 2 ~ 'Agree',
+                                                          employer_question == 3 ~ 'Neutral',
+                                                          employer_question == 4 ~ 'Disagree',
+                                                          employer_question == 5 ~ 'Hard Disagree')) %>% 
+  # relevel that variable so the labels appear in the correct order
+  mutate(employer_should_give_preference_to_natives = factor(employer_should_give_preference_to_natives,
+                                                             levels = c('Hard Disagree', 'Disagree',
+                                                                        'Neutral', 'Agree', 'Hard Agree'))) %>% 
+  count(employer_should_give_preference_to_natives, country) %>% 
+   ggplot(mapping = aes(x = employer_should_give_preference_to_natives, y = n, group = country)) +
+  geom_bar(stat = 'identity') +
+  facet_wrap(~country) +
+  theme_fivethirtyeight() +
+  labs(x = 'Attitudes towards Hiring', y = 'Number of Respondents', title = 'How do Immigrants Feel About Employers Prioritizing Native Citizens?',
+       caption = 'Data Source: World Values Survey 7')
+
+print(employ_immigrants)
+
+```
+
+The beliefs of immigrants with regards to the topic of native citizens receiving hiring preference is a unique collection of responses, because it is a section with some of the most variation in responses. Interestingly, it seems immigrants to the USA do not have strong opinions about this subject, as there are no responses recorded in the "agree strongly" or "disagree strongly" sections. More Americans disagree that hiring preferences should be given (though an almost equally strong number either agree or do not have a preference about practices). Andorrans, Canadians, and Germans seem to both primarily disagree or disagree strongly with the idea that native citizens should receive hiring preferences. Amusingly, only one immigrant to Germany dared to say that he agreed strongly that natives should receive hiring preference. Hong Kong breaks the pattern of its fellow countries, as its immigrants overwhelmingly agree that native citizens should receive hiring preference, and only 3 respondents disagreed strongly with that idea.  
+
+Now, we'll take a look at how much immigration immigrants would prefer to see.
+
+```{r figure 5, fig.width = 12, fig.height = 6, echo=FALSE}
+how_much_immigration <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         how_much = Q130,
+         immigration_status = Q263) %>% 
+  filter(immigration_status == 2) %>% 
+  filter(country %in% c('USA', 'GMY', 'CAN', 'AND', 'HKG')) %>% 
+  filter(how_much >= 1) %>% 
+  mutate(immigration_preference = case_when(how_much == 1 ~ 'Welcome All',
+                                            how_much == 2 ~ 'Fill all extra jobs',
+                                            how_much == 3 ~ 'Strict limits',
+                                            how_much == 4 ~ 'Prohibit it')) %>% 
+  # relevel that variable so the labels appear in the correct order
+  mutate(immigration_preference = factor(immigration_preference,
+                                         levels = c('Welcome All', 'Fill all extra jobs',
+                                                    'Strict limits', 'Prohibit it'))) %>% 
+  count(immigration_preference, country) %>%  
+  ggplot(mapping = aes(x = immigration_preference, y = n, group = country)) +
+  geom_bar(stat = 'identity') +
+  facet_wrap(~country) +
+  theme_fivethirtyeight() +
+  labs(x = 'Attitudes Towards Immigration', y = 'Number of Respondents', title = 'How Much Immigration Should Occur?',
+       caption = 'Data Source: World Values Survey 7')
+
+print(how_much_immigration)
+```
+
+By this stage of my research, I am used to Hong Kong being an outlier, and it is notable that the majority of immigrants to Hong Kong prefer strict limits to immigration as opposed to the more open attitudes of the other countries. Immigrants to the US and Germany also are more evenly split in their belief that immigration should be used to fill extra jobs or should be strictly limited than Andorrans or Canadians. While taking a "welcome all" approach was slightly more popular than the belief that immigration should generally be prohibited, I had expected slightly more immigrants to opt for the "welcome all" style of immigration rather than merely allowing as many in as there are jobs available. It could be that believing that immigration is good as long as there are jobs to be filled is a form of mental justification for immigrants that they belong in their new country and that they are not being a burden or taking away a job from a native citizen. 
+
+Finally, here's the bombshell question to end on: do immigrants believe that immigrants are good for the development of a country?
+
+```{r figure 6, fig.width=11, fig.height=6, echo=FALSE}
+immigrants_and_development <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         development = Q121,
+         immigration_status = Q263) %>% 
+  filter(immigration_status == 2) %>% 
+  filter(country %in% c('USA', 'GMY', 'CAN', 'AND', 'HKG')) %>% 
+  filter(development >= 1) %>% 
+  mutate(effect_on_development = case_when(development == 1 ~ 'Very bad',
+                                           development == 2 ~ 'Bad',
+                                           development == 3 ~ 'No effect',
+                                           development == 4 ~ 'Good',
+                                           development == 5 ~ 'Very good')) %>% 
+    # relevel that variable so the labels appear in the correct order
+  mutate(effect_on_development = factor(effect_on_development,
+                                         levels = c('Very bad', 'Bad',
+                                                    'No effect', 'Good', 'Very good'))) %>% 
+  count(effect_on_development, country) %>%  
+  ggplot(mapping = aes(x = effect_on_development, y = n, group = country)) +
+  geom_bar(stat = 'identity') +
+  facet_wrap(~country) +
+  theme_fivethirtyeight() +
+  labs(x = 'Attitudes Towards Immigration', y = 'Number of Respondents', title = "Effect of Immigrants on a Country's Development",
+       caption = 'Data Source: World Values Survey 7')
+
+print(immigrants_and_development)  
+```
+
+Yet again, Hong Kong sticks out like a sore thumb. The majority of their responses suggest that immigrants believe immigrants are neutral for the development of a country, but notably, more responses say immigrants to Hong Kong believe immigrants are bad for development than that it is good. This is in sharp contrast to the beliefs of immigrants from the other countries, who view immigrants at least as neutral, if not overwhelmingly as a good force for societal development. Germany is a little bit behind its peers as the mode response views immigrants as neutral, but there are still a high number of responses suggesting immigration is good for the development of Germany.
+
+In conclusion, Hong Kong is a standout country amongst its peers of Germany, Canada, Andorra, and the United States. Immigrants to Hong Kong demonstrated the most hostile attitudes towards other immigrants over the various metrics listed above, yet they also feel the closest to their new country of residence. While Andorrans tend to have the most immigrant friendly attitudes (followed closely by Canada), they also seemingly have some of the lowest levels of closeness to their host country. That being said, immigrants to Germany and the United States are maybe slightly more moderate on immigration than those who went to Canada or Andorra, but they still generally display attitudes that are pro-immigrant. Overall, I believe my second hypothesis is mostly confirmed, as with the exception of Hong Kong, attitudes by immigrants towards immigrants are generally if not significantly positive, with the caveat that some of the responses are indeed still negative. 
+
+## Bibliography
+
+Becker, Charlotte Clara. “The Influence of a Migration Background on Attitudes Towards Immigration.” Social Inclusion 7, no. 4 (December 27, 2019): 279–92.
+
+Cárdenas, Diana, and Maykel Verkuyten. “Immigrants’ Behavioral Participation and Its Relation with National Identification: Perceived Closeness to the Prototype as a Psychological Mechanism.” Self and Identity 19, no. 6 (August 17, 2020): 719–37. https://doi.org/10.1080/15298868.2019.1665577.
+
+Just, Aida and Christopher J. Anderson. “Dual Allegiances? Immigrants’ Attitudes toward Immigration.” The Journal of Politics 77, no. 1 (January 1, 2015): 188–201. https://doi.org/10.1086/678388.
+
+Southern Poverty Law Center. “Meet the Anti-Immigrant Group Legal Immigrants for America and Their Staff.” Accessed September 19, 2021. https://www.splcenter.org/hatewatch/2016/02/19/meet-anti-immigrant-group-legal-immigrants-america-and-their-staff.
