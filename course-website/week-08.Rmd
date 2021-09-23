@@ -9,15 +9,14 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(tidyverse)
 ```
 
-
-
+[![](img/xkcd_correlation.png)](https://xkcd.com/552/)
 
 ## Reading Assignments
 
-- [Moore & Siegel](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618), Chapter 12. Ignore sections 12.3.6 and 12.3.7 on computing determinants and inverses by hand. We have computers that do that for us now.
+Next week we explore the world of matrix algebra. Moore & Siegel are our guides:
 
-
+-   [Moore & Siegel](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618), Chapter 12. Ignore sections 12.3.6 and 12.3.7 on computing determinants and inverses by hand. We have computers that do that for us now.
 
 ## Problem Set
 
-Practice a bit with calculus [here](problem-sets/problem-set-06.pdf). Complete and submit to eLC in any format you like.
+Consider a research question you're interested in and draw a DAG to represent the web of relevant causal relationships - `R` or by hand are both acceptable. What are the backdoor paths between your treatment and outcome (i.e. alternative explanations)? What variables must you condition on to close them?

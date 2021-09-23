@@ -32,6 +32,8 @@ navbar:
           href: week-07.html
         - text: "Week 8: Causation"
           href: week-08.html
+        - text: "Week 9: Regression"
+          href: week-09.html
     - icon: fas fa-calendar-plus
       href: https://calendly.com/jornstein/15min
     - icon: fas fa-book-open

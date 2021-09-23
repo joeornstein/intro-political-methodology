@@ -1,7 +1,7 @@
 ---
 title: "Week 9"
 description: |
-  
+  Regression analysis: this is not the last time you'll see it
 ---
 
 ```{r setup, include=FALSE}
@@ -9,15 +9,18 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(tidyverse)
 ```
 
-
+This week, we discuss the linear model as a general purpose tool for conditioning on confounding variables and recovering causal estimands. We will highlight the strengths and limitations of this approach, and show how to estimate the model's parameters using matrix algebra.
 
 ![](img/matrix.jpg)
 
 
 ## Reading Assignments
 
+Next time, we talk about how to express our *uncertainty* about these estimates. 
 
-
+- [Teacup Giraffes Module 6](https://tinystats.github.io/teacups-giraffes-and-statistics/06_standardError.html)
+- [The Joy of X](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559), Chapters 22 and 23.
+- [Seeing Theory](https://seeing-theory.brown.edu/), some nice interactive explanations of concepts from probability theory
 
 ## Problem Set
 
