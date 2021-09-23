@@ -1,0 +1,105 @@
+---
+title: "Environmental Attitudes Across the Globe"
+output: pdf_document
+# bibliography: references.bib (Don't have your .bib file, so I needed to comment this out)
+author: Elise Holcomb
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Acknowledging global warming as a pressing and potent issue is the first step in working towards a solution. For some states, implementing green policies has already come to the forefront of political issues, yet for others it is still highly debated and polarized. This paper proposes that culture, government type, and likelihood of experiencing local global warming consequences can help explain this gap.
+
+```{r graphs 1, echo=FALSE, message=FALSE, warning=FALSE}
+load(here::here("data/raw/WVS_Cross-National_Wave_7_R_v2_0.rdata"))
+library(tidyverse)
+library(patchwork)
+g <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         res = Q108)%>%
+  filter(country %in% c('CHN','USA','BRA','AUL'), 
+         res >= 1)%>%
+  ggplot(mapping = aes(y = res, group = country, fill=country)) +
+  geom_bar(position="dodge")+
+  labs(y= "Scale 1 to 10", 
+       title = "Government (1) or Individual (10) Responsibility?")+
+  scale_y_continuous(breaks = c(1,2,3,4,5,6,7,8,9,10))
+
+u <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         f = Q10)%>%
+  filter(country %in% c('CHN','USA','BRA','AUL'), 
+         f >= 1)%>%
+  mutate(f = 
+           case_when(f == 1 ~ 'Yes',
+                     f == 2 ~ 'No'))%>%
+  ggplot(mapping = aes(y = f, group = country, fill=country)) +
+  geom_bar(position="dodge")+
+  labs(y= "Is It in Your Top 5 Qualities?", 
+       title = "Quality of Responsibility in Children?")
+g+u+plot_layout(nrow = 2, byrow = FALSE)
+```
+
+The culture of a state can contribute to citizens' attitudes towards global warming and green policies. A society that puts more emphasis on the greater good may be more likely to support overarching climate change initiatives than those countries who value the individual. Collectivist societies, such as China and Brazil seem to be more likely to be concerned about and act when dealing with climate change. According to the article "Public Perception of Climate Change in China," when Chinese citizens were surveyed, there was an 8% rise of general concern when considering the personal impacts of climate change versus the societal impacts @yu2013d. However, cultural influence does not necessarily translate to direct action. A study on Mexican high schoolers by Raul Flores found that while a large portion of students were concerned about climate change, it seems to be the result of social pressure and not the root of true change. The same high schoolers showed little likelihood to take personal action to combat climate change @viewofc. As seen in Figure 1.1, China and Brazil put more emphasis on a feeling of responsibility when raising children versus the United States and Australia who put relatively less emphasis on societal responsibility.
+
+```{r graphs 2, echo=FALSE, message=FALSE, warning=FALSE}
+
+# no need to do this a second time! slows everything down
+
+# load("~/Documents/junior year/intro to political methodology/week 3/WVS_Cross-National_Wave_7_R_v2_0.rdata")
+# library(tidyverse)
+# library(patchwork)
+
+r <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         environment_vs_econ = Q111)%>%
+  filter(country %in% c('CHN','USA','BRA','AUL'), 
+         environment_vs_econ %in% c(1,2))%>%
+  mutate(environment_vs_econ = 
+           case_when(environment_vs_econ == 1 ~ 'Environment',
+                     environment_vs_econ == 2 ~ 'Economy'))%>%
+  ggplot(mapping = aes(y = environment_vs_econ, group = country, fill=country)) +
+  geom_bar(position="dodge")+
+  labs(y = "Environment vs. Economy", title = "Do You Value the Environment or Economy?")
+
+o <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         orgs = Q99)%>%
+  filter(country %in% c('CHN','USA','BRA','AUL'), 
+         orgs >= 0)%>%
+  mutate(orgs = 
+           case_when(orgs == 0 ~ 'Do Not Belong',
+                     orgs == 1 ~ 'Inactive Member',
+                     orgs == 2 ~ 'Active Member'))%>%
+  ggplot(mapping = aes(y = orgs, group = country, fill=country)) +
+  geom_bar(position="dodge")+
+  labs(y = "Status", title = "Environmental Organization Status")
+
+m <- `WVS_Cross-National_Wave_7_v2_0` %>% 
+  select(country = C_COW_ALPHA,
+         move = Q79)%>%
+  filter(country %in% c('CHN','USA','BRA','AUL'), 
+         move >= 1)%>%
+  mutate(move = 
+           case_when(move == 1 ~ 'A Great Deal',
+                     move == 2 ~ 'Quite Alot',
+                     move == 3 ~ 'Not Very Much',
+                     move == 4 ~ 'None At All'))%>%
+  ggplot(mapping = aes(y = move, group = country, fill=country)) +
+  geom_bar(position="dodge")+
+  labs(y= "Confidence Level", 
+       title = "Confidence in Environmental Movement?")
+o+m+plot_layout(nrow = 2, byrow = FALSE)
+r
+```
+
+Even in collectivist cultures, proximity to the effects of climate change can influence citizens' views. States that are experiencing more drastic consequences of climate change are more likely to acknowledge and address global warming as a pressing issue. Between the years 2002 and 2010, extreme weather events significantly affected U.S. public concern about global warming @yu2013e. Developing countries and countries closest to the equator, such as Brazil, are most likely to feel the effects of global warming @globalc.
+
+Lastly, the government type and political tendencies of a state factor into the public's attitudes towards climate change. States that lean left, towards a large amount of government intervention and control, are probably more likely to support government intervention on behalf of global warming. A huge majority, 93%, of respondents to the "Public Perception of Climate Change in China," survey agreed that the government should play the lead role in combating climate change. In the past, the Chinese government has played a large role in promoting nation programs of energy conservation and emission reduction @yu2013f. On the contrary, states that tend to lean right do not favor government help in fighting global warming. Emission trading and carbon prices have been a huge debate in Australian politics, and have garnered even less attention and support in the United States @morrison2013e. Within states that have multi-party systems, party lines can prove an obstacle to green policies as well. In the U.S. 83% of Democrats agree that global warming should be a high federal priority, compared to 56% of independents and 22% of Republicans @rode2021b. Similarly in Australia, Green Party and Labor Party members are much more likely to support green policies than the Liberal or National parties @morrison2013f.
+
+In all, it is difficult to pin down an exact reason some citizens harbor doubt and disdain for climate change initiatives. However, the culture, government, and environment they are surrounded by heavily influences their perceptions. Moving forward, it is important to properly educate the public on the impacts -- both personal and societal -- climate change will bring. Whether or not citizens support government protocols and interventions, it will take collectivism to make a true dent in the climate change crisis.
+
+<!-- Make sure this is a section heading if you want the references to work -->
+
+## References

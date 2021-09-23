@@ -1,0 +1,119 @@
+---
+title: "A Comparative View of Women's Political Empowerment"
+author: "Sophia Abela Kiwanuka"
+date: "9/16/2021"
+output: pdf_document
+urlcolor: blue
+# bibliography: references.bib
+---
+
+```{r setup, include = FALSE}
+#this line tells RMarkdown not to include code or warning messages in the final PDF
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+
+#load libraries here
+library(tidyverse)
+library(here)
+library(knitr)
+```
+
+## Introduction
+
+How politically empowered are women? This is the question posed by Varieties of Democracies (V-dem) researchers to construct their Women's Political Empowerment Index (WPEI). They define women's political empowerment "as a process of increasing capacity for women, leading to greater choice, agency, and participation in societal decision-making," and maintain that it captures the three most important elements of empowerment: "that of choice, that of agency, and that of participation"(Coppedge et al. 2021, 298)
+
+My focus is on a comparative analysis of women's political empowerment. How has women's political empowerment changed over time? Does this change translates into gender and political equality? I use the V-dem WPEI to capture the evolution of women's political empowerment. This index was constructed by taking the average of women's civil liberties index, women's civil society participation index, and women's political participation.
+
+```{r figure1, fig.width=12, fig.height=8, fig.cap='Data Source: Vdem (2021)'} 
+
+
+# data available here: https://www.v-dem.net/en/data/data/v-dem-dataset-v111/
+vdem<-read_csv(here('data/raw/vdem.csv'))
+
+#select the variables we want
+vdem %>%  
+
+#re-name my variables
+mutate(e_regiongeo = case_when(e_regiongeo == 1 ~ 'Western Europe',
+                              e_regiongeo == 2 ~ 'Northern Europe',
+                              e_regiongeo == 3 ~ 'Southern Europe',
+                              e_regiongeo == 4 ~ 'Eastern Europe', 
+                              e_regiongeo == 5 ~ 'Northern Africa', 
+                              e_regiongeo == 6 ~ 'Western Africa',
+                              e_regiongeo == 7 ~ 'Middle Africa', 
+                              e_regiongeo == 8 ~ 'Eastern Africa',
+                              e_regiongeo == 9 ~ 'Southern Africa',
+                              e_regiongeo == 10 ~ 'Western Asia',
+                              e_regiongeo == 11 ~ 'Central Asia',
+                              e_regiongeo == 12 ~ 'Eastern Asia',
+                              e_regiongeo == 13 ~ 'South-Eastern Asia',
+                              e_regiongeo == 14 ~ 'Southern Asia',
+                              e_regiongeo == 15 ~ 'Oceania, Australia and the Pacific',
+                              e_regiongeo == 16 ~ 'North America',
+                              e_regiongeo == 17 ~ 'Central America',
+                              e_regiongeo == 18 ~ 'South America',
+                              e_regiongeo == 19 ~ 'Caribbean,Belize, Cuba, Haiti, Dominican Republic and Guyana'))%>% 
+
+
+#initiate ggplot object
+ggplot(aes(year, v2x_gender, color=e_regiongeo, group=country_text_id))+
+geom_line(linetype ='solid')+
+theme_classic()+
+theme_minimal() +
+facet_wrap(~e_regiongeo)+
+
+# add labels
+labs(x = 'Year', y = 'Levels of Empowerment',
+title = 'Women Political Empowerment 1789-2020')+
+theme(
+    axis.title.x = element_text(color="black", face = 'bold', size=15, margin = margin(t = 30, r = 0, b = 0, l = 0)),
+    axis.title.y = element_text(color="black", face = 'bold', size=15, margin = margin(t = 0, r = 30, b = 0, l = 0)),
+    axis.text = element_text(color = 'black',size=12),
+    axis.line = element_line(size=1),
+    legend.position = 'none'
+  )
+```
+
+## 
+
+```{r figure2, fig.width=12, fig.height=8, fig.cap='Data Source: Vdem (2021)'}
+
+library(dplyr)
+library(tidyverse)
+
+
+# Commenting this out, or it outputs several hundred pages of data to your PDF!
+
+#separate countries 
+# `vdem` %>%
+# dplyr::select(country_name, country_text_id, country_id, year, v2x_polyarchy, v2x_libdem, v2x_partipdem, v2x_delibdem, v2x_egaldem, v2x_gender, e_regiongeo)
+  
+#initiate ggplot object
+ggplot(vdem,aes(year, v2x_gender, color=country_text_id))+
+geom_line(linetype ='solid')+
+theme_classic()+
+theme_minimal() +
+facet_wrap(~country_text_id)+ 
+
+# add labels
+labs(x = 'Year', y = 'Levels of Empowerment',
+title = 'Women Political Empowerment 1789-2020')+
+theme(
+    axis.title.x = element_text(color="black", face = 'bold', size=15, margin = margin(t = 30, r = 0, b = 0, l = 0)),
+    axis.title.y = element_text(color="black", face = 'bold', size=15, margin = margin(t = 0, r = 30, b = 0, l = 0)),
+    axis.text = element_text(color = 'black',size=12),
+    axis.line = element_line(size=1),
+    legend.position = 'none'
+  )
+
+```
+
+\newpage
+
+## Findings
+
+My findings suggest that women were not politically empowered until in mid 1900s.my future goal is to reveal if the the increase in the levels of women's political empowerment translates into gender and political equality.
+
+# References
+
+Coppedge et al. 2021. "V-Dem Codebook v11.1" Varieties of Democracy (V-Dem) Project.
