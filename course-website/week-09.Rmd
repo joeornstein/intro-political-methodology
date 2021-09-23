@@ -1,0 +1,24 @@
+---
+title: "Week 9"
+description: |
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+```
+
+
+
+![](img/matrix.jpg)
+
+
+## Reading Assignments
+
+
+
+
+## Problem Set
+
+No problem set this week. Enjoy!

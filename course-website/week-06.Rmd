@@ -8,6 +8,12 @@ description: |
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
+This week you'll present a project that follows the entire data analysis pipeline from start to finish: finding the data, importing it, cleaning it up, summarizing it, and building visualizations.
+
+![](img/environmental-data-science-r4ds-general.png)
+
+If you're looking for additional practice with the skills we've learned over the past five weeks, I highly recommend the [RStudio primers](https://rstudio.cloud/learn/primers), a set of interactive online tutorials. To review the functions we've covered so far, check out "The Basics", "Work With Data", "Visualize Data", and "Tidy Your Data". The other primers are more advanced `R` functions -- you may try them if you're looking for an extra challenge. 
+
 ## Reading Assignments
 
 Next week, we start building mathematical models to help us understand what's going on in our data. Before then, please read:[^link]
