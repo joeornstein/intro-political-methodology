@@ -52,7 +52,7 @@ mydata_tidy <- mydata %>%
 
 I <- ggplot(data=mydata_tidy,
             aes(x=religiosity, y=hawk_score))
-I + geom_jitter(width = 0.2, height = 0.2)+
+I + geom_jitter(width = 0.2, height = 0.15)+
   geom_boxplot(alpha=0.3)+
   stat_summary(fun.y=mean, geom="point", shape=20, size=8, 
                color="red", fill="red")+labs(title="Jewish Religiosity and Hawkish Attitudes in Israel",x="Religiosity",
