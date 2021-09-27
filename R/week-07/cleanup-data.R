@@ -19,14 +19,5 @@ d <- ches %>%
   select(country, party, party_id, social, economic)
 
 
-ggplot(data = d,
-       mapping = aes(x = social, y = economic)) +
-  geom_point() +
-  geom_smooth(method = 'lm', se = FALSE) +
-  theme_bw() +
-  scale_y_continuous(limits = c(-5, 5)) +
-  coord_equal() +
-  labs(title = 'European Political Parties (2019)',
-       caption = 'Measures from the Chapel Hill Expert Survey (Bakker et al., 2019)',
-       x = 'Position on Social Issues',
-       y = 'Position on Economic Issues')
+# saved cleaned up data
+write_csv(d, 'data/ches/ches-cleaned.csv')

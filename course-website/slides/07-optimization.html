@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 7: Optimization</title>
+    <meta charset="utf-8" />
+    <script src="07-optimization_files/header-attrs-2.7/header-attrs.js"></script>
+    <link href="07-optimization_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="07-optimization_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <script src="07-optimization_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+    <script src="07-optimization_files/plotly-binding-4.9.2.1/plotly.js"></script>
+    <script src="07-optimization_files/typedarray-0.1/typedarray.min.js"></script>
+    <script src="07-optimization_files/jquery-1.11.3/jquery.min.js"></script>
+    <link href="07-optimization_files/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+    <script src="07-optimization_files/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+    <link href="07-optimization_files/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="07-optimization_files/plotly-main-1.52.2/plotly-latest.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Week 7: Optimization
+
+---
+
+
+
+
+# Warm Up
+
+--
+
+- What is a **function**?
+
+--
+
+  - A **function** takes one or more inputs and produces an output.
+  
+--
+
+&lt;br&gt;
+
+- If `\(f(x) = 2x^2 + 2x + 3\)`, what is `\(f(2)\)`?
+
+--
+
+`$$f(2) = 2(2)^2 + 2(2) + 3 = 8 + 4 + 3 = 15$$`
+
+--
+
+&lt;br&gt;
+
+- `\(y = 2x + 1\)` and `\(y = 10 - x\)`. Solve for `\(x\)` and `\(y\)`.
+
+--
+
+`$$10 - x = 2x + 1$$`
+--
+
+`$$3x = 9$$`
+
+--
+
+&lt;br&gt;
+
+`$$x = 3$$`
+`$$y = 7$$`
+
+???
+
+Two equations, two unknowns.
+
+---
+
+# Warm Up
+
+What is the **slope** of `\(f(x) = 3x + 2\)`?
+
+&lt;img src="07-optimization_files/figure-html/slope-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+--
+
+The slope of a linear function (a straight line) is measured by how much `\(y\)` increases when you increase `\(x\)` by `\(1\)`. In this case, `\(3\)`.
+
+---
+
+# Warm Up
+
+What is the **area** of this rectangle?
+
+&lt;img src="07-optimization_files/figure-html/rectangle-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+--
+
+Area `\(= bh = 2 \times 5 = 10\)`
+
+---
+
+class: center, middle
+
+**Good news!** You're super close to knowing all the calculus you need.
+
+???
+
+You know what a function is; you know how to compute the slope of a line; you know how to compute the area of a rectangle.
+
+It's just **one** conceptual step from there to calculus. The hard part is the tedious computation. But you don't have to do that stuff. Computers can do it now.
+
+---
+
+# Learning Objectives
+
+By the end of this week, you will be able to:
+
+--
+
+- Find the slope of a function at any point
+
+--
+
+- Identify the *minimum* or *maximum* value of a function
+
+--
+
+
+- Compute the area under a curve
+
+--
+
+- Explain the Fundamental Theorem of Calculus
+
+
+
+???
+
+- Optimization is central to game theory, statistical estimation. So much of mathematical social science is maximizing a value function or minimizing a cost function.
+- When we get to inference and hypothesis testing, we'll need to know how to take the area under a probability distribution function.
+- And the FOTC is just cool. It shows that those two things that seem very different are in fact fundamentally unified on a deep level.
+
+---
+
+
+class: center, middle
+
+# Slopes
+
+
+---
+
+# Linear Functions
+
+&lt;!-- `\(y = ax + b\)` --&gt;
+
+&lt;img src="07-optimization_files/figure-html/Plot Linear Function-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Linear Functions
+
+Find the slope of each function:
+
+- `\(y = 2x + 4\)`
+
+- `\(f(x) = \frac{1}{2}x - 2\)`
+
+- life expectancy (years) = 18.09359 + 5.737335 `\(\times\)` log(GDP per capita)
+
+
+--
+
+### Remember:
+
+Slope of a line `\(= \frac{rise}{run}\)` 
+
+--
+`\(= \frac{\Delta Y}{\Delta X}\)`
+
+--
+`\(= \frac{f(x+h) - f(x)}{h}\)`
+
+
+???
+
+Finding the slope of a line is *easy*.
+
+Just wanted you to get comfortable with that last expression, because we'll be see it again in a moment. 
+
+https://smartech.gatech.edu/bitstream/handle/1853/56031/effect_of_gdp_per_capita_on_national_life_expectancy.pdf
+
+---
+
+# Nonlinear Functions
+
+.center[
+&lt;img src="07-optimization_files/figure-html/Nonlinear Function-1.png" width="600" style="display: block; margin: auto;" /&gt;
+]
+
+???
+
+Nonlinear functions are confusing and scary. Sometimes the slope is positive. Sometimes it's negative. Sometimes it's zero. And unlike with linear functions, just looking at the formula gives you no indication what the slope is at any point.
+
+
+---
+
+
+
+# Isaac Newton
+
+![](img/newton.png)
+
+???
+
+Developed/Discovered:
+- The theory of universal gravitation
+- Three Laws of Motion
+- The Nature of Light
+- And, as a side project so he'd have mathematical notation for those other projects, he created calculus
+
+NB: Newton did some of his best work while stuck at home during an epidemic. So, you know, get to it.
+
+---
+
+# Gottfried Wilhelm Leibniz
+
+
+&lt;img src="img/leibniz.jpg" width="600" style="display: block; margin: auto;" /&gt;
+
+???
+
+Also invented calculus, but with better notation. A philosophical optimist who believed we lived in the "best of all possible worlds", a sentiment parodied by Voltaire, and perhaps belied by the fact that Newton took all the credit for inventing calculus. 
+
+---
+
+# Newton and Leibniz's Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+--
+
+&lt;br&gt;
+
+&lt;img src="img/enhance.gif" width="600" style="display: block; margin: auto;" /&gt;
+
+???
+
+&lt;https://knowyourmeme.com/memes/zoom-and-enhance&gt;
+
+---
+
+# Zoom and Enhance...
+
+&lt;img src="07-optimization_files/figure-html/Show the function again-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Zoom and Enhance...
+
+&lt;img src="07-optimization_files/figure-html/Zoom and Enhance-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Zoom and Enhance...
+
+&lt;img src="07-optimization_files/figure-html/Zoom and Enhance 2-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Zoom and Enhance...Again...
+
+&lt;img src="07-optimization_files/figure-html/Zoom and Enhance 3-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Zoom and Enhance...Again...
+
+&lt;img src="07-optimization_files/figure-html/Zoom and Enhance 4-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Zoom and Enhance...Again...And Again...
+
+&lt;img src="07-optimization_files/figure-html/Zoom and Enhance 5-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Zoom and Enhance...Again...And Again...
+
+&lt;img src="07-optimization_files/figure-html/Zoom and Enhance 6-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+--
+
+It's basically a straight line! And finding the slope of a straight line is easy...
+
+???
+
+The point is that, in the limit, as you shrink the interval smaller and smaller (infinitesimally small), the function is better and better approximated by a straight line. And we already know the slope of a straight line, so the problem is solved! (That line is called the tangent line FYI.)
+
+---
+
+# Putting All That Into Math...
+
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+`$$f'(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$`
+
+---
+
+# Putting All That Into Math...
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+`$$f'(x) = \underbrace{\lim_{h \to 0}}_\text{shrink h really small}\frac{\overbrace{f(x+h)-f(x)}^\text{the change in y}}{\underbrace{h}_\text{the change in x}}$$`
+
+--
+
+&lt;br&gt;
+
+
+This is called the **derivative** of a function.
+
+
+---
+
+# Example
+
+Let `\(f(x) = 2x + 3\)`. What is `\(f'(x)\)`?
+
+--
+
+`$$f'(x) =  \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}$$` 
+--
+
+`$$= \lim_{h \to 0}\frac{2(x+h)+3-(2x+3)}{h}$$` 
+
+--
+
+`$$= \lim_{h \to 0}\frac{2x+2h+3-(2x+3)}{h}$$`
+
+--
+
+`$$= \lim_{h \to 0}\frac{2h}{h}$$`
+
+--
+
+`$$= 2$$`
+
+???
+
+Hey look what we discovered! The slope of a linear function equals the coefficient on `\(x\)`!
+
+---
+
+# Now A Nonlinear One
+
+Let `\(f(x) = 3x^2 + 2x + 3\)`. What is `\(f'(x)\)`?
+
+--
+
+`$$= \lim_{h \to 0}\frac{3(x+h)^2 + 2(x+h) + 3 - (3x^2 + 2x + 3)}{h}$$`
+--
+
+`$$= \lim_{h \to 0}\frac{3x^2 + 3h^2 + 6xh + 2x+ 2h + 3 - (3x^2 + 2x + 3)}{h}$$`
+
+`$$= \lim_{h \to 0}\frac{3h^2 + 6xh + 2h}{h}$$`
+--
+
+`$$= \lim_{h \to 0}3h + 6x + 2$$`
+
+--
+
+`$$= 6x + 2$$`
+
+---
+
+# Solution
+
+&lt;img src="07-optimization_files/figure-html/Derivative Exercise Solution-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+???
+
+This function, `\(f'(x)\)`, outputs the slope of `\(f(x)\)` at every point. You can "read off" the slope of `\(f(x)\)` from the vertical of `\(f'(x)\)`.
+
+---
+
+class: center, middle
+
+More **good news!** You don't have to go through that process every time. Mathematicians have done it for you, and have discovered a whole bunch of useful shortcuts.
+
+---
+
+## Shortcut 1: The Power Rule
+
+If `\(f(x) = ax^k\)`, then `\(f'(x) = kax^{k-1}\)`
+
+--
+
+&lt;br&gt;
+
+### Practice Problem:
+
+Let `\(f(x) = 2x^3\)`. What is `\(f'(x)\)`?
+
+--
+
+&lt;br&gt;
+
+`$$f'(x) = 6x^2$$`
+
+---
+
+## Shortcut 2: The Sum Rule
+
+The derivative of a sum is equal to the sum of derivatives.
+
+If `\(f(x) = g(x) + h(x)\)`, then `\(f'(x) = g'(x) + h'(x)\)`
+
+--
+
+&lt;br&gt;
+
+### Practice Problem:
+
+If `\(f(x) = 2x^3 + x^2\)`, what is `\(f'(x)\)`?
+
+--
+
+`$$f'(x) = 6x^2 + 2x$$`
+
+---
+
+## Shortcut 3: The Constant Rule
+
+The derivative of a constant is zero
+
+If `\(f(x) = c\)`, then `\(f'(x) = 0\)`
+
+--
+
+&lt;br&gt;
+
+### Practice Problem:
+
+If `\(f(x) = 4x^2 + 3x + 5\)`, what is `\(f'(x)\)`?
+
+--
+
+&lt;br&gt;
+
+`$$f'(x) = 8x + 3$$`
+
+---
+
+## Shortcut 4: The Product Rule
+
+The derivative of a product is a bit trickier...
+
+If `\(f(x) = g(x) \cdot h(x)\)`, then `\(f'(x) = g'(x) \cdot h(x) + g(x) \cdot h'(x)\)`
+
+--
+
+### Practice Problem
+
+`\(f(x) = (3x^2 + 6x)(x+2)\)`, what is `\(f'(x)\)`?
+
+--
+
+`$$f'(x) = (3x^2 + 6x)(1) + (6x + 6)(x+2)$$`
+
+`$$f'(x) = 3x^2 + 6x + 6x^2 + 6x + 12x + 12$$`
+
+`$$f'(x) = 9x^2 + 24x + 12$$`
+
+---
+
+## Shortcut 5: The Exponential Rule
+
+Remember Euler's number? `\(e =\)` 2.7182818...
+
+--
+
+If `\(f(x) = e^x\)`, then `\(f'(x) = e^x\)`
+
+
+&lt;img src="07-optimization_files/figure-html/exponential rule-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+???
+
+Often when we use `\(e\)` in applied mathematics, we're taking advantage of this fact to make the math easier.
+
+---
+
+## Other Derivative Rules
+
+![](img/moore-siegel-truncated.png)
+---
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+.center[![](img/math.gif)]
+
+--
+
+&lt;br&gt;
+
+If you haven't seen these before, it's a lot to absorb. But practice helps.
+
+???
+
+Don't freak out.
+
+---
+
+# More Practice
+
+### Problem 1: Sum of Powers (Polynomial)
+
+Let `\(f(x) = 2x^3 + 4x + 79\)`. What is `\(f'(x)\)`?
+
+### Problem 2: Multiply By A Constant
+
+Let `\(f(x) = 3(x^2 + x + 42)\)`. What is `\(f'(x)\)`?
+
+### Problem 3: Product Rule
+
+Let `\(f(x) = (x^2 + 1)(x+3)\)`. What is `\(f'(x)\)`?
+
+
+
+---
+
+class: center, middle
+
+# I taught you that...
+
+
+
+---
+
+class: center, middle
+
+# ...so you could do *this*.
+
+
+---
+
+# Optimization
+
+Let `\(f(x) = 2x^2 + 8x - 32\)`. At what value of `\(x\)` is the function minimized?
+
+&lt;img src="07-optimization_files/figure-html/Optimization Function-1.png" width="500" style="display: block; margin: auto;" /&gt;
+
+--
+
+**Key Insight**: Function is minimized when the slope "switches" from decreasing to increasing. Exactly at the point where the slope equals zero.
+
+---
+
+# Optimization in Three Steps
+
+--
+
+#### 1. Take the derivative of the function.
+
+--
+
+#### 2. Set it equal to zero.
+
+--
+
+#### 3. Solve for `\(x\)`.
+
+---
+
+# Optimization in Three Steps
+
+#### 1. Take the derivative of the function.
+
+--
+
+`$$f(x) = 2x^2 + 8x - 32$$`
+
+--
+
+`$$f'(x) = 4x + 8$$`
+
+--
+
+#### 2. Set it equal to zero
+
+`$$4x + 8 = 0$$`
+
+--
+
+#### 3. Solve for `\(x\)`.
+
+--
+
+`$$x = -2$$`
+
+
+???
+
+That second step is called the "First Order Condition", or FOC.
+
+---
+
+# Optimization in Three Steps
+
+&lt;img src="07-optimization_files/figure-html/Optimization Plot with Solution-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+???
+
+Bonus question: how do you know if it's a maximum or a minimum? Take the second derivative! If it's positive, then the slope is increasing (so it's a minimum). If it's positive, then the slope is decreasing (so it's a maximum).
+
+---
+
+# Now You Try It
+
+Suppose that happiness as a function of jellybeans consumed is `\(h(j) = -\frac{1}{3}j^3 + 81j + 2\)`. How many jellybeans should you eat? (Assume you can only eat a positive number of jellybeans).
+
+--
+
+&lt;img src="07-optimization_files/figure-html/Jellybean Plot-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+
+### Wait, how do you know if it's a maximum or a minimum?
+
+---
+
+## Jellybeans Again
+
+`\(h(j) = \frac{1}{3}j^3 + 81j + 2\)` and `\(h'(j) = 81 - j^2\)`
+
+&lt;img src="07-optimization_files/figure-html/Jellybean Plot Again-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+--
+
+It's a maximum when the slope is **decreasing**, and a minimum when then slope is **increasing**. How do you figure out if the slope is increasing or decreasing?
+
+--
+
+That's right. You find the **slope of the slope** (aka the **second derivative**).
+
+---
+
+## The Second Derivative Test
+
+`\(h(j) = \frac{1}{3}j^3 + 81j + 2\)` and `\(h'(j) = 81 - j^2\)`
+
+What is `\(h''(j)\)`? Is it positive or negative when you eat `\(9\)` jellybeans?
+
+--
+
+`$$h''(j) = -2j$$`
+
+&lt;img src="07-optimization_files/figure-html/second derivative-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+class: center, middle
+
+# Partial Derivatives
+
+
+---
+
+# Partial Derivatives
+
+What if you have a multivariable function?
+
+`$$f(x,y) = 2x^2y + xy - 4x + y -6$$`
+
+--
+
+Same procedure! To get the derivative of a function *with respect to* `\(x\)` or `\(y\)`, treat the other variable as a constant.
+
+--
+
+`$$\frac{\partial f}{\partial x} = 4yx + y - 4$$`
+
+--
+
+`$$\frac{\partial f}{\partial y} = 2x^2 + x + 1$$`
+
+---
+
+# Now You Try...
+
+Suppose happiness as a function of jellybeans and Dr. Peppers consumed is
+
+`$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$`
+How many jellybeans should you eat? How many Dr. Peppers should you drink?
+
+--
+
+Intuitively, the `\(jd\)` term is an **interaction effect**. The effect of jellybeans on happiness increases if you also drink more Dr. Peppers. 
+
+---
+
+# Now You Try...
+
+`$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$`
+
+--
+
+`$$\frac{\partial h}{\partial j} = 8 - j + d = 0$$`
+--
+
+`$$\frac{\partial h}{\partial d} = 2 - 6d + j = 0$$`
+--
+
+`$$j = 8 + d$$`
+
+`$$j = 6d - 2$$`
+--
+
+&lt;br&gt;
+
+`$$d^* = 2$$`
+`$$j^* = 10$$`
+
+---
+
+## Visualizing That Function
+
+`$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$`
+
+<div id="htmlwidget-d3309d8ad0d37249a74c" style="width:600px;height:360px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d3309d8ad0d37249a74c">{"x":{"visdat":{"738c2997c72":["function () ","plotlyVisDat"]},"cur_data":"738c2997c72","attrs":{"738c2997c72":{"z":[[100,97.3333333333333,84,60],[107.86703601108,106.603878116343,94.67405355494,72.0775623268698],[114.626038781163,114.766389658356,104.240073868883,83.0470914127424],[120.277008310249,121.820867959372,112.698060941828,92.9085872576177],[124.819944598338,127.767313019391,120.048014773777,101.662049861496],[128.254847645429,132.605724838412,126.289935364728,109.307479224377],[130.581717451524,136.336103416436,131.423822714681,115.84487534626],[131.800554016621,138.958448753463,135.449676823638,121.274238227147],[131.91135734072,140.472760849492,138.367497691597,125.595567867036],[130.914127423823,140.879039704524,140.17728531856,128.808864265928],[128.808864265928,140.17728531856,140.879039704524,130.914127423823],[125.595567867036,138.367497691597,140.472760849492,131.91135734072],[121.274238227147,135.449676823638,138.958448753463,131.80055401662],[115.84487534626,131.423822714681,136.336103416436,130.581717451524],[109.307479224377,126.289935364728,132.605724838412,128.254847645429],[101.662049861496,120.048014773777,127.767313019391,124.819944598338],[92.9085872576177,112.698060941828,121.820867959372,120.277008310249],[83.0470914127424,104.240073868883,114.766389658356,114.626038781163],[72.0775623268698,94.67405355494,106.603878116343,107.86703601108],[60,84,97.3333333333333,100]],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"surface"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"Dr. Peppers"},"yaxis":{"title":"Jellybeans"},"zaxis":{"title":"Happiness"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666666","rgba(199,225,42,1)"],["0.958333333333334","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[[100,97.3333333333333,84,60],[107.86703601108,106.603878116343,94.67405355494,72.0775623268698],[114.626038781163,114.766389658356,104.240073868883,83.0470914127424],[120.277008310249,121.820867959372,112.698060941828,92.9085872576177],[124.819944598338,127.767313019391,120.048014773777,101.662049861496],[128.254847645429,132.605724838412,126.289935364728,109.307479224377],[130.581717451524,136.336103416436,131.423822714681,115.84487534626],[131.800554016621,138.958448753463,135.449676823638,121.274238227147],[131.91135734072,140.472760849492,138.367497691597,125.595567867036],[130.914127423823,140.879039704524,140.17728531856,128.808864265928],[128.808864265928,140.17728531856,140.879039704524,130.914127423823],[125.595567867036,138.367497691597,140.472760849492,131.91135734072],[121.274238227147,135.449676823638,138.958448753463,131.80055401662],[115.84487534626,131.423822714681,136.336103416436,130.581717451524],[109.307479224377,126.289935364728,132.605724838412,128.254847645429],[101.662049861496,120.048014773777,127.767313019391,124.819944598338],[92.9085872576177,112.698060941828,121.820867959372,120.277008310249],[83.0470914127424,104.240073868883,114.766389658356,114.626038781163],[72.0775623268698,94.67405355494,106.603878116343,107.86703601108],[60,84,97.3333333333333,100]],"type":"surface","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+
+&lt;!-- Saving everything after this for our week on probability distributions --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- class: center, middle --&gt;
+
+&lt;!-- # Integrals --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # The Area Under a Curve --&gt;
+
+&lt;!-- Rectangles are easy. `\(A = bh\)` --&gt;
+
+&lt;!-- ```{r rectangular area} --&gt;
+
+&lt;!-- data = tibble(x = -2:2, --&gt;
+&lt;!--               y = 2) --&gt;
+
+&lt;!-- ggplot() + --&gt;
+&lt;!--   geom_rect(aes(xmin = -2, xmax = 2, ymin = 0, ymax = 2), --&gt;
+&lt;!--             alpha = 0.3, fill = 'blue') +  --&gt;
+&lt;!--   geom_line(data = data, aes(x=x,y=y), size = 1) + --&gt;
+&lt;!--   scale_x_continuous(limits = c(-4,4)) + --&gt;
+&lt;!--   scale_y_continuous(limits = c(-4,4)) + --&gt;
+&lt;!--   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +  --&gt;
+&lt;!--   xlab('x') + ylab('y') +  --&gt;
+&lt;!--   geom_text(aes(x=2.4,y=2, label='f(x)'), size = 5) --&gt;
+
+
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # The Area Under a Curve --&gt;
+
+&lt;!-- Curves are harder. We didn't learn this in geometry! --&gt;
+
+
+&lt;!-- ```{r plot curve} --&gt;
+
+&lt;!-- f &lt;- function(x){ --&gt;
+&lt;!--   x^3 - 2*x^2 + 2 --&gt;
+&lt;!-- } --&gt;
+
+&lt;!-- # f &lt;- function(x){ --&gt;
+&lt;!-- #   0.7*x^2 --&gt;
+&lt;!-- # } --&gt;
+
+&lt;!-- x &lt;- seq(-2,2,0.01) --&gt;
+
+&lt;!-- data &lt;- tibble(x=x, --&gt;
+&lt;!--                y=f(x)) --&gt;
+
+&lt;!-- ggplot() + --&gt;
+&lt;!--   geom_line(data = data, aes(x=x,y=y), size = 1) + --&gt;
+&lt;!--   scale_x_continuous(limits = c(-4,4)) + --&gt;
+&lt;!--   scale_y_continuous(limits = c(-4,4)) + --&gt;
+&lt;!--   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +  --&gt;
+&lt;!--   xlab('x') + ylab('y') +  --&gt;
+&lt;!--   geom_text(aes(x=2.4,y=2, label='f(x)'), size = 5) --&gt;
+
+
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # The Area Under a Curve --&gt;
+
+&lt;!--  - With derivatives, we approximated a hard problem (the slope of a curve) using an easy problem (the slope of a line) by zooming in close enough. --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!--  - With integrals, we'll use a similar trick. --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!--  - We approximate a hard problem (the area under a curve) using an easy problem (the area of a bunch of rectangles) by making the rectangles *really* thin. --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Riemann Sum --&gt;
+
+&lt;!-- `\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`. --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- ```{r reimann plot function} --&gt;
+&lt;!-- # function to plot Riemann sums --&gt;
+
+&lt;!-- riemann_plot &lt;- function(x_minimum, x_maximum, f, h, --&gt;
+&lt;!--                          rectangle_outline = 'black'){ --&gt;
+
+&lt;!--   # create x and y variables --&gt;
+&lt;!--   x &lt;- seq(x_minimum,x_maximum,0.1) --&gt;
+&lt;!--   y &lt;- f(x) --&gt;
+
+&lt;!--   # rectangle dimensions --&gt;
+&lt;!--   x_rectangles &lt;- seq(x_minimum, x_maximum - h, h) --&gt;
+&lt;!--   y_rectangles &lt;- f(seq(x_minimum, x_maximum - h, h)) --&gt;
+
+&lt;!--   # approximate area --&gt;
+&lt;!--   approximate_area &lt;- sum(y_rectangles * h) --&gt;
+
+&lt;!--   # rectangle dataframe for plot --&gt;
+&lt;!--   rectangles &lt;- tibble(xmin = x_rectangles, --&gt;
+&lt;!--                        xmax = seq(x_minimum + h, x_maximum, h), --&gt;
+&lt;!--                        ymin = 0, --&gt;
+&lt;!--                        ymax = f(xmin)) --&gt;
+
+
+&lt;!--   # return ggplot object --&gt;
+&lt;!--   ggplot() + --&gt;
+&lt;!--     geom_line(data = tibble(x,y), --&gt;
+&lt;!--               aes(x=x,y=y)) + --&gt;
+&lt;!--     geom_rect(data = rectangles, --&gt;
+&lt;!--               aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax), --&gt;
+&lt;!--               fill = 'blue', color = rectangle_outline, alpha = 0.3) + --&gt;
+&lt;!--     labs(title = paste0("h = ", h,  --&gt;
+&lt;!--                         ", Approximate Area = ", round(approximate_area, 3))) + --&gt;
+&lt;!--     theme_bw() --&gt;
+&lt;!-- } --&gt;
+
+&lt;!-- ``` --&gt;
+
+&lt;!-- ```{r reimann sum 1} --&gt;
+
+&lt;!-- f &lt;- function(x){ --&gt;
+&lt;!--   x^3 - 2*x^2 + 2 --&gt;
+&lt;!-- } --&gt;
+
+&lt;!-- riemann_plot(x_minimum = 0, --&gt;
+&lt;!--              x_maximum = 3, --&gt;
+&lt;!--              f = f, --&gt;
+&lt;!--              h = 0.5) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Riemann Sum --&gt;
+
+&lt;!-- `\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`. --&gt;
+
+&lt;!-- ```{r reimann sum 3} --&gt;
+
+&lt;!-- riemann_plot(x_minimum = 0, --&gt;
+&lt;!--              x_maximum = 3, --&gt;
+&lt;!--              f = f, --&gt;
+&lt;!--              h = 0.25) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Riemann Sum --&gt;
+
+&lt;!-- `\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`. --&gt;
+
+&lt;!-- ```{r reimann sum 4} --&gt;
+
+&lt;!-- riemann_plot(x_minimum = 0, --&gt;
+&lt;!--              x_maximum = 3, --&gt;
+&lt;!--              f = f, --&gt;
+&lt;!--              h = 0.1) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Riemann Sum --&gt;
+
+&lt;!-- `\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`. --&gt;
+
+&lt;!-- ```{r reimann sum 5} --&gt;
+
+&lt;!-- riemann_plot(x_minimum = 0, --&gt;
+&lt;!--              x_maximum = 3, --&gt;
+&lt;!--              f = f, --&gt;
+&lt;!--              h = 0.01) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Riemann Sum --&gt;
+
+&lt;!-- `\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`. --&gt;
+
+&lt;!-- ```{r reimann sum 6} --&gt;
+
+&lt;!-- riemann_plot(x_minimum = 0, --&gt;
+&lt;!--              x_maximum = 3, --&gt;
+&lt;!--              f = f, --&gt;
+&lt;!--              h = 0.001, --&gt;
+&lt;!--              rectangle_outline = NA) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Integral Notation --&gt;
+
+&lt;!-- $$\lim_{h \to 0} \sum f(x) \cdot h = \int f(x)dx $$ --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- `\(dx\)` is an "infinitesimal" (infinitely small value).  --&gt;
+
+&lt;!-- So `\(\int f(x)dx\)` is the area of an infinite number of infinitely skinny rectangles. --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- If we want the area under a curve between `\(a\)` and `\(b\)`, we denote it like so: --&gt;
+
+&lt;!-- `$$\int_a^b f(x)dx$$` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## There has to be an easier way! --&gt;
+
+&lt;!-- What we want is a function `\(F(x)\)`; let's call it the **area function**. --&gt;
+
+&lt;!-- - `\(F(a)\)` gives the area under `\(f(x)\)` between `\(-\infty\)` and `\(a\)`. --&gt;
+
+&lt;!-- - `\(F(b) - F(a)\)` gives the area under `\(f(x)\)` between `\(a\)` and `\(b\)`. --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- - As `\(h\)` approaches zero, our skinny rectangles become a better and better approximation of the area function... --&gt;
+
+&lt;!-- `$$f(x) \cdot h = \lim_{h \to 0} F(x+h) - F(x)$$` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- Divide by `\(h\)` on both sides: --&gt;
+
+&lt;!-- `$$f(x) = \lim_{h \to 0} \frac{F(x+h) - F(x)}{h}$$` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- Hey. We've seen that before! --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- `\(f(x) = F'(x)\)`. In other words, `\(F(x)\)` is the *antiderivative* of `\(f(x)\)`. --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # The Fundamental Theorem of Calculus --&gt;
+
+&lt;!-- `$$\int_a^b f(x)dx =  F(b) - F(a)$$` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- Computing the area under the curve and taking the antiderivative are equivalent operations! --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Try It! --&gt;
+
+&lt;!-- If `\(f(x) = x\)`, find the area under the curve between `\(x=0\)` and `\(x=4\)`. --&gt;
+
+&lt;!-- ```{r plot triangle} --&gt;
+
+&lt;!-- x = -1:5 --&gt;
+
+&lt;!-- ggplot(data = tibble(x)) + --&gt;
+&lt;!--   geom_line(aes(x=x,y=x), size = 1) + --&gt;
+&lt;!--   geom_vline(xintercept = 0) + --&gt;
+&lt;!--   geom_hline(yintercept = 0) + --&gt;
+&lt;!--   xlab('x') + ylab('f(x)') + --&gt;
+&lt;!--   geom_vline(xintercept = 4, linetype = 'dashed', color = 'blue') --&gt;
+
+&lt;!-- ``` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- **Hint**: It's a triangle, so the answer should be 8. --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # The Area Under a Curve --&gt;
+
+&lt;!-- If `\(f(x) = x\)`, find the area under the curve between `\(x=0\)` and `\(x=4\)`. --&gt;
+
+&lt;!-- Use the Fundamental Theorem of Calculus: --&gt;
+
+&lt;!-- `$$\int_0^4 f(x)dx = F(4) - F(0)$$` --&gt;
+&lt;!-- -- --&gt;
+
+&lt;!-- `\(F(x) = \frac{1}{2}x^2 + C\)` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- `\(F(4) - F(0) = \frac{1}{2}\cdot4^2 = 8\)` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Now a Nonlinear Example... --&gt;
+
+&lt;!-- If `\(f(x) = x^3 - 2x^2 + 2\)`, find the area under the curve between `\(x=0\)` and `\(x=3\)`. --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- `$$\int_0^3 f(x)dx = F(3) - F(0)$$` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- `\(F(x) = \frac{1}{4}x^4 - \frac{2}{3}x^3 + 2x + C\)` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- `\(F(3) - F(0) = \frac{1}{4}3^4 - \frac{2}{3}3^3 + 2(3) - [\frac{1}{4}0^4 - \frac{2}{3}0^3 + 2(0)]\)` --&gt;
+
+&lt;!-- -- --&gt;
+&lt;!-- `\(= 8.25\)` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## Now a Nonlinear Example... --&gt;
+
+&lt;!-- That's the same answer that we got from the skinny rectangles! --&gt;
+
+&lt;!-- ```{r reimann sum 7} --&gt;
+
+&lt;!-- riemann_plot(x_minimum = 0, --&gt;
+&lt;!--              x_maximum = 3, --&gt;
+&lt;!--              f = f, --&gt;
+&lt;!--              h = 0.001, --&gt;
+&lt;!--              rectangle_outline = NA) --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- class: center, middle --&gt;
+
+&lt;!-- ## ...and that's All The Calculus You Need --&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
