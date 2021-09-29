@@ -29,6 +29,12 @@ But where did that line of best fit come from? What does it even mean to be the 
 
 Come with me on a journey.
 
+## Slides
+
+```{r slides}
+knitr::include_url('slides/07-optimization.html')
+```
+
 
 ## Reading Assignments
 
