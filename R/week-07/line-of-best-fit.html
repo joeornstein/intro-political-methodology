@@ -243,7 +243,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">The Line of Best Fit</h1>
 <h4 class="author">Joe Ornstein</h4>
-<h4 class="date">2021-09-29</h4>
+<h4 class="date">September 29, 2021</h4>
 
 </div>
 
@@ -386,7 +386,7 @@ knitr::kable(head(ches))</code></pre>
 <p>It’s definitely better, but notice that not <em>all</em> the residuals decreased. The model got better for predicting some values and worse for others! So what’s the best way to optimize the model’s fit to the data?</p>
 <p>The standard approach is to find the <span class="math inline">\(\beta\)</span> value that minimizes the <strong>sum of squared errors</strong>. (We square the errors so that positive and negative values don’t cancel each other out – any number squared is positive.)</p>
 <p>The following code chunk computes the sum of squared errors for a given slope parameter. Play around with it a bit, changing the value of <code>beta</code> and seeing what happens to the SSE.</p>
-<pre class="r"><code>beta &lt;- 1
+<pre class="r"><code>beta &lt;- 2
 
 ches &lt;- mutate(ches,
                expected_value = beta * social,
@@ -394,8 +394,21 @@ ches &lt;- mutate(ches,
 
 # print the sum of squared errors
 sum( ches$residual ^ 2 )</code></pre>
-<pre><code>## [1] 1723.351</code></pre>
+<pre><code>## [1] 5880.195</code></pre>
 <p>There’s a more systematic way to do this than plugging in guesses and hunting for the best slope. And it’s called <strong>calculus</strong>. Back to the slides!</p>
+<pre class="r"><code># here&#39;s what the lm() function gave us:
+lm(economic ~ social, data = ches)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = economic ~ social, data = ches)
+## 
+## Coefficients:
+## (Intercept)       social  
+##  -2.592e-16    3.125e-01</code></pre>
+<pre class="r"><code># here&#39;s what the calculus solution gives us:
+sum(ches$economic * ches$social) / sum(ches$social^2)</code></pre>
+<pre><code>## [1] 0.3125066</code></pre>
+<pre class="r"><code># That is ordinary least squares (OLS)</code></pre>
 </div>
 <div class="footnotes">
 <hr />
