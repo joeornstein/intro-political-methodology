@@ -1,5 +1,5 @@
 ---
-title: "Week 7: Optimization"
+title: "Week 7: The Linear Model"
 # author: "Joe Ornstein"
 # date: "September 30, 2020"
 output:
@@ -19,9 +19,55 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
                       message=FALSE, warning=FALSE, echo=FALSE)
 ```
 
-# The Problem
+# The Linear Model is Everywhere
 
-```{r party-data, echo = FALSE, out.width='640px', out.height='400px'}
+--
+
+- **OLS / Regression Analysis (POLS 7014)** = The Linear Model
+
+- **MLE / Logit / Probit / Count Models (POLS 8501)** = The Linear Model + another function
+
+- **t-tests** = The Linear Model + a binary predictor
+
+- **Instrumental Variables** = Two Linear Models
+
+- **Regression Discontinuity** = Two Linear Models
+
+- **Matching** = The Linear Model + Weights
+
+- **Fixed Effects / Random Effects** = The Linear Model + Categorical Predictor Variables
+
+- **Difference-in-differences** = The Linear Model + Time
+
+--
+
+Statistical modeling can seem pretty daunting when you think about it as a bunch of tests with no obvious connections. Instead, let's build everything from the ground up...
+
+---
+
+# Why Build Models?
+
+--
+
+1. To *describe* complex data
+
+--
+
+2. To make *predictions*
+
+--
+
+3. To help infer *causality*
+
+???
+
+Up to now, we've been using visualization as our primary mode of inquiry. This is a great, and underrated, tool! But there are limits to what it can do for us. Models allow us to more precisely describe the relationships we can only see in a chart. They allow us to make predictions about unseen data. And, coupled with theory, they can help us uncover causal relationships.
+
+---
+
+# The Linear Model
+
+```{r party-data, echo = FALSE}
 ches <- read_csv('../../data/ches/ches-cleaned.csv')
 
 p <- ggplot(data = ches,
@@ -42,6 +88,14 @@ p
 
 # The Linear Model
 
+```{r}
+p + geom_smooth(method = 'lm', se = FALSE)
+```
+
+---
+
+# The Linear Model
+
 $$Y = X\beta + \varepsilon$$
 ```{r}
 p + geom_smooth(method = 'lm', se = FALSE)
@@ -51,98 +105,87 @@ p + geom_smooth(method = 'lm', se = FALSE)
 
 # The Linear Model
 
-$$\underbrace{Y}_\text{outcome} = X\beta + \varepsilon$$
-```{r}
-p + geom_smooth(method = 'lm', se = FALSE)
-```
+Partitioning the outcome into two parts -- the part we can explain, and the part we're ignoring:
 
+$$\underbrace{Y}_\text{outcome} = \underbrace{X\beta}_\text{explained} + \underbrace{\varepsilon}_\text{unexplained}$$
 ---
 
 # The Linear Model
+
+Partitioning the outcome into two parts -- the part we can explain, and the part we're ignoring:
 
 $$\underbrace{Y}_\text{outcome} = \overbrace{X}^\text{explanatory variable}\beta + \varepsilon$$
-
-```{r}
-p + geom_smooth(method = 'lm', se = FALSE)
-```
-
 ---
 
 # The Linear Model
+
+Partitioning the outcome into two parts -- the part we can explain, and the part we're ignoring:
 
 $$\underbrace{Y}_\text{outcome} = \overbrace{X}^\text{explanatory variable}\underbrace{\beta}_\text{parameter} + \varepsilon$$
-```{r}
-p + geom_smooth(method = 'lm', se = FALSE)
-```
 ---
 
 # The Linear Model
 
-$$\underbrace{Y}_\text{outcome} = \overbrace{X}^\text{explanatory variable}\underbrace{\beta}_\text{parameter} + \overbrace{\varepsilon}^\text{residual}$$
+Partitioning the outcome into two parts -- the part we can explain, and the part we're ignoring:
 
-```{r}
-p + geom_smooth(method = 'lm', se = FALSE)
+$$\underbrace{Y}_\text{outcome} = \overbrace{X}^\text{explanatory variable}\underbrace{\beta}_\text{parameter} + \overbrace{\varepsilon}^\text{residual}$$
+--
+
+**Our challenge for today**: how do we estimate the $\beta$ parameter? What is the "best" slope for the line of best fit?
+
+---
+
+class: center, middle
+
+Let's play around a little bit with `R/week-07/line-of-best-fit.Rmd`.
+
+---
+
+class: center, middle
+
+# Calculus
+
+---
+
+# An Optimization Problem
+
+--
+
+We have a **function** that we want to minimize.
+
+$$SSE = \sum (Y - X\beta)^2$$
+Here's what that function looks like:
+
+```{r sse-plot, out.height='300px', out.width='500px'}
+# this code chunk creates a sum of squared errors function,
+# then plots it over a range of values for beta
+sse <- function(y, x, beta){
+  return(sum((y - x*beta)^2))
+}
+
+# iterate over a sequence of beta values and return the sum of squared error
+betas <- seq(-5, 5, 0.1)
+f <- map_dbl( betas, sse, 
+              y = ches$social, x = ches$economic )
+
+ggplot(mapping = aes(x=betas, y = f)) +
+  geom_line() +
+  labs(x = 'Beta', y = 'Sum of Squared Errors')
 ```
 
-???
+--
 
-### Why build statistical models?
-
-1. To describe relationships in the data.
-
-2. To make predictions.
-
-3. To make causal inferences.
+**Key Insight**: Function is minimized when the slope "switches" from decreasing to increasing. Exactly at the point where the slope equals zero.
 
 ---
 
-# Warm Up
+class: center, middle
 
---
-
-- What is a **function**?
-
---
-
-  - A **function** takes one or more inputs and produces an output.
-  
---
-
-<br>
-
-- If $f(x) = 2x^2 + 2x + 3$, what is $f(2)$?
-
---
-
-$$f(2) = 2(2)^2 + 2(2) + 3 = 8 + 4 + 3 = 15$$
-
---
-
-<br>
-
-- $y = 2x + 1$ and $y = 10 - x$. Solve for $x$ and $y$.
-
---
-
-$$10 - x = 2x + 1$$
---
-
-$$3x = 9$$
-
---
-
-<br>
-
-$$x = 3$$
-$$y = 7$$
-
-???
-
-Two equations, two unknowns.
+# Slopes
 
 ---
 
-# Warm Up
+# Slopes
 
 What is the **slope** of $f(x) = 3x + 2$?
 
@@ -157,49 +200,6 @@ ggplot(mapping = aes(x=x, y = y)) +
 --
 
 The slope of a linear function (a straight line) is measured by how much $y$ increases when you increase $x$ by $1$. In this case, $3$.
-
----
-
-class: center, middle
-
-**Good news!** You're extremely close to knowing all the calculus you need.
-
-???
-
-You know what a function is; you know how to compute the slope of a line; you know how to compute the area of a rectangle.
-
-It's just **one** conceptual step from there to calculus. The hard part is the tedious computation. But you don't have to do that stuff. Computers can do it now.
-
----
-
-class: center, middle
-
-# Slopes
-
-
----
-
-# Linear Functions
-
-<!-- $y = ax + b$ -->
-
-```{r Plot Linear Function}
-
-a <- 2
-b <- 1
-
-x <- seq(-1,1,0.01)
-y <- a*x + b
-
-p <- ggplot(mapping = aes(x=x,y=y)) +
-  geom_line(size=1) +
-  geom_hline(yintercept = 0) +
-  geom_vline(xintercept = 0) +
-  ggtitle('y = ax+b')
-
-p
-```
-
 
 ---
 
@@ -261,6 +261,8 @@ p +
   geom_vline(xintercept = 0)
 ```
 ]
+
+Nonlinear functions are confusing and scary...
 
 ???
 
@@ -540,7 +542,7 @@ This function, $f'(x)$, outputs the slope of $f(x)$ at every point. You can "rea
 
 class: center, middle
 
-More **good news!** You don't have to go through that process every time. Mathematicians have done it for you, and have discovered a whole bunch of useful shortcuts.
+**Good news!** You don't have to go through that process every time. Mathematicians have done it for you, and have discovered a whole bunch of useful shortcuts.
 
 ---
 
@@ -1079,393 +1081,27 @@ Note: suppressing index notation for the brains of the students
 
 ---
 
-<!-- Saving all the integral calculus for our week on probability distributions -->
+## Back to our motivating example...
 
+The Linear Model:
 
-<!-- --- -->
+$$y = x\beta + \varepsilon$$
+The thing we want to minimize:
 
-<!-- class: center, middle -->
+$$SSE = \sum (y - x\beta)^2$$
+The solution to the minimization problem:
 
-<!-- # Integrals -->
+$$b = \frac{\sum xy}{\sum x^2}$$
 
-<!-- --- -->
+--
 
-<!-- # The Area Under a Curve -->
+Some terminology:
 
-<!-- Rectangles are easy. $A = bh$ -->
+- $\beta$ in that first equation is called the **estimand**. It's the thing we're trying to estimate.
+- $b$ in that final equation is called the **estimator**, or the **estimating equation**. It's the procedure we use to produce an estimate.
 
-<!-- ```{r rectangular area} -->
+---
 
-<!-- data = tibble(x = -2:2, -->
-<!--               y = 2) -->
+class: center, middle
 
-<!-- ggplot() + -->
-<!--   geom_rect(aes(xmin = -2, xmax = 2, ymin = 0, ymax = 2), -->
-<!--             alpha = 0.3, fill = 'blue') +  -->
-<!--   geom_line(data = data, aes(x=x,y=y), size = 1) + -->
-<!--   scale_x_continuous(limits = c(-4,4)) + -->
-<!--   scale_y_continuous(limits = c(-4,4)) + -->
-<!--   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +  -->
-<!--   xlab('x') + ylab('y') +  -->
-<!--   geom_text(aes(x=2.4,y=2, label='f(x)'), size = 5) -->
-
-
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # The Area Under a Curve -->
-
-<!-- Curves are harder. We didn't learn this in geometry! -->
-
-
-<!-- ```{r plot curve} -->
-
-<!-- f <- function(x){ -->
-<!--   x^3 - 2*x^2 + 2 -->
-<!-- } -->
-
-<!-- # f <- function(x){ -->
-<!-- #   0.7*x^2 -->
-<!-- # } -->
-
-<!-- x <- seq(-2,2,0.01) -->
-
-<!-- data <- tibble(x=x, -->
-<!--                y=f(x)) -->
-
-<!-- ggplot() + -->
-<!--   geom_line(data = data, aes(x=x,y=y), size = 1) + -->
-<!--   scale_x_continuous(limits = c(-4,4)) + -->
-<!--   scale_y_continuous(limits = c(-4,4)) + -->
-<!--   geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +  -->
-<!--   xlab('x') + ylab('y') +  -->
-<!--   geom_text(aes(x=2.4,y=2, label='f(x)'), size = 5) -->
-
-
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # The Area Under a Curve -->
-
-<!--  - With derivatives, we approximated a hard problem (the slope of a curve) using an easy problem (the slope of a line) by zooming in close enough. -->
-
-<!-- -- -->
-
-<!--  - With integrals, we'll use a similar trick. -->
-
-<!-- -- -->
-
-<!--  - We approximate a hard problem (the area under a curve) using an easy problem (the area of a bunch of rectangles) by making the rectangles *really* thin. -->
-
-<!-- --- -->
-
-<!-- # Riemann Sum -->
-
-<!-- $f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$. -->
-
-<!-- -- -->
-
-<!-- ```{r reimann plot function} -->
-<!-- # function to plot Riemann sums -->
-
-<!-- riemann_plot <- function(x_minimum, x_maximum, f, h, -->
-<!--                          rectangle_outline = 'black'){ -->
-
-<!--   # create x and y variables -->
-<!--   x <- seq(x_minimum,x_maximum,0.1) -->
-<!--   y <- f(x) -->
-
-<!--   # rectangle dimensions -->
-<!--   x_rectangles <- seq(x_minimum, x_maximum - h, h) -->
-<!--   y_rectangles <- f(seq(x_minimum, x_maximum - h, h)) -->
-
-<!--   # approximate area -->
-<!--   approximate_area <- sum(y_rectangles * h) -->
-
-<!--   # rectangle dataframe for plot -->
-<!--   rectangles <- tibble(xmin = x_rectangles, -->
-<!--                        xmax = seq(x_minimum + h, x_maximum, h), -->
-<!--                        ymin = 0, -->
-<!--                        ymax = f(xmin)) -->
-
-
-<!--   # return ggplot object -->
-<!--   ggplot() + -->
-<!--     geom_line(data = tibble(x,y), -->
-<!--               aes(x=x,y=y)) + -->
-<!--     geom_rect(data = rectangles, -->
-<!--               aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax), -->
-<!--               fill = 'blue', color = rectangle_outline, alpha = 0.3) + -->
-<!--     labs(title = paste0("h = ", h,  -->
-<!--                         ", Approximate Area = ", round(approximate_area, 3))) + -->
-<!--     theme_bw() -->
-<!-- } -->
-
-<!-- ``` -->
-
-<!-- ```{r reimann sum 1} -->
-
-<!-- f <- function(x){ -->
-<!--   x^3 - 2*x^2 + 2 -->
-<!-- } -->
-
-<!-- riemann_plot(x_minimum = 0, -->
-<!--              x_maximum = 3, -->
-<!--              f = f, -->
-<!--              h = 0.5) -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Riemann Sum -->
-
-<!-- $f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$. -->
-
-<!-- ```{r reimann sum 3} -->
-
-<!-- riemann_plot(x_minimum = 0, -->
-<!--              x_maximum = 3, -->
-<!--              f = f, -->
-<!--              h = 0.25) -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Riemann Sum -->
-
-<!-- $f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$. -->
-
-<!-- ```{r reimann sum 4} -->
-
-<!-- riemann_plot(x_minimum = 0, -->
-<!--              x_maximum = 3, -->
-<!--              f = f, -->
-<!--              h = 0.1) -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Riemann Sum -->
-
-<!-- $f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$. -->
-
-<!-- ```{r reimann sum 5} -->
-
-<!-- riemann_plot(x_minimum = 0, -->
-<!--              x_maximum = 3, -->
-<!--              f = f, -->
-<!--              h = 0.01) -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Riemann Sum -->
-
-<!-- $f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$. -->
-
-<!-- ```{r reimann sum 6} -->
-
-<!-- riemann_plot(x_minimum = 0, -->
-<!--              x_maximum = 3, -->
-<!--              f = f, -->
-<!--              h = 0.001, -->
-<!--              rectangle_outline = NA) -->
-<!-- ``` -->
-
-
-<!-- --- -->
-
-<!-- ## Integral Notation -->
-
-<!-- $$\lim_{h \to 0} \sum f(x) \cdot h = \int f(x)dx $$ -->
-
-<!-- -- -->
-
-<!-- $dx$ is an "infinitesimal" (infinitely small value).  -->
-
-<!-- So $\int f(x)dx$ is the area of an infinite number of infinitely skinny rectangles. -->
-
-<!-- -- -->
-
-<!-- If we want the area under a curve between $a$ and $b$, we denote it like so: -->
-
-<!-- $$\int_a^b f(x)dx$$ -->
-
-<!-- --- -->
-
-<!-- ## There has to be an easier way! -->
-
-<!-- What we want is a function $F(x)$; let's call it the **area function**. -->
-
-<!-- - $F(a)$ gives the area under $f(x)$ between $-\infty$ and $a$. -->
-
-<!-- - $F(b) - F(a)$ gives the area under $f(x)$ between $a$ and $b$. -->
-
-<!-- -- -->
-
-<!-- - As $h$ approaches zero, our skinny rectangles become a better and better approximation of the area function... -->
-
-<!-- $$f(x) \cdot h = \lim_{h \to 0} F(x+h) - F(x)$$ -->
-
-<!-- -- -->
-
-<!-- Divide by $h$ on both sides: -->
-
-<!-- $$f(x) = \lim_{h \to 0} \frac{F(x+h) - F(x)}{h}$$ -->
-
-<!-- -- -->
-
-<!-- Hey. We've seen that before! -->
-
-<!-- -- -->
-
-<!-- $f(x) = F'(x)$. In other words, $F(x)$ is the *antiderivative* of $f(x)$. -->
-
-
-<!-- --- -->
-
-<!-- # The Fundamental Theorem of Calculus -->
-
-<!-- $$\int_a^b f(x)dx =  F(b) - F(a)$$ -->
-
-<!-- -- -->
-
-<!-- Computing the area under the curve and taking the antiderivative are equivalent operations! -->
-
-<!-- --- -->
-
-<!-- # Try It! -->
-
-<!-- If $f(x) = x$, find the area under the curve between $x=0$ and $x=4$. -->
-
-<!-- ```{r plot triangle} -->
-
-<!-- x = -1:5 -->
-
-<!-- ggplot(data = tibble(x)) + -->
-<!--   geom_line(aes(x=x,y=x), size = 1) + -->
-<!--   geom_vline(xintercept = 0) + -->
-<!--   geom_hline(yintercept = 0) + -->
-<!--   xlab('x') + ylab('f(x)') + -->
-<!--   geom_vline(xintercept = 4, linetype = 'dashed', color = 'blue') -->
-
-<!-- ``` -->
-
-<!-- -- -->
-
-<!-- **Hint**: It's a triangle, so the answer should be 8. -->
-
-<!-- --- -->
-
-<!-- # The Area Under a Curve -->
-
-<!-- If $f(x) = x$, find the area under the curve between $x=0$ and $x=4$. -->
-
-<!-- Use the Fundamental Theorem of Calculus: -->
-
-<!-- $$\int_0^4 f(x)dx = F(4) - F(0)$$ -->
-<!-- -- -->
-
-<!-- $F(x) = \frac{1}{2}x^2 + C$ -->
-
-<!-- -- -->
-
-<!-- $F(4) - F(0) = \frac{1}{2}\cdot4^2 = 8$ -->
-
-<!-- --- -->
-
-<!-- ## Now a Nonlinear Example... -->
-
-<!-- If $f(x) = x^3 - 2x^2 + 2$, find the area under the curve between $x=0$ and $x=3$. -->
-
-<!-- -- -->
-
-<!-- $$\int_0^3 f(x)dx = F(3) - F(0)$$ -->
-
-<!-- -- -->
-
-<!-- $F(x) = \frac{1}{4}x^4 - \frac{2}{3}x^3 + 2x + C$ -->
-
-<!-- -- -->
-
-<!-- $F(3) - F(0) = \frac{1}{4}3^4 - \frac{2}{3}3^3 + 2(3) - [\frac{1}{4}0^4 - \frac{2}{3}0^3 + 2(0)]$ -->
-
-<!-- -- -->
-<!-- $= 8.25$ -->
-
-<!-- --- -->
-
-<!-- ## Now a Nonlinear Example... -->
-
-<!-- That's the same answer that we got from the skinny rectangles! -->
-
-<!-- ```{r reimann sum 7} -->
-
-<!-- riemann_plot(x_minimum = 0, -->
-<!--              x_maximum = 3, -->
-<!--              f = f, -->
-<!--              h = 0.001, -->
-<!--              rectangle_outline = NA) -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- class: center, middle -->
-
-<!-- ## ...and that's All The Calculus You Need -->
-
-<!-- Moving this to the integral calculus slides... -->
-
-<!-- # Warm Up -->
-
-<!-- What is the **area** of this rectangle? -->
-
-<!-- ```{r rectangle, out.width = '80%'} -->
-
-<!-- ggplot() +  -->
-<!--   geom_rect(aes(xmin = 0, xmax = 2, ymin = 0, ymax = 5),  -->
-<!--             fill = NA, color = 'black') + -->
-<!--   geom_text(aes(x = 1, y = 0.25, label = '2'), size = 5) + -->
-<!--   geom_text(aes(x = 1.8, y = 2.5, label = '5'), size = 5) + -->
-<!--   scale_x_continuous(limits = c(0,5)) + -->
-<!--   scale_y_continuous(limits = c(0,5)) + -->
-<!--   theme_void() -->
-
-<!-- ``` -->
-
-<!-- -- -->
-
-<!-- Area $= bh = 2 \times 5 = 10$ -->
-
-<!-- --- -->
-
-
-<!-- --- -->
-
-<!-- ## Shortcut 5: The Exponential Rule -->
-
-<!-- Remember Euler's number? $e =$ `r exp(1) %>% round(8)`... -->
-
-<!-- -- -->
-
-<!-- If $f(x) = e^x$, then $f'(x) = e^x$ -->
-
-
-<!-- ```{r exponential rule, out.width = '80%'} -->
-
-<!-- x <- seq(0,5, 0.1) -->
-
-<!-- y <- exp(x) -->
-
-<!-- tibble(x,y) %>%  -->
-<!--   ggplot() + -->
-<!--   geom_line(aes(x=x,y=y)) -->
-
-
-<!-- ``` -->
-
-<!-- ??? -->
-
-<!-- Often when we use $e$ in applied mathematics, we're taking advantage of this fact to make the math easier. -->
+Back to the `R` script!
