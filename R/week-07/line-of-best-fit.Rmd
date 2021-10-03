@@ -90,7 +90,7 @@ ches <- mutate(ches,
 knitr::kable(head(ches))
 ```
 
-Note how this line looks a bit too steep. The residuals on the are all positive and those on the right are all negative:
+Note how this line looks a bit too steep. The residuals on the left are all positive and those on the right are all negative:
 
 ```{r arbitrary-line}
 p + 
