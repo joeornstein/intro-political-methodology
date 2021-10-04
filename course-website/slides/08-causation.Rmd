@@ -1,0 +1,142 @@
+---
+title: "Week 8: Causal Inference"
+# author: "Joe Ornstein"
+# date: "October 6, 2021"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightStyle: github
+      countIncrementalSlides: false
+# subtitle: 'POLS 7012: Introduction to Political Methodology'
+# institute: University of Georgia
+---
+
+```{r Setup, include=FALSE}
+library(tidyverse)
+set.seed(42)
+theme_set(theme_minimal(base_size = 16))
+knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
+                      fig.align = 'center', out.width = 600,
+                      message=FALSE, warning=FALSE, echo=TRUE)
+```
+
+
+---
+
+# Helpful R Packages
+
+```{r}
+# for working with DAGs
+library(dagitty)
+
+# for visualizing DAGs
+library(ggdag)
+```
+---
+
+class: center, middle
+
+![](img/elemental-confounds-mcelreath.png)
+---
+
+## Forks
+
+```{r}
+fork <- dagify(Y ~ Z,
+               X ~ Z)
+
+ggdag_classic(fork) + theme_dag()
+```
+
+---
+
+## Forks
+
+Simulate some example data:
+
+```{r}
+# number of observations
+n <- 1000
+
+# create a data frame
+simulated_data <- tibble(
+  # randomly assign each observation as female or male
+  female = sample(c(0,1) , size = n, replace = TRUE),
+  
+  # X is caused by gender + some random error
+  X = 2 * female + rnorm(n, 0 , 1),
+  
+  # Y is caused by gender + some random error
+  Y = 3 * female + rnorm(n, 0 , 1)
+) 
+```
+
+--
+
+Notice that $X$ is not causally related to $Y$ at all. Any observed relationship between the two is driven by gender.
+
+---
+
+## Forks
+
+```{r}
+ggplot(data = simulated_data, mapping = aes(x=X, y=Y)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE)
+```
+
+---
+
+## Forks
+
+- The relationship between $X$ and $Y$ is **confounded** by the presence of the backdoor path through gender.
+
+```{r, echo = FALSE, out.width='400px'}
+fork <- dagify(Y ~ Gender, X ~ Gender)
+ggdag_classic(fork) + theme_dag()
+```
+
+- Every backdoor path is an *alternative explanation* for the observed correlation between $X$ and $Y$.
+
+- To account for that alternative explanation, we must find a way to *condition on gender*. If gender is held constant, then it cannot explain the relationship between $X$ and $Y$.
+
+---
+
+## Forks
+
+Here's what conditioning on gender looks like...
+
+```{r, out.width='500px'}
+ggplot(data = simulated_data, mapping = aes(x = X, y = Y)) + 
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+  facet_wrap(~female)
+```
+
+---
+
+## Backdoor Paths
+
+Conveniently, you can shut down a backdoor path by conditioning on *any* variable along it. Suppose you have this:
+
+```{r, out.width = '400px'}
+gnarly_dag <- dagify(X ~ Z, Z ~ Q, Q ~ W, U ~ W, Y ~ U)
+
+ggdag_classic(gnarly_dag) + theme_dag()
+```
+
+--
+
+Conditioning on $Z$ or $Q$ or $W$ or $U$ would close the backdoor path.
+
+---
+
+## Backdoor Paths
+
+```{r, echo=FALSE, out.width='400px'}
+ggdag_classic(gnarly_dag) + theme_dag()
+```
+
+```{r}
+adjustmentSets(gnarly_dag, exposure = 'X', outcome = 'Y')
+```

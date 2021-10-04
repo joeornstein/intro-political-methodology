@@ -35,6 +35,7 @@ Come with me on a journey.
 knitr::include_url('slides/07-optimization.html')
 ```
 
+[(Full Screen Version)](slides/07-optimization.html)
 
 ## Reading Assignments
 
