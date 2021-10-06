@@ -14,6 +14,8 @@ bibliography: refs.bib
 
 ```{r Setup, include=FALSE}
 library(tidyverse)
+library(dagitty)
+library(ggdag)
 set.seed(42)
 theme_set(theme_minimal(base_size = 16))
 knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
@@ -51,30 +53,54 @@ class: center, middle
 
 ## The Fundamental Problem of Causal Inference
 
-Potential outcomes
+- I have some treatment $(X)$ and some outcome $(Y)$. I want to know if $X$ causes $Y$. In other words, if changing the value of $X$ would result in a different value of $Y$.
 
-
-Can only observe one potential outcome
-
----
-
-Best we can do is estimate the **average treatment effect**.
+- The **Fundamental Problem of Causal Inference** is that every observation is either treated or not treated. I can't see what would happen in the alternate universe where an untreated observation is treated.
 
 ---
 
-Dataset:
+## The Potential Outcomes Framework
 
+| Alive w/ Hospital $(Y_0)$ | Alive w/o Hospital $(Y_1)$ | Hospital $(X)$ | Alive $(Y)$ |
+|-------|-------|-----|-----|
+| 0     | 1     | 1   | 1   |
+| 1     | 1     | 0   | 1   |
+| 0     | 0     | 1   | 0   |
+| 0     | 1     | 1   | 1   |
+| 1     | 1     | 0   | 1   |
+| 0     | 0     | 1   | 0   |
+| 0     | 1     | 1   | 1   |
+| 0     | 0     | 1   | 0   |
+| 1     | 1     | 0   | 1   |
+| 1     | 1     | 1   | 1   |
 
+--
 
+The big problem here is that the **potential outcomes** and the **treatment** are correlated. Sick people are more likely to go to the hospital!
 
+???
 
-
-Task of causal inference: systematically eliminating alternative explanations until the only credible one remaining is that $X$ causes $Y$.
-
+We'd like to know $Y_1$ - $Y_0$, the treated outcome minus the untreated outcome. But we can't do that, because we only ever see one of the potential outcomes. The best we can do is estimate the **average treatment effect**.
 
 ---
 
-# Helpful R Packages
+## Causal Diagrams Help Make Sense of All This
+
+```{r echo = FALSE, fig.width=12}
+dagify(Hospital ~ Severity, Death ~ Hospital + Severity) %>% 
+  ggdag_classic() +
+  theme_dag()
+```
+
+The relationship between hospitals and death is **confounded** by the severity of a person's illness. Unless we can hold severity constant, we won't be able to do a good job assessing whether hospitals are good for your health.
+
+---
+
+# Drawing Causal Diagrams
+
+Today, we're going to draw some causal diagrams and use them to address this Fundamental Problem of Causal Inference. 
+
+### Some Useful R Packages
 
 ```{r}
 # for working with DAGs
@@ -136,10 +162,10 @@ simulated_data <- tibble(
   # randomly assign each observation as female or male
   female = sample(c(0,1) , size = n, replace = TRUE),
   
-  # X is caused by gender + some random error
+  # X is caused by gender + some random value (epsilon)
   X = 2 * female + rnorm(n, 0 , 1),
   
-  # Y is caused by gender + some random error
+  # Y is caused by gender + some random value (epsilon)
   Y = 3 * female + rnorm(n, 0 , 1)
 ) 
 ```
