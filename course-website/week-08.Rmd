@@ -11,6 +11,14 @@ library(tidyverse)
 
 [![](img/xkcd_correlation.png)](https://xkcd.com/552/)
 
+## Slides
+
+```{r slides}
+knitr::include_url('slides/08-causation.html')
+```
+
+[(Full Screen Version)](slides/08-causation.html)
+
 ## Reading Assignments
 
 Next week we explore the world of matrix algebra. Moore & Siegel are our guides:

@@ -46,16 +46,19 @@ data <- tibble(D,P,Q,R,U,W,X,Y,Z)
 
 write_csv(data, 'data/causal-inference/dag-data.csv')
 
+## The confounded relationship -----------------
+
 plot(X,Y)
 lm(Y~X, data = data)
 
-# back door
+## Estimate by closing the back doors -----------
+
 lm(Y~X + U + R)
 
 lm(Y~X, data = filter(data, U == 1, R == 1))
 
 
-# front door
+## Estimate by finding a front door ------------------
 
 # first stage: use P to predict X
 lm1 <- lm(X ~ P, data = data)

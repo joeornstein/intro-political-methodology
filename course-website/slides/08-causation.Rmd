@@ -105,9 +105,19 @@ class: center, middle
 ## Forks
 
 ```{r, out.width = '500px'}
-fork <- dagify(Y ~ Z,
-               X ~ Z)
+fork <- dagify(Y ~ Gender,
+               X ~ Gender)
 
+ggdag_classic(fork) + theme_dag()
+```
+
+---
+
+## Forks
+
+- The relationship between $X$ and $Y$ is **confounded** by the presence of the backdoor path through gender.
+
+```{r, echo = FALSE, out.width='400px'}
 ggdag_classic(fork) + theme_dag()
 ```
 
@@ -152,17 +162,13 @@ ggplot(data = simulated_data, mapping = aes(x=X, y=Y)) +
 
 ## Forks
 
-- The relationship between $X$ and $Y$ is **confounded** by the presence of the backdoor path through gender.
+- Every backdoor path is an *alternative explanation* for the observed correlation between $X$ and $Y$.
 
-```{r, echo = FALSE, out.width='400px'}
-fork <- dagify(Y ~ Gender, X ~ Gender)
+```{r echo = FALSE, out.width = '500px'}
 ggdag_classic(fork) + theme_dag()
 ```
 
-- Every backdoor path is an *alternative explanation* for the observed correlation between $X$ and $Y$.
-
 - To account for that alternative explanation, we must find a way to *condition on gender*. If gender is held constant, then it cannot explain the relationship between $X$ and $Y$.
-
 
 ---
 
@@ -375,7 +381,7 @@ Conditioning on a mediator closes the path between treatment and outcome. This i
 
 But sometimes you may want to condition on a mediator -- for example, when you're performing a **mediation analysis** (Baron & Kenny, 1986). If conditioning on $M$ weakens the association between $X$ and $Y$, that lends support to your theory that it was a mediator!
 
-```{r, echo = FALSE, out.width='350px'}
+```{r, echo = FALSE, fig.width=11}
 dagify(Confidence ~ Training, Job ~ Confidence + Training) %>% ggdag_classic() + theme_dag()
 ```
 
@@ -427,8 +433,7 @@ dagify(Treatment ~ Severity, Outcome ~ Treatment + Severity) %>%
 
 ## Simpson's Paradox
 
-Unless you condition on illness, it seems like hospitals cause death...
-
+Relatedly, it seems like hospitals cause death unless you condition on illness...
 
 ```{r echo = FALSE, fig.width=8}
 dagify(Hospital ~ Severity, Death ~ Hospital + Severity) %>% 
@@ -438,7 +443,23 @@ dagify(Hospital ~ Severity, Death ~ Hospital + Severity) %>%
 
 ---
 
-## Exercise
+## Simpson's Paradox
+
+Another classic example: in 1973 a lawsuit was brought against UC Berkeley for discriminating against women in graduate admissions. That year, only 35% of women applicants were admitted versus 43% of male applicants.
+
+--
+
+But when you look at the breakdown by department...
+
+![](img/bickel.jpg)
+--
+
+So, was Berkeley discriminatory or not? Does being female cause your chances of admission to decrease?
+
+
+---
+
+## Simpson's Paradox: Exercise
 
 ```{r cleanup-ces, echo = FALSE}
 load('../../data/ces-2020/cleaned-CES.RData')
@@ -463,7 +484,7 @@ ces %>%
 
 ---
 
-## Exercise
+## Simpson's Paradox: Exercise
 
 Should you condition by Trump approval?
 
@@ -621,7 +642,7 @@ ggdag_classic(dag) +
   theme_dag()
 ```
 
-Using `daggity` or pen-and-paper, identify which variable(s) you can condition on to recover the true causal effect of $X$ on $Y$. Then estimate it in `R`. Compare your estimate with the slope you get from `lm(Y~X)`.
+Using `daggity` or pen-and-paper, identify which variable(s) you can condition on to recover the true causal effect of $X$ on $Y$. Then estimate it in `R`. Compare your estimate with the confounded estimate you get from `lm(Y~X)`.
 
 ---
 
@@ -635,10 +656,14 @@ knitr::include_graphics('img/book-of-why.jpg')
 
 ## Looking Ahead
 
-Broadly speaking, there are two ways you can make causal claims. 
+<br>
 
-1. Close all the back doors between your treatment and outcome. 
+Broadly speaking, there are two ways you can make credible causal claims:
+
+1. Close all the back door paths between your treatment and outcome. 
 
 2. Find a *front door path*.
+
+<br>
 
 We'll tackle the first one next week, and the second one the week after that.
