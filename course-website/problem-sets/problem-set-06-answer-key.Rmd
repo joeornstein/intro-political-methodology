@@ -1,0 +1,67 @@
+---
+title: 'POLS 7012: Problem Set 6 (Calculus)'
+author: "Joe Ornstein"
+date: "Due October 6, 2021"
+output:
+  pdf_document: default
+  html_document: default
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+# For problem set, echo and eval = FALSE
+# For answer key, echo and eval = TRUE
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+```
+
+## Problem 1
+
+A dictator is deciding how much tax revenue to steal for himself and how much to give to his generals. He can steal some fraction of revenue $x$ between 0 and 1. If he steals all of it ($x=1$), then his generals will get mad, overthrow him, and he gets nothing. If he gives everything to his generals ($x=0$), then his generals are happy, don't overthrow him, but he still gets nothing because he gave away all the loot. 
+
+If the probability that the generals leave him in place equals $1-x$, how much should the dictator steal to maximize his **expected happiness** (probability of staying in power $\times$ the amount of money stolen)? 
+
+### Solution
+
+$$H(x) = x(1-x) = x - x^2$$
+$$H'(x) = 1 - 2x$$
+To find the maximum, set the derivative equal to zero.
+
+$$1-2x = 0$$
+
+$$x^* = \frac{1}{2}$$
+
+## Problem 2
+
+Suppose you have three data points: $x_1$, $x_2$ and $x_3$. Find the value $m$ that minimizes the sum of squared errors $f(m)$:
+
+$$f(m) = (x_1 - m)^2 + (x_2 - m)^2 + (x_3 - m)^2$$
+
+### Solution
+
+$$f(m) = x_1^2 + m^2 - 2x_1m + x_2^2 + m^2 - 2x_2m + x_3^2 + m^2 - 2x_3m$$
+
+$$\frac{\partial f}{\partial m} = 6m - 2x_1 - 2x_2 - 2x_3$$
+To find the minimum, set that derivative equal to zero.^[The second derivative is positive, so we know it's a minimum.]
+
+$$6m - 2x_1 - 2x_2 - 2x_3 = 0$$
+
+$$m = \frac{x_1 + x_2 + x_3}{3}$$
+
+Hey you proved a theorem! The **mean** of a variable minimizes the sum of squared errors.
+
+## Problem 3
+
+Consider the following regression model:
+
+$$Y = 2X_1 + 5X_2 - 4X_1X_2 + \varepsilon$$
+
+If you increase $X_1$ by $1$ unit, what happens to $Y$?
+
+### Solution
+
+$$\frac{\partial Y}{\partial X_1} = 2 - 4X_2$$
+
+When you increase $X_1$ by one unit, the value of $Y$ may increase, or may decrease, depending on the value of $X_2$. If $X_2 > \frac{1}{2}$, the slope is negative, and otherwise positive.
+
+Remember that when you start working with linear-interaction models! The answer to "what is the slope" is "it depends on the other variables!"
