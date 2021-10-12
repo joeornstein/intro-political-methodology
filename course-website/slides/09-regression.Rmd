@@ -1,0 +1,899 @@
+---
+title: "Closing Back Door Paths"
+# author: "Joseph T. Ornstein"
+# date: "June 12, 2020"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightStyle: github
+      countIncrementalSlides: false
+subtitle: 'POLS 7012: Introduction to Political Methodology'
+# institute: University of Georgia
+---
+
+<style>
+
+.center-middle {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+</style>
+
+```{r Setup, include=FALSE}
+library(tidyverse)
+theme_set(theme_minimal(base_size = 16))
+knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5, 
+                      fig.align = 'center', out.width = 600,
+                      message=FALSE, warning=FALSE, echo=TRUE)
+set.seed(42)
+```
+
+
+# Recap
+
+--
+
+## Weeks 1-6: Exploration 
+
+*Working with data*, *visualization*, *summary statistics*
+
+--
+
+## Weeks 7-10: Causality 
+
+*Linear models*, *causal diagrams*, *closing back door paths*, *finding front door paths* 
+
+--
+
+## PART 3: Uncertainty 
+
+*Sampling distributions*, *probability theory*, *confidence intervals*, *hypothesis testing*
+
+---
+
+class: center, middle
+
+## What's Going On Under The Hood
+
+---
+
+## Multivariable Linear Regression
+
+Suppose we want to explain the outcome as a function of **multiple** explanatory variables.
+
+--
+
+$$\text{mpg} = \alpha + \beta_1 \text{hp} + \beta_2 \text{wt} + \varepsilon$$
+Fuel efficiency probably depends on both horsepower **and** weight. More powerful and heavier cars will tend to have lower fuel efficiency. We'd like to estimate the slope of both relationships simultaneously!
+
+--
+
+**Vector Representation**:
+
+$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\alpha \times \begin{bmatrix} 1 \\ 1 \\1 \\ \vdots \\ 1 \end{bmatrix}}_\alpha + \underbrace{\beta_1 \times \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}}_{\beta_1 \text{hp}} + \underbrace{\beta_2 \times \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}}_{\beta_2 \text{wt}} + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon$$
+---
+
+## Multivariable Linear Regression
+
+The challenge is to simultaneously estimate $\alpha$, $\beta_1$, and $\beta_2$.
+
+$$\text{mpg} = \alpha + \beta_1 \text{hp} + \beta_2 \text{wt} + \varepsilon$$
+--
+
+We've come as far as we can with scalar algebra. It's time you learned **matrix algebra**.
+
+---
+
+class: center, middle
+
+# Matrix Algebra
+
+---
+
+## Matrix Algebra
+
+Recall from Week 1 that a **matrix** is a bunch of vectors squished together.
+
+--
+
+.pull-left[
+$\text{hp} = \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}$
+]
+
+.pull-right[
+$\text{wt} = \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}$
+]
+
+--
+
+<br>
+
+$$X = \begin{bmatrix} 110 & 2.62 \\ 110 & 2.875 \\ 93 & 2.32 \\ \vdots & \vdots \\ 109 & 2.78 \end{bmatrix}$$
+???
+
+We've been calling this a **dataframe**.
+
+---
+
+## Matrix Algebra
+
+The **dimension** of a matrix refers to the number of rows and columns. An $m \times n$ matrix has $m$ rows and $n$ columns.
+
+--
+
+```{r matrix dimensions}
+dim(mtcars)
+```
+
+There are 32 rows and 11 columns in the mtcars data matrix.
+
+---
+
+## Matrix Algebra
+
+**Adding** and **subtracting** matrices is straightforward. Just add and subtract elementwise. 
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \\ 4 & 4 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \\ 8 & 5 \end{bmatrix}$
+]
+
+--
+
+$$A + B = \begin{bmatrix} 3 & 3 \\ 6 & 7 \\ 12 & 9 \end{bmatrix}$$
+--
+
+**Multiplying** and **dividing** is where it gets tricky.
+  - You can only multiply *some* matrices together (they must be **conformable**)
+  - And matrix division isn't really a thing. Instead, we multiply by the matrix's **inverse**.
+
+
+---
+
+class: center, middle
+
+## Matrix Multiplication
+
+---
+
+## Matrix Multiplication
+
+--
+
+First, let's introduce the **dot product** of two vectors.
+
+$$a \cdot b = \sum a_i b_i$$
+--
+
+If $a = [3,1,2]$ and $b = [1,2,3]$, then the dot product of $a$ and $b$ equals:
+
+$$a \cdot b =  3 \times 1 + 1 \times 2 + 2 \times 3 = 11$$
+--
+
+In `R`, a dot product can be computed like so:
+
+```{r dot product}
+A <- c(3,1,2)
+B <- c(1,2,3)
+
+# dot product
+sum(A*B)
+```
+
+---
+
+## Matrix Multiplication
+
+**Exercise:** Take the dot product of $a$ and $b$.
+
+$a = [1,4,5]$ and $b = [3,2,1]$
+
+--
+
+**Answer:**
+
+$$a \cdot b =  1 \times 3 + 4 \times 2 + 5 \times 1 = 16$$
+
+```{r dot product 2}
+A <- c(1,4,5)
+B <- c(3,2,1)
+
+# dot product
+sum(A*B)
+```
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+--
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix} \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix} = \begin{bmatrix} & \\ & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} \color{red} 1 & \color{red} 2 \\ 2 & 3 \end{bmatrix} \begin{bmatrix} \color{red} 2 & 1 \\ \color{red} 4 & 4 \end{bmatrix} = \begin{bmatrix} \color{red} {10} & \\ & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} \color{red} 1 & \color{red} 2 \\ 2 & 3 \end{bmatrix} \begin{bmatrix} 2 & \color{red} 1 \\ 4 & \color{red} 4 \end{bmatrix} = \begin{bmatrix} 10 & \color{red} 9 \\ & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} \color{red} 1 & \color{red} 2 \\ 2 & 3 \end{bmatrix} \begin{bmatrix} 2 & \color{red} 1 \\ 4 & \color{red} 4 \end{bmatrix} = \begin{bmatrix} 10 & \color{red} 9 \\ & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} 1 & 2 \\ \color{red} 2 & \color{red} 3 \end{bmatrix} \begin{bmatrix} \color{red} 2 & 1 \\ \color{red} 4 &  4 \end{bmatrix} = \begin{bmatrix} 10 & 9 \\ \color{red} {16} & \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+When you multiply two matrices, you take a series of dot products.
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 2 & 3 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 2 & 1 \\ 4 & 4 \end{bmatrix}$
+]
+
+Each entry in $AB$ is the dot product of a column in $A$ and a row in $B$.
+
+$$AB = \begin{bmatrix} 1 & 2 \\ \color{red} 2 & \color{red} 3 \end{bmatrix} \begin{bmatrix} 2 & \color{red} 1 \\ 4 & \color{red} 4 \end{bmatrix} = \begin{bmatrix} 10 & 9 \\ 16 & \color{red}{14} \end{bmatrix}$$
+
+--
+
+<br>
+
+This is all very strange and confusing to get used to if you've never seen it before, but we'll soon see that it makes representing our multivariable linear regression problem a whole lot easier.
+
+???
+
+To get the entry in the first row, first column of $AB$, take the dot product of:
+
+- The first row of $A$, and
+- The first column of $B$
+
+Then do that for every row in $A$ and every column in $B$.
+
+$$AB = \begin{bmatrix} 1 \times 2 + 2 \times 4 & 1 \times 1 + 2 \times 4 \\ 2 \times 2 + 3 \times 4 & 2 \times 1 + 3 \times 4 \end{bmatrix} = \begin{bmatrix} 10 & 9 \\ 16 & 14 \end{bmatrix}$$
+
+---
+
+## Matrix Multiplication
+
+You can multiply matrices in `R` with the `%*%` command.
+
+```{r matrix multiplication}
+A <- cbind(c(1,2), c(2,3))
+A
+
+B <- cbind(c(2,4), c(1,4))
+B
+```
+
+--
+
+```{r matrix multiplication 2}
+A %*% B
+```
+
+---
+
+## Matrix Multiplication
+
+**Exercise:** Try multiplying these two matrices.
+
+.pull-left[
+$A = \begin{bmatrix} 4 & 1 \\ 1 & 2 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 5 & 5 \\ 2 & 1 \end{bmatrix}$
+]
+
+--
+
+**Answer:**
+
+$$AB = \begin{bmatrix} 4 \times 5 + 1 \times 2 & 4 \times 5 + 1 \times 1 \\ 1 \times 5 + 2 \times 2 & 5 \times 1 + 1 \times 2 \end{bmatrix} = \begin{bmatrix} 22 & 21 \\ 9 & 7 \end{bmatrix}$$
+```{r matrix multiplication exercise}
+A <- cbind(c(4,1), c(1,2))
+B <- cbind(c(5,2), c(5,1))
+A %*% B
+```
+
+---
+
+## Matrix Multiplication
+
+This process -- taking the dot product of rows and columns -- means that you can only multiply two matrices $AB$ if the row vectors of $A$ are the same length as the column vectors in $B$.
+
+--
+
+.pull-left[
+$A = \begin{bmatrix} 1 & 2 \\ 4 & 3 \\ 1 & 8 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 7 & 2 \\ 4 & 3 \\ 1 & 2 \end{bmatrix}$
+]
+
+These matrices are not **conformable**! You can't take the dot product of the rows and columns.
+
+--
+
+### Formally
+
+You can only multiply $AB$ if the dimension of $A$ is $m \times k$ and the dimension of $B$ is $k \times n$. The result is an $m \times n$ matrix.
+
+???
+
+- In other words, you can only multiply $AB$ if the dimension of $A$ is $m \times k$ and the dimension of $B$ is $k \times n$.
+- If this condition holds, then the two matrices are **conformable**.
+
+---
+
+## Matrix Multiplication
+
+**Exercise**: Which can you multiply: $AB$ or $BA$?
+
+.pull-left[
+$A = \begin{bmatrix} 3 & 2 \\ 1 & 2 \\ 2 & 2 \end{bmatrix}$
+]
+
+.pull-right[
+$B = \begin{bmatrix} 4 & 5 & 1 \\ 5 & 4 & 1 \end{bmatrix}$
+]
+
+.pull-left[
+```{r conformable matrices}
+A <- cbind(c(3,1,2), c(2,2,2))
+A
+```
+]
+
+.pull-right[
+```{r conformable matrices 2}
+B <- cbind(c(4,5), c(5,4), c(1,1))
+B
+```
+]
+
+
+---
+
+## Matrix Multiplication
+
+**Answer:** Both!
+
+```{r conformable or non-conformable}
+A %*% B
+
+B %*% A
+```
+
+--
+
+But now try `A %*% A`. I can't do it here because `R` gets so mad it won't even render my slides.
+
+
+---
+
+## Matrix Multiplication
+
+To make matrices conformable for multiplication, sometimes you may need to take the **transpose** of a matrix. The transpose just takes the rows and turns them into columns.
+
+.pull-left[
+$$A = \begin{bmatrix} 4 & 1 \\ 1 & 2 \\ 3 & 3 \end{bmatrix}$$
+]
+
+.pull-right[
+$$A' = \begin{bmatrix} 4 & 1 & 3 \\ 1 & 2 & 3 \end{bmatrix}$$
+]
+
+```{r transpose}
+t(A)
+
+t(A) %*% A
+```
+
+---
+
+## Matrix Multiplication
+
+Multiplying a vector by its transpose is the same as taking the dot product with itself:
+
+$$a = \begin{bmatrix} 1 \\ 3 \\ 4 \end{bmatrix}$$
+
+$$a \cdot a = a'a = 1 \times 1 + 3 \times 3 + 4 \times 4 = 26$$
+--
+
+Hey, it's the **sum of squares**! That could be useful for something...
+
+--
+
+```{r transpose multiplication}
+a <- c(1,3,4)
+
+sum(a*a)
+
+t(a) %*% a
+```
+
+---
+
+class: center, middle
+
+## Matrix Inversion
+
+---
+
+## Matrix Inversion
+
+Before I can teach you how to **divide** matrices, I need to tell you about a very special matrix, called the **identity matrix**.
+
+--
+
+Remember how any number times 1 just equals the original number?
+
+$$a \times 1 = a$$
+This is called the **identity property**. It's what makes $1$ a very special number.
+
+--
+
+<br>
+
+The **identity matrix** $(I)$ is basically the $1$ of matrices.
+
+$$AI = A$$
+
+You multiply any matrix by $I$ and you get the same matrix back.
+
+
+---
+
+## Matrix Inversion
+
+The identity matrix $I_n$ is an $n \times n$ matrix with ones in the diagonal and zeroes everywhere else.
+
+$$I_3 = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}$$
+
+--
+
+**Exercise:** Try multiplying this matrix with the following matrix $A$.
+
+$$A = \begin{bmatrix} 2 & 1 & 5 \\ -2 & 8 & 100 \\ 7 & 42 & -42 \end{bmatrix}$$
+
+---
+
+## Matrix Inversion
+
+**Answer:**
+
+```{r identity matrix}
+diag(3) # Create the identity matrix in R with the `diag()` function
+
+A <- rbind(c(2, 1, 5),
+           c(-2, 8, 100),
+           c(7, 42, -2))
+
+# multiply AI
+A %*% diag(3)
+```
+
+
+---
+
+## Matrix Inversion
+
+Hey, remember how dividing $\frac{a}{b}$ is the same as multiplying $a \times \frac{1}{b}$?
+
+--
+
+ - $\frac{1}{b} = b^{-1}$ is called the **inverse** (or reciprocal) of $b$. 
+
+--
+
+<br>
+
+**Exercise:** What do you get when you multiply a number by its inverse?
+
+--
+
+- **Answer:** $a \times \frac{1}{a} = a^1a^{-1} = a^0 = 1$
+
+--
+
+<br>
+
+There is an equivalent concept in matrix algebra, called the **matrix inverse**.
+
+$$AA^{-1} = I$$
+---
+
+## Matrix Inversion
+
+Good news! It's the 21st century. No one is going to make you solve for matrix inverses by hand.
+
+--
+
+There is literally a function in R called `solve()` which will do it for you.
+
+```{r solve}
+solve(A)
+
+A %*% solve(A) %>% round
+```
+
+---
+
+## Matrix Inversion
+
+Just like there are some matrices you can't multiply together (**non-conformable** matrices), there are some matrices you can't invert (**non-invertible** or **singular** matrices).
+
+--
+
+$$A = \begin{bmatrix} 1 & 2 & 5 \\ 2 & 4 & 100 \\ 3 & 6 & -42 \end{bmatrix}$$
+
+Try to `solve()` this matrix in `R`. Again, I can't show it to you here because `R` yells at me...
+
+```{r singular matrix}
+A <- rbind(c(1,2,5),
+           c(2,4,100),
+           c(3,6,-42))
+
+# solve(A)
+```
+
+--
+
+Notice that the second column is a two times the first column.
+
+---
+
+## Matrix Inversion
+
+This matrix is also singular. Notice that the sum of columns 2 and 3 are a multiple of column 1. (In matrix algebra-speak, the columns are not **linearly independent**.)
+
+$$B = \begin{bmatrix} 1 & 1 & 2 \\ 2 & 4 & 2 \\ 3 & 2 & 7 \end{bmatrix}$$
+
+```{r singular matrix 2}
+B <- rbind(c(1,1,2),
+           c(2,4,2),
+           c(3,2,7))
+
+# solve(B)
+```
+
+???
+
+I bring this up, dear reader, because there will come a day when you will want to invert a matrix and you will not be able to, because your columns are perfectly correlated with each other! (It's called multicollinearity, and I'll let Mollie tell you all about it.)
+
+---
+
+## Matrix Inversion
+
+Now that we know how to multiply by an inverse, we have what we need to perform matrix algebra.
+
+**Exercise:** Solve this equation for $A$.
+
+$$AB = C$$
+
+--
+
+**Answer:** Multiply both sides by $B^{-1}$
+
+$$ABB^{-1} = CB^{-1}$$
+
+$$AI = CB^{-1}$$
+
+<br>
+
+$$A = CB^{-1}$$
+---
+
+## Matrix Inversion
+
+Watch out for conformability! With matrices, it matters whether you multiply on the right or the left.
+
+**Exercise:** Solve for $B$.
+
+$$AB = C$$
+--
+
+**Answer:**
+
+$$A^{-1}AB = A^{-1}C$$
+
+$$IB = A^{-1}C$$
+<br>
+
+$$B = A^{-1}C$$
+--
+
+$$B \neq CA^{-1}$$
+
+
+---
+
+class: center, middle
+
+## Back to Multivariable Regression
+
+
+---
+
+## Multivariable Regression
+
+This is the regression problem we wanted to solve:
+
+$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\alpha \times \begin{bmatrix} 1 \\ 1 \\1 \\ \vdots \\ 1 \end{bmatrix}}_\alpha + \underbrace{\beta_1 \times \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}}_{\beta_1 \text{hp}} + \underbrace{\beta_2 \times \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}}_{\beta_2 \text{wt}} + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon$$
+
+--
+
+Notice that we can restate it as a matrix multiplication problem:
+
+$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\begin{bmatrix} 1 & 110 & 2.62 \\ 1 & 110 & 2.875 \\ 1 & 93 & 2.32 \\ \vdots & \vdots & \vdots \\ 1 & 109 & 2.78 \end{bmatrix}}_X \underbrace{\begin{bmatrix} \alpha \\ \beta_1 \\ \beta_2 \end{bmatrix}}_\beta + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon = X\beta + \varepsilon$$
+
+???
+
+How do you simultaneously estiamte $\alpha$, $\beta_1$, and $\beta_2$?
+
+---
+
+## Multivariable Regression
+
+$X\beta$ is an $n \times 1$ vector of predicted values, and $\varepsilon$ is an $n \times 1$ vector of errors.
+
+$$Y = X\beta + \varepsilon$$
+
+--
+
+Just like before, we want to minimize the sum of squared errors:
+
+$$\varepsilon \cdot \varepsilon = \varepsilon'\varepsilon = (Y - X\beta)'(Y-X\beta)$$
+--
+
+Minimizing this expression follows the same three steps we used with scalar calculus. Just be careful with matrix multiplication and division. Start by distributing the function:
+
+$$f(X,Y,\beta) = (Y - X\beta)'(Y-X\beta) = Y'Y - 2(X\beta)'Y + (X\beta)'X\beta$$
+---
+
+## Estimating The Regression Parameters
+
+**Step 1: Take the derivative with respect to $\beta$**
+
+$$f(X,Y,\beta) = Y'Y - 2(X\beta)'Y + (X\beta)'X\beta$$
+
+$$\frac{\partial f}{\partial \beta} = -2X'Y + 2 X'X \beta$$ 
+
+--
+
+**Step 2: Set the derivative equal to zero**
+
+$$-2X'Y + 2 X'X \beta = 0$$
+--
+
+**Step 3: Solve for $\beta$**
+
+$$2 X'X \beta = 2 X'Y$$
+$$\hat{\beta} = (X'X)^{-1} X'Y$$ 
+
+---
+
+## The Ordinary Least Squares (OLS) Estimator
+
+<br>
+
+<br>
+
+<br>
+
+### $$\hat{\beta} = (X'X)^{-1} X'Y$$ 
+
+---
+
+## Now We Can Estimate...
+
+```{r estimate multivariable regression}
+# create the Y vector
+Y <- mtcars$mpg
+
+# create the X matrix
+X <- mtcars %>% 
+  select(hp, wt) %>% 
+  mutate(intercept = 1) %>% 
+  as.matrix
+
+head(X)
+```
+
+---
+
+## Now We Can Estimate...
+
+The vector of estimates that minimizes the sum of squared errors equals $(X'X)^{-1}(X'Y)$:
+
+```{r estimate multivariable regression part 2}
+beta_hat <- solve(t(X) %*% X) %*% t(X) %*% Y
+
+beta_hat
+```
+
+--
+
+```{r multivariable lm}
+lm_fit <- lm(mpg ~ hp + wt, data = mtcars)
+coef(lm_fit)
+```
+
+---
+
+## What's Going On Here?
+
+Previously, we showed that the line of best fit between `hp` and `mpg` had this slope:
+
+```{r previous slope}
+bivariate_fit <- lm(mpg ~ hp, data = mtcars)
+coef(bivariate_fit)
+```
+
+--
+
+Now the slope is this half that...
+
+```{r multivariate slope}
+multivariate_fit <- lm(mpg ~ hp + wt, data = mtcars)
+coef(multivariate_fit)
+```
+
+
+---
+
+## What's Going On Here?
+
+```{r plotly, echo = FALSE, out.height='80%'}
+library(plotly)
+
+hp <- mtcars$hp
+wt <- mtcars$wt
+mpg <- mtcars$mpg
+
+scatter3d <- plot_ly(x = hp, y = wt, z = mpg, type = 'scatter3d', mode = 'markers',
+                     marker = list(size = 5, color = "black", symbol = 104)) %>% 
+  layout(scene = list(
+      xaxis = list(title = "Horsepower (hp)"),
+      yaxis = list(title = "Weight (wt)"),
+      zaxis = list(title = "Fuel Efficiency (mpg)")))
+
+scatter3d
+```
+
+???
+
+Notice that hp and wt are correlated with each other, so the bivariate slope captures both the effect of hp and the effect of wt.
+
+---
+
+## What's Going On Here?
+
+<!-- `r multivariate_fit$coef[1] %>% round(2)` + `r multivariate_fit$coef[2] %>% round(2)` $\times$ `hp` + `r multivariate_fit$coef[3] %>% round(2)` $\times$ `wt` -->
+
+```{r plotly with plane, echo = FALSE, out.height='80%'}
+
+x <- 0:round(max(hp))
+y <- 0:round(max(wt)+1)
+
+zhat <- function(x,y){
+  coef(multivariate_fit)[1] + coef(multivariate_fit)[2] * x + coef(multivariate_fit)[3] * y
+}
+
+plane_of_best_fit <- outer(x,y,zhat)
+colnames(plane_of_best_fit) <- y
+rownames(plane_of_best_fit) <- x
+
+
+p <- plot_ly(z = plane_of_best_fit, type = "surface") %>% 
+  layout(scene = list(
+      xaxis = list(title = "Weight (wt)"),
+      yaxis = list(title = "Horsepower (hp)"),
+      zaxis = list(title = "Fuel Efficiency (mpg)"))) %>% 
+  add_trace(x = wt, y = hp, z = mpg, type = 'scatter3d', mode = 'markers',
+            marker = list(size = 5, color = "black", symbol = 104))
+
+p
+```
+
+???
+
+Instead of a "line of best fit", we're now fitting a "plane of best fit".
+
+
+---
+
+todos: 
+
+1. Show that it works with a simulation
+2. Replace mtcars example with political science example
+3. Discuss the limitations of the approach. Matching if time.
+4. Tee up credibility revolution and front doors
