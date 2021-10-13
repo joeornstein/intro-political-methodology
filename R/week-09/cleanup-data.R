@@ -32,8 +32,10 @@ polity <- read_csv('data/week-09/p5v2018.csv') %>%
   mutate(iso3 = countrycode(country, 
                             origin = 'country.name',
                             destination = 'iso3c')) %>% 
+  # classify a country as a democracy if polity2 >=5
+  mutate(democracy = if_else(polity2 >=5, 1, 0)) %>% 
   # keep the country code and the 2018 polity score
-  select(iso3, polity2)
+  select(iso3, polity2, democracy)
 
 # merge
 d <- cpi %>% 
@@ -41,4 +43,4 @@ d <- cpi %>%
   left_join(polity, by = 'iso3')
 
 # write to file
-write_csv(d, 'data/week-09/clean-data.csv')
+write_csv(d, 'data/week-09/corruption-data.csv')

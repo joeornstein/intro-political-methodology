@@ -1,5 +1,6 @@
 ---
-title: "Closing Back Door Paths"
+title: "Week 9: Closing Back Door Paths"
+subtitle: "Linear Regression"
 # author: "Joseph T. Ornstein"
 # date: "June 12, 2020"
 output:
@@ -7,22 +8,9 @@ output:
     nature:
       highlightStyle: github
       countIncrementalSlides: false
-subtitle: 'POLS 7012: Introduction to Political Methodology'
+# subtitle: 'POLS 7012: Introduction to Political Methodology'
 # institute: University of Georgia
 ---
-
-<style>
-
-.center-middle {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-
-</style>
 
 ```{r Setup, include=FALSE}
 library(tidyverse)
@@ -34,25 +22,249 @@ set.seed(42)
 ```
 
 
-# Recap
+## Road Map
 
 --
 
-## Weeks 1-6: Exploration 
+### Weeks 1-6: Exploration 
 
-*Working with data*, *visualization*, *summary statistics*
-
---
-
-## Weeks 7-10: Causality 
-
-*Linear models*, *causal diagrams*, *closing back door paths*, *finding front door paths* 
+- Working with data
+- Visualization
+- Summary Statistics
 
 --
 
-## PART 3: Uncertainty 
+### Weeks 7-10: Causality 
 
-*Sampling distributions*, *probability theory*, *confidence intervals*, *hypothesis testing*
+- Linear model 
+- Causal diagrams
+- **Closing back door paths**
+- Finding front door paths
+
+--
+
+### Weeks 11+: Uncertainty 
+
+- Sampling distributions
+- Confidence intervals
+- Hypothesis testing
+
+---
+
+## Causal Inference
+
+<br>
+
+Broadly speaking, there are two ways you can make credible causal claims:
+
+1. Close all the back door paths between your treatment and outcome. 
+
+2. Find a *front door path*.
+
+--
+
+This week, we tackle number 1. Next week, number 2.
+
+
+---
+
+class: center, middle
+
+## Does democracy reduce political corruption?
+
+
+???
+
+This will be our motivating research question over the next few weeks.
+
+
+---
+
+## Let's Play With This Dataset
+
+```{r, echo=FALSE}
+d <- read_csv('../../data/week-09/corruption-data.csv')
+```
+
+```{r, eval=FALSE}
+d <- read_csv('data/week-09/corruption-data.csv')
+```
+
+If you'd like more practice with data wrangling, check out the script I use to put it this dataset together, `R/week-09/cleanup-data.R`. 
+
+---
+
+## Look At The Data
+
+```{r, out.width='500px'}
+ggplot(data = d,
+       mapping = aes(x=democracy, y=cpi_score)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE)
+```
+
+---
+
+## Look At The Data
+
+Notice a neat trick I employed here. If `democracy` is a 0-1 variable, then the slope of the linear model gives you the difference in means between the two groups.
+
+```{r, out.width='500px', echo = FALSE}
+ggplot(data = d,
+       mapping = aes(x=democracy, y=cpi_score)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE)
+```
+
+(Actually, you proved this in your calculus problem set. The value that minimizes the sum of squared errors is the mean.)
+
+---
+
+## Fit A Linear Model
+
+The difference in corruption score between democracies and autocracies -- without conditioning on anything -- is:
+
+```{r}
+lm(cpi_score ~ democracy, data = d)
+```
+
+--
+
+The average autocracy scores 32 on the Corruption Perceptions Index. The average democracy scores about 15.6 points higher.
+
+--
+
+Democracies are less corrupt!
+
+---
+
+class: center, middle
+
+## But wait...
+
+---
+
+## A Back Door Path
+
+```{r, fig.width=10}
+library(dagitty)
+library(ggdag)
+
+dag <- dagify(Corruption ~ Democracy + GDP, Democracy ~ GDP)
+
+ggdag_classic(dag) + theme_dag()
+```
+
+---
+
+## 3D View
+
+[Here](https://joeornstein.github.io/pols-7012/week-09.html#d-plots)
+
+```{r scatterplotly, echo = FALSE, eval = FALSE}
+library(plotly)
+
+cpi <- d$cpi_score
+gdp <- d$gdp_per_capita
+democracy <- d$democracy
+
+scatter3d <- plot_ly(x = gdp, y = democracy, z = cpi, type = 'scatter3d', mode = 'markers',
+                     marker = list(size = 5, color = "black", symbol = 104)) %>% 
+  layout(scene = list(
+      xaxis = list(title = "GDP Per Capita"),
+      yaxis = list(title = "Democracy"),
+      zaxis = list(title = "Corruption Perceptions")))
+
+scatter3d
+```
+
+---
+
+## How Do You Condition On A Continuous Variable?
+
+--
+
+Every country has its own unique GDP per capita! If you tried to just isolate the countries with national income of, say, $2,770 per person, it would...just be Tanzania. Can't do a statistical comparison with a sample size of 1.
+
+---
+
+## How Do You Condition On A Continuous Variable?
+
+You could try something like this...
+
+```{r, eval=FALSE, fig.width=10}
+d %>% 
+  mutate(income_group = case_when(gdp_per_capita < 10000 ~ 'Low Income',
+                                  gdp_per_capita < 40000 ~ 'Middle Income',
+                                  TRUE ~ 'High Income')) %>% 
+  ggplot(mapping = aes(x=democracy, y=cpi_score)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+  facet_wrap(~income_group)
+```
+
+---
+
+## How Do You Condition On A Continuous Variable?
+
+You could try something like this...
+
+```{r, echo = FALSE, fig.width = 10, out.width='700px'}
+d %>% 
+  mutate(income_group = case_when(gdp_per_capita < 10000 ~ 'Low Income',
+                                  gdp_per_capita < 40000 ~ 'Middle Income',
+                                  TRUE ~ 'High Income')) %>% 
+  ggplot(mapping = aes(x=democracy, y=cpi_score)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+  facet_wrap(~income_group)
+```
+
+--
+
+But there's still a lot of variation in GDP within each of those subplots. We haven't completely conditioned on GDP -- so the back door path is still open!
+
+---
+
+## How Do You Condition On A Continuous Variable?
+
+**Our Approach**: Add more variables to the linear model, drawing a "[plane of best fit](https://joeornstein.github.io/pols-7012/week-09.html#d-plots)".
+
+```{r, echo = FALSE, eval = FALSE}
+cpi <- d$cpi_score
+gdp <- d$gdp_per_capita
+democracy <- d$democracy
+
+lm1 <- lm(cpi ~ democracy + gdp)
+
+# create the plane to plot
+x <- seq(0, 1, length.out = 20)
+y <- seq(from = 0,
+         to = max(na.omit(gdp)),
+         length.out = 20)
+
+zhat <- function(x,y){
+  coef(lm1)[1] + coef(lm1)[2] * x + coef(lm1)[3] * y
+}
+
+plane_of_best_fit <- outer(x,y,zhat)
+colnames(plane_of_best_fit) <- y
+rownames(plane_of_best_fit) <- x
+
+
+
+p <- plot_ly(z = plane_of_best_fit, 
+             x = x, y = y, type = 'surface') %>% 
+  layout(scene = list(
+    xaxis = list(title = "Democracy"),
+    yaxis = list(title = "GDP Per Capita"),
+    zaxis = list(title = "Corruption Perceptions Index"))) %>% 
+  add_trace(x = democracy, y = gdp, z = cpi, type = 'scatter3d', mode = 'markers',
+            marker = list(size = 5, color = "black", symbol = 104))
+
+p
+```
+
 
 ---
 
@@ -64,25 +276,25 @@ class: center, middle
 
 ## Multivariable Linear Regression
 
-Suppose we want to explain the outcome as a function of **multiple** explanatory variables.
+The "plane of best fit" is described by a linear model with multiple $X$ variables on the right hand side.
 
 --
 
-$$\text{mpg} = \alpha + \beta_1 \text{hp} + \beta_2 \text{wt} + \varepsilon$$
-Fuel efficiency probably depends on both horsepower **and** weight. More powerful and heavier cars will tend to have lower fuel efficiency. We'd like to estimate the slope of both relationships simultaneously!
+$$\text{corruption} = \alpha + \beta_1 \text{democracy} + \beta_2 \text{GDP} + \varepsilon$$
+This model says: "Corruption probably depends on both democracy **and** national income. Richer, democratic countries will tend to have less corruption." We'd like to estimate the slope of both relationships simultaneously!
 
 --
 
 **Vector Representation**:
 
-$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\alpha \times \begin{bmatrix} 1 \\ 1 \\1 \\ \vdots \\ 1 \end{bmatrix}}_\alpha + \underbrace{\beta_1 \times \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}}_{\beta_1 \text{hp}} + \underbrace{\beta_2 \times \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}}_{\beta_2 \text{wt}} + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon$$
+$$\underbrace{\begin{bmatrix} 19 \\ 36 \\ 36 \\ \vdots \\ 24 \end{bmatrix}}_\text{corruption} = \underbrace{\alpha \times \begin{bmatrix} 1 \\ 1 \\1 \\ \vdots \\ 1 \end{bmatrix}}_\alpha + \underbrace{\beta_1 \times \begin{bmatrix} 0 \\ 1 \\ 0 \\ \vdots \\ 0 \end{bmatrix}}_{\beta_1 \text{democracy}} + \underbrace{\beta_2 \times \begin{bmatrix} 2,156 \\ 14,648 \\ 12,019 \\ \vdots \\ 2,961 \end{bmatrix}}_{\beta_2 \text{GDP}} +  \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon$$
 ---
 
 ## Multivariable Linear Regression
 
 The challenge is to simultaneously estimate $\alpha$, $\beta_1$, and $\beta_2$.
 
-$$\text{mpg} = \alpha + \beta_1 \text{hp} + \beta_2 \text{wt} + \varepsilon$$
+$$\text{corruption} = \alpha + \beta_1 \text{democracy} + \beta_2 \text{GDP} + \varepsilon$$
 --
 
 We've come as far as we can with scalar algebra. It's time you learned **matrix algebra**.
@@ -97,24 +309,24 @@ class: center, middle
 
 ## Matrix Algebra
 
-Recall from Week 1 that a **matrix** is a bunch of vectors squished together.
+A **matrix** is a bunch of vectors squished together.
 
 --
 
 .pull-left[
-$\text{hp} = \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}$
+$\text{democracy} = \begin{bmatrix} 0 \\ 1 \\ 0 \\ \vdots \\ 0  \end{bmatrix}$
 ]
 
 .pull-right[
-$\text{wt} = \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}$
+$\text{GDP} = \begin{bmatrix} 2,156 \\ 14,648 \\ 12,019 \\ \vdots \\ 2,961 \end{bmatrix}$
 ]
 
 --
 
 <br>
 
-$$X = \begin{bmatrix} 110 & 2.62 \\ 110 & 2.875 \\ 93 & 2.32 \\ \vdots & \vdots \\ 109 & 2.78 \end{bmatrix}$$
-???
+$$X = \begin{bmatrix} 0 & 2,156 \\ 1 & 14,648 \\ 0 & 12,019 \\ \vdots & \vdots \\ 0 & 2,961 \end{bmatrix}$$
+--
 
 We've been calling this a **dataframe**.
 
@@ -127,10 +339,10 @@ The **dimension** of a matrix refers to the number of rows and columns. An $m \t
 --
 
 ```{r matrix dimensions}
-dim(mtcars)
+dim(d)
 ```
 
-There are 32 rows and 11 columns in the mtcars data matrix.
+There are 180 rows and 6 columns in the corruption dataset.
 
 ---
 
@@ -698,22 +910,22 @@ $$B \neq CA^{-1}$$
 
 class: center, middle
 
-## Back to Multivariable Regression
+## Back to Multivariable Linear Regression
 
 
 ---
 
-## Multivariable Regression
+## Multivariable Linear Regression
 
 This is the regression problem we wanted to solve:
 
-$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\alpha \times \begin{bmatrix} 1 \\ 1 \\1 \\ \vdots \\ 1 \end{bmatrix}}_\alpha + \underbrace{\beta_1 \times \begin{bmatrix} 110 \\ 110 \\ 93 \\ \vdots \\ 109 \end{bmatrix}}_{\beta_1 \text{hp}} + \underbrace{\beta_2 \times \begin{bmatrix} 2.62 \\ 2.875 \\ 2.32 \\ \vdots \\ 2.78 \end{bmatrix}}_{\beta_2 \text{wt}} + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon$$
+$$\underbrace{\begin{bmatrix} 19 \\ 36 \\ 36 \\ \vdots \\ 24 \end{bmatrix}}_\text{corruption} = \underbrace{\alpha \times \begin{bmatrix} 1 \\ 1 \\1 \\ \vdots \\ 1 \end{bmatrix}}_\alpha + \underbrace{\beta_1 \times \begin{bmatrix} 0 \\ 1 \\ 0 \\ \vdots \\ 0 \end{bmatrix}}_{\beta_1 \text{democracy}} + \underbrace{\beta_2 \times \begin{bmatrix} 2,156 \\ 14,648 \\ 12,019 \\ \vdots \\ 2,961 \end{bmatrix}}_{\beta_2 \text{GDP}} +  \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon$$
 
 --
 
 Notice that we can restate it as a matrix multiplication problem:
 
-$$\underbrace{\begin{bmatrix} 21.0 \\ 21.0 \\ 22.8 \\ \vdots \\ 21.4 \end{bmatrix}}_\text{mpg} = \underbrace{\begin{bmatrix} 1 & 110 & 2.62 \\ 1 & 110 & 2.875 \\ 1 & 93 & 2.32 \\ \vdots & \vdots & \vdots \\ 1 & 109 & 2.78 \end{bmatrix}}_X \underbrace{\begin{bmatrix} \alpha \\ \beta_1 \\ \beta_2 \end{bmatrix}}_\beta + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon = X\beta + \varepsilon$$
+$$\underbrace{\begin{bmatrix} 19 \\ 36 \\ 36 \\ \vdots \\ 24 \end{bmatrix}}_\text{corruption} = \underbrace{\begin{bmatrix} 1 & 0 & 2,156 \\ 1 & 1 & 14,648 \\ 1 & 0 & 12,019 \\ \vdots & \vdots & \vdots \\ 1 & 0 & 2,961 \end{bmatrix}}_X \underbrace{\begin{bmatrix} \alpha \\ \beta_1 \\ \beta_2 \end{bmatrix}}_\beta + \underbrace{\begin{bmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \varepsilon_3 \\ \vdots \\ \varepsilon_n \end{bmatrix}}_\varepsilon = X\beta + \varepsilon$$
 
 ???
 
@@ -721,7 +933,7 @@ How do you simultaneously estiamte $\alpha$, $\beta_1$, and $\beta_2$?
 
 ---
 
-## Multivariable Regression
+## Multivariable Linear Regression
 
 $X\beta$ is an $n \times 1$ vector of predicted values, and $\varepsilon$ is an $n \times 1$ vector of errors.
 
@@ -776,12 +988,15 @@ $$\hat{\beta} = (X'X)^{-1} X'Y$$
 ## Now We Can Estimate...
 
 ```{r estimate multivariable regression}
+# drop the missing values
+d <- filter(d, complete.cases(d))
+
 # create the Y vector
-Y <- mtcars$mpg
+Y <- d$cpi_score
 
 # create the X matrix
-X <- mtcars %>% 
-  select(hp, wt) %>% 
+X <- d %>% 
+  select(democracy, gdp_per_capita) %>% 
   mutate(intercept = 1) %>% 
   as.matrix
 
@@ -803,97 +1018,68 @@ beta_hat
 --
 
 ```{r multivariable lm}
-lm_fit <- lm(mpg ~ hp + wt, data = mtcars)
-coef(lm_fit)
+lm(cpi_score ~ democracy + gdp_per_capita, data = d)
 ```
 
 ---
 
 ## What's Going On Here?
 
-Previously, we showed that the line of best fit between `hp` and `mpg` had this slope:
+Previously, we showed that the line of best fit between `cpi_score` and `democracy` had this slope:
 
 ```{r previous slope}
-bivariate_fit <- lm(mpg ~ hp, data = mtcars)
-coef(bivariate_fit)
+lm1 <- lm(cpi_score ~ democracy, data = d)
+coef(lm1)
 ```
 
 --
 
-Now the slope is this half that...
+Now the slope is almost half that...
 
 ```{r multivariate slope}
-multivariate_fit <- lm(mpg ~ hp + wt, data = mtcars)
-coef(multivariate_fit)
+lm2 <- lm(cpi_score ~ democracy + gdp_per_capita, data = d)
+coef(lm2)
 ```
+
+...suggesting that the observed relationship between democracy and corruption was partially confounded by national income!
+
+---
+
+class: center, middle
+
+# Looking Forward
+
+---
+
+## Limitations
+
+There are some important limitations to the approach we just took. In order for your causal inference to be credible, you need to believe two major things:
+
+--
+
+1. The relationship between your predictors and your outcome is not *nonlinear* in some way.
+
+2. You've identified *all* of the significant back door paths and closed them off.
+
+--
+
+<br>
+
+If you're worried about number 1, there are some diagnostic tests you can run (more on that in POLS 7014) or you could try something like **matching** methods (Chapter 14 of *The Effect*).
+
+--
+
+<br>
+
+If you're worried about number 2, then next week will be awesome for you! 
 
 
 ---
 
-## What's Going On Here?
+## Next Week: Walking Through The Front Door
 
-```{r plotly, echo = FALSE, out.height='80%'}
-library(plotly)
-
-hp <- mtcars$hp
-wt <- mtcars$wt
-mpg <- mtcars$mpg
-
-scatter3d <- plot_ly(x = hp, y = wt, z = mpg, type = 'scatter3d', mode = 'markers',
-                     marker = list(size = 5, color = "black", symbol = 104)) %>% 
-  layout(scene = list(
-      xaxis = list(title = "Horsepower (hp)"),
-      yaxis = list(title = "Weight (wt)"),
-      zaxis = list(title = "Fuel Efficiency (mpg)")))
-
-scatter3d
+```{r}
+dagify(X ~ Z + U,
+       Y ~ X + U) %>% 
+  ggdag_classic() + theme_dag()
 ```
-
-???
-
-Notice that hp and wt are correlated with each other, so the bivariate slope captures both the effect of hp and the effect of wt.
-
----
-
-## What's Going On Here?
-
-<!-- `r multivariate_fit$coef[1] %>% round(2)` + `r multivariate_fit$coef[2] %>% round(2)` $\times$ `hp` + `r multivariate_fit$coef[3] %>% round(2)` $\times$ `wt` -->
-
-```{r plotly with plane, echo = FALSE, out.height='80%'}
-
-x <- 0:round(max(hp))
-y <- 0:round(max(wt)+1)
-
-zhat <- function(x,y){
-  coef(multivariate_fit)[1] + coef(multivariate_fit)[2] * x + coef(multivariate_fit)[3] * y
-}
-
-plane_of_best_fit <- outer(x,y,zhat)
-colnames(plane_of_best_fit) <- y
-rownames(plane_of_best_fit) <- x
-
-
-p <- plot_ly(z = plane_of_best_fit, type = "surface") %>% 
-  layout(scene = list(
-      xaxis = list(title = "Weight (wt)"),
-      yaxis = list(title = "Horsepower (hp)"),
-      zaxis = list(title = "Fuel Efficiency (mpg)"))) %>% 
-  add_trace(x = wt, y = hp, z = mpg, type = 'scatter3d', mode = 'markers',
-            marker = list(size = 5, color = "black", symbol = 104))
-
-p
-```
-
-???
-
-Instead of a "line of best fit", we're now fitting a "plane of best fit".
-
-
----
-
-todos: 
-
-1. Show that it works with a simulation
-2. Replace mtcars example with political science example
-3. Discuss the limitations of the approach. Matching if time.
-4. Tee up credibility revolution and front doors

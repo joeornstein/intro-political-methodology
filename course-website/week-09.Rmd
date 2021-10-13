@@ -1,7 +1,7 @@
 ---
 title: "Week 9"
 description: |
-  Regression analysis: this is not the last time you'll see it
+  Closing The Back Doors
 ---
 
 ```{r setup, include=FALSE}
@@ -13,14 +13,81 @@ This week, we discuss the linear model as a general purpose tool for conditionin
 
 ![](img/matrix.jpg)
 
+## Slides
+
+```{r slides}
+knitr::include_url('slides/09-regression.html')
+```
+
+[(Full Screen Version)](slides/09-regression.html)
+
+### 3D Plots
+
+Some three-dimensional plots illustrating the "plane of best fit".
+
+```{r echo = FALSE}
+library(plotly)
+
+d <- read_csv('../data/week-09/corruption-data.csv')
+
+cpi <- d$cpi_score
+gdp <- d$gdp_per_capita
+democracy <- d$democracy
+
+scatter3d <- plot_ly(x = gdp, y = democracy, z = cpi, type = 'scatter3d', mode = 'markers',
+                     marker = list(size = 5, color = "black", symbol = 104)) %>% 
+  layout(scene = list(
+      xaxis = list(title = "GDP Per Capita"),
+      yaxis = list(title = "Democracy"),
+      zaxis = list(title = "Corruption Perceptions")))
+
+scatter3d
+```
+
+```{r echo = FALSE}
+cpi <- d$cpi_score
+gdp <- d$gdp_per_capita
+democracy <- d$democracy
+
+lm1 <- lm(cpi ~ democracy + gdp)
+
+# create the plane to plot
+x <- seq(0, 1, length.out = 20)
+y <- seq(from = 0,
+         to = max(na.omit(gdp)),
+         length.out = 20)
+
+zhat <- function(x,y){
+  coef(lm1)[1] + coef(lm1)[2] * x + coef(lm1)[3] * y
+}
+
+plane_of_best_fit <- outer(x,y,zhat)
+colnames(plane_of_best_fit) <- y
+rownames(plane_of_best_fit) <- x
+
+p <- plot_ly(z = plane_of_best_fit, 
+             x = x, y = y, type = 'surface') %>% 
+  layout(scene = list(
+    xaxis = list(title = "Democracy"),
+    yaxis = list(title = "GDP Per Capita"),
+    zaxis = list(title = "Corruption Perceptions Index"))) %>% 
+  add_trace(x = democracy, y = gdp, z = cpi, type = 'scatter3d', mode = 'markers',
+            marker = list(size = 5, color = "black", symbol = 104))
+
+p
+```
 
 ## Reading Assignments
 
-Next time, we talk about how to express our *uncertainty* about these estimates. 
+Next week, we discuss a set of methods that don't require you to catalogue every possible back door path and close it. Please read up on:
 
-- [Teacup Giraffes Module 6](https://tinystats.github.io/teacups-giraffes-and-statistics/06_standardError.html)
-- [The Joy of X](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559), Chapters 22 and 23.
-- [Seeing Theory](https://seeing-theory.brown.edu/), some nice interactive explanations of concepts from probability theory
+- [The Effect Chapter 19: Finding Front Doors](https://theeffectbook.net/ch-FindingFrontDoors.html)
+
+<!-- Next time, we talk about how to express our *uncertainty* about these estimates.  -->
+
+<!-- - [Teacup Giraffes Module 6](https://tinystats.github.io/teacups-giraffes-and-statistics/06_standardError.html) -->
+<!-- - [The Joy of X](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559), Chapters 22 and 23. -->
+<!-- - [Seeing Theory](https://seeing-theory.brown.edu/), some nice interactive explanations of concepts from probability theory -->
 
 ## Problem Set
 
