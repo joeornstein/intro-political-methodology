@@ -2,6 +2,7 @@
 title: "Week 9"
 description: |
   Closing The Back Doors
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -80,25 +81,28 @@ p
 
 ## Midterm Survey
 
-
 ```{r survey}
 knitr::include_url('https://docs.google.com/forms/d/e/1FAIpQLScAIDf-C11Brca0yUPdgaThGr91-VmR_ULsk6BegUWel6usMA/viewform?usp=sf_link')
 ```
-
-
 
 ## Reading Assignments
 
 Next week, we discuss a set of methods that don't require you to catalogue every possible back door path and close it. Please read up on:
 
-- [The Effect Chapter 19: Finding Front Doors](https://theeffectbook.net/ch-FindingFrontDoors.html)
+-   [The Effect Chapter 19: Finding Front Doors](https://theeffectbook.net/ch-FindingFrontDoors.html)
 
 <!-- Next time, we talk about how to express our *uncertainty* about these estimates.  -->
 
 <!-- - [Teacup Giraffes Module 6](https://tinystats.github.io/teacups-giraffes-and-statistics/06_standardError.html) -->
+
 <!-- - [The Joy of X](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559), Chapters 22 and 23. -->
+
 <!-- - [Seeing Theory](https://seeing-theory.brown.edu/), some nice interactive explanations of concepts from probability theory -->
 
 ## Problem Set
 
-No problem set this week. Enjoy!
+1.  In class, we showed that GDP per capita was partly confounding the observed relationship between democracy and corruption. Can you think of any other back door paths that need to be closed? What variable would you need to measure and condition upon to close that path? Try your hand at finding a dataset with that variable, merging it with the country-level corruption dataset we created in `R/week-09/cleanup-data.R`, and adding it to the linear model.
+
+2.  @cohn2019 left wallets in cities around the world to see how many of them would be returned. It's a very ambitious study. You can read about it [here](papers/Cohn et al. - 2019 - Civic honesty around the globe.pdf) and you can find the replication data in our repository at `data/cohn-2019/`. You want the "behavioral data"; check out the codebook to see what all the variables mean. The experimenters varied a few things at random, including the type of institution they left it at (public, bank, etc.) and how much money was in the wallet. Your task is this: I want to know what fraction of wallets were returned in each country when they were left at public institutions (this could be another measure of public corruption; if bureaucrats just tend to steal wallets instead of returning them). Are government officials less likely to steal wallets in countries that have been democracies for longer periods of time (`c_PIV_years_democracy`)? What's the slope of that relationship? And can you interpret that relationship as causal? Why or why not?
+
+3.  **Bonus Fun** (not required, just fun): Replicate Figure 1 in the @cohn2019 paper using `ggplot`.

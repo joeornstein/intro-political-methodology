@@ -33,6 +33,7 @@ Optional:
 
 -   If you want to learn how to make maps in `ggplot`, [Healy Chapter 7](https://socviz.co/maps.html) is a great resource.
 -   For more practice with `ggplot`, this [chapter](https://r4ds.had.co.nz/data-visualisation.html) in Hadley Wickham's book is a nice resource.[^2]
+- The [ggplot cheat sheet](https://www.rstudio.com/resources/cheatsheets/) is a useful reference.
 
 [^2]: Hadley is the author of `ggplot`, so he knows a trick or two.
 
