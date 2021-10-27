@@ -1,0 +1,159 @@
+---
+title: "Problem Set 6 - Closing Back Doors (Answer Key)"
+author: "Joe Ornstein"
+date: "10/21/2021"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Problem 1
+
+Countries with abundant natural resources like oil or mining are more likely to be authoritarian [@ross1999][^1] and face greater problems with political corruption [@knutsen2017]. This could be an important alternative explanation for why democracies are less corrupt on average.
+
+[^1]: Though see @haber2011 for a critical appraisal of the resource curse literature.
+
+```{r dag, out.width='700px', fig.width=11}
+# load packages
+library(tidyverse)
+library(janitor)
+library(dagitty)
+library(ggdag)
+library(ggrepel)
+library(here)
+
+dag1 <- dagify(corruption ~ democracy + gdp + resources,
+               gdp ~ resources,
+               democracy ~ gdp + resources)
+
+ggdag_classic(dag1) +
+  theme_dag()
+
+adjustmentSets(dag1, exposure = 'democracy', outcome = 'corruption')
+```
+
+To condition on natural resource dependence, we need a measure like percent of GDP derived from resource extraction. The World Bank has such a measure [here](https://data.worldbank.org/indicator/NY.GDP.TOTL.RT.ZS). Let's merge it with our existing corruption dataset.
+
+```{r merge}
+natural_resources <- read_csv('API_NY.GDP.TOTL.RT.ZS_DS2_en_csv_v2_3053187.csv', 
+                              skip = 4) %>% 
+  clean_names() %>% 
+  select(iso3 = country_code, pct_resources = x2017)
+
+corruption_data <- read_csv(here('data/week-09/corruption-data.csv'))
+
+d <- left_join(corruption_data, natural_resources, by = 'iso3')
+```
+
+Countries with greater shares of GDP coming from natural resources are more authoritarian on average:
+
+```{r}
+ggplot(data = d,
+       mapping = aes(x = pct_resources,
+                     y = polity2)) +
+  geom_point(alpha = 0.4) +
+  theme_minimal()
+```
+
+And more corrupt on average:
+
+```{r}
+ggplot(data = d,
+       mapping = aes(x = pct_resources,
+                     y = cpi_score)) +
+  geom_point(alpha = 0.4) +
+  theme_minimal()
+```
+
+Here's the estimated relationship between corruption and democracy when we condition on (1) nothing, (2) GDP only, and (3) GDP and natural resource wealth.
+
+```{r}
+lm(cpi_score ~ democracy, data = d)
+
+lm(cpi_score ~ democracy + gdp_per_capita, data = d)
+
+lm(cpi_score ~ democracy + gdp_per_capita + pct_resources, data = d)
+```
+
+The estimated relationship between democracy and corruption perceptions is further attenuated, though it remains positive.
+
+## Problem 2
+
+First, load the behavioral data from @cohn2019.
+
+```{r}
+wallets <- read_csv( here('data/cohn-2019/behavioral data (csv file).csv') )
+```
+
+What fraction of the wallets were returned in each country?
+
+```{r}
+wallets_summary <- wallets %>% 
+  # keep only the public institutions
+  filter(public == 1) %>% 
+  # compute the average response rate by country
+  group_by(Country, c_PIV_years_democracy) %>% 
+  summarize(pct_returned = mean(response))
+
+# plot the relationship between democracy and wallet stealing
+p <- ggplot(data = wallets_summary,
+            mapping = aes(x = c_PIV_years_democracy,
+                          y = pct_returned,
+                          label = Country)) +
+  geom_point(alpha = 0.7) +
+  geom_text_repel() +
+  labs(x = 'Years of Democracy',
+       y = 'Percent Returned',
+       title = 'Wallet Returns At Public Institutions (Cohn, 2019)') +
+  theme_minimal()
+
+p
+
+lm(pct_returned ~ c_PIV_years_democracy, 
+   data = wallets_summary)
+```
+
+The rate at which bureaucrats return wallets is higher in traditionally democratic countries. But we cannot interpret that relationship as causal, even though the data comes from an experiment. The experiment randomized *who* received wallets and whether there was money in the wallet, but could not, of course, randomize the political institutions of a country. The observed relationship between democracy and wallet returning could be confounded by any number of variables outside the control of the experimenters.
+
+## Problem 3 (Bonus Fun)
+
+```{r}
+fig1a <- wallets %>% 
+  filter(cond %in% c(0,1)) %>% 
+  mutate(cond = case_when(cond == 1 ~ 'Money', 
+                          cond == 0 ~ 'NoMoney')) %>% 
+  # compute reporting rate by country and monetary condition
+  group_by(Country,
+           cond) %>% 
+  summarize(pct_reported = mean(response)) %>%
+  # pivot_wider to make those line segments
+  ungroup %>% 
+  pivot_wider(names_from = cond, values_from = pct_reported) %>% 
+  # reorder Country by the NoMoney reporting rate 
+  mutate(Country = fct_reorder(Country, NoMoney)) %>% 
+  # compute label position, left of the minimum reporting rate
+  mutate(label_position = pmin(Money, NoMoney) -
+           nchar(as.character(Country))/3.5 - 1) %>% 
+  # begin ggplot
+  ggplot() +
+  geom_segment(aes(x=Money, xend=NoMoney, y=Country, yend=Country),
+               color = 'gray', size = 0.5) + 
+  geom_point(aes(x=Money,y=Country), color = 'red') +
+  geom_point(aes(x=NoMoney,y=Country), color = '#F6BE00') +
+  geom_text(aes(x=label_position, y=Country, label = Country), size = 2) +
+  labs(x = 'Reporting rate (%)', y = '', color = 'Condition') +
+  theme_classic() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.line.y = element_blank())
+
+fig1a
+```
+
+## References
