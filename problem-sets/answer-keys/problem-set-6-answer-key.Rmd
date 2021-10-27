@@ -2,10 +2,12 @@
 title: "Problem Set 6 - Closing Back Doors (Answer Key)"
 author: "Joe Ornstein"
 date: "10/21/2021"
-output: 
+output:
   html_document:
-    toc: true
-    toc_float: true
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
 bibliography: references.bib
 ---
 
@@ -19,7 +21,7 @@ Countries with abundant natural resources like oil or mining are more likely to 
 
 [^1]: Though see @haber2011 for a critical appraisal of the resource curse literature.
 
-```{r dag, out.width='700px', fig.width=11}
+```{r dag, fig.width=11}
 # load packages
 library(tidyverse)
 library(janitor)
