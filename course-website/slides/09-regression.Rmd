@@ -292,6 +292,34 @@ $$\underbrace{\begin{bmatrix} 19 \\ 36 \\ 36 \\ \vdots \\ 24 \end{bmatrix}}_\tex
 
 ## Multivariable Linear Regression
 
+$$\text{corruption} = \alpha + \beta_1 \text{democracy} + \beta_2 \text{GDP} + \varepsilon$$
+
+```{r 2d, echo = FALSE}
+lm1 <- lm(cpi_score ~ democracy + gdp_per_capita, 
+          data = d)
+
+ggplot(data = filter(d, !is.na(democracy)),
+       mapping = aes(x=gdp_per_capita,
+                     y=cpi_score,
+                     color = factor(democracy))) +
+  geom_point(alpha = 0.5) +
+  scale_x_continuous(labels = scales::dollar) +
+  labs(x = 'GDP Per Capita',
+       y = 'Corruption Perceptions Index',
+       color = 'Democracy?') +
+  scale_color_manual(values = c('black', 'purple')) +
+  geom_abline(intercept = lm1$coefficients['(Intercept)'],
+              slope = lm1$coefficients['gdp_per_capita'],
+              color = 'black') +
+  geom_abline(intercept = lm1$coefficients['(Intercept)'] + lm1$coefficients['democracy'],
+              slope = lm1$coefficients['gdp_per_capita'],
+              color = 'purple')
+```
+
+---
+
+## Multivariable Linear Regression
+
 The challenge is to simultaneously estimate $\alpha$, $\beta_1$, and $\beta_2$.
 
 $$\text{corruption} = \alpha + \beta_1 \text{democracy} + \beta_2 \text{GDP} + \varepsilon$$
