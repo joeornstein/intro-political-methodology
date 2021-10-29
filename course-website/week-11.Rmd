@@ -35,6 +35,68 @@ For an (optional) deeper dive into the mathematics of probability theory:
 
 ## Class Notes
 
+```{r}
+# load the CES dataset
+load('data/ces-2020/cleaned-CES.RData')
+
+# recode TV news viewership as a 0-1 variable
+ces <- mutate(ces, tv_news_24h = as.numeric(tv_news_24h == 'Yes'))
+
+
+```
+
+What percent of this population (CES respondents) watched TV news in the past 24 hours?
+
+```{r}
+mean(ces$tv_news_24h)
+```
+
+But suppose we just had a *sample* from this population, and we were trying to estimate that population mean?
+
+```{r}
+# pull a sample
+sample_data <- slice_sample(ces, n = 100)
+
+# what percent of the sample watched TV news recently?
+mean(sample_data$tv_news_24h)
+```
+
+Your result may differ! (It's a random sample, so there's some...randomness involved.) But the estimate I got was 54%. Not terrible, but not terribly accurate either.
+
+Here's the question that motivates basically all of statistics. How *weird* can our sample estimates get? On average, do they tend to be close to the truth, or can they be pretty far off the mark? To answer this question, let's introduce the **sampling distribution** -- the distribution of outcomes we would expect to observe if we repeatedly drew samples and computed the estimate.[^3]
+
+[^3]: In the real world, this is a pure thought experiment. We can't actually do this (unless we had a *lot* of money for repeated surveys).
+
+```{r sampling-distribution, echo=TRUE, eval=FALSE}
+
+# we'll use the replicate() function to repeat that sampling process a large number of times
+sampling_distribution <- replicate(25000,
+                                   ces %>% 
+                                     # draw a sample
+                                     slice_sample(n = 100) %>% 
+                                     # pull the tv news variable
+                                     pull(tv_news_24h) %>% 
+                                     # take the mean
+                                     mean)
+```
+
+```{r speed-up-site-building, echo=FALSE, eval=TRUE}
+# note to the curious inspecting the raw Rmd file. I saved all the sampling distribution I created above to a file I'm loading them here so that R doesn't repeat those 25k draws whenever I build my website. That would be annoying.
+load('data/ces-2020/sampling_distribution.RData')
+```
+
+The object `sampling_distribution` is a vector with 25,000 sample means. Each one was computed from an independent random sample from the CES dataset. The first sample estimate I got was 54%, but what does this set of 25,000 estimates look like?
+
+```{r}
+
+head(sampling_distribution)
+
+ggplot(mapping = aes(x = sampling_distribution)) +
+  geom_histogram(color = 'black', binwidth = 0.01) +
+  theme_minimal() +
+  labs(x = 'Estimate', y = 'Number of Samples')
+```
+
 ## Problem Set
 
 1.  
