@@ -13,4 +13,5 @@ d <- raw %>%
          ALDmean1970 = 1 - GCISCmean1970,
          # compute average distance to the state centroid
          centr_GCISCmean1970 = rowMeans(across(centr_GCISC1920:centr_GCISC1970)),
-         centr_ALDmean1970 = 1 - centr_GCISCmean1970)
+         centr_ALDmean1970 = 1 - centr_GCISCmean1970) %>% 
+  filter(year == 1970)
