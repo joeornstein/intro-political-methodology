@@ -6,7 +6,7 @@ bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(tidyverse)
 set.seed(42)
 ```
@@ -42,7 +42,6 @@ load('data/ces-2020/cleaned-CES.RData')
 # recode TV news viewership as a 0-1 variable
 ces <- mutate(ces, tv_news_24h = as.numeric(tv_news_24h == 'Yes'))
 
-
 ```
 
 What percent of this population (CES respondents) watched TV news in the past 24 hours?
@@ -51,7 +50,9 @@ What percent of this population (CES respondents) watched TV news in the past 24
 mean(ces$tv_news_24h)
 ```
 
-But suppose we just had a *sample* from this population, and we were trying to estimate that population mean?
+### Drawing a Sample
+
+But suppose we just had a *sample* from this population, and we were trying to estimate that population mean? How weird can that sample get? And how far can a sample statistic get from the true value? To see, let's play around with drawing samples of CES respondents.
 
 ```{r}
 # pull a sample
@@ -63,40 +64,189 @@ mean(sample_data$tv_news_24h)
 
 Your result may differ! (It's a random sample, so there's some...randomness involved.) But the estimate I got was 54%. Not terrible, but not terribly accurate either.
 
-Here's the question that motivates basically all of statistics. How *weird* can our sample estimates get? On average, do they tend to be close to the truth, or can they be pretty far off the mark? To answer this question, let's introduce the **sampling distribution** -- the distribution of outcomes we would expect to observe if we repeatedly drew samples and computed the estimate.[^3]
+Here's a custom function that draws a sample and returns the percent of respondents in that sample that watch TV news. You should run that function a few times to see how much variability we get from sample to sample.
 
-[^3]: In the real world, this is a pure thought experiment. We can't actually do this (unless we had a *lot* of money for repeated surveys).
+```{r custom-function}
+get_sample_mean <- function(sample_size = 100){
+  ces %>% 
+    # draw a sample
+    slice_sample(n = sample_size) %>%
+    # pull the TV news variable
+    pull(tv_news_24h) %>% 
+    # return the mean
+    mean
+}
+
+get_sample_mean()
+get_sample_mean()
+
+get_sample_mean(sample_size = 200)
+get_sample_mean(sample_size = 10)
+```
+
+### The Sampling Distribution
+
+Now here's the question that motivates basically all of statistics. How *weird* can our sample estimates get? On average, do they tend to be close to the truth, or can they be pretty far off the mark? To address this question, let's introduce the **sampling distribution** -- the distribution of outcomes we would expect to observe if we repeatedly drew samples and computed the estimate.[^3]
+
+[^3]: The sampling distribution is a pure thought experiment, because in real life we can't actually do this (unless we had a *lot* of money to repeat the same survey thousands of times).
 
 ```{r sampling-distribution, echo=TRUE, eval=FALSE}
 
 # we'll use the replicate() function to repeat that sampling process a large number of times
-sampling_distribution <- replicate(25000,
-                                   ces %>% 
-                                     # draw a sample
-                                     slice_sample(n = 100) %>% 
-                                     # pull the tv news variable
-                                     pull(tv_news_24h) %>% 
-                                     # take the mean
-                                     mean)
+sampling_distribution <- replicate( 25000, get_sample_mean() )
+                                   
 ```
 
 ```{r speed-up-site-building, echo=FALSE, eval=TRUE}
-# note to the curious inspecting the raw Rmd file. I saved all the sampling distribution I created above to a file I'm loading them here so that R doesn't repeat those 25k draws whenever I build my website. That would be annoying.
+# A note to the curious inspecting this raw Rmd file. I saved all the sampling distribution I created above to a file, and I'm loading it here so that R doesn't repeat those 25k draws whenever I build my website. That would be annoying.
 load('data/ces-2020/sampling_distribution.RData')
 ```
 
 The object `sampling_distribution` is a vector with 25,000 sample means. Each one was computed from an independent random sample from the CES dataset. The first sample estimate I got was 54%, but what does this set of 25,000 estimates look like?
 
 ```{r}
-
 head(sampling_distribution)
 
 ggplot(mapping = aes(x = sampling_distribution)) +
   geom_histogram(color = 'black', binwidth = 0.01) +
   theme_minimal() +
-  labs(x = 'Estimate', y = 'Number of Samples')
+  labs(x = 'Estimate', y = 'Number of Samples',
+       title = 'The Sampling Distribution of the Mean')
 ```
+
+If I draw a sample of 100 people from a population where 60% have some characteristic, then this is the range of outcomes I should expect to observe. Most of the time, we'll get a sample estimate between 55% and 65%. An estimate smaller than 50% or larger than 70% is unlikely, but possible.[^4]
+
+[^4]: And the chance of drawing a sample with 0% is about 1 in ten quintillion-trillion-billion. It will approximately never happen.
+
+### Expected Value
+
+What is the mean value of the sampling distribution?
+
+```{r}
+mean(sampling_distribution)
+```
+
+This is the **expected value** of our sample statistic -- the average value that you would expect to get if you repeatedly sampled from the population. In this case, notice how close the expected value is to the truth! We say that an estimator is **unbiased** if its expected value equals the true population parameter.
+
+So we just demonstrated that the mean of a random sample is an unbiased estimator of the population mean. No big deal. Just the foundation of all statistics and polling. That if I draw 100 people at random and ask them a question, their responses will, on average, give us a good approximation of what all 300 million Americans would say.
+
+But [averages can be deceiving](https://www.reddit.com/r/Jokes/comments/1fbepm/a_physicist_a_biologist_and_a_statistician_go/)! We don't just want to know whether we'll be right *on average*. We want to know how far from the truth we might end up with our particular sample.
+
+### Standard Error
+
+What is the standard deviation of our sampling distribution?[^5]
+
+[^5]: Recall that the variance of a distribution is the [average squared distance from the mean](https://tinystats.github.io/teacups-giraffes-and-statistics/04_variance.html), and the standard deviation is the square root of variance.
+
+```{r}
+sd(sampling_distribution)
+```
+
+The standard deviation of a sampling distribution is is called the **standard error**, and it's a very important for understanding hypothesis tests. The larger the standard error, the wider the range of sample statistics that could have been computed from our population, and the less certain we should be about our particular value.
+
+### The Central Limit Theorem
+
+Next, notice the *shape* of the sampling distribution in the figure above. It's this nice bell curve you may have seen before, called a "normal" distribution (aka a Gaussian distribution).[^6] Why is the sampling distribution normally shaped? Well that's one of the most fascinating and magical theorems in all of statistics: the **Central Limit Theorem**. The sampling distribution of the mean is approximately normally distributed -- as long as you have a sufficiently large[^7] sample size.
+
+[^6]: [Technically](https://1.bp.blogspot.com/-GbgoSNOuSm0/WilbpekABZI/AAAAAAAAFxQ/kHfvPEHMGgQ7egYL6v4NZaaygWaIaAuxgCLcBGAs/s1600/technically_correct.png) it's a binomial distribution, but we can reserve that distinction for a footnote because binomial distributions are approximately normal when the sample size is large enough.
+
+[^7]: How large is "sufficiently large"? I don't want to give a definitive number, because people will yell at me on Twitter. But, as you see in the figure above, 100 is clearly big enough. 50 might even be okay. Less than 25 is pushing your luck.
+
+Intuition: some samples will, by chance, contain an unrepresentatively large number of TV watchers. Some will contain an unrepresentatively small number of TV watchers. But most of the time, the TV watchers and the non-TV watchers will cancel each other out, such that the mass of the distribution is centered around the truth.
+
+There are a bunch of nice [simulations](https://seeing-theory.brown.edu/probability-distributions/index.html#section3) that showing the Central Limit Theorem in action. In class, you'll get to play around with one.
+
+Normal distributions are nice. They allow us to say precisely how far a sample estimate is likely to deviate from the truth. For example, we know that about 68% of a normal distribution falls within 1 standard deviation of the mean.
+
+```{r}
+expected_value <- mean(sampling_distribution)
+standard_error <- sd(sampling_distribution) 
+num_draws <- 25000
+
+within_1sd <- sum(sampling_distribution > expected_value - standard_error &
+      sampling_distribution < expected_value + standard_error)
+
+within_1sd / num_draws
+```
+
+And about 95% of observations fall within two standard deviations.
+
+```{r}
+within_2sd <- sum(sampling_distribution > expected_value - 2*standard_error &
+                        sampling_distribution < expected_value + 2*standard_error)
+
+within_2sd / num_draws
+```
+
+And about 99.7% fall within 3 standard deviations. It's super rare to get an observation that far away.
+
+```{r}
+within_3sd <- sum(sampling_distribution > expected_value - 3*standard_error &
+                        sampling_distribution < expected_value + 3*standard_error)
+
+within_3sd / num_draws
+```
+
+### Margin of Error and Confidence Intervals
+
+So if I draw a sample of 100 individuals, then 95% of the time, my sample proportion will be within...
+
+```{r}
+2*sd(sampling_distribution)
+```
+
+...of the truth. This is what pollsters call the **margin of error**.
+
+Another way of describing this sampling variability is with a **confidence interval**. You construct a confidence interval by taking your sample estimate plus or minus 2 standard errors. Because the sample mean is within 2 standard deviations of the truth 95% of the time, the 95% confidence interval will contain the true value approximately 95% of the time.
+
+### The Law of Large Numbers
+
+What happens to the standard error when you increase your sample size? Intuitively, you're getting more data, so you should be more and more confident in your estimate.
+
+Let's draw a sampling distribution with 400 instead of 100 people.
+
+```{r, eval = FALSE, echo = TRUE}
+sampling_distribution <- replicate(25000,
+                                   get_sample_mean(sample_size = 400))
+```
+
+```{r, echo = FALSE, eval = TRUE}
+# note: doing that same trick again here; saving the sampling distribution from the previous chunk and loading
+load('data/ces-2020/sampling_distribution2.RData')
+```
+
+```{r}
+ggplot(mapping = aes(x = sampling_distribution)) +
+  geom_histogram(color = 'black', binwidth = 0.01) +
+  theme_minimal() +
+  labs(x = 'Estimate', y = 'Number of Samples',
+       title = 'The Sampling Distribution of the Mean')
+```
+
+Check out that sampling variability! Previously, we got values as high as 0.8 and as low as 0.4. Now the highest and lowest values are more like 0.7 and 0.5.
+
+Note that our estimate is still unbiased (centered around the truth):
+
+```{r}
+mean(sampling_distribution)
+```
+
+But the standard error is half as large.
+
+```{r}
+sd(sampling_distribution)
+```
+
+This is a general fact about the standard error of the mean. If the population standard deviation equals $\sigma$, then
+
+$$
+\text{Standard Error} = \frac{\sigma}{\sqrt{n}}
+$$
+
+If the population distribution has higher variance, so will your sampling distribution, because you can draw a wider range of samples. And standard error decreases with the square root of n. If you quadruple your sample size, you cut standard error in half.
+
+In the limit, as your sample size gets bigger and bigger, the standard error approaches (but never quite reaches) zero. This is the **Law of Large Numbers**. Bigger datasets mean more confidence in your estimate. Formally, we say that the sample mean *converges in probability* to its expected value.
 
 ## Problem Set
 
-1.  
+TBD
