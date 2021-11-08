@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Integral Calculus</title>
+    <meta charset="utf-8" />
+    <script src="10-integrals_files/header-attrs-2.7/header-attrs.js"></script>
+    <link href="10-integrals_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="10-integrals_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Integral Calculus
+## POLS 7012: Introduction to Political Methodology
+
+---
+
+
+
+
+# The Area Under a Curve
+
+Rectangles are easy. `\(A = bh\)`
+
+&lt;img src="10-integrals_files/figure-html/rectangular area-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# The Area Under a Curve
+
+Curves are harder. We didn't learn this in geometry!
+
+
+&lt;img src="10-integrals_files/figure-html/plot curve-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# The Area Under a Curve
+
+ - With derivatives, we approximated a hard problem (the slope of a curve) using an easy problem (the slope of a line) by zooming in close enough.
+
+--
+
+ - With integrals, we'll use a similar trick.
+
+--
+
+ - We approximate a hard problem (the area under a curve) using an easy problem (the area of a bunch of rectangles) by making the rectangles *really* thin.
+
+---
+
+# Riemann Sum
+
+`\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`.
+
+--
+
+
+
+&lt;img src="10-integrals_files/figure-html/reimann sum 1-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Riemann Sum
+
+`\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`.
+
+&lt;img src="10-integrals_files/figure-html/reimann sum 3-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Riemann Sum
+
+`\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`.
+
+&lt;img src="10-integrals_files/figure-html/reimann sum 4-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Riemann Sum
+
+`\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`.
+
+&lt;img src="10-integrals_files/figure-html/reimann sum 5-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Riemann Sum
+
+`\(f(x) = x^3 - 2x^2 + 2\)`. Find area under curve from `\(x=0\)` to `\(x=3\)`.
+
+&lt;img src="10-integrals_files/figure-html/reimann sum 6-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Integral Notation
+
+$$\lim_{h \to 0} \sum f(x) \cdot h = \int f(x)dx $$
+
+--
+
+`\(dx\)` is an "infinitesimal" (infinitely small value). 
+
+So `\(\int f(x)dx\)` is the area of an infinite number of infinitely skinny rectangles.
+
+--
+
+If we want the area under a curve between `\(a\)` and `\(b\)`, we denote it like so:
+
+`$$\int_a^b f(x)dx$$`
+
+---
+
+## There has to be an easier way!
+
+What we want is a function `\(F(x)\)`; let's call it the **area function**.
+  
+- `\(F(a)\)` gives the area under `\(f(x)\)` between `\(-\infty\)` and `\(a\)`.
+
+- `\(F(b) - F(a)\)` gives the area under `\(f(x)\)` between `\(a\)` and `\(b\)`.
+
+--
+
+- As `\(h\)` approaches zero, our skinny rectangles become a better and better approximation of the area function...
+
+`$$f(x) \cdot h = \lim_{h \to 0} F(x+h) - F(x)$$`
+
+--
+
+Divide by `\(h\)` on both sides:
+
+`$$f(x) = \lim_{h \to 0} \frac{F(x+h) - F(x)}{h}$$`
+
+--
+
+Hey. We've seen that before!
+
+--
+
+`\(f(x) = F'(x)\)`. In other words, `\(F(x)\)` is the *antiderivative* of `\(f(x)\)`.
+
+
+---
+
+# The Fundamental Theorem of Calculus
+
+`$$\int_a^b f(x)dx =  F(b) - F(a)$$`
+
+--
+
+Computing the area under the curve and taking the antiderivative are equivalent operations!
+
+---
+
+# Try It!
+
+If `\(f(x) = x\)`, find the area under the curve between `\(x=0\)` and `\(x=4\)`.
+
+&lt;img src="10-integrals_files/figure-html/plot triangle-1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+--
+
+**Hint**: It's a triangle, so the answer should be 8.
+
+---
+
+# The Area Under a Curve
+
+If `\(f(x) = x\)`, find the area under the curve between `\(x=0\)` and `\(x=4\)`.
+
+Use the Fundamental Theorem of Calculus:
+
+`$$\int_0^4 f(x)dx = F(4) - F(0)$$`
+--
+
+`\(F(x) = \frac{1}{2}x^2 + C\)`
+
+--
+
+`\(F(4) - F(0) = \frac{1}{2}\cdot4^2 = 8\)`
+
+---
+
+## Now a Nonlinear Example...
+
+If `\(f(x) = x^3 - 2x^2 + 2\)`, find the area under the curve between `\(x=0\)` and `\(x=3\)`.
+
+--
+
+`$$\int_0^3 f(x)dx = F(3) - F(0)$$`
+
+--
+
+`\(F(x) = \frac{1}{4}x^4 - \frac{2}{3}x^3 + 2x + C\)`
+
+--
+
+`\(F(3) - F(0) = \frac{1}{4}3^4 - \frac{2}{3}3^3 + 2(3) - [\frac{1}{4}0^4 - \frac{2}{3}0^3 + 2(0)]\)`
+
+--
+`\(= 8.25\)`
+
+---
+
+## Now a Nonlinear Example...
+
+That's the same answer that we got from the skinny rectangles!
+
+&lt;img src="10-integrals_files/figure-html/reimann sum 7-1.png" width="600" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
