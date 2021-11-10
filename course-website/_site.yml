@@ -38,6 +38,8 @@ navbar:
           href: week-10.html
         - text: "Week 11: Sampling"
           href: week-11.html
+        - text: "Week 12: Hypothesis Testing"
+          href: week-12.html
     - icon: fas fa-calendar-plus
       href: https://calendly.com/jornstein/15min
     - icon: fas fa-book-open
