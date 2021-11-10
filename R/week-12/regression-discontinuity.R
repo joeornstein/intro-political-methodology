@@ -9,7 +9,7 @@ library(tidyverse)
 raw <- read_csv('data/klasnja-titiunik-2017/KlasnjaTitiunik-LAcountries-data.csv')
 
 # keep the Brazilian elections only
-brazil <- ???
+brazil <- filter(raw, country == 'Brazil')
 
 ## Step 2: Recreate Figure 1 -----------------------
 
@@ -38,8 +38,14 @@ p
 
 ## Step 3: Fit a linear model on either side ---------
 
-lm_left <- ???
-lm_right <- ???
+lm_left <- lm(post_winning_incumbent_unc ~ mv_incumbent,
+              data = filter(brazil,
+                            mv_incumbent < 0,
+                            mv_incumbent > -10))
+lm_right <- lm(post_winning_incumbent_unc ~ mv_incumbent,
+               data = filter(brazil,
+                             mv_incumbent > 0,
+                             mv_incumbent < 10))
   
 # subtract the predicted value from lm_right and the predicted value from lm_left
 left_prediction <- predict(lm_left,
