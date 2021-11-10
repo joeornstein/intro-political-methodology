@@ -249,4 +249,12 @@ In the limit, as your sample size gets bigger and bigger, the standard error app
 
 ## Problem Set
 
-TBD
+Imagine we were interested in studying whether American men were more or less likely than American women to support import tariffs on Chinese goods.
+
+1.  Load `data/ces-2020/cleaned-CES.RData`.
+2.  What percent of CES respondents support tariffs on China?
+3.  What is the difference between men and women in support for tariffs?
+4.  Write a function that draws a sample of 100 respondents and returns a sample estimate of the difference between men and women in support for tariffs.
+5.  Using that function, generate a sampling distribution for this difference-in-means.
+6.  Plot your sampling distribution. Confirm that it is centered around the truth.
+7.  How far away from the truth can these sample estimates get? What is the maximum value? What is the minimum value? What is the standard deviation of the sampling distribution?
