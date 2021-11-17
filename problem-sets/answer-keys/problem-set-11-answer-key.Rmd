@@ -1,0 +1,88 @@
+---
+title: "Problem Set: Sampling Distributions (Answer Key)"
+author: "Joe Ornstein"
+date: "November 17, 2021"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+First, load the dataset.
+
+```{r}
+library(tidyverse)
+library(here)
+
+load(here('data/ces-2020/cleaned-CES.RData'))
+```
+
+Next, we'll compute the percent of respondents that support tariffs, and the difference between men and women.
+
+```{r}
+# create female and pro_tariffs variables
+ces <- mutate(ces,
+              female = as.numeric(gender == 'Female'),
+              pro_tariffs = as.numeric(china_tariffs == 'Support'))
+
+# remove the rows with missing outcomes
+ces <- filter(ces,
+              !is.na(pro_tariffs))
+
+# percent that support tariffs is the mean of the 0-1 variable
+mean(ces$pro_tariffs)
+
+# difference in means by gender
+lm(pro_tariffs ~ female, data = ces)
+```
+
+In the broader population[^1], there is almost no difference between men and women on support for tariffs. But suppose we only had a sample of 100. How weird could a sample of 100 get? Let's create the `get_estimate()` function to find out.
+
+[^1]: The broader population of CES respondents, that is! We're continuing here with the useful fiction that this is the population we care about...
+
+```{r}
+get_estimate <- function(sample_size = 100){
+  
+  # draw a sample
+  sample_data <- slice_sample(ces, n = sample_size)
+  
+  # compute the difference in means
+  lm_sample <- lm(pro_tariffs ~ female, data = sample_data)
+  
+  # return the coefficient
+  coef(lm_sample)['female']
+}
+
+get_estimate()
+get_estimate()
+```
+
+Next, let's use that function to generate a sampling distribution with 25,000 draws.
+
+```{r}
+sampling_distribution <- replicate( 25000, get_estimate() )
+
+ggplot(mapping = aes(x=sampling_distribution)) +
+  geom_histogram(color = 'black') +
+  theme_minimal() +
+  labs(title = 'Range of Possible Estimates of Gender Differences on Tariff Support')
+
+sd(sampling_distribution)
+
+min(sampling_distribution)
+max(sampling_distribution)
+```
+
+Despite the fact that the true value is practically zero, there is a wide range of statistics you might compute in a sample of 100. Here is the probability that you'd get an estimate a gender difference greater than 10%:
+
+```{r}
+sum(abs(sampling_distribution) > 0.1) / length(sampling_distribution) * 100
+```
+
+This, by the way, is the foundation of null hypothesis testing. What's the range of estimates you would expect to get if the true value of your statistic was actually zero?
