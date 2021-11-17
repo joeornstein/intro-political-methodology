@@ -7,7 +7,7 @@ output:
     nature:
       highlightStyle: github
       countIncrementalSlides: false
-subtitle: 'POLS 7012: Introduction to Political Methodology'
+# subtitle: 'POLS 7012: Introduction to Political Methodology'
 #institute: University of Georgia
 ---
 
@@ -18,6 +18,35 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
                       fig.align = 'center', out.width = 600,
                       message=FALSE, warning=FALSE, echo=FALSE)
 ```
+
+# The Problem
+
+To compute a p-value, we need to know the area of the shaded part of the probability distribution function.
+
+```{r, echo = FALSE, out.width='400px'}
+
+# plot a gaussian and shade a part of it
+mu <- 0
+sigma <- 1
+
+# http://www.sthda.com/english/wiki/ggplot2-area-plot-quick-start-guide-r-software-and-data-visualization
+d <- tibble(x = seq(-4, 4, 0.01),
+            y = dnorm(x, mean = mu, sd = sigma))
+
+ggplot(data = d) +
+  geom_line(mapping = aes(x=x,y=y)) +
+  geom_area(mapping = aes(x=x, y = if_else(x > 2, y, 0)),
+            fill = 'gray', alpha = 0.5) + 
+  theme_void() +
+  geom_vline(xintercept = mu, linetype = 'dashed')
+```
+
+
+Formally:
+
+$$\int_{\hat{\tau}}^\infty \mathcal{N}\left(0, \frac{\sigma^2}{n}\right)$$
+
+---
 
 # The Area Under a Curve
 
