@@ -1,0 +1,13 @@
+---
+title: "Week 13"
+description: |
+  Statistical Inference, Part II
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+set.seed(42)
+```
+

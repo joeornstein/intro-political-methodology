@@ -1,7 +1,7 @@
 ---
 title: "Week 12"
 description: |
-  Statistical Inference & Hypothesis Tests
+  Statistical Inference, Part I
 bibliography: references.bib
 ---
 
@@ -25,11 +25,9 @@ This week, we turn that question on its head. We are no longer an omniscient bei
 
 [^1]: If you're taking POLS 7010, then I assume you have this book. If not, you may borrow it from others in the class or from me. Or buy it, I guess. It's a good book.
 
-## Class Notes[^2]
+## Class Notes
 
-[^2]: Sorry these are a bit rough right now. I'll clean them up over Thanksgiving.
-
-Every statistic has a sampling distribution. When we conduct a **hypothesis test**, we compare our observed statistic to its sampling distribution, to assess whether our result is something we would have expected due to chance alone. Every hypothesis test proceeds in three steps:
+Every statistic has a sampling distribution. When we conduct a **hypothesis test**, we compare our observed statistic to its sampling distribution, to assess whether that statistic is something we would have expected due to chance alone. Every hypothesis test proceeds in three steps:
 
 1.  Compute the test statistic
 
@@ -43,9 +41,9 @@ Every statistic has a sampling distribution. When we conduct a **hypothesis test
 
 ### Step 1: Compute the test statistic
 
-A statistic can be anything you compute from data! So far we've looked at:
+A statistic can be anything you compute from data! So far we've computed statistics like:
 
--   The sample mean[^3]
+-   The sample mean[^2]
 
 -   The difference in means
 
@@ -53,11 +51,11 @@ A statistic can be anything you compute from data! So far we've looked at:
 
 -   Linear model coefficients
 
-[^3]: The reason why statisticians like means as a measure of central tendency is because of Central Limit Theorem! The sampling distribution of the mean is normally distributed; no such guarantee for other statistics like medians or modes.
+[^2]: The reason why statisticians like means as a measure of central tendency is because of Central Limit Theorem! The sampling distribution of the mean is normally distributed; no such guarantee for other statistics like medians or modes.
 
-A word on notation: statisticians denote population-level parameters with Greek letters.[^4] So the population mean is typically $\mu$, the population standard deviation is $\sigma$, the true average treatment effect is $\tau$, and the true linear model slope coefficient is $\beta$. Of course, you can write whatever Greek letters you like. These are just conventions.
+A word on notation: statisticians denote population-level parameters with Greek letters.[^3] So the population mean is typically $\mu$, the population standard deviation is $\sigma$, the true average treatment effect is $\tau$, and the true linear model slope coefficient is $\beta$. Of course, you can write whatever Greek letters you like. These are just conventions.
 
-[^4]: Because mathematicians associate timeless truth and beauty with the ancient Greeks.
+[^3]: Because mathematicians associate timeless truth and beauty with the ancient Greeks.
 
 Sample statistics get plain old English letters, like $b$ for an estimated slope or $s$ for a the standard deviation of a sample. Alternatively, they might get little hats on top of Greek letters, like $\hat{\beta}$, to show that they are estimates of the population-level parameter we care about.
 
@@ -88,10 +86,10 @@ Statisticians have spent centuries doing most of the work here, so unless you've
 
 We typically represent random events (like the outcomes of a random sample) with a special type of function called a **probability distribution function** (pdf). These functions have two special properties:
 
-1.   $f(x) \geq 0$
+1.  $f(x) \geq 0$
 2.  $\int_{-\infty}^\infty f(x)dx = 1$
 
-That first property says that probability can't be less-than-zero. Every outcome must have at least a zero probability of happening. The second property uses **integral notation**, which we'll discuss in a moment. It says that the sum of probabilities for all outcomes equals 1 (*something* has to happen).
+That first property says that probability can't be less-than-zero. Every outcome must have at least a zero probability of happening. The second property uses **integral notation** (if you've never seen that before we'll discuss it in a moment). It says that the sum of probabilities for all outcomes equals 1 (*something* has to happen).
 
 The PDF of a normal distribution looks like this (please don't cry).
 
@@ -99,13 +97,13 @@ $$
 f(x) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}
 $$
 
-where $\mu$ is the mean of the distribution, $\sigma$ is the standard deviation, $\pi$ is the ratio of a circle's circumference to its diameter, and $e$ is how much money you would have if you left a dollar in a bank offering 100% interest continuously compounded over one year. The fact that both $\pi$ and $e$ appear in the same equation to describe the distribution of a sample mean is honestly one of the most beautiful things I know about the universe.[^5]
+where $\mu$ is the mean of the distribution, $\sigma$ is the standard deviation, $\pi$ is the ratio of a circle's circumference to its diameter, and $e$ is how much money you would have if you left a dollar in a bank offering 100% interest continuously compounded over one year. The fact that both $\pi$ and $e$ appear in the same equation to describe the distribution of a sample mean is honestly one of the most beautiful things I know about the universe.[^4]
 
-[^5]: And that's saying something, because I recently learned about [sugar gliders](https://www.google.com/search?q=sugar+glider&rlz=1C1GCEB_enUS896US896&sxsrf=AOaemvJQSFwuBnPuMFcsaRyjIy1n39LXPg:1637176458516&tbm=isch&source=iu&ictx=1&fir=AECjVDXyb9L4NM%252CDAZfITb-5dSBDM%252C_%253B8ofc3BtPDTU5IM%252C6lc9Ql_E8ch4GM%252C_%253BLBeHy7s7UTlA3M%252C1eFqmKv_uvivfM%252C_%253BrTgLh98tmmTi9M%252C2_cTYlj3OJup-M%252C_&vet=1&usg=AI4_-kSQHnIcHjtS5XE9k1mV0C-JW8-RIg&sa=X&ved=2ahUKEwjV5vnJjaD0AhXkSjABHfKVBfgQ_h16BAgiEAE&cshid=1637176596303177&biw=1280&bih=609&dpr=1.5#imgrc=AECjVDXyb9L4NM).
+[^4]: And that's saying something, because I recently learned about [sugar gliders](https://www.google.com/search?q=sugar+glider&rlz=1C1GCEB_enUS896US896&sxsrf=AOaemvJQSFwuBnPuMFcsaRyjIy1n39LXPg:1637176458516&tbm=isch&source=iu&ictx=1&fir=AECjVDXyb9L4NM%252CDAZfITb-5dSBDM%252C_%253B8ofc3BtPDTU5IM%252C6lc9Ql_E8ch4GM%252C_%253BLBeHy7s7UTlA3M%252C1eFqmKv_uvivfM%252C_%253BrTgLh98tmmTi9M%252C2_cTYlj3OJup-M%252C_&vet=1&usg=AI4_-kSQHnIcHjtS5XE9k1mV0C-JW8-RIg&sa=X&ved=2ahUKEwjV5vnJjaD0AhXkSjABHfKVBfgQ_h16BAgiEAE&cshid=1637176596303177&biw=1280&bih=609&dpr=1.5#imgrc=AECjVDXyb9L4NM).
 
-We'd like to test the null hypothesis that there is no difference between men and women on support for tariffs $(H_0: \beta = 0)$. So we'll set the mean of our null distribution to 0, but what do we use for $\sigma$? We don't know its true value, because we only have a sample, so we'll estimate it.
+We'd like to test the null hypothesis that there is no difference between men and women on support for tariffs $(H_0: \beta = 0)$. So we'll set the mean of our null distribution to 0, but what do we use for $\sigma$? We don't know its true value, because we only have a sample. So we'll estimate it instead.
 
-Recall from the @kellstedt2018 that the standard error of a difference in means statistic is $\sqrt{\frac{\sigma^2}{n_0} + \frac{\sigma^2}{n_1}}$. (If you're curious where that value comes from, see the appendix of this page -- forthcoming during the Thanksgiving break!) We'll estimate that standard error by plugging in the sample variance for $\sigma^2$.
+Recall from the @kellstedt2018 that the standard error of a difference in means statistic is $\sqrt{\frac{\sigma^2}{n_0} + \frac{\sigma^2}{n_1}}$. (If you're curious where that value comes from, see the appendix of this page.) We'll estimate that standard error by plugging in the sample variance for $\sigma^2$.
 
 ```{r}
 n0 <- sum(sample_data$female == 0)
@@ -185,8 +183,16 @@ p <- pnorm(-test_statistic,
 p
 ```
 
-**Coming Soon**: Confidence Intervals
+## Appendix  {.appendix}
 
-## Problem Set
+To see why the standard error of the difference-in-means statistic is equal to $\sqrt{\frac{\sigma^2}{n_0} + \frac{\sigma^2}{n_1}}$, first recall that the variance of one sample mean is $Var(\bar{X}) = \frac{\sigma^2}{N}$. Now we draw two independent sample means and take the difference. What's the variance of that statistic?
 
-TBD
+$$
+Var(\bar{X_1} - \bar{X_0}) = Var(\bar{X_1}) + Var(\bar{X_0}) - 2 Cov(\bar{X_1},\bar{X_0}) 
+$$
+
+Because the two samples are drawn independently, that final covariance term equals zero. The standard error is the square root of the variance, so:
+
+$$
+\sqrt{Var(\bar{X}_1) + Var(\bar{X}_2)} = \sqrt{\frac{\sigma^2}{n_0} + \frac{\sigma^2}{n_1}}
+$$
