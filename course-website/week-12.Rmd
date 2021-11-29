@@ -127,6 +127,20 @@ ggplot() +
 
 ...which should look a lot like the sampling distribution from your last problem set!
 
+```{r overlay}
+load('data/ces-2020/ps11-sampling-distribution.RData')
+
+ggplot() + 
+  geom_histogram(mapping = 
+                   aes(x=sampling_distribution, 
+                       y = ..density..), 
+                 color = 'black', fill = 'gray',
+                 binwidth=0.02) + 
+  geom_line(mapping = aes(x=x, y=f),
+            color = 'red') +
+  theme_minimal()
+```
+
 ### Step 3: Compare the observed statistic to the null distribution
 
 There are two ways to do this:
@@ -183,7 +197,7 @@ p <- pnorm(-test_statistic,
 p
 ```
 
-## Appendix  {.appendix}
+## Appendix {.appendix}
 
 To see why the standard error of the difference-in-means statistic is equal to $\sqrt{\frac{\sigma^2}{n_0} + \frac{\sigma^2}{n_1}}$, first recall that the variance of one sample mean is $Var(\bar{X}) = \frac{\sigma^2}{N}$. Now we draw two independent sample means and take the difference. What's the variance of that statistic?
 
