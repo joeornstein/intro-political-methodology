@@ -154,6 +154,8 @@ To understand where p-values come from, let's take a quick break for second-seme
 knitr::include_url('slides/10-integrals.html')
 ```
 
+[(Full Screen Version)](slides/10-integrals.html)
+
 Okay we're back.
 
 Formally, our sample statistic is $\hat{\tau}$. The sampling distribution of this statistic is centered around the true population parameter $\tau$.
