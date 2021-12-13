@@ -9,7 +9,7 @@ my_babynames <- filter(babynames,
                        name == 'Maude',
                        sex == 'F')
 
-# create a plot of Joe popularity over time
+# create a plot of Maude popularity over time
 p <- ggplot(data = my_babynames) +
   geom_point(mapping = aes(x=year, y=n)) +
   geom_line(mapping = aes(x=year, y=n)) +
@@ -28,7 +28,7 @@ most_popular_2017 <- slice_max(names_2017, n, n = 20)
 
 ggplot(data = most_popular_2017,
        mapping = aes(x = n, y = name)) +
-  geom_bar(stat = 'identity') +
+  geom_col(color = 'black') +
   theme_minimal() +
   labs(x = 'Number of Babies', y = 'Baby Name',
        title = 'Most popular baby names in 2017')
