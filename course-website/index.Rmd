@@ -7,7 +7,7 @@ author:
     affiliation_url: https://spia.uga.edu/departments-centers/department-of-political-science/
     orcid_id: 0000-0002-5704-2098
 description: |
-  A PhD-level course on understanding data
+  How to learn from data
 site: distill::distill_website
 bibliography: references.bib
 ---

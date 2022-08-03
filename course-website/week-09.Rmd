@@ -36,7 +36,7 @@ gdp <- d$gdp_per_capita
 democracy <- d$democracy
 
 scatter3d <- plot_ly(x = gdp, y = democracy, z = cpi, type = 'scatter3d', mode = 'markers',
-                     marker = list(size = 5, color = "black", symbol = 104)) %>% 
+                     marker = list(size = 5, color = "black", symbol = 104)) |> 
   layout(scene = list(
       xaxis = list(title = "GDP Per Capita"),
       yaxis = list(title = "Democracy"),
@@ -67,11 +67,11 @@ colnames(plane_of_best_fit) <- y
 rownames(plane_of_best_fit) <- x
 
 
-p <- plot_ly(z = plane_of_best_fit, type = "surface") %>% 
+p <- plot_ly(z = plane_of_best_fit, type = "surface") |> 
   layout(scene = list(
       xaxis = list(title = "GDP Per Capita"),
       yaxis = list(title = "Democracy"),
-      zaxis = list(title = "Corruption Perceptions"))) %>% 
+      zaxis = list(title = "Corruption Perceptions"))) |> 
   add_trace(x = gdp, y = democracy, z = cpi, type = 'scatter3d', mode = 'markers',
             marker = list(size = 5, color = "black", symbol = 104))
 
@@ -103,6 +103,6 @@ Next week, we discuss a set of methods that don't require you to catalogue every
 
 1.  In class, we showed that GDP per capita was partly confounding the observed relationship between democracy and corruption. Can you think of any other back door paths that need to be closed? What variable would you need to measure and condition upon to close that path? Try your hand at finding a dataset with that variable, merging it with the country-level corruption dataset we created in `R/week-09/cleanup-data.R`, and adding it to the linear model.
 
-2.  @cohn2019 left wallets in cities around the world to see how many of them would be returned. It's a very ambitious study. You can read about it [here](papers/Cohn et al. - 2019 - Civic honesty around the globe.pdf) and you can find the replication data in our repository at `data/cohn-2019/`. You want the "behavioral data"; check out the codebook to see what all the variables mean. The experimenters varied a few things at random, including the type of institution they left it at (public, bank, etc.) and how much money was in the wallet. Your task is this: I want to know what fraction of wallets were returned in each country when they were left at public institutions (this could be another measure of public corruption; if bureaucrats just tend to steal wallets instead of returning them). Are government officials less likely to steal wallets in countries that have been democracies for longer periods of time (`c_PIV_years_democracy`)? What's the slope of that relationship? And can you interpret that relationship as causal? Why or why not?
+2.  @cohn2019 left wallets in cities around the world to see how many of them would be returned. It's a very ambitious study. You can read about it [here](papers/Cohn%20et%20al.%20-%202019%20-%20Civic%20honesty%20around%20the%20globe.pdf) and you can find the replication data in our repository at `data/cohn-2019/`. You want the "behavioral data"; check out the codebook to see what all the variables mean. The experimenters varied a few things at random, including the type of institution they left it at (public, bank, etc.) and how much money was in the wallet. Your task is this: I want to know what fraction of wallets were returned in each country when they were left at public institutions (this could be another measure of public corruption; if bureaucrats just tend to steal wallets instead of returning them). Are government officials less likely to steal wallets in countries that have been democracies for longer periods of time (`c_PIV_years_democracy`)? What's the slope of that relationship? And can you interpret that relationship as causal? Why or why not?
 
-3.  **Bonus Fun** (not required, just fun): Replicate Figure 1 in the @cohn2019 paper using `ggplot`.
+3.  **Optional Challenge**: Replicate Figure 1 in the @cohn2019 paper using `ggplot`.
