@@ -20,7 +20,7 @@ Next week, we start building mathematical models to help us understand what's go
 
 - [The Joy of X](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559), Chapters 17 and 18.
 - [Moore & Siegel](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618), Chapter 5.
-- [Allison Horst explains derivatives](https://twitter.com/allison_horst/status/1554921698742468625).
+- [Allison Horst Explains Derivatives](https://twitter.com/allison_horst/status/1307538146121244674).
 
 ## Problem Set
 
