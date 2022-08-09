@@ -11,17 +11,7 @@ library(tidyverse)
 set.seed(42)
 ```
 
-Okay. So we have an estimate we computed from our data. Maybe we've even done enough theoretical legwork to believe that our estimate reflects a causal relationship. We're feeling pretty good about ourselves.
-
-But we're not done yet, because that estimate we calculated is based on limited information about the world. Maybe our data only represents a sample from a much larger population. There's no guarantee that the estimate we get from that sample is that same one we would get if we could observe everyone in the population. And even if we've collected data from the entire population, don't forget about the [Fundamental Problem of Causal Inference](week-08.html) -- we can never know with certainty what would have happened under some counterfactual treatment regime.[^1] So we need a way to express our uncertainty about the estimates we produced. How likely is it that our result was just caused by a weird sample?
-
-[^1]: For a thorough review of the distinction between sampling-based and design-based uncertainty, see @abadie2020.
-
-This week, we discuss the fundamental concept underlying all of statistical inference[^2] -- the **sampling distribution**.
-
-[^2]: Well, frequentist statistical inference. Bayesians think about uncertainty in a different way [@mcelreath2020].
-
-## Reading Assignments
+## Readings
 
 -   [Teacup Giraffes: Module 6](https://tinystats.github.io/teacups-giraffes-and-statistics/06_standardError.html)
 
@@ -32,6 +22,18 @@ This week, we discuss the fundamental concept underlying all of statistical infe
 For an (optional) deeper dive into the mathematics of probability theory:
 
 -   [Moore & Siegel](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618), Chapters 9-11
+
+## Overview
+
+Okay. So we have an estimate we computed from our data. Maybe we've even done enough theoretical legwork to believe that our estimate reflects a causal relationship. We're feeling pretty good about ourselves.
+
+But we're not done yet, because that estimate we calculated is based on limited information about the world. Maybe our data only represents a sample from a much larger population. There's no guarantee that the estimate we get from that sample is that same one we would get if we could observe everyone in the population. And even if we've collected data from the entire population, don't forget about the [Fundamental Problem of Causal Inference](week-08.html) -- we can never know with certainty what would have happened under some counterfactual treatment regime.[^1] So we need a way to express our uncertainty about the estimates we produced. How likely is it that our result was just caused by a weird sample?
+
+[^1]: For a thorough review of the distinction between sampling-based and design-based uncertainty, see @abadie2020.
+
+This week, we discuss the fundamental concept underlying all of statistical inference[^2] -- the **sampling distribution**.
+
+[^2]: Well, frequentist statistical inference. Bayesians think about uncertainty in a different way [@mcelreath2020].
 
 ## Class Notes
 

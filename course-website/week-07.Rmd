@@ -1,50 +1,18 @@
 ---
 title: "Week 7"
 description: |
-  Building our first statistical model, plus all the calculus you need to make it go
+  Midterm Mini-Conference
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-library(tidyverse)
 ```
 
-This week, we introduce the **linear model**, the workhorse of empirical social science. In its most basic form, we take two variables from our dataset and try to find the "line of best fit" -- the line that best describes the relationship between them. For example, the line of best fit below suggests that places where infant mortality is high also tend to be places where fertility is high, and vice versa:
+This week you'll present a project that follows the entire data analysis pipeline from start to finish: finding the dataset, importing it, cleaning it up, summarizing it, and building visualizations.
 
-```{r line-of-best-fit, echo = TRUE}
-ggplot(data = swiss,
-       mapping = aes(x = Fertility,
-                     y = Infant.Mortality)) +
-  geom_point() +
-  # the line of best fit
-  geom_smooth(method = 'lm', se = FALSE) +
-  theme_bw() +
-  labs(title = 'The Relationship Between Fertility and Infant Mortality',
-       subtitle = 'Swiss Provinces (1888)')
-```
+![](img/environmental-data-science-r4ds-general.png)
 
-But where did that line of best fit come from? What does it even mean to be the "best fit"? To answer that question, we first need a language that will help us talk about how to *minimize* error or *maximize* model fit. That language is differential calculus.
-
-[![](img/newton_and_leibniz.png)](https://xkcd.com/626/)
-
-Come with me on a journey.
-
-## Slides
-
-```{r slides}
-knitr::include_url('slides/07-optimization.html')
-```
-
-[(Full Screen Version)](slides/07-optimization.html)
-
-## Reading Assignments
-
-Next week we discuss the art of causal inference. Our guide is *The Effect*, by Nick Huntington-Klein. The whole book is great, but start with:
-
-- [Chapter 6: Causal Diagrams](https://theeffectbook.net/ch-CausalDiagrams.html)
-- [Chapter 7: Drawing Causal Diagrams](https://theeffectbook.net/ch-DrawingCausalDiagrams.html)
-- [Chapter 8: Closing Back Doors](https://theeffectbook.net/ch-CausalPaths.html)
-
+If you're looking for additional practice with the skills we've learned over the past six weeks, I highly recommend the [RStudio primers](https://rstudio.cloud/learn/primers), a set of interactive online tutorials. To review the functions we've covered so far, check out "The Basics", "Work With Data", "Visualize Data", and "Tidy Your Data". The other primers are more advanced `R` functions -- you may try them if you're looking for an extra challenge. 
 
 ## Problem Set
 

@@ -11,19 +11,23 @@ library(tidyverse)
 set.seed(42)
 ```
 
+## Readings
+
+-   @kellstedt2018, chapters 7-8 (Statistical Inference and Bivariate Hypothesis Testing)[^1]
+
+-   @huntington-kleinEffectIntroductionResearch2021, section 3.5 (this is the section we skipped before on Theoretical Distributions).
+
+-   [There Is Only One Test](http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html) (blog post by Allen Downey)
+
+[^1]: If you're taking POLS 7010, then I assume you have this book. If not, you may borrow it from others in the class or from me. Or buy it, I guess. It's a good book.
+
+## Overview
+
 Last week, we introduced probability theory from the perspective of *sampling*. We have some population of interest, and we imagine all the possible samples that we could draw from the population. With this sampling distribution in hand, we have a better sense of how far from the truth a sample estimate might be.
 
 This week, we turn that question on its head. We are no longer an omniscient being who can sample *ad infinitum* from the population. Instead, we are a humble researcher with a single sample. What conclusions can we draw? How confident are we that our sample is not way out in the tails of the sampling distribution? That is a task for **statistical inference**.
 
 [![](img/boyfriend.png)](https://xkcd.com/539/)
-
-## Reading Assignments
-
--   @kellstedt2018, chapters 7-8 (Statistical Inference and Bivariate Hypothesis Testing)[^1]
-
--   [There Is Only One Test](http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html) (blog post by Allen Downey)
-
-[^1]: If you're taking POLS 7010, then I assume you have this book. If not, you may borrow it from others in the class or from me. Or buy it, I guess. It's a good book.
 
 ## Class Notes
 

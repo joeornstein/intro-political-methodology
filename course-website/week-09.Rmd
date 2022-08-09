@@ -10,6 +10,14 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(tidyverse)
 ```
 
+## Readings
+
+-    [*The Effect*](https://theeffectbook.net/ch-CausalPaths.html)*,* Chapter 8: Closing Back Doors
+
+-   [Moore & Siegel](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618)[,](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618),) Chapter 12. Ignore sections 12.3.6 and 12.3.7 on computing determinants and inverses by hand. We have computers that do that for us now.
+
+## Overview
+
 This week, we discuss the linear model as a general purpose tool for conditioning on confounding variables and recovering causal estimands. We will highlight the strengths and limitations of this approach, and show how to estimate the model's parameters using matrix algebra.
 
 ![](img/matrix.jpg)
@@ -84,20 +92,6 @@ p
 ```{r survey}
 knitr::include_url('https://docs.google.com/forms/d/e/1FAIpQLScAIDf-C11Brca0yUPdgaThGr91-VmR_ULsk6BegUWel6usMA/viewform?usp=sf_link')
 ```
-
-## Reading Assignments
-
-Next week, we discuss a set of methods that don't require you to catalogue every possible back door path and close it. Please read up on:
-
--   [The Effect Chapter 19: Finding Front Doors](https://theeffectbook.net/ch-FindingFrontDoors.html)
-
-<!-- Next time, we talk about how to express our *uncertainty* about these estimates.  -->
-
-<!-- - [Teacup Giraffes Module 6](https://tinystats.github.io/teacups-giraffes-and-statistics/06_standardError.html) -->
-
-<!-- - [The Joy of X](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559), Chapters 22 and 23. -->
-
-<!-- - [Seeing Theory](https://seeing-theory.brown.edu/), some nice interactive explanations of concepts from probability theory -->
 
 ## Problem Set
 
