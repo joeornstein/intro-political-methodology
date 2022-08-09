@@ -8,8 +8,7 @@ description: |
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-## Reading Assignments
-
+## Reading
 
 - [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/04_variance.html): Spread of the Data
 - [Wrangling Penguins](https://allisonhorst.shinyapps.io/dplyr-learnr/)
@@ -30,7 +29,7 @@ Up to now, we've been working with pretty tidy datasets. Every column is a varia
 
 ![](img/horst_tidyverse.jpg)
 
-This week, we'll learn some of the most important functions in the `tidyverse` for data importing, wrangling, and summarizing. We'll introduce the essential **summary statistics** that we use to describe central tendency, variation, and correlation.
+This week, we'll learn some of the most important functions in the `tidyverse` for data importing, wrangling, and summarizing.
 
 ## Problem Set
 

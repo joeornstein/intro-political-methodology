@@ -1,7 +1,7 @@
 ---
 title: "Week 1"
 description: |
-  Telling stories with data
+  Tell stories with data
 ---
 
 ```{r setup, include=FALSE}

@@ -16,11 +16,11 @@ navbar:
         - text: "PART 1: DISCOVERY"
         - text: "Week 1: Getting Started"
           href: week-01.html
-        - text: "Week 2: Visualize Your Data"
+        - text: "Week 2: Describe Your Data"
           href: week-02.html
-        - text: "Week 3: Tidy Your Data"
+        - text: "Week 3: Wrangle Your Data"
           href: week-03.html
-        - text: "Week 4: Wrangle Your Data"
+        - text: "Week 4: Visualize Your Data"
           href: week-04.html
         - text: "Week 5: No Class (APSA)"
         - text: "Week 6: The Linear Model"
