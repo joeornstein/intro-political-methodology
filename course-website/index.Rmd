@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Overview
 
-In this course, you will learn the math and coding skills you need to conduct quantitative social science research. In the first half of the semester, we'll get comfortable working with data: cleaning it up, visualizing it, and summarizing it. In the second half of the semester, we'll build statistical models to help us interpret our data, communicate uncertainty, and make causal claims. A key theme of the course is that, to deeply understand your data, you must do both.
+In this course, you will learn the math and coding skills you need to conduct social science research. In the first half of the semester, we'll get comfortable working with data: cleaning it up, visualizing it, and summarizing it. In the second half of the semester, we'll build statistical models to help us interpret our data, communicate uncertainty, and make causal claims. A key theme of the course is that, to deeply understand your data, you must do both.
 
 All the course materials you need will be available on this website. Check the Schedule tab for an overview of each week's topics and assignments. On the navbar, you can also find links to [read the syllabus](syllabus/POLS-7012-syllabus.pdf), [schedule an office hours appointment](https://calendly.com/jornstein/15min), [read your classmates' comments on the readings](https://hypothes.is/groups/g7pXazQj/pols-7012-fall-2021), and [visit the code repository](https://github.com/joeornstein/intro-political-methodology).
 

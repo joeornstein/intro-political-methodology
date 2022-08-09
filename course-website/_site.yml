@@ -13,7 +13,7 @@ navbar:
       href: syllabus/POLS-7012-syllabus.pdf
     - text: "Schedule"
       menu:
-        - text: "PART 1: LOOK AT YOUR DATA"
+        - text: "PART 1: DISCOVERY"
         - text: "Week 1: Getting Started"
           href: week-01.html
         - text: "Week 2: Visualize Your Data"
@@ -22,20 +22,21 @@ navbar:
           href: week-03.html
         - text: "Week 4: Wrangle Your Data"
           href: week-04.html
-        - text: "Week 5: Describe Your Data"
-          href: week-05.html
-        - text: "Week 6: Midterm Mini-Conference"
+        - text: "Week 5: No Class (APSA)"
+        - text: "Week 6: The Linear Model"
           href: week-06.html
-        - text: "---"
-        - text: "PART 2: BUILD MODELS"
-        - text: "Week 7: Optimization"
+        - text: "Week 7: Midterm Mini-Conference"
           href: week-07.html
-        - text: "Week 8: Causation"
+        - text: "---"
+        - text: "PART 2: CAUSALITY"
+        - text: "Week 8: The Fundamental Problem"
           href: week-08.html
         - text: "Week 9: Back Doors"
           href: week-09.html
         - text: "Week 10: Front Doors"
           href: week-10.html
+        - text: "---"
+        - text: "PART 3: UNCERTAINTY"
         - text: "Week 11: Sampling"
           href: week-11.html
         - text: "Week 12: Statistical Inference I"
@@ -43,7 +44,7 @@ navbar:
         - text: "Week 13: Statistical Inference II"
           href: week-13.html
     - icon: fas fa-calendar-plus
-      href: https://calendly.com/jornstein/15min
+      href: https://calendly.com/joeornstein/20min
     - icon: fas fa-book-open
       href: "https://hypothes.is/groups/g7pXazQj/pols-7012-fall-2021"
     - icon: fab fa-github
