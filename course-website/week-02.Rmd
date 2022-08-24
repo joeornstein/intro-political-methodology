@@ -23,7 +23,7 @@ The [RStudio Primers](https://rstudio.cloud/learn/primers) are a set of helpful 
 
 ## Overview
 
-This week, we introduce a tremendously fundamental concept in statistics, called the *variable*. What is a variable? Well, it's a thing that *varies* across observations. Reason #1 why we're using data (i.e. [many stories](week-01.html)) to understand the world is that it allows us to study how things vary from case to case.
+This week, we introduce a tremendously fundamental concept in statistics, called the *variable*. What is a variable? Well, it's a thing that *varies* across observations. Reason #1 why we're using data  to understand the world (i.e. a [many story](week-01.html) approach) is that it allows us to study variation -- how things change from case to case.
 
 In a tidy dataset, variables are the columns. For example, in the `babynames` dataset, the column named `n` contains the number of babies born in the United States in a given year with a given name and sex.
 
