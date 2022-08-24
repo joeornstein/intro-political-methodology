@@ -69,4 +69,9 @@ d |>
               n() * 100) |>
   arrange(pct_nonreligious)
 
+## Step 6: Obama support by education ---------------
 
+d |>
+  group_by(degree) |>
+  summarize(pct_obama = mean(obama, na.rm = TRUE),
+            count = n())

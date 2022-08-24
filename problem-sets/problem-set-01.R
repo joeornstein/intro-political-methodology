@@ -19,9 +19,9 @@ library(babynames) # a package with the baby names data from US Census
 # here's what the dataset looks like
 head(babynames)
 
-# create an object called 'd' with just the male Josephs
+# create an object called 'd' with just the male Andrew
 d <- babynames |> 
-  filter(name == 'Joseph',
+  filter(name == 'Andrew',
          sex == 'M')
 
 head(d)
