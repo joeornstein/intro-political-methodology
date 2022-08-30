@@ -42,7 +42,7 @@ vignettes/*.pdf
 _dross/
 
 # ignore big raw data files
-data/raw/
+raw/
 
 # ignore hidden folders
 problem-sets/hidden/
