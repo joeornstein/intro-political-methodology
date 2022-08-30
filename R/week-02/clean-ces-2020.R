@@ -10,11 +10,11 @@ library(tidyverse)
 library(janitor)
 
 # load original data
-ces_raw <- read_csv('data/raw/ces-2020/CES20_Common_OUTPUT_vv.csv') %>% 
+ces_raw <- read_csv('data/raw/ces-2020/CES20_Common_OUTPUT_vv.csv') |> 
   # clean up the names (janitor function)
   clean_names()
 
-ces <- ces_raw %>%
+ces <- ces_raw |>
   # recode some variables
   mutate(gender = if_else(gender == 1, 'Male', 'Female'),
          educ = case_when(educ == 1 ~ 'No HS',
@@ -61,26 +61,26 @@ ces <- ces_raw %>%
                                   pew_religimp == 4 ~ 'Not at all important'))
 
 # inputstate is a fips code. merge with maps::state.fips to get state names
-state_names <- maps::state.fips %>% 
-  select(fips, abb) %>% 
+state_names <- maps::state.fips |> 
+  select(fips, abb) |> 
   # missing alaska and hawaii
   bind_rows(
     tibble(
       fips = c(2, 15),
-      abb = c('AK', 'HI'))) %>% 
-  unique %>% 
+      abb = c('AK', 'HI'))) |> 
+  unique() |> 
   arrange(fips)
 
-ces <- ces %>% 
-  mutate(fips = inputstate) %>% 
-  left_join(state_names, by = 'fips') %>% 
+ces <- ces |> 
+  mutate(fips = inputstate) |> 
+  left_join(state_names, by = 'fips') |> 
   # select the variables you want
   select(caseid, gender, educ, race, age, abb, national_economy,
          someone_diagnosed_with_covid, lost_work_during_covid,
          trump_approval,
          social_media_24h, tv_news_24h, newspaper_24h, radio_news_24h,
          assault_rifle_ban, increase_border_patrols, china_tariffs,
-         pew_religimp) %>% 
+         pew_religimp) |> 
   # order the factor variables
   mutate(national_economy = factor(national_economy,
                                    levels = c('Not sure', 'Gotten much worse',
