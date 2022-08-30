@@ -46,7 +46,7 @@ name, age, party
 'Avery', 3, 'Know Nothing'
 ```
 
-It's a nice standardized way to represent datasets, and fortunately for us, the `read_csv()` function allows us to read such files into `R`. Let's create an object called `ces_raw` with the raw dataset.
+It's a nice standardized way to represent datasets, and fortunately for us, the `read_csv()` function allows us to read such files into `R`. Let's create an object called `ces_raw` from that raw dataset.
 
 ```{r}
 
@@ -77,7 +77,7 @@ ces_raw |>
   count(gender)
 ```
 
-Let's make this more readable. The codebook (available at the same site where you downloaded the data) says that 1 is male and 2 is female. We can create a new version of the gender column using the `mutate()` function.
+Let's make this more readable. The codebook (available at the same site where you downloaded the data) says that 1 is male and 2 is female. We can create a new version of the gender column using the `mutate()` and `if_else()` functions.
 
 ```{r}
 ces_clean <- ces_raw |> 
@@ -125,7 +125,7 @@ ces_clean |>
 
 Much better!
 
-Now there's a variable in CES called `birthyr`. What if we wanted to know the respondents age in 2020 instead? The `mutate()` function can help us here too.
+There's a variable in CES called `birthyr`. What if we wanted to know the respondents age in 2020 instead? The `mutate()` function can help us here too.
 
 ```{r}
 ces_clean |> 
@@ -140,18 +140,33 @@ ces_clean |>
 
 ### Joining Datasets
 
-Here's another messy thing about this dataset. Every respondent has a variable called `inputstate`, representing the state where they live.
+Here's another messy feature of this dataset. Every respondent has a variable called `inputstate`, representing the state where they live.
 
 ```{r}
 ces_clean |> 
   count(inputstate)
 ```
 
-But it's a number! A unique number representing each state called a FIPS code. Now I don't know all 51 state FIPS codes by heart, so these numbers aren't really helping me out. But I do have a dataset....
+But it's a number! Not, like, the actual name of the state, which would be more useful to me. I don't know all 51 state [FIPS codes](https://www.nrcs.usda.gov/wps/portal/nrcs/detail/?cid=nrcs143_013696) by heart, but fortunately I have a dataset that includes every state's name and FIPS code. 
 
+```{r}
+state_fips <- tidycensus::fips_codes |> 
+  mutate(inputstate = as.numeric(state_code)) |> 
+  select(inputstate, state_name) |> 
+  unique()
 
-TO BE COMPLETED
+head(state_fips)
+```
 
+And I can **join** that information with the CES data like this.
+
+```{r}
+ces_clean <- ces_clean |> 
+  left_join(state_fips, by = 'inputstate')
+
+ces_clean |> 
+  count(inputstate, state_name)
+```
 
 ### Selecting Variables
 
@@ -159,9 +174,29 @@ Finally, we can use the `select()` function to keep only the columns we want, an
 
 ```{r}
 ces_clean <- ces_clean |> 
-  select(caseid, gender, educ, age, state)
+  select(caseid, gender, educ, age, state_name)
+
+head(ces_clean)
+```
+
+And you can save your cleaned up version of the data to an .RData file with the `save()` function.
+
+```{r, eval=FALSE}
+save(ces_clean, file = 'data/ces-clean.RData')
 ```
 
 ## Problem Set
 
-TBD
+Just like last week, we're going to be summarizing different variables from the CES dataset. But this time, you'll need to use the codebook to identify which variables contain the information you want, tidy them up, and then summarize. Write an R script that performs these tasks, compile a PDF report, and submit the report.
+
+Here are the questions I'd like you to answer:
+
+1. Are labor union members more likely to be Democrats or Republicans?
+
+2. What is the median age of people with landline phones, compared to those who only have cell phones?
+
+3. Are people who read the newspaper more likely to correctly answer the questions about who controls the US House of Representatives and US Senate?
+
+4. Which religious groups are the most and least likely to support making abortion illegal in all circumstances?
+
+5. Pick one other variable you find interesting and describe it.
