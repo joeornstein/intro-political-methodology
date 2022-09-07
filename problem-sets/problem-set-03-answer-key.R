@@ -10,7 +10,7 @@
 library(tidyverse)
 library(here)
 
-ces_raw <- read_csv(here('data/raw/ces-2020/CES20_Common_OUTPUT_vv.csv'))
+ces_raw <- read_csv(here('data/raw/CES20_Common_OUTPUT_vv.csv'))
 
 
 ## Problem 1 ----------
@@ -90,3 +90,52 @@ ces_clean |>
                                             na.rm = TRUE) * 100,
             num_respondents = n()) |> 
   arrange(-pct_support_abortion_ban)
+
+
+
+## Problem 5: Homeownership by 2016 vote choice ---------------
+
+ces_clean |> 
+  mutate(presvote16post = case_when(presvote16post == 1 ~ 'Clinton',
+                                    presvote16post == 2 ~ 'Trump',
+                                    presvote16post == 3 ~ 'Johnson',
+                                    presvote16post == 4 ~ 'Stein',
+                                    presvote16post == 5 ~ 'McMullin',
+                                    presvote16post == 6 ~ 'Other',
+                                    presvote16post == 7 ~ 'Did not vote')) |> 
+  group_by(presvote16post) |> 
+  mutate(homeowner = as.numeric(ownhome == 1)) |> 
+  summarize(pct_homeowners = mean(homeowner, na.rm = TRUE),
+            num_respondents = n()) |> 
+  arrange(-pct_homeowners)
+
+
+## Family income and military surplus policy -----------
+
+ces_clean |> count(faminc_new)
+
+ces_clean |> count(CC20_334g)
+
+income_and_military_summary_table <- ces_clean |>
+  # remove the people who refused to give their income
+  filter(faminc_new != 97) |> 
+  group_by(partyid, faminc_new) |> 
+  mutate(support_ending_dod_program = as.numeric(CC20_334g == 1)) |> 
+  summarize(pct_support = mean(support_ending_dod_program, na.rm = TRUE),
+            num_respondents = n())
+
+
+# create a new object called p, p for plot
+p <- ggplot(data = income_and_military_summary_table,
+            mapping = aes(x = faminc_new,
+                          y = pct_support,
+                          color = partyid,
+                          size = num_respondents)) +
+  geom_point() +
+  geom_smooth(se = FALSE, method = 'lm') + 
+  labs(x = 'Family Income',
+       y = 'Percent Who Support Ending the DoD Policy') +
+  theme_minimal() +
+  scale_color_manual(values = c('cornflowerblue', 'gray', '#BA0C2F'))
+
+p
