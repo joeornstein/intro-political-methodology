@@ -81,7 +81,8 @@ ces_clean <- ces_clean |>
                               religpew == 10 ~ 'Agnostic',
                               religpew == 11 ~ 'Nothing in particular',
                               religpew == 12 ~ 'Something else')) |> 
-  mutate(abortion_illegal = if_else(CC20_332f == 1, 1, 0))
+  mutate(abortion_illegal = if_else(CC20_332f == 1, 1, 0)) |> 
+  mutate(pro_choice = if_else(CC20_332a == 1, 1, 0))
 
 ces_clean |> 
   filter(!is.na(religion)) |> 
@@ -90,6 +91,37 @@ ces_clean |>
                                             na.rm = TRUE) * 100,
             num_respondents = n()) |> 
   arrange(-pct_support_abortion_ban)
+
+
+ces_clean |> 
+  filter(!is.na(religion)) |> 
+  group_by(religion) |> 
+  summarize(pct_support_abortion_ban = mean(abortion_illegal,
+                                            na.rm = TRUE) * 100,
+            num_respondents = n()) |> 
+  arrange(-pct_support_abortion_ban) |> 
+  mutate(religion = fct_reorder(religion, pct_support_abortion_ban)) |> 
+  # pipe that summary dataframe directly into a ggplot object
+  ggplot(mapping = aes(y = religion,
+                       x = pct_support_abortion_ban,
+                       color = religion,
+                       fill = religion)) + 
+  geom_col()
+
+
+ces_clean |> 
+  filter(!is.na(religion)) |> 
+  group_by(religion) |> 
+  summarize(pct_pro_choice = mean(pro_choice,
+                                            na.rm = TRUE) * 100,
+            num_respondents = n()) |> 
+  mutate(religion = fct_reorder(religion, pct_pro_choice)) |> 
+  # pipe that summary dataframe directly into a ggplot object
+  ggplot(mapping = aes(y = religion,
+                       x = pct_pro_choice,
+                       color = religion,
+                       fill = religion)) + 
+  geom_col()
 
 
 
