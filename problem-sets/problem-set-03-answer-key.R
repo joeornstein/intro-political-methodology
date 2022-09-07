@@ -1,5 +1,6 @@
 #' ---
-#' Problem Set 3 Answer Key
+#' title: Problem Set 3 Answer Key
+#' author: Joe Ornstein
 #' date: 2022-09-07
 #' ---
 
@@ -7,8 +8,9 @@
 ## Load Packages and Data --------------
 
 library(tidyverse)
+library(here)
 
-ces_raw <- read_csv('data/raw/ces-2020/CES20_Common_OUTPUT_vv.csv')
+ces_raw <- read_csv(here('data/raw/ces-2020/CES20_Common_OUTPUT_vv.csv'))
 
 
 ## Problem 1 ----------
