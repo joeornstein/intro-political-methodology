@@ -3,7 +3,7 @@
   <head>
     <title>Week 8: Causal Inference</title>
     <meta charset="utf-8" />
-    <script src="08-causation_files/header-attrs-2.7/header-attrs.js"></script>
+    <script src="08-causation_files/header-attrs-2.14/header-attrs.js"></script>
     <link href="08-causation_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="08-causation_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
@@ -353,7 +353,7 @@ class: center, middle
 
 
 ```r
-dagify(M ~ X, Y ~ M) %&gt;% 
+dagify(M ~ X, Y ~ M) |&gt; 
   ggdag_classic() +
   theme_dag()
 ```
@@ -538,8 +538,8 @@ Should you condition by Trump approval?
 
 
 ```r
-ces %&gt;% 
-  group_by(educ) %&gt;% 
+ces |&gt; 
+  group_by(educ) |&gt; 
   summarize(pct_much_worse = sum(
     national_economy == 'Gotten much worse') / n() * 100)
 ```
@@ -564,10 +564,10 @@ Should you condition by Trump approval?
 
 
 ```r
-ces %&gt;% 
+ces |&gt; 
   filter(trump_approval %in% c('Strongly approve',
-                               'Somewhat approve')) %&gt;% 
-  group_by(educ) %&gt;% 
+                               'Somewhat approve')) |&gt; 
+  group_by(educ) |&gt; 
   summarize(pct_much_worse = sum(
     national_economy == 'Gotten much worse') / n() * 100)
 ```

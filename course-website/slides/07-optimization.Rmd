@@ -19,51 +19,6 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
                       message=FALSE, warning=FALSE, echo=FALSE)
 ```
 
-# The Linear Model is Everywhere
-
---
-
-- **OLS / Regression Analysis (POLS 7014)** = The Linear Model
-
-- **MLE / Logit / Probit / Count Models (POLS 8501)** = The Linear Model + another function
-
-- **t-tests** = The Linear Model + a binary predictor
-
-- **Instrumental Variables** = Two Linear Models
-
-- **Regression Discontinuity** = Two Linear Models
-
-- **Matching** = The Linear Model + Weights
-
-- **Fixed Effects / Random Effects** = The Linear Model + Categorical Predictor Variables
-
-- **Difference-in-differences** = The Linear Model + Time
-
---
-
-Statistical modeling can seem pretty daunting when you think about it as a bunch of tests with no obvious connections. Instead, let's build everything from the ground up...
-
----
-
-# Why Build Models?
-
---
-
-1. To *describe* complex data
-
---
-
-2. To make *predictions*
-
---
-
-3. To help infer *causality*
-
-???
-
-Up to now, we've been using visualization as our primary mode of inquiry. This is a great, and underrated, tool! But there are limits to what it can do for us. Models allow us to more precisely describe the relationships we can only see in a chart. They allow us to make predictions about unseen data. And, coupled with theory, they can help us uncover causal relationships.
-
----
 
 # The Linear Model
 
@@ -1101,6 +1056,53 @@ Some terminology:
 - $b$ in that final equation is called the **estimator**, or the **estimating equation**. It's the procedure we use to produce an estimate.
 
 ---
+
+# The Linear Model is Everywhere
+
+--
+
+- **OLS / Regression Analysis (POLS 7014)** = The Linear Model
+
+- **MLE / Logit / Probit / Count Models (POLS 8501)** = The Linear Model + another function
+
+- **t-tests** = The Linear Model + a binary predictor
+
+- **Instrumental Variables** = Two Linear Models
+
+- **Regression Discontinuity** = Two Linear Models
+
+- **Matching** = The Linear Model + Weights
+
+- **Fixed Effects / Random Effects / ANOVA** = The Linear Model + Categorical Predictor Variables
+
+- **Difference-in-differences** = The Linear Model + Time
+
+--
+
+Statistical modeling can seem pretty daunting when you think about it as a bunch of tests with no obvious connections. But fundamentally, the linear model is what unifies all these approaches...
+
+<!-- --- -->
+
+<!-- # Why Build Models? -->
+
+<!-- -- -->
+
+<!-- 1. To *describe* complex data -->
+
+<!-- -- -->
+
+<!-- 2. To make *predictions* -->
+
+<!-- -- -->
+
+<!-- 3. To help infer *causality* -->
+
+<!-- ??? -->
+
+<!-- Up to now, we've been using visualization as our primary mode of inquiry. This is a great, and underrated, tool! But there are limits to what it can do for us. Models allow us to more precisely describe the relationships we can only see in a chart. They allow us to make predictions about unseen data. And, coupled with theory, they can help us uncover causal relationships. -->
+
+---
+
 
 class: center, middle
 

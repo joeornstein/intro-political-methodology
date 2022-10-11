@@ -87,7 +87,7 @@ We'd like to know $Y_1$ - $Y_0$, the treated outcome minus the untreated outcome
 ## Causal Diagrams Help Make Sense of All This
 
 ```{r echo = FALSE, fig.width=12}
-dagify(Hospital ~ Severity, Death ~ Hospital + Severity) %>% 
+dagify(Hospital ~ Severity, Death ~ Hospital + Severity) |> 
   ggdag_classic() +
   theme_dag()
 ```
@@ -273,7 +273,7 @@ adjustmentSets(gnarly_dag, exposure = 'X', outcome = 'Y')
 What variables can you condition on to close the backdoor paths between $X$ and $Y$?
 
 ```{r echo=FALSE}
-dagify(Y ~ X + C, C ~ A + B, X ~ A + B, A ~ B) %>% 
+dagify(Y ~ X + C, C ~ A + B, X ~ A + B, A ~ B) |> 
   ggdag_classic() +
   theme_dag()
 ```
@@ -328,7 +328,7 @@ class: center, middle
 ## Mediators
 
 ```{r, out.width='400px'}
-dagify(M ~ X, Y ~ M) %>% 
+dagify(M ~ X, Y ~ M) |> 
   ggdag_classic() +
   theme_dag()
 ```
@@ -408,7 +408,7 @@ Conditioning on a mediator closes the path between treatment and outcome. This i
 But sometimes you may want to condition on a mediator -- for example, when you're performing a **mediation analysis** (Baron & Kenny, 1986). If conditioning on $M$ weakens the association between $X$ and $Y$, that lends support to your theory that it was a mediator!
 
 ```{r, echo = FALSE, fig.width=11}
-dagify(Confidence ~ Training, Job ~ Confidence + Training) %>% ggdag_classic() + theme_dag()
+dagify(Confidence ~ Training, Job ~ Confidence + Training) |> ggdag_classic() + theme_dag()
 ```
 
 --
@@ -450,7 +450,7 @@ Which is the better treatment?
 ## Simpson's Paradox
 
 ```{r echo = FALSE, fig.width=8}
-dagify(Treatment ~ Severity, Outcome ~ Treatment + Severity) %>% 
+dagify(Treatment ~ Severity, Outcome ~ Treatment + Severity) |> 
   ggdag_classic() +
   theme_dag()
 ```
@@ -462,7 +462,7 @@ dagify(Treatment ~ Severity, Outcome ~ Treatment + Severity) %>%
 Relatedly, it seems like hospitals cause death unless you condition on illness...
 
 ```{r echo = FALSE, fig.width=8}
-dagify(Hospital ~ Severity, Death ~ Hospital + Severity) %>% 
+dagify(Hospital ~ Severity, Death ~ Hospital + Severity) |> 
   ggdag_classic() +
   theme_dag()
 ```
@@ -490,10 +490,10 @@ So, was Berkeley discriminatory or not? Does being female cause your chances of 
 ```{r cleanup-ces, echo = FALSE}
 load('../../data/ces-2020/cleaned-CES.RData')
 
-ces <- ces %>% 
+ces <- ces |> 
   filter(!is.na(educ),
          !is.na(trump_approval),
-         !is.na(national_economy)) %>% 
+         !is.na(national_economy)) |> 
   # reorder factors
   mutate(educ = factor(educ,
                        levels = c('No HS', 'High school graduate', 'Some college', '2-year', '4-year', 'Post-grad')))
@@ -502,8 +502,8 @@ ces <- ces %>%
 Should you condition by Trump approval?
 
 ```{r ces-simpson-1}
-ces %>% 
-  group_by(educ) %>% 
+ces |> 
+  group_by(educ) |> 
   summarize(pct_much_worse = sum(
     national_economy == 'Gotten much worse') / n() * 100)
 ```
@@ -515,10 +515,10 @@ ces %>%
 Should you condition by Trump approval?
 
 ```{r}
-ces %>% 
+ces |> 
   filter(trump_approval %in% c('Strongly approve',
-                               'Somewhat approve')) %>% 
-  group_by(educ) %>% 
+                               'Somewhat approve')) |> 
+  group_by(educ) |> 
   summarize(pct_much_worse = sum(
     national_economy == 'Gotten much worse') / n() * 100)
 ```
@@ -600,7 +600,7 @@ p <- ggplot() +
              mapping = aes(x=verbal, y = math),
              alpha = 0.1) +
   # just the admitted points
-  geom_point(data = d %>% filter(admitted == 1),
+  geom_point(data = d |> filter(admitted == 1),
              mapping = aes(x=verbal, y = math),
              alpha = 0.7) +
   labs(x = 'SAT Verbal Score', y = 'SAT Math Score',

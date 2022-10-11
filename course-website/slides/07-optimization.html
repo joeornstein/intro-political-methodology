@@ -3,17 +3,17 @@
   <head>
     <title>Week 7: The Linear Model</title>
     <meta charset="utf-8" />
-    <script src="07-optimization_files/header-attrs-2.7/header-attrs.js"></script>
+    <script src="07-optimization_files/header-attrs-2.14/header-attrs.js"></script>
     <link href="07-optimization_files/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="07-optimization_files/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
-    <script src="07-optimization_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-    <script src="07-optimization_files/plotly-binding-4.9.2.1/plotly.js"></script>
+    <script src="07-optimization_files/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <script src="07-optimization_files/plotly-binding-4.10.0/plotly.js"></script>
     <script src="07-optimization_files/typedarray-0.1/typedarray.min.js"></script>
-    <script src="07-optimization_files/jquery-1.11.3/jquery.min.js"></script>
-    <link href="07-optimization_files/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
-    <script src="07-optimization_files/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
-    <link href="07-optimization_files/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
-    <script src="07-optimization_files/plotly-main-1.52.2/plotly-latest.min.js"></script>
+    <script src="07-optimization_files/jquery-3.5.1/jquery.min.js"></script>
+    <link href="07-optimization_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="07-optimization_files/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+    <link href="07-optimization_files/plotly-htmlwidgets-css-2.5.1/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="07-optimization_files/plotly-main-2.5.1/plotly-latest.min.js"></script>
   </head>
   <body>
     <textarea id="source">
@@ -26,51 +26,6 @@ class: center, middle, inverse, title-slide
 
 
 
-# The Linear Model is Everywhere
-
---
-
-- **OLS / Regression Analysis (POLS 7014)** = The Linear Model
-
-- **MLE / Logit / Probit / Count Models (POLS 8501)** = The Linear Model + another function
-
-- **t-tests** = The Linear Model + a binary predictor
-
-- **Instrumental Variables** = Two Linear Models
-
-- **Regression Discontinuity** = Two Linear Models
-
-- **Matching** = The Linear Model + Weights
-
-- **Fixed Effects / Random Effects** = The Linear Model + Categorical Predictor Variables
-
-- **Difference-in-differences** = The Linear Model + Time
-
---
-
-Statistical modeling can seem pretty daunting when you think about it as a bunch of tests with no obvious connections. Instead, let's build everything from the ground up...
-
----
-
-# Why Build Models?
-
---
-
-1. To *describe* complex data
-
---
-
-2. To make *predictions*
-
---
-
-3. To help infer *causality*
-
-???
-
-Up to now, we've been using visualization as our primary mode of inquiry. This is a great, and underrated, tool! But there are limits to what it can do for us. Models allow us to more precisely describe the relationships we can only see in a chart. They allow us to make predictions about unseen data. And, coupled with theory, they can help us uncover causal relationships.
-
----
 
 # The Linear Model
 
@@ -793,8 +748,8 @@ Intuitively, the `\(jd\)` term is an **interaction effect**. The effect of jelly
 
 `$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$`
 
-<div id="htmlwidget-325ee410ed09963fe0d8" style="width:600px;height:360px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-325ee410ed09963fe0d8">{"x":{"visdat":{"7b4c1a306e7b":["function () ","plotlyVisDat"]},"cur_data":"7b4c1a306e7b","attrs":{"7b4c1a306e7b":{"z":[[100,97.3333333333333,84,60],[107.86703601108,106.603878116343,94.67405355494,72.0775623268698],[114.626038781163,114.766389658356,104.240073868883,83.0470914127424],[120.277008310249,121.820867959372,112.698060941828,92.9085872576177],[124.819944598338,127.767313019391,120.048014773777,101.662049861496],[128.254847645429,132.605724838412,126.289935364728,109.307479224377],[130.581717451524,136.336103416436,131.423822714681,115.84487534626],[131.800554016621,138.958448753463,135.449676823638,121.274238227147],[131.91135734072,140.472760849492,138.367497691597,125.595567867036],[130.914127423823,140.879039704524,140.17728531856,128.808864265928],[128.808864265928,140.17728531856,140.879039704524,130.914127423823],[125.595567867036,138.367497691597,140.472760849492,131.91135734072],[121.274238227147,135.449676823638,138.958448753463,131.80055401662],[115.84487534626,131.423822714681,136.336103416436,130.581717451524],[109.307479224377,126.289935364728,132.605724838412,128.254847645429],[101.662049861496,120.048014773777,127.767313019391,124.819944598338],[92.9085872576177,112.698060941828,121.820867959372,120.277008310249],[83.0470914127424,104.240073868883,114.766389658356,114.626038781163],[72.0775623268698,94.67405355494,106.603878116343,107.86703601108],[60,84,97.3333333333333,100]],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"surface"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"Dr. Peppers"},"yaxis":{"title":"Jellybeans"},"zaxis":{"title":"Happiness"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666666","rgba(199,225,42,1)"],["0.958333333333334","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[[100,97.3333333333333,84,60],[107.86703601108,106.603878116343,94.67405355494,72.0775623268698],[114.626038781163,114.766389658356,104.240073868883,83.0470914127424],[120.277008310249,121.820867959372,112.698060941828,92.9085872576177],[124.819944598338,127.767313019391,120.048014773777,101.662049861496],[128.254847645429,132.605724838412,126.289935364728,109.307479224377],[130.581717451524,136.336103416436,131.423822714681,115.84487534626],[131.800554016621,138.958448753463,135.449676823638,121.274238227147],[131.91135734072,140.472760849492,138.367497691597,125.595567867036],[130.914127423823,140.879039704524,140.17728531856,128.808864265928],[128.808864265928,140.17728531856,140.879039704524,130.914127423823],[125.595567867036,138.367497691597,140.472760849492,131.91135734072],[121.274238227147,135.449676823638,138.958448753463,131.80055401662],[115.84487534626,131.423822714681,136.336103416436,130.581717451524],[109.307479224377,126.289935364728,132.605724838412,128.254847645429],[101.662049861496,120.048014773777,127.767313019391,124.819944598338],[92.9085872576177,112.698060941828,121.820867959372,120.277008310249],[83.0470914127424,104.240073868883,114.766389658356,114.626038781163],[72.0775623268698,94.67405355494,106.603878116343,107.86703601108],[60,84,97.3333333333333,100]],"type":"surface","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-cb579d23e38fb9167ca5" style="width:600px;height:360px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cb579d23e38fb9167ca5">{"x":{"visdat":{"1d6c7b044141":["function () ","plotlyVisDat"]},"cur_data":"1d6c7b044141","attrs":{"1d6c7b044141":{"z":[[100,97.3333333333333,84,60],[107.86703601108,106.603878116343,94.67405355494,72.0775623268698],[114.626038781163,114.766389658356,104.240073868883,83.0470914127424],[120.277008310249,121.820867959372,112.698060941828,92.9085872576177],[124.819944598338,127.767313019391,120.048014773777,101.662049861496],[128.254847645429,132.605724838412,126.289935364728,109.307479224377],[130.581717451524,136.336103416436,131.423822714681,115.84487534626],[131.800554016621,138.958448753463,135.449676823638,121.274238227147],[131.91135734072,140.472760849492,138.367497691597,125.595567867036],[130.914127423823,140.879039704524,140.17728531856,128.808864265928],[128.808864265928,140.17728531856,140.879039704524,130.914127423823],[125.595567867036,138.367497691597,140.472760849492,131.91135734072],[121.274238227147,135.449676823638,138.958448753463,131.80055401662],[115.84487534626,131.423822714681,136.336103416436,130.581717451524],[109.307479224377,126.289935364728,132.605724838412,128.254847645429],[101.662049861496,120.048014773777,127.767313019391,124.819944598338],[92.9085872576177,112.698060941828,121.820867959372,120.277008310249],[83.0470914127424,104.240073868883,114.766389658356,114.626038781163],[72.0775623268698,94.67405355494,106.603878116343,107.86703601108],[60,84,97.3333333333333,100]],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"surface"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"Dr. Peppers"},"yaxis":{"title":"Jellybeans"},"zaxis":{"title":"Happiness"}},"hovermode":"closest","showlegend":false,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"colorbar":{"title":"","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666666","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666666","rgba(199,225,42,1)"],["0.958333333333334","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[[100,97.3333333333333,84,60],[107.86703601108,106.603878116343,94.67405355494,72.0775623268698],[114.626038781163,114.766389658356,104.240073868883,83.0470914127424],[120.277008310249,121.820867959372,112.698060941828,92.9085872576177],[124.819944598338,127.767313019391,120.048014773777,101.662049861496],[128.254847645429,132.605724838412,126.289935364728,109.307479224377],[130.581717451524,136.336103416436,131.423822714681,115.84487534626],[131.800554016621,138.958448753463,135.449676823638,121.274238227147],[131.91135734072,140.472760849492,138.367497691597,125.595567867036],[130.914127423823,140.879039704524,140.17728531856,128.808864265928],[128.808864265928,140.17728531856,140.879039704524,130.914127423823],[125.595567867036,138.367497691597,140.472760849492,131.91135734072],[121.274238227147,135.449676823638,138.958448753463,131.80055401662],[115.84487534626,131.423822714681,136.336103416436,130.581717451524],[109.307479224377,126.289935364728,132.605724838412,128.254847645429],[101.662049861496,120.048014773777,127.767313019391,124.819944598338],[92.9085872576177,112.698060941828,121.820867959372,120.277008310249],[83.0470914127424,104.240073868883,114.766389658356,114.626038781163],[72.0775623268698,94.67405355494,106.603878116343,107.86703601108],[60,84,97.3333333333333,100]],"type":"surface","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 
 
 ---
@@ -862,6 +817,53 @@ Some terminology:
 - `\(b\)` in that final equation is called the **estimator**, or the **estimating equation**. It's the procedure we use to produce an estimate.
 
 ---
+
+# The Linear Model is Everywhere
+
+--
+
+- **OLS / Regression Analysis (POLS 7014)** = The Linear Model
+
+- **MLE / Logit / Probit / Count Models (POLS 8501)** = The Linear Model + another function
+
+- **t-tests** = The Linear Model + a binary predictor
+
+- **Instrumental Variables** = Two Linear Models
+
+- **Regression Discontinuity** = Two Linear Models
+
+- **Matching** = The Linear Model + Weights
+
+- **Fixed Effects / Random Effects / ANOVA** = The Linear Model + Categorical Predictor Variables
+
+- **Difference-in-differences** = The Linear Model + Time
+
+--
+
+Statistical modeling can seem pretty daunting when you think about it as a bunch of tests with no obvious connections. But fundamentally, the linear model is what unifies all these approaches...
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Why Build Models? --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- 1. To *describe* complex data --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- 2. To make *predictions* --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- 3. To help infer *causality* --&gt;
+
+&lt;!-- ??? --&gt;
+
+&lt;!-- Up to now, we've been using visualization as our primary mode of inquiry. This is a great, and underrated, tool! But there are limits to what it can do for us. Models allow us to more precisely describe the relationships we can only see in a chart. They allow us to make predictions about unseen data. And, coupled with theory, they can help us uncover causal relationships. --&gt;
+
+---
+
 
 class: center, middle
 
