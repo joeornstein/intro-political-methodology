@@ -668,7 +668,7 @@ ggdag_classic(dag) +
   theme_dag()
 ```
 
-Using `daggity` or pen-and-paper, identify which variable(s) you can condition on to recover the true causal effect of $X$ on $Y$. Then estimate it in `R`. Compare your estimate with the confounded estimate you get from `lm(Y~X)`.
+Using `dagitty` or pen-and-paper, identify which variable(s) you can condition on to recover the true causal effect of $X$ on $Y$. Then estimate it in `R`. Compare your estimate with the confounded estimate you get from `lm(Y~X)`.
 
 ---
 
