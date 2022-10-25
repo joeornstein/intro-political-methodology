@@ -245,7 +245,27 @@ $$
 \text{Standard Error} = \frac{\sigma}{\sqrt{n}}
 $$
 
-If the population distribution has higher variance, so will your sampling distribution, because you can draw a wider range of samples. And standard error decreases with the square root of n. If you quadruple your sample size, you cut standard error in half.
+For those interested in the derivation, it's in the footnotes.[^8]
+
+[^8]: The sample mean is the sum of your all your sample values $(X)$ divided by the sample size $(n)$.
+
+    $$\bar{X} = \frac{\sum{X_i}}{n}$$
+
+    The variance of that statistic is:
+
+    $$
+    \text{Var}(\bar{X}) = \text{Var}\left(\frac{\sum{X_i}}{n}\right)
+    $$
+
+    One property of variance is that $\text{Var}(ax) = a^2\text{Var}(X)$ for any constant $a$. If $\text{Var}(X_i) = \sigma^2$, then:
+
+    $$
+    \text{Var}\left(\frac{\sum{X_i}}{n}\right) = \frac{1}{n^2} (n\sigma) = \frac{\sigma^2}{n}
+    $$
+
+    The square root of that variance, $\frac{\sigma}{\sqrt{n}}$, is the standard error of th mean.
+
+If the population distribution has higher variance, so too will your sampling distribution, because you can draw a wider range of samples. And if you draw a larger sample, the variance of the sampling distribution decreases. More precisely, the standard error decreases with the square root of $n$. If you quadruple your sample size, you cut standard error in half.
 
 In the limit, as your sample size gets bigger and bigger, the standard error approaches (but never quite reaches) zero. This is the **Law of Large Numbers**. Bigger datasets mean more confidence in your estimate. Formally, we say that the sample mean *converges in probability* to its expected value.
 
@@ -255,8 +275,8 @@ Imagine we were interested in studying whether American men were more or less li
 
 1.  Load `data/ces-2020/cleaned-CES.RData`.
 2.  What percent of CES respondents support tariffs on China?
-3.  What is the difference between men and women in support for tariffs?
-4.  Write a function that draws a sample of 100 respondents and returns a sample estimate of the difference between men and women in support for tariffs.
-5.  Using that function, generate a sampling distribution for this difference-in-means.
+3.  What percent of women support tariffs on China? What percent of men support tariffs on China? What is the difference between these two values (aka the **difference in means**)?
+4.  Write a function that draws a sample of 100 respondents and returns a sample estimate of the difference between men and women's support for tariffs.
+5.  Using that function, generate a sampling distribution for this difference in means.
 6.  Plot your sampling distribution. Confirm that it is centered around the truth.
 7.  How far away from the truth can these sample estimates get? What is the maximum value? What is the minimum value? What is the standard deviation of the sampling distribution?

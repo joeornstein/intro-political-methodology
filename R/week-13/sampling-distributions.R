@@ -1,4 +1,6 @@
 
+library(tidyverse)
+
 # load the CES dataset
 load('data/ces-2020/cleaned-CES.RData')
 
@@ -16,7 +18,7 @@ sample_data <- slice_sample(ces, n = 100)
 mean(sample_data$tv_news_24h)
 
 # if we want to keep the randomness the same across runs
-set.seed(1)
+set.seed(42)
 
 # draw another sample estimate
 sample_data <- slice_sample(ces, n = 100)
@@ -88,19 +90,24 @@ sd(sampling_distribution)
 expected_value <- mean(sampling_distribution)
 standard_error <- sd(sampling_distribution)
 
-number_of_samples_within_1sd <- length(sampling_distribution[sampling_distribution < expected_value + standard_error &
-                               sampling_distribution > expected_value - standard_error])
-
-number_of_samples_within_1sd / 25000
+sampling_distribution |> 
+  tibble() |> 
+  summarize(samples_within_1sd = sum(sampling_distribution < expected_value + standard_error &
+                                       sampling_distribution > expected_value - standard_error),
+            pct_within_1sd = samples_within_1sd / n() * 100)
 
 # about 95% fall within 2 sd of the truth
-number_of_samples_within_2sd <- length(sampling_distribution[sampling_distribution < expected_value + 2*standard_error &
-                                                               sampling_distribution > expected_value - 2*standard_error])
+sampling_distribution |> 
+  tibble() |> 
+  summarize(samples_within_1sd = sum(sampling_distribution < expected_value + 2*standard_error &
+                                       sampling_distribution > expected_value - 2*standard_error),
+            pct_within_1sd = samples_within_1sd / n() * 100)
 
-number_of_samples_within_2sd / 25000
 
-# 3 standard deviations (99.7%)
-number_of_samples_within_3sd <- length(sampling_distribution[sampling_distribution < expected_value + 3*standard_error &
-                                                               sampling_distribution > expected_value - 3*standard_error])
+# and about 99.7% fall within 3 standard deviations
+sampling_distribution |> 
+  tibble() |> 
+  summarize(samples_within_1sd = sum(sampling_distribution < expected_value + 3 * standard_error &
+                                       sampling_distribution > expected_value - 3 * standard_error),
+            pct_within_1sd = samples_within_1sd / n() * 100)
 
-number_of_samples_within_3sd / 25000
