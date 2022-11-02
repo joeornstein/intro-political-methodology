@@ -17,6 +17,10 @@ lm(Y~X, data = d)
 lm(Y~ X + Q + U, data = d)
 
 
+d <- d |> 
+  select(-U, -R, -Q)
+
+
 
 ## Front Door Path
 
@@ -47,3 +51,8 @@ ggplot(data = d,
 # values for X and the outcome Y
 
 lm(Y ~ predicted_x, data = d)
+
+ggplot(data = d,
+       mapping = aes(x=predicted_x, y=Y)) + 
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE)
