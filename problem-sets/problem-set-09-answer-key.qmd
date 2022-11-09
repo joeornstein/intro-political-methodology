@@ -1,0 +1,106 @@
+---
+title: "Problem Set 9 (Answer Key)"
+format: pdf
+editor: visual
+
+message: false
+warning: false
+---
+
+## Problem 1
+
+We want to compute the Average Treatment Effect for a bunch of different subgroups.
+
+```{r}
+
+library(tidyverse)
+library(here)
+
+d <- read_csv( here('data/cohn-2019/behavioral data (csv file).csv') )
+
+
+```
+
+Average Treatment Effect for the Money condition:
+
+```{r}
+
+lm(response ~ cond,
+   data = d |> filter(cond %in% c(0,1)))
+
+```
+
+Now we want to estimate that ATE for different subgroups.
+
+```{r}
+
+
+# men
+lm(response ~ cond,
+   data = d |> filter(cond %in% c(0,1),
+                      male == 1))
+
+# women
+lm(response ~ cond,
+   data = d |> filter(cond %in% c(0,1),
+                      male == 0))
+
+
+# public institutions
+lm(response ~ cond,
+   data = d |> filter(cond %in% c(0,1),
+                      public == 1))
+
+
+# understood what the experimenter was asking
+lm(response ~ cond,
+   data = d |> filter(cond %in% c(0,1),
+                      understood_situation >= 3))
+
+lm(response ~ cond,
+   data = d |> filter(cond %in% c(0,1),
+                      understood_situation == 6))
+
+```
+
+## Problem 2
+
+We want to estimate the incumbency advantage/disadvantage in all the non-Brazil countries in the Klasnja & Titiunik dataset.
+
+```{r}
+
+# load the data
+d <- read_csv( here('data/klasnja-titiunik-2017/KlasnjaTitiunik-LAcountries-data.csv'))
+
+p <- ggplot(data = d |> filter(country != 'Brazil'), 
+              mapping = aes(x = mv_incumbent,
+                            y = post_winning_incumbent_unc)) +
+    stat_summary_bin(fun = 'mean', breaks = -100:100,
+                     geom = 'point', shape = 'square') +
+    geom_vline(xintercept = 0, color = 'red') +
+    theme_classic() +
+    labs(x = 'Incumbent Party Vote Margin at t',
+         y = 'Probability of Unconditional Victory t+1') +
+  facet_wrap(~country)
+  
+p
+
+```
+
+```{r}
+
+library(rdrobust)
+
+# estimate those incumbency advantage effects
+
+peru_data <- d |> 
+  filter(country == 'Peru')
+
+peru_rd <- rdrobust(x = peru_data$mv_incumbent,
+                    y = peru_data$post_winning_incumbent_unc,
+                    c = 0)
+
+summary(peru_rd)
+```
+
+You can do that for all of the countries to get the incumbency advantage estimates.
