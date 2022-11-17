@@ -8,11 +8,10 @@ library(tidyverse)
 
 load('data/ces-2020/cleaned-CES.RData')
 
-
 truth <- mean(ces$age)
 
 # draw sample
-sample_data <- ces %>% 
+sample_data <- ces |> 
   slice_sample(n = 10)
 
 # estimate
