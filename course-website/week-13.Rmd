@@ -35,8 +35,8 @@ Let's draw a sample and compute a confidence interval.
 ```{r}
 sample_size <- 100
 
-sample_ages <- ces %>% 
-  slice_sample(n = sample_size) %>% 
+sample_ages <- ces |> 
+  slice_sample(n = sample_size) |> 
   pull(age)
 
 estimate <- mean(sample_ages)
@@ -62,8 +62,8 @@ How small is too small? Well, try computing those confidence intervals again, bu
 ```{r}
 sample_size <- 10
 
-sample_ages <- ces %>% 
-  slice_sample(n = sample_size) %>% 
+sample_ages <- ces |> 
+  slice_sample(n = sample_size) |> 
   pull(age)
 
 estimate <- mean(sample_ages)
@@ -215,7 +215,7 @@ Let's close our discussion of hypothesis testing with some notes of caution. P-v
 
 ### 1. P-values and confidence intervals don't mean what most people think they mean
 
-When discussing the results of a hypothesis test, it is common even for knowledgeable researchers to slip into colloquial language, like "the p-value is 0.03, which means there's a 3% chance that the null hypothesis is true". Or "I'm 95% sure that the true value lies within this confidence interval". These interpretations *seem* sensible, but they're wrong in an important-to-understand way.
+When discussing the results of a hypothesis test, it is common even for knowledgeable researchers to slip into colloquial language, like "the p-value is 0.03, which means there's a 3% chance that the null hypothesis is true". Or "I'm 95% sure that the true value lies within this confidence interval". These interpretations *seem* sensible, but they're wrong in an important-to-understand way.
 
 A p-value tells us *the probability of the observing your statistic, conditional on the null hypothesis being true*. But that's a bit of a bait-and-switch, because it's not really the thing we want to know. Instead, we we want to know *the probability the null hypothesis is true, conditional on observing the statistic you did*. Fortunately, [Bayes Theorem](https://en.wikipedia.org/wiki/Bayes%27_theorem) tells us how to go from one conditional probability to the other.
 
@@ -243,17 +243,17 @@ Suppose 200 researchers each survey a random sample of 100 Americans to see if p
 load( here('data/ces-2020/cleaned-CES.RData') )
 
 # clean up the data
-ces <- ces %>% 
-  select(social_media_24h, assault_rifle_ban) %>% 
+ces <- ces |> 
+  select(social_media_24h, assault_rifle_ban) |> 
   # remove rows with missing data
-  na.omit %>% 
+  na.omit() |> 
   # convert to 0-1
   mutate(social_media_24h = as.numeric(social_media_24h == 'Yes'),
          assault_rifle_ban = as.numeric(assault_rifle_ban == 'Support'))
 
 # the true difference in the population
-ces %>% 
-  group_by(social_media_24h) %>% 
+ces |> 
+  group_by(social_media_24h) |> 
   summarize(pct_support_ban = mean(assault_rifle_ban))
 ```
 
@@ -261,11 +261,11 @@ The true difference is basically zero; social media users are 0.3% more likely t
 
 ```{r}
 results <- replicate(200,
-                     ces %>% 
-                       slice_sample(n = 100) %>% 
-                       lm(assault_rifle_ban ~ social_media_24h, data = .) %>% 
-                       coef %>% 
-                       last)
+                     ces |> 
+                       slice_sample(n = 100) |> 
+                       lm(assault_rifle_ban ~ social_media_24h, data = _) |> 
+                       coef() |> 
+                       last())
 
 p <- ggplot(mapping = aes(x=results)) + 
   geom_histogram(color = 'black') +
@@ -287,3 +287,49 @@ To make matters worse, @hauer2004 describes how the dominance of statistical sig
 Many scientists think the problem is that 0.05 is too high a threshold, and advocate using something like 0.005 instead [@benjamin2018]. With respect to the 72 authors of that paper I just cited (many of whom I deeply admire), my own preference is to abandon statistical significance rather than redefine it. Reducing the threshold to 0.005 solves neither the harms discussed by @hauer2004 nor the Type M distortions discussed by @gelman2014a. Those can only be solved by research transparency and human judgment.
 
 [![](img/significant.png){width="600"}](https://xkcd.com/882/)
+
+### 3. "Big Data" can be wildly misleading
+
+In November 2022, Elon Musk conducted the following Twitter poll.
+
+[![](img/musk-poll.png){width="500"}](https://twitter.com/elonmusk/status/1593767953706921985)
+
+With over 15 million votes, the poll estimated that 51.8% of Twitter users wanted Trump back on the platform. Let's put a 95% confidence interval around that estimate.
+
+```{r}
+
+# a bit over 15 million respondents
+n <- 15085458
+
+# here's that poll as a vector
+poll <- c(
+  rep(1, n * 0.518),
+  rep(0, n * 0.482)
+)
+
+
+# approximately normal sampling distribution,
+# mean = 51.8
+# standard error = sd / sqrt(n) 
+estimate <- mean(poll)
+sd <- sd(poll)
+se <- sd / sqrt(n)
+
+# the 95% confidence interval is plus/minus 1.96 standard errors
+confidence_interval <- c(
+  estimate - 1.96*se,
+  estimate + 1.96*se
+)
+
+confidence_interval
+```
+
+Our 95% confidence interval ranges from 51.77% to 51.83%. By the standards of the data we've been working with in class, this is an *incredibly* precise estimate! With giant sample sizes come teeny tiny standard errors.
+
+But, what does that actually mean? Does it mean we're 95% confident that somewhere between 51.77% and 51.83% of Twitter users support reinstating Donald Trump?
+
+Here's where insisting on the pedantic definition of confidence intervals really starts to come in handy. A confidence interval doesn't say "I'm 95% confident the value is in here". It says "if we draw a bunch of random samples from the population, then the confidence interval will contain the true value 95% of the time". But there's no reason to believe that Musk's poll is a random sample. Certain people were more likely than others to see and respond to the poll, and it's unlikely that the people who responded are perfectly representative of the population of Twitter users.
+
+What inferences can we make about the population using this sample? The surprising answer is...basically nothing! Because we have no way of knowing whether Trump supporters were more or less likely to answer Musk's poll (and by how much), even a sample size as large as 15 million doesn't permit us to make valid inferences beyond the sample. In fact, a truly random sample of 1,000 Twitter users would do a *much* better job estimating what the broader population thinks than this non-representative poll of 15 million.
+
+The key takeaway here is that data *quality* matters far more than data *quantity.* For more on this "Big Data Paradox", I highly recommend the @bradleyUnrepresentativeBigSurveys2021 paper on how surveys of millions of social media users wildly mis-estimated the COVID-19 vaccination rate, while a carefully-constructed random sample of 1,000 performed much better. For a more technical (but still delightful) description of the trouble with Big Data, see @mengStatisticalParadisesParadoxes2018.
