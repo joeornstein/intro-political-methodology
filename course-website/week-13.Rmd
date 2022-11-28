@@ -333,3 +333,5 @@ Here's where insisting on the pedantic definition of confidence intervals really
 What inferences can we make about the population using this sample? The surprising answer is...basically nothing! Because we have no way of knowing whether Trump supporters were more or less likely to answer Musk's poll (and by how much), even a sample size as large as 15 million doesn't permit us to make valid inferences beyond the sample. In fact, a truly random sample of 1,000 Twitter users would do a *much* better job estimating what the broader population thinks than this non-representative poll of 15 million.
 
 The key takeaway here is that data *quality* matters far more than data *quantity.* For more on this "Big Data Paradox", I highly recommend the @bradleyUnrepresentativeBigSurveys2021 paper on how surveys of millions of social media users wildly mis-estimated the COVID-19 vaccination rate, while a carefully-constructed random sample of 1,000 performed much better. For a more technical (but still delightful) description of the trouble with Big Data, see @mengStatisticalParadisesParadoxes2018.
+
+[![](img/selection_bias.png){width="300"}](https://xkcd.com/2618/)
