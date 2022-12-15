@@ -14,7 +14,7 @@ echo: true
 
 [^1]: Unlike the problem sets, this exam must be completed individually, without help from others.
 
-1.  Plot a histogram of the Spanish city population distribution in 2007. What is th mean, median, and standard deviation of the distribution? Why are the mean and median so different?
+1.  Plot a histogram of the Spanish city population distribution in 2007. What is the mean, median, and standard deviation of the distribution? Why are the mean and median so different?
 
 ```{r}
 library(tidyverse)
@@ -210,7 +210,7 @@ t.test(corr0711 ~ treated, data = d)
 
 The rate of corruption scandals in 2007-2011 does not seem to be significantly different between cities just barely above or below the threshold.
 
-11. What about the *change* in corruption scandals between the 2003-2007 period and the 2007-2011 period? Is that higher for cities just barely above or below the threshold?
+12. What about the *change* in corruption scandals between the 2003-2007 period and the 2007-2011 period? Is that higher for cities just barely above or below the threshold?
 
 ```{r}
 d |> 
@@ -220,7 +220,7 @@ d |>
 
 On both sides of the threshold there was a slight decrease in the share of cities with a corruption scandal, but that decrease was slightly larger (about 5 percentage points) in the cities with a gender quota.
 
-12. Re-estimate that difference-in-means using the local linear regression approach from the `rdrobust` package. What is the associated p-value and 95% confidence interval? Interpret the results.
+13. Re-estimate that difference-in-means using the local linear regression approach from the `rdrobust` package. What is the associated p-value and 95% confidence interval? Interpret the results.
 
 ```{r}
 library(rdrobust)
@@ -236,7 +236,7 @@ summary(rd)
 
 This estimate is much larger (about 23.3% difference between the groups), but the 95% confidence interval includes zero. This is a result that would not be surprising from sampling error alone if women had no effect on municipal corruption.
 
-13. **Optional Bonus Fun:** Create a chart that visualizes what's going on in the local linear regression analysis. Keep data points only within the bandwidth, with population on the x-axis, outcome on the y-axis, a vertical line at the threshold, and two linear models on either side. What's going on here?
+14. **Optional Bonus Fun:** Create a chart that visualizes what's going on in the local linear regression analysis. Keep data points only within the bandwidth, with population on the x-axis, outcome on the y-axis, a vertical line at the threshold, and two linear models on either side. What's going on here?
 
 ```{r}
 ggplot() +
