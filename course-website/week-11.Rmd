@@ -242,28 +242,12 @@ sd(sampling_distribution)
 This is a general fact about the standard error of the mean. If the population standard deviation equals $\sigma$, then
 
 $$
-\text{Standard Error} = \frac{\sigma}{\sqrt{n}}
+\text{Standard Error of the Mean} = \frac{\sigma}{\sqrt{n}}
 $$
 
 For those interested in the derivation, it's in the footnotes.[^8]
 
-[^8]: The sample mean is the sum of your all your sample values $(X)$ divided by the sample size $(n)$.
-
-    $$\bar{X} = \frac{\sum{X_i}}{n}$$
-
-    The variance of that statistic is:
-
-    $$
-    \text{Var}(\bar{X}) = \text{Var}\left(\frac{\sum{X_i}}{n}\right)
-    $$
-
-    One property of variance is that $\text{Var}(ax) = a^2\text{Var}(X)$ for any constant $a$. If $\text{Var}(X_i) = \sigma^2$, then:
-
-    $$
-    \text{Var}\left(\frac{\sum{X_i}}{n}\right) = \frac{1}{n^2} (n\sigma) = \frac{\sigma^2}{n}
-    $$
-
-    The square root of that variance, $\frac{\sigma}{\sqrt{n}}$, is the standard error of th mean.
+[^8]: The sample mean is the sum of your all your sample values $(X)$ divided by the sample size $(n)$. $\bar{X} = \frac{\sum{X_i}}{n}$. The variance of that statistic is $\text{Var}(\bar{X}) = \text{Var}\left(\frac{\sum{X_i}}{n}\right)$. One useful property of variance is that $\text{Var}(ax) = a^2\text{Var}(X)$ for any constant $a$. If $\text{Var}(X_i) = \sigma^2$, then $\text{Var}\left(\frac{\sum{X_i}}{n}\right) = \frac{1}{n^2} (n\sigma) = \frac{\sigma^2}{n}$. The square root of that variance, $\frac{\sigma}{\sqrt{n}}$, is the standard error of the mean.
 
 If the population distribution has higher variance, so too will your sampling distribution, because you can draw a wider range of samples. And if you draw a larger sample, the variance of the sampling distribution decreases. More precisely, the standard error decreases with the square root of $n$. If you quadruple your sample size, you cut standard error in half.
 
