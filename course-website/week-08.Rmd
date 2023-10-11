@@ -30,4 +30,4 @@ knitr::include_url('slides/08-causation.html')
 
 ## Problem Set
 
-Consider a research question you're interested in and draw a DAG to represent the web of relevant causal relationships - `R` or by hand are both acceptable. What are the backdoor paths between your treatment and outcome (i.e. alternative explanations)? What variables must you condition on to close them?
+In this problem set, you'll draw three DAGs -- with `R` or by hand, your choice. For each DAG, consider a relationship between two variables that you've previously discovered in data (an in-class exercise, problem set, or your midterm presentation). Do you think the relationship between these two variables is causal? If so, which is the treatment and which is the outcome? What are the backdoor paths between your treatment and outcome (i.e. alternative explanations)? What variables must you condition on to close those backdoor paths?

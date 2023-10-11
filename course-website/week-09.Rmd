@@ -16,8 +16,7 @@ library(tidyverse)
 
 - Rohrer, Julia M. [“Thinking Clearly About Correlations and Causation: Graphical Causal Models for Observational Data.”](papers/Rohrer - 2018 - Thinking Clearly About Correlations and Causation.pdf) *Advances in Methods and Practices in Psychological Science* 1:1 (2018): 27–42.
 
-
--   [Moore & Siegel](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618), Chapter 12. Ignore sections 12.3.6 and 12.3.7 on computing determinants and inverses by hand. We have computers that do that for us now.
+- [Moore & Siegel](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618), Chapter 12. Ignore sections 12.3.6 and 12.3.7 on computing determinants and inverses by hand. We have computers that do that for us now.
 
 ## Overview
 

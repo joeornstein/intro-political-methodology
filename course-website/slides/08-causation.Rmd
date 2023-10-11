@@ -27,7 +27,7 @@ knitr::opts_chunk$set(comment=NA, fig.width=7, fig.height=5,
 
 <br>
 
-### Last Week
+### Previously
 
 $Y = X\beta + \varepsilon$, and how to estimate the best $\beta$ using calculus.
 
@@ -92,13 +92,13 @@ dagify(Hospital ~ Severity, Death ~ Hospital + Severity) |>
   theme_dag()
 ```
 
-The relationship between hospitals and death is **confounded** by the severity of a person's illness. Unless we can hold severity constant, we won't be able to do a good job assessing whether hospitals are good for your health.
+The relationship between hospitals and death is **confounded** by the severity of a person's illness. Unless we can hold severity constant (aka **condition on** or **control for** severity), we can't confidently say whether hospitals are good for your health.
 
 ---
 
 # Drawing Causal Diagrams
 
-Today, we're going to draw some causal diagrams and use them to address this Fundamental Problem of Causal Inference. 
+Today, we're going to show how causal diagrams can help us think through the problem of identifying causal effects. These causal diagrams -- also known as **DAGs** (directed acyclic graphs) -- are a way of representing the relationships between a web of variables.
 
 ### Some Useful R Packages
 
@@ -112,14 +112,14 @@ library(ggdag)
 
 ---
 
-## Shapes to Recognize
+## Three Shapes to Recognize
+
+In this lecture, we'll introduce three ways in which a statistical relationship between X and Y can be **confounded**.
 
 <br>
 
-<br>
 
-
-![](img/elemental-confounds-mcelreath.png)
+![](img/three-elemental-confounds.png)
 ---
 
 class: center, middle
