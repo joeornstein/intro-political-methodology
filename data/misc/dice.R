@@ -31,6 +31,10 @@ library(readxl)
 
 avery_dice <- read_xlsx(here('data/misc/avery-dice.xlsx'))
 
+ggplot(data = avery_dice,
+       mapping = aes(x=roll)) +
+  geom_histogram()
+
 test_statistic <- mean(avery_dice$roll)
 num_rolls <- nrow(avery_dice)
 
