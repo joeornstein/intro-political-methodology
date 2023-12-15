@@ -112,10 +112,29 @@ d |>
 4.  [Scott Alexander](https://slatestarcodex.com/2013/04/12/noisy-poll-results-and-reptilian-muslim-climatologists-from-mars/) argues that 4% of Americans will say pretty much anything on a survey. That's the percent of survey respondents who report believing that "shape-shifting reptilian people control our world by taking on human form and gaining power" ([source](https://www.publicpolicypolling.com/wp-content/uploads/2017/09/PPP_Release_National_ConspiracyTheories_040213.pdf)). So my null hypothesis is that roughly 4% of Americans, through some combination of joking around and/or accidentally pressing the wrong button, will express complete agreement with any conspiracy theory. Is our result here consistent with that null hypothesis? Simulate a sampling distribution and compute a p-value.
 
 ```{r}
-# generate 10,000 random surveys (binomial distribution)
+# create a population where the null hypothesis is true
+null_america <- sample(c(0,1), 
+                       size = 1e6, 
+                       prob = c(0.96, 0.04),
+                       replace = TRUE)
+
+# here's a function to draw a sample from Null America and
+# count how many respondents are QAnon Believers
+get_sample_statistic <- function(n){
+  
+  this_sample <- sample(null_america, size = n, replace = FALSE)
+  
+  return(sum(this_sample))
+}
+
+get_sample_statistic(n = nrow(d))
+
+# now generate 10,000 random surveys from Null America
 num_samples <- 1e4
 
-sampling_distribution <- rbinom(n = num_samples, size = nrow(d), prob = 0.04)
+sampling_distribution <- replicate(num_samples,
+                                   get_sample_statistic(n = nrow(d)))
+
 
 hist(sampling_distribution)
 
@@ -123,6 +142,16 @@ sum(sampling_distribution >= 249) / num_samples
 ```
 
 *There is more support for QAnon than we would expect to observe due to sampling error alone from that null hypothesis. The Satan-worshipping pedophiles conspiracy theory has a statistically significantly larger number of adherents than the Lizardpeople conspiracy, though not by a large margin (it's a difference of roughly 1 percentage point).*
+
+```{r}
+# note that the binomial distribution function does the same thing, 
+# but faster
+sampling_distribution <- rbinom(n = num_samples, size = nrow(d), prob = 0.04)
+
+hist(sampling_distribution)
+
+sum(sampling_distribution >= 249) / num_samples
+```
 
 5.  Since QAnon is an Internet-based conspiracy theory, maybe it is more widespread among younger respondents. What is the average age of QAnon Believers? Is that higher or lower than the average age of everyone else in the survey? Perform a null hypothesis test and report the associated p-value.
 
