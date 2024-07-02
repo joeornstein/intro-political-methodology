@@ -94,6 +94,8 @@ morekeywords={__global__, __device__},  % CUDA specific keywords
 
 I intend for this class to be a very practical introduction to the mathematical and computational skills you'll need to conduct political science research. Throughout the semester, we will focus on building up the techniques that social scientists use to address the three fundamental problems of our discipline: measurement, causal inference, and prediction. And when we're done, you'll have the foundational skills you need to tackle the more advanced material that makes up the rest of the graduate methods sequence. % In Part 1 of the course (Discovery), you'll learn the programming skills you need to tidy, explore, and describe patterns in data. In Part 2 (Causality), you'll learn how to design research that convincingly distinguishes between correlation and causation. In Part 3 (Uncertainty), you'll learn the foundational statistical tools you need to communicate the uncertainty of your estimates and to generalize from samples to populations.
 
+%TODO Part 1 of the course is foundations, part 2 is getting our hands dirty
+
 % Data Trap
 \begin{figure}[h]
 	\centering
@@ -151,38 +153,31 @@ By the end of this course, you will be able to:
 
 \section*{Assignments \& Grading}
 
-Each week I will assign a problem set, due at noon the day of class. Your responses will be graded pass-fail (a passing problem set demonstrates a mastery of the concepts from that week's reading, even if there are a few mistakes in implementation). Feel free to work with your classmates, but please submit your answers individually. 70\% of your grade will come from these problem sets, and 15\% each from a midterm and final exam.
+Each week I will assign a problem set, due at noon the day of class. Your responses will be graded pass-fail (a passing problem set demonstrates a solid grasp of the concepts from that week's reading, even if there are some mistakes in implementation). Feel free to work with your classmates, but please submit your answers individually. 70\% of your grade will come from these problem sets, and 15\% each from a midterm and final exam.
 
 %\vskip.15in
 %\noindent\textbf{Office Hours:}
 \section*{Office Hours and Email Policy}
-I will be available for students to drop in and chat every Monday, Wednesday, and Friday afternoon from 1:30-3pm. My office is Baldwin 304C. If you send me an email, please allow me 24 hours to respond. Like many professors, my inbox is pretty overloaded. Also, I have small children, so it's my policy to not check email after 5pm or on weekends.
-
-You should also feel free to seek assistance from the senior graduate students staffing the SPIA Methods Helpdesk. You can email them questions at \href{mailto:spia-methods-help@uga.edu}{spia-methods-help@uga.edu}.
+I will be available for students to drop in and chat every Monday, Wednesday, and Friday afternoon from 1:30-3pm. My office is Baldwin 304C. If you send me an email, please allow me 24 hours to respond. Like many professors, my inbox is pretty overloaded. Also, I have small children, so it's my policy to not check email after 5pm or on weekends. You should feel free to seek assistance from the senior graduate students staffing the SPIA Methods Helpdesk. You can email them questions at \href{mailto:spia-methods-help@uga.edu}{spia-methods-help@uga.edu}.
 
 
 %\vskip.15in
 %\noindent\textbf{Textbook:} %\footnotemark
 \section*{Books}
-%All of the assigned readings for this class will be available free online (including a few of the textbooks listed below). However, if you're the sort of person that prefers reading hard copies, I recommend these books!
 
-\subsubsection*{First Half of the Course (Weeks 1-8):}
+Our readings will come from the two books listed below. The first book (DAFSS) must be purchased, but the second (R4DS) is freely available online.
+
+%All of the assigned readings for this class will be available free online (including a few of the textbooks listed below). However, if you're the sort of person that prefers reading hard copies, I recommend these books!
 
 \begin{itemize}
 
 %\item \href{https://www.amazon.com/Quantitative-Social-Science-Introduction-tidyverse/dp/0691222274}{Imai, Kosuke, and Nora Webb Williams (2022). \textit{Quantitative Social Science: An Introduction in Tidyverse}. Princeton: Princeton University Press.}
 
-\item \href{https://press.princeton.edu/books/paperback/9780691199436/data-analysis-for-social-science}{Llaudet, Elena \& Imai, Kosuke (2022). \textit{Data Analysis for Social Science: A Friendly and Practical Introduction}. Princeton University Press.}
+\item \textbf{DAFSS:}  \href{https://press.princeton.edu/books/paperback/9780691199436/data-analysis-for-social-science}{Llaudet, Elena \& Imai, Kosuke (2022). \textit{Data Analysis for Social Science: A Friendly and Practical Introduction}. Princeton University Press.}
 
-\end{itemize}
+\item \textbf{R4DS:} \href{https://r4ds.hadley.nz/}{Wickham, H., Cetinkaya-Rundel, M., \& Grolemund, G., (2023). \textit{R For Data Science: Import, Tidy, Transform, Visualize, and Model Data, 2nd Edition}. O'Reilly Media, Inc.}
 
-\subsubsection*{Second Half of the Course (Weeks 9-15):}
-
-\begin{itemize}
-
-\item \href{https://r4ds.hadley.nz/}{Wickham, H., Cetinkaya-Rundel, M., \& Grolemund, G., (2023). \textit{R For Data Science: Import, Tidy, Transform, Visualize, and Model Data, 2nd Edition}. O'Reilly Media, Inc.}
-
-%\item \href{https://ebookcentral.proquest.com/lib/ugalib/detail.action?pq-origsite=primo&docID=1205618}{Moore, Will H., and David A. Siegel. 2013. \textit{A Mathematics Course for Political and Social Research}. Princeton, NJ: Princeton University Pres.}
+%\item \textbf{M\&S:}  \href{https://ebookcentral.proquest.com/lib/ugalib/detail.action?pq-origsite=primo&docID=1205618}{Moore, Will H., and David A. Siegel. 2013. \textit{A Mathematics Course for Political and Social Research}. Princeton, NJ: Princeton University Press.}
 
 %\item \href{https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559}{Strogatz, Steven H. 2012. \textit{The Joy of X: A Guided Tour of Math, from One to Infinity}. Boston: Houghton Mifflin Harcourt.}
 
@@ -214,7 +209,7 @@ You should also feel free to seek assistance from the senior graduate students s
 %Chapter 1 \dotfill ~$\approx$ 3 days \\
 %{\color{darkgreen}{\Rectangle}} ~A little of probability theory and graph theory
 \subsubsection*{Week 1: Getting Started}
-\textit{Pre-Class Survey, Three Fundamental Problems of Scientific Inquiry, Setting Up R and RStudio}\\
+\textit{Introduction, The Three Fundamental Problems of Scientific Inquiry, Setting Up R and RStudio}\\
 \textbf{Reading Due}: None
 
 \subsubsection*{Week 2: Writing Code}
@@ -226,26 +221,60 @@ You should also feel free to seek assistance from the senior graduate students s
 \textbf{Reading Due}: DAFSS Chapter 2
 
 \subsubsection*{Week 4: Samples}
-\textit{Descriptive Statistics, Representative Samples, Distributions, Data Visualization}\\
+\textit{Descriptive Statistics, Representative Samples, Distributions, Basic Data Visualization}\\
 \textbf{Reading Due}: DAFSS Chapter 3
 
-\subsubsection*{Week 5: Visualization}
-\textit{ggplot2, Distributions, Correlations, Conditional Distributions}\\
-\textbf{Reading Due}: R4DS Chapter 1
-
-\subsubsection*{Week 6: Tidying Data}
-\textit{Importing, Merging, Data Wrangling}\\
-\textbf{Reading Due}: R4DS Chapter 3 and 19
-
-\subsubsection*{Week 7: Midterm Miniconference}
-
-\subsubsection*{Week 8: Prediction}
-\textit{The Linear Model, Logarithms}\\
+\subsubsection*{Week 5: The Linear Model}
+\textit{Regression, Logarithms, Prediction}\\
 \textbf{Reading Due}: DAFSS Chapter 4
 
-\subsubsection*{Week 9: Calculus}
-\textit{Derivatives, Optimization}\\
-\textbf{Reading Due}: Moore \& Siegel Chapter 5, Strogatz Chapter 17
+% This week we give the calculus lecture, just like normal, and the calculus problem set is due the week after.
+
+%\subsubsection*{Week 7: Calculus}
+%\textit{Derivatives, Optimization}\\
+%\textbf{Reading Due}: M\&S Chapter 5%, Strogatz Chapter 17
+
+\subsubsection*{Week 6: Causality}
+\textit{Confounders, Multiple Regression, Internal and External Validity}\\
+\textbf{Reading Due}: DAFSS Chapter 5
+
+% This week you can give the Matrix Algebra lecture....if you want?? But there's no problem set for it, and Michael says he doesn't need it, so honestly, forget about it!
+
+%\subsubsection*{Week 9: Matrix Algebra}
+%\textit{Vectors, Matrices, Matrix Inverse, Ordinary Least Squares}\\
+%\textbf{Reading Due}: M\&S Chapter 12 (ignore sections 12.3.6 and 12.3.7).
+
+\subsubsection*{Week 7: Probability}
+\textit{Sampling, Expected Value, Variance, Normal Distributions, Bernoulli Distributions, Central Limit Theorem, the Law of Large Numbers}\\
+\textbf{Reading Due}: DAFSS Chapter 6
+
+\subsubsection*{Week 8: Uncertainty}
+\textit{Sampling Distributions, Standard Errors, Hypothesis Testing, p-values, Confidence Intervals, Integrals, The Fundamental Theorem of Calculus}\\
+\textbf{Reading Due}: DAFSS Chapter 7
+
+% PART 2: Getting your hands dirty (applying the lessons from part 1 to real datasets / research projects)
+
+\subsubsection*{Week 9: Data Visualization}
+\textit{ggplot2, Exploration, Communication}\\
+\textbf{Reading Due}: R4DS Chapters 1-2
+
+\subsubsection*{Week 10: Data Transformation}
+\textit{Data Wrangling, Filtering, Summarizing, Code Style}\\
+\textbf{Reading Due}: R4DS Chapter 3-4, 12
+
+\subsubsection*{Week 11: Data Tidying}
+\textit{Pivoting, Scripts, and Projects}\\
+\textbf{Reading Due}: R4DS Chapter 5-6
+
+\subsubsection*{Week 12: Data Import \& Export}
+\textit{Pivoting, Scripts, and Projects}\\
+\textbf{Reading Due}: R4DS Chapter 7-8
+
+\subsubsection*{Week 13: Merging Datasets}
+\textit{Keys, Joins, Fuzzy Record Linkage}\\
+\textbf{Reading Due}: R4DS Chapter 19
+
+
 
 %\subsubsection*{Week 3: Tools for Reproducible Research}
 %\textit{Workflow, Documentation, File Structure, RMarkdown, \LaTeX, Zotero/Mendeley, \texttt{git} and GitHub}
@@ -258,26 +287,16 @@ You should also feel free to seek assistance from the senior graduate students s
 
 %\subsection*{PART 2: CAUSALITY}
 
-\subsubsection*{Week 10: Causality}
-\textit{Confounders, Multiple Regression, Internal and External Validity}\\
-\textbf{Reading Due}: DAFSS Chapter 5
 
-\subsubsection*{Week 11: Matrix Algebra}
-\textit{Vectors, Matrices, Matrix Inverse, Ordinary Least Squares}\\
-\textbf{Reading Due}: Moore \& Siegel Chapter 12 (ignore sections 12.3.6 and 12.3.7).
+
+
 
 %\subsubsection*{Week 10: Sneaking Through the Front Door}
 %\textit{Experiments, Instrumental Variables, Regression Discontinuity}
 
 %\subsection*{PART 3: UNCERTAINTY}
 
-\subsubsection*{Week 12: Probability}
-\textit{Sampling, Expected Value, Variance, Normal Distributions, Bernoulli Distributions, Central Limit Theorem, the Law of Large Numbers}\\
-\textbf{Reading Due}: DAFSS Chapter 6
 
-\subsubsection*{Weeks 13-14: Uncertainty}
-\textit{Sampling Distributions, Standard Errors, Hypothesis Testing, p-values, Confidence Intervals, Integrals, The Fundamental Theorem of Calculus}\\
-\textbf{Reading Due}: DAFSS Chapter 7
 
 
 %\subsubsection*{Week 10: Matrix Algebra and OLS}
@@ -295,9 +314,8 @@ You should also feel free to seek assistance from the senior graduate students s
 %\subsubsection*{Week 14: Bonus Week 3}
 %Possible Topics: \textit{Causal Inference, Text-As-Data, Big Data, Machine Learning, Networks, Spatial Data, \texttt{blogdown, bookdown}, Advanced Reproducible Research}
 
-\subsubsection*{Week 15: Wrap-Up}
+\subsubsection*{Weeks 14-15: Wrap Up}
 \textit{Review, Catchup, Bonus Topics, Final Exam}
-
 
 
 %\end{flushleft}
@@ -319,7 +337,7 @@ You should also feel free to seek assistance from the senior graduate students s
 
 
 \section*{Academic Honesty}
-Remember that when you joined the University of Georgia community, you agreed to abide by a code of conduct outlined in the academic honesty policy called \href{https://honesty.uga.edu/Academic-Honesty-Policy/Introduction/}{\textit{A Culture of Honesty}}. Problem sets may be completed in groups, but I expect your responses to be individual, and the midterm and final must be completed individually.
+Remember that when you joined the University of Georgia community, you agreed to abide by a code of conduct outlined in the academic honesty policy called \href{https://honesty.uga.edu/Academic-Honesty-Policy/Introduction/}{\textit{A Culture of Honesty}}. You may work on problem sets in groups, but I expect you to submit individual responses, and the midterm and final must be completed individually.
 
 \section*{Mental Health and Wellness Resources}
 
