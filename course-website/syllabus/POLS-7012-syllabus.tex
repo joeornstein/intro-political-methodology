@@ -90,9 +90,9 @@ morekeywords={__global__, __device__},  % CUDA specific keywords
 \renewcommand{\arraystretch}{2}
 
 
-\noindent So you want to be a political scientist? Cool! It's a fun and fulfilling profession. But before you can eat your cake, you need to eat your vegetables. In this analogy, cake is political science, and vegetables is math. Because modern political science is heavily quantitative, and in order to fruitfully engage with the ongoing scientific conversation, you will need to understand the language. 
+%\noindent So you want to be a political scientist? Cool! It's a fun and fulfilling profession. But before you can eat your cake, you need to eat your vegetables. In this analogy, cake is political science, and vegetables is math. Because modern political science is heavily quantitative, and in order to fruitfully engage with the ongoing scientific conversation, you will need to understand the language. 
 
-I intend for this class to be a very practical introduction to the mathematical and computational skills you'll need to conduct political science research. Throughout the semester, we will focus on building up the techniques that social scientists use to address the three fundamental problems of our discipline: measurement, causal inference, and prediction. And when we're done, you'll have the foundational skills you need to tackle the more advanced material that makes up the rest of the graduate methods sequence. % In Part 1 of the course (Discovery), you'll learn the programming skills you need to tidy, explore, and describe patterns in data. In Part 2 (Causality), you'll learn how to design research that convincingly distinguishes between correlation and causation. In Part 3 (Uncertainty), you'll learn the foundational statistical tools you need to communicate the uncertainty of your estimates and to generalize from samples to populations.
+\noindent This course will introduce the foundational mathematical and computational skills you will need to conduct political science research. During the first half of the semester (Part 1: Fundamentals), we focus on building up the techniques that social scientists use to address the three fundamental problems of our discipline: measurement, causal inference, and prediction. In Part 2 (Applications), we build on the skills in a series mini-research projects. And when we're done, you'll have the foundational skills you need to tackle the more advanced material that makes up the rest of the graduate methods sequence. % In Part 1 of the course (Discovery), you'll learn the programming skills you need to tidy, explore, and describe patterns in data. In Part 2 (Causality), you'll learn how to design research that convincingly distinguishes between correlation and causation. In Part 3 (Uncertainty), you'll learn the foundational statistical tools you need to communicate the uncertainty of your estimates and to generalize from samples to populations.
 
 %TODO Part 1 of the course is foundations, part 2 is getting our hands dirty
 
@@ -201,7 +201,7 @@ Our readings will come from the two books listed below. The first book (DAFSS) m
 
 %Moltke the Elder writes that no battle plan survives first contact with the enemy. This is doubly true for syllabi. We may need to be flexible, and deviate from the plan if some topics require more or less attention, or we think of something completely unexpected that we want to do, and it takes up a few weeks. Caveats aside, here is what I have planned! %I've built in some Bonus Weeks towards the end of the semester that we can use for catch up. If everything goes according to plan, then we can cover extra topics during those weeks by popular demand.
 
-%\subsection*{PART 1: DISCOVERY}
+\subsection*{\underline{PART 1: FUNDAMENTALS}}
 
 %\begin{center}
 %\begin{minipage}{6in}
@@ -209,24 +209,32 @@ Our readings will come from the two books listed below. The first book (DAFSS) m
 %Chapter 1 \dotfill ~$\approx$ 3 days \\
 %{\color{darkgreen}{\Rectangle}} ~A little of probability theory and graph theory
 \subsubsection*{Week 1: Getting Started}
-\textit{Introduction, The Three Fundamental Problems of Scientific Inquiry, Setting Up R and RStudio}\\
+\textit{Introductions, The Three Fundamental Problems of Scientific Inquiry}\\
 \textbf{Reading Due}: None
 
 \subsubsection*{Week 2: Writing Code}
-\textit{Tidy Datasets, Variables, Basic Programming}\\
+\textit{Setting Up R and RStudio, Tidy Datasets, Variables, Basic Programming}\\
 \textbf{Reading Due}: DAFSS Chapter 1
+
+% ADVANCED TOPIC: Quarto
 
 \subsubsection*{Week 3: Experiments}
 \textit{Causal Inference, Potential Outcomes, Randomization, Estimation}\\
 \textbf{Reading Due}: DAFSS Chapter 2
 
+% ADVANCED TOPIC: ???
+
 \subsubsection*{Week 4: Samples}
 \textit{Descriptive Statistics, Representative Samples, Distributions, Basic Data Visualization}\\
 \textbf{Reading Due}: DAFSS Chapter 3
 
+% ADVANCED TOPIC: Non-representative samples (big data paradox)
+
 \subsubsection*{Week 5: The Linear Model}
 \textit{Regression, Logarithms, Prediction}\\
 \textbf{Reading Due}: DAFSS Chapter 4
+
+% ADVANCED TOPIC:
 
 % This week we give the calculus lecture, just like normal, and the calculus problem set is due the week after.
 
@@ -245,32 +253,34 @@ Our readings will come from the two books listed below. The first book (DAFSS) m
 %\textbf{Reading Due}: M\&S Chapter 12 (ignore sections 12.3.6 and 12.3.7).
 
 \subsubsection*{Week 7: Probability}
-\textit{Sampling, Expected Value, Variance, Normal Distributions, Bernoulli Distributions, Central Limit Theorem, the Law of Large Numbers}\\
+\textit{Sampling Distributions, Expected Value, Variance, Normal Distributions, Bernoulli Distributions, Central Limit Theorem, Law of Large Numbers}\\
 \textbf{Reading Due}: DAFSS Chapter 6
 
 \subsubsection*{Week 8: Uncertainty}
-\textit{Sampling Distributions, Standard Errors, Hypothesis Testing, p-values, Confidence Intervals, Integrals, The Fundamental Theorem of Calculus}\\
+\textit{Hypothesis Testing, Confidence Intervals, Standard Errors, p-values,  Integrals, The Fundamental Theorem of Calculus}\\
 \textbf{Reading Due}: DAFSS Chapter 7
 
 % PART 2: Getting your hands dirty (applying the lessons from part 1 to real datasets / research projects)
 
-\subsubsection*{Week 9: Data Visualization}
+\subsection*{\underline{PART 2: APPLICATIONS}}
+
+\subsubsection*{Week 9: Visualize Your Data}
 \textit{ggplot2, Exploration, Communication}\\
 \textbf{Reading Due}: R4DS Chapters 1-2
 
-\subsubsection*{Week 10: Data Transformation}
+\subsubsection*{Week 10: Transform Your Data}
 \textit{Data Wrangling, Filtering, Summarizing, Code Style}\\
 \textbf{Reading Due}: R4DS Chapter 3-4, 12
 
-\subsubsection*{Week 11: Data Tidying}
+\subsubsection*{Week 11: Tidy Your Data}
 \textit{Pivoting, Scripts, and Projects}\\
 \textbf{Reading Due}: R4DS Chapter 5-6
 
-\subsubsection*{Week 12: Data Import \& Export}
+\subsubsection*{Week 12: Import \& Export Your Data}
 \textit{Pivoting, Scripts, and Projects}\\
 \textbf{Reading Due}: R4DS Chapter 7-8
 
-\subsubsection*{Week 13: Merging Datasets}
+\subsubsection*{Week 13: Merge Your Data}
 \textit{Keys, Joins, Fuzzy Record Linkage}\\
 \textbf{Reading Due}: R4DS Chapter 19
 
@@ -314,8 +324,8 @@ Our readings will come from the two books listed below. The first book (DAFSS) m
 %\subsubsection*{Week 14: Bonus Week 3}
 %Possible Topics: \textit{Causal Inference, Text-As-Data, Big Data, Machine Learning, Networks, Spatial Data, \texttt{blogdown, bookdown}, Advanced Reproducible Research}
 
-\subsubsection*{Weeks 14-15: Wrap Up}
-\textit{Review, Catchup, Bonus Topics, Final Exam}
+\subsubsection*{Weeks 14-15: Final Projects}
+\textit{Review, Catchup, Bonus Topics, Final Presentations}
 
 
 %\end{flushleft}
