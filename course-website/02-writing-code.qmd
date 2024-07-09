@@ -1,0 +1,14 @@
+---
+title: "Week 2: Writing Code"
+author: Joe Ornstein
+
+echo: true
+message: false
+warning: false
+---
+
+# Reading
+
+**DAFSS** Chapter 2
+
+# Problem Set

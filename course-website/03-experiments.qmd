@@ -1,0 +1,14 @@
+---
+title: "Week 3: Experiments"
+author: Joe Ornstein
+
+echo: true
+message: false
+warning: false
+---
+
+# Reading
+
+**DAFSS** Chapter 3
+
+# Problem Set

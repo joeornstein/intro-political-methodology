@@ -1,0 +1,51 @@
+---
+title: "Week 1: Introduction"
+author: Joe Ornstein
+
+echo: true
+message: false
+warning: false
+bibliography: references.bib
+---
+
+This week, we introduce the course and discuss three **Fundamental Problems of Scientific Inquiry**.
+
+# Reading
+
+*No reading due before our first class. See [Week 2](02-writing-code) for next week's reading.*
+
+# Problem Set
+
+*No problem set due before our first class. See [Week 2](02-writing-code.qmd) for next week's problem set.*
+
+# Class Notes
+
+Science
+
+## Measurement
+
+Scientific theories often involve concepts and ideas that we cannot observe directly with our senses. Political scientists in particular are interested in nebulous concepts like *democracy*, *polarization*, *freedom*, *ideology*, *representation*, *warfare*, *alliances*, and countless other ideas that lack clear, objective standards for categorization and measurement. But if we want to test our theories against evidence, we can't just , we need a consistent way to measure these concepts,
+
+"[I know it when I see it](https://en.wikipedia.org/wiki/I_know_it_when_I_see_it)" may be that . Even relatively straightforward concepts like require us to *ask human beings questions*, and
+
+[![](https://imgs.xkcd.com/comics/pain_rating.png)](https://xkcd.com/883/)
+
+## Causal Inference
+
+[![](https://imgs.xkcd.com/comics/correlation_2x.png){width="500"}](https://xkcd.com/552/)
+
+## Samples
+
+[![](https://imgs.xkcd.com/comics/selection_bias_2x.png){width="300"}](https://xkcd.com/2618/)
+
+One can think of these three fundamental problems as three different kinds of *missing data problems*---whether it's a latent characteristic, a counterfactual, or observations not included in your dataset---there is some information that we cannot observe directly, and we have to predict what it might be on the basis of the information we do observe.
+
+# Additional Resources
+
+-   @gelmanRegressionOtherStories2021 is a bit more advanced than the content we cover in POLS 7012, but chapters 1 and 2 helped motivate the "three challenges of statistics" ([website](https://avehtari.github.io/ROS-Examples/)).
+
+-   @berinskyMeasuringPublicOpinion2017 is a nice overview of the challenges of measuring public opinion using polls, emphasizing that *who we ask* and *what we ask* are equally important considerations.
+
+-   @bradleyUnrepresentativeBigSurveys2021 is a beautiful exploration of the "Paradox of Big Data", demonstrating why *large* samples are not necessarily *better* samples.
+
+-   See the [Rubin Causal Model](https://en.wikipedia.org/wiki/Rubin_causal_model) for a more detailed discussion of the potential outcomes framework and the Fundamental Problem of Causal Inference.

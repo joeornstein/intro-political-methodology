@@ -1,14 +1,36 @@
 project:
   type: website
+  output-dir: '../../../projects/joeornstein.github.io/pols-7012/'
+
+execute:
+  freeze: auto  # re-render only when source changes
 
 website:
-  title: "course-website"
+  title: "Introduction to Political Methodology"
+  favicon: img/favicon_io/favicon.ico
   navbar:
-    left:
+    background: '#BA0C2F'
+    # left:
+    #   - href: index.qmd
+    #     text: Home
+    #   - about.qmd
+    right: 
       - href: index.qmd
         text: Home
-      - about.qmd
-
+      - href: syllabus/POLS-7012-syllabus.pdf
+        text: "Syllabus"
+      - text: "Schedule"
+        menu: 
+          - 01-introduction.qmd
+          - 02-writing-code.qmd
+          - 03-experiments.qmd
+      - href: https://uga.view.usg.edu/d2l/home/3240411
+        icon: mortarboard-fill
+      - href: https://app.perusall.com/courses/introduction-to-political-methodology/
+        icon: book-fill
+      - href: https://github.com/joeornstein/intro-political-methodology
+        icon: github
+      
 format:
   html:
     theme: cosmo
