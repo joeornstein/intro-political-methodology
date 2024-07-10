@@ -8,7 +8,7 @@ warning: false
 bibliography: references.bib
 ---
 
-This week, we introduce the course and discuss three **Fundamental Problems of Scientific Inquiry**.
+This week, we introduce the course and discuss three **Fundamental Problems of Scientific Inquiry**, which will guide our thinking about data analysis this semester.
 
 # Reading
 
@@ -24,13 +24,21 @@ Science
 
 ## Measurement
 
-Scientific theories often involve concepts and ideas that we cannot observe directly with our senses. Political scientists in particular are interested in nebulous concepts like *democracy*, *polarization*, *freedom*, *ideology*, *representation*, *warfare*, *alliances*, and countless other ideas that lack clear, objective standards for categorization and measurement. But if we want to test our theories against evidence, we can't just , we need a consistent way to measure these concepts,
+Our theories about the world often involve concepts and ideas that we cannot observe directly with our senses. Political scientists in particular are interested in nebulous concepts---*democracy*, *polarization*, *freedom*, *ideology*, *representation*, *warfare*, *alliances*---ideas that are all quite sensible when described in words, but lack an obvious method for categorizing and measuring our observations. If we want to test our theories against evidence, we need ....
 
-"[I know it when I see it](https://en.wikipedia.org/wiki/I_know_it_when_I_see_it)" may be that . Even relatively straightforward concepts like require us to *ask human beings questions*, and
+clear, objective standards to categorize and measure these sorts of things.
+
+Even relatively straightforward concepts ... like require us to *ask human beings questions*, and
+
+Latent characteristics that we can't observe directly; instead we observe things like campaign contributions, and we use that to guess what...
 
 [![](https://imgs.xkcd.com/comics/pain_rating.png)](https://xkcd.com/883/)
 
 ## Causal Inference
+
+Often our theories attempt to *explain*
+
+Fundamentally involves a counterfactual claim. (*"If this country wasn't a democracy, it would be poorer."*) But we [can't observe counterfactuals](https://en.wikipedia.org/wiki/Rubin_causal_model). We only know what happened in *this* universe
 
 [![](https://imgs.xkcd.com/comics/correlation_2x.png){width="500"}](https://xkcd.com/552/)
 
@@ -38,7 +46,7 @@ Scientific theories often involve concepts and ideas that we cannot observe dire
 
 [![](https://imgs.xkcd.com/comics/selection_bias_2x.png){width="300"}](https://xkcd.com/2618/)
 
-One can think of these three fundamental problems as three different kinds of *missing data problems*---whether it's a latent characteristic, a counterfactual, or observations not included in your dataset---there is some information that we cannot observe directly, and we have to predict what it might be on the basis of the information we do observe.
+One can think of these three fundamental problems as three different kinds of *missing data problems*---whether it's a latent characteristic, a counterfactual, or observations not included in your dataset---there is some information that we do not observe directly, and so we have to predict what it might be on the basis of the information we do observe.
 
 # Additional Resources
 

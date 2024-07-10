@@ -7,11 +7,26 @@ author:
 date: today
 ---
 
-Welcome to our course website! You can find links to the course syllabus in the upper right, and schedule in the drop-down menu on the upper right, which includes each week's class notes and assignments. Please complete the assigned reading and problems set by noon before the class meets that week.
+Welcome to our course website! Here you can find links to everything you'll need this semester:
 
-There are a few other useful links in the The book icon in the upper right is a link to our class [Perusall](https://app.perusall.com/courses/introduction-to-political-methodology/) page.
+-   The course syllabus (this page or in [PDF](syllabus/POLS-7012-syllabus.pdf))
+
+-   Reading assignments, problem sets, and class notes can be found in the **Schedule** drop-down menu on the upper-right; click each link to access that week's content.
+
+```{=html}
+<!-- -->
+```
+-   Submit assignments at our course [eLC page](https://uga.view.usg.edu/d2l/home/3240411) (mortarboard icon in the upper right).
+
+-   You can read, annotate, and ask questions about each week's readings on our course [Perusall](https://app.perusall.com/courses/introduction-to-political-methodology/) page (book icon in the upper right).[^1]
+
+-   I will post code and data on the course [GitHub repository](https://github.com/joeornstein/intro-political-methodology) (the octocat icon in the upper right).
+
+[^1]: Visit eLC for the Perusall access code.
 
 # Syllabus
+
+This course will introduce the foundational mathematical and computational skills you will need to conduct and evaluate political science research. During the first half of the semester (Part 1: Fundamentals), we discuss the techniques that political scientists use to address three fundamental problems of scientific inquiry: measurement, causal inference, and sampling. In the second half of the semester (Part 2: Applications), we apply what we've learned to a series of miniature research projects, focusing on the practical computational skills you need to work with data. By the end of the semester, you will be armed with the necessary tools to tackle the more advanced material that makes up the rest of our graduate methods sequence.
 
 ## Course Objectives
 
@@ -25,17 +40,17 @@ By the end of this course, you will be able to:
 
 -   Build basic statistical models and estimate their parameters from data
 
--   Communicate the uncertainty around your estimates
+-   Communicate uncertainty around your estimates
 
--   Describe research designs that can credibly identify causation (not just correlation)
+-   Identify research designs that credibly address three fundamental challenges of social science: measurement, causal inference, and sampling.
 
 ## Assignments & Grading
 
-Each week I will assign a problem set, due at noon the day of class. Your responses will be graded pass-fail (a passing problem set demonstrates a solid grasp of the concepts from that week\'s reading, even if there are some mistakes in implementation). Feel free to work with your classmates, but please submit your answers individually. 70% of your grade will come from these problem sets, and 15% each from a midterm and final exam.
+Each week I will assign 1-2 chapters of reading and a problem set, both due at noon the day of class. Feel free to work collaboratively with your classmates on the problem sets, but please submit your answers individually. **Resist the temptation to copy-paste your classmates' code.** You are much more likely to learn if you type your responses yourself. 70% of your grade will come from these problem sets, and 15% each from a take-home midterm and final exam.
 
 ## Office Hours and Email Policy
 
-I will be available for students to drop in and chat every Monday, Wednesday, and Friday afternoon from 1:30-3pm. My office is Baldwin 304C. If you send me an email, please allow me 24 hours to respond. Like many professors, my inbox is pretty overloaded. Also, I have small children, so it\'s my policy to not check email after 5pm or on weekends. You should feel free to seek assistance from the senior graduate students staffing the SPIA Methods Helpdesk. You can email them questions at **spia-methods-help\@uga.edu**.
+I will be available for students to drop in and chat every Monday, Wednesday, and Friday afternoon from 1:30-3pm. My office is Baldwin 304C. If you send me an email, please allow me 24 hours to respond. Like many professors, my inbox is pretty overloaded. Also, I have small children, so it's my policy to not check email after 5pm or on weekends. You should feel free to seek assistance from the senior graduate students staffing the SPIA Methods Helpdesk. You can email them questions at **spia-methods-help\@uga.edu**.
 
 ## Books
 
@@ -43,4 +58,8 @@ Our readings will come from the two books listed below. The first book (DAFSS) m
 
 -   **DAFSS**: Llaudet, Elena & Imai, Kosuke (2022). [Data Analysis for Social Science: A Friendly and Practical Introduction](https://press.princeton.edu/books/paperback/9780691199436/data-analysis-for-social-science). Princeton University Press.
 
--   **R4DS**: Wickham, H., Cetinkaya-Rundel, M., & Grolemund, G., (2023). [R For Data Science: Import, Tidy, Transform, Visualize, and Model Data](https://r4ds.hadley.nz/), 2nd Edition. O\'Reilly Media, Inc.
+-   **R4DS**: Wickham, H., Cetinkaya-Rundel, M., & Grolemund, G., (2023). [R For Data Science: Import, Tidy, Transform, Visualize, and Model Data](https://r4ds.hadley.nz/), 2nd Edition. O'Reilly Media, Inc.
+
+## Schedule
+
+See the **Schedule** drop-down menu in the upper right for a complete list of each week's objectives, assignments, and class notes.
