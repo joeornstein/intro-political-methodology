@@ -20,7 +20,7 @@ This week, we introduce the course and discuss three **Fundamental Problems of S
 
 # Class Notes
 
-Science
+"Normal science" [@kuhnStructureScientificRevolutions1962] is an iterative process of (1) building theories about how the world works, (2) testing those theories against evidence, and (3) refining our theories in light of the evidence. This is all very hard work. Because the world inhabited by theory is all very tidy and knowable, while the world inhabited by humans is messy and full of unknowable things. Anyone who wants to test whether their theories are supported/refuted by evidence will quickly run into three **Fundamental Problems of Scientific Inquiry**. I call these problems *fundamental*, because they are each inherent to knowledge-building, and cannot be fully dispelled no matter how fancy one's mathematical toolkit. Let us consider each in turn.
 
 ## Measurement
 
