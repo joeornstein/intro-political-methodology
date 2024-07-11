@@ -20,17 +20,11 @@ This week, we introduce the course and discuss three **Fundamental Problems of S
 
 # Class Notes
 
-"Normal science" [@kuhnStructureScientificRevolutions1962] is an iterative process of (1) building theories about how the world works, (2) testing those theories against evidence, and (3) refining our theories in light of the evidence. This is all very hard work. Because the world inhabited by theory is all very tidy and knowable, while the world inhabited by humans is messy and full of unknowable things. Anyone who wants to test whether their theories are supported/refuted by evidence will quickly run into three **Fundamental Problems of Scientific Inquiry**. I call these problems *fundamental*, because they are each inherent to knowledge-building, and cannot be fully dispelled no matter how fancy one's mathematical toolkit. Let us consider each in turn.
+"Normal science" [@kuhnStructureScientificRevolutions1962] is an iterative process of (1) building theories about how the world works, (2) testing those theories against evidence, and (3) refining our theories in light of the evidence. This is all very hard work. Because the world of theory is all very tidy and knowable, while the world inhabited by humans is messy and full of unknowable things. Any scientist who wants to test their theories against evidence will quickly run into three **Fundamental Problems of Scientific Inquiry**. I call these problems *fundamental* because they are inherent to knowledge creation, and cannot be fully dispelled no matter how fancy one's mathematical toolkit. Let us consider each in turn.
 
 ## Measurement
 
-Our theories about the world often involve concepts and ideas that we cannot observe directly with our senses. Political scientists in particular are interested in nebulous concepts---*democracy*, *polarization*, *freedom*, *ideology*, *representation*, *warfare*, *alliances*---ideas that are all quite sensible when described in words, but lack an obvious method for categorizing and measuring our observations. If we want to test our theories against evidence, we need ....
-
-clear, objective standards to categorize and measure these sorts of things.
-
-Even relatively straightforward concepts ... like require us to *ask human beings questions*, and
-
-Latent characteristics that we can't observe directly; instead we observe things like campaign contributions, and we use that to guess what...
+Our theories about the world often involve concepts and ideas that we cannot observe directly with our senses. Political scientists in particular are interested in nebulous concepts---*democracy*, *polarization*, *freedom*, *ideology*, *representation*, *warfare*, *alliances*---ideas that are all quite sensible when described in words, but lack an obvious method for categorization and measurement in the real world. In statistical terminology, something like a person's ideology [@converseNatureBeliefSystems1964] is a **latent characteristic** that we cannot observe directly. Instead, we observe behaviors that we think are *influenced* by a person's ideology---whose campaign they donate to, how they respond to survey questions, how they vote on bills, etc.---and infer their ideology on the basis of those observed characteristics [@barberComparingCampaignFinance2021]. But these observable measures are always imperfect glimpses at the theoretical concepts we're trying to understand.
 
 [![](https://imgs.xkcd.com/comics/pain_rating.png)](https://xkcd.com/883/)
 
