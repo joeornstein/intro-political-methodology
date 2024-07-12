@@ -5,6 +5,7 @@ author: Joe Ornstein
 echo: true
 message: false
 warning: false
+bibliography: references.bib
 ---
 
 # Reading
@@ -14,3 +15,5 @@ warning: false
 # Class Notes
 
 # Additional Resources
+
+-   @huntington-kleinEffectIntroductionResearch2021, a friendly yet thorough introduction to causal inference with observational data (free version online [here](https://theeffectbook.net/)).

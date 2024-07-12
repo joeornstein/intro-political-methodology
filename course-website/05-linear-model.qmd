@@ -5,12 +5,47 @@ author: Joe Ornstein
 echo: true
 message: false
 warning: false
+bibliography: references.bib
 ---
+
+This week we introduce the **linear model**, the workhorse of empirical social science. By the end of this week, you will be able to:
+
+-   Fit a linear model in `R`, interpret the results, and use the fitted model to make predictions about unobserved data points.
+
+-   Determine when and how to compute logarithmic transformations of continuous variables.
+
+-   Use differential calculus to optimize functions, and explain the link between optimization and the least-squares estimator for the linear model.
 
 # Reading
 
+-   **DAFSS** Chapter 4
+
 # Problem Set
+
+\<The Butterfly Did It\> `florida.csv`
+
+4.  Predict counterfactual. Greater than the vote margin?
 
 # Class Notes
 
+\<Calculus Slides Go Here\>
+
 # Additional Resources
+
+*For more on the linear model:*
+
+-   @huntington-kleinEffectIntroductionResearch2021, chapter 4 (free version available [here](https://theeffectbook.net/ch-DescribingRelationships.html))
+
+-   @lindelovCommonStatisticalTests2019 explains how nearly every statistical test is just the linear model in disguise.
+
+*For more calculus resources:*
+
+-   @horstDerivativesSeries2020 explains derivatives with adorable illustrations
+
+-   @strogatzJoyGuidedTour2012, Chapters 17 and 18 (ebook available through the UGA library [here](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559))
+
+-   @mooreMathematicsCoursePolitical2013, Chapter 5 (ebook available through the UGA library [here](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618))
+
+*For more on the 2000 presidential election in Florida:*
+
+-   @wandButterflyDidIt2001

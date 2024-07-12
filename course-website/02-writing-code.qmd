@@ -20,23 +20,23 @@ This week we introduce the statistical software that we will use to work with da
 
 # Reading
 
-**DAFSS** Chapter 1
+-   **DAFSS** Chapter 1
 
 # Problem Set
 
 This week's problem set is designed to ensure that you have R and RStudio properly installed on your computer, and that you can write code that loads data, describes it, and performs a few basic analyses.
 
-We will analyze a dataset from an experiment conducted in Michigan in 2006 [@gerberSocialPressureVoter2008]. In that experiment, voters were randomly assigned to receive a postcard with a "social pressure" message, describing the recipient's voting history and the voting history of their neighbors. The dataset we will use is called "voting.csv", available [here](data/voting.csv). The following table shows the names and descriptions of the variables in the dataset.
+We will analyze a dataset from an experiment conducted in Michigan in 2006 [@gerberSocialPressureVoter2008]. In that experiment, voters were randomly assigned to receive a postcard with a "social pressure" message, describing the recipient's voting history and the voting history of their neighbors. The dataset we will use is called [voting.csv](data/voting.csv). The following table shows the names and descriptions of the variables in the dataset.
 
 | variable  | description                                                                                     |
-|-----------|-------------------------------------------------------------------------------------------------|
+|--------------|----------------------------------------------------------|
 | *birth*   | year of birth of registered voter                                                               |
 | *message* | whether the registered voter was assigned to receive the social pressure message: "yes" or "no" |
 | *voted*   | whether registered voter voted in the August 2006 election: 1=voted, 0=didn't vote              |
 
 Write an R script that performs the following analyses, in order. You can use comments in your script to respond to questions.
 
-1.  Download the [voting.csv](data/voting.csv) file and put it into your DSS folder. Read the dataset into R and save it as an object called `voting`. (10 points)
+1.  Download the [voting.csv](data/voting.csv) file (note: you can right click that link to save the file to your computer) and put it into your DSS folder. Read the dataset into R and save it as an object called `voting`. (10 points)
 
 2.  Use the function `head()` to view the first few observations of the dataset. (10 points)
 

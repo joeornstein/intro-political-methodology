@@ -5,7 +5,18 @@ author: Joe Ornstein
 echo: false
 message: false
 warning: false
+bibliography: references.bib
 ---
+
+Today we begin Part 2 of the semester. Our goal over the next few weeks is to train you to complete the entire data analysis pipeline: importing raw datasets, tidying them up, joining together information from multiple datasets, making sure everything is formatted correctly, performing statistical analyses, and, finally, communicating your results.
+
+We'll start by discussing data visualization, which is an essential tool at every step along that pipeline. Our brains are hardwired to detect patterns in images, and a well-crafted data visualization can take advantage of that fact to communicate lots of information about your data all at once. This makes visualization a particularly effective tool for communicating results to your audience.
+
+But don't think that visualization is just something you do at the end of the project when you're writing up the paper. Charts are a useful diagnostic tool as well, revealing patterns in data that summary statistics alone might miss, as the [Datasaurus Dozen](https://www.autodesk.com/research/publications/same-stats-different-graphs) artfully reveals…
+
+![](img/datasaurus-dozen.gif)
+
+This week, we dive deeper into building visualizations with the `ggplot2` package (a part of the `tidyverse`). It will take some time to learn all of the function syntax, so be patient with yourself. Once you get the hang of it, you’ll have an endlessly flexible tool for exploring and communicating patterns in your data.
 
 # Reading
 
@@ -13,7 +24,9 @@ warning: false
 
 # Problem Set
 
-1.  Recreate the following chart using the `voting.csv` dataset. (25 points)
+In a knitted R script or Quarto document, complete the following exercises.
+
+1.  Recreate the following chart using the [voting.csv](data/voting.csv) dataset. (25 points)
 
 ```{r}
 library(tidyverse)
@@ -39,7 +52,8 @@ ggplot(data = d,
        y = NULL)
 ```
 
-2.  Recreate the following chart using the `ANES.csv` dataset. (25 points) Don't forget the caption. Recreating the dashed vertical lines is worth a **bonus** 10 points.
+2.  Recreate the following chart using the [ANES.csv](data/ANES.csv) dataset. Don't forget the caption. (25 points) \
+    Recreating the dashed vertical lines is worth a **bonus** 10 points.
 
 ```{r}
 d <- read_csv('data/ANES.csv')
@@ -61,9 +75,9 @@ ggplot(data = d) +
   labs(x = 'Year',
        y = 'Turnout (%)',
        title = 'Bias in Self-Reported Voter Turnout',
-       caption = 'Note: Red points denote turnout estimated from ANES. Black points are the percent of Voting Eligible Population that turned out in that election.')
+       caption = 'Note: Red points show turnout estimated from ANES. Black points show actual turnout of Voting Eligible Population.')
 ```
 
-# Class Notes
-
 # Additional Resources
+
+-   Kieran Healy's data visualization textbook is a great step-by-step guide to the practical challenges of visualizing social science data using `ggplot` [@healyDataVisualizationPractical2018]; online version available [here](https://socviz.co/).

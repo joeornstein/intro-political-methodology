@@ -7,12 +7,24 @@ message: false
 warning: false
 ---
 
+This week we discuss the challenges involved in making inferences about a population based on an observed sample. By the end of this week, you will be able to:
+
+-   Describe the conditions under which a sample is representative of a population of interest, and the primary challenges involved in obtaining a representative sample.
+
+-   Compute and interpret a variety of summary statistics from data, including frequency tables, median, variance, standard deviation, covariance, and correlation coefficient.
+
+-   Produce basic data visualizations like histograms and scatter plots.
+
 # Reading
 
+-   **DAFSS** Chapter 3
+
 # Problem Set
+
+\<TBD\>
 
 # Class Notes
 
 # Additional Resources
 
--   [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/02_bellCurve.html): Intro to the Normal Distribution
+-   [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/02_bellCurve.html): Modules 2-5

@@ -14,3 +14,5 @@ warning: false
 # Class Notes
 
 # Additional Resources
+
+-   [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/06_standardError.html): Module 6 (Standard Error)
