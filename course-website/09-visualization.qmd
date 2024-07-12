@@ -2,14 +2,67 @@
 title: "Week 9: Data Visualization"
 author: Joe Ornstein
 
-echo: true
+echo: false
 message: false
 warning: false
 ---
 
 # Reading
 
+-   **R4DS** Chapters 1-2
+
 # Problem Set
+
+1.  Recreate the following chart using the `voting.csv` dataset. (25 points)
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+
+d <- read_csv('data/voting.csv')
+
+d$senior <- ifelse(d$birth < (2006-55), 
+                   'Age 55+',
+                   'Age < 55')
+
+d$voted <- ifelse(d$voted == 1,
+                  'Voted', 'Did Not Vote')
+
+ggplot(data = d,
+       mapping = aes(x = message,
+                     fill = as.factor(voted))) +
+  geom_bar(position = 'fill') +
+  facet_wrap(~senior) +
+  scale_fill_colorblind() +
+  labs(fill = NULL,
+       x = 'Received Social Pressure Message?',
+       y = NULL)
+```
+
+2.  Recreate the following chart using the `ANES.csv` dataset. (25 points) Don't forget the caption. Recreating the dashed vertical lines is worth a **bonus** 10 points.
+
+```{r}
+d <- read_csv('data/ANES.csv')
+
+d$midterm <- ifelse(d$midterm == 1, 
+                    'Midterm Elections',
+                    'Presidential Elections')
+
+ggplot(data = d) +
+  geom_linerange(mapping = aes(ymin = votes/VEP*100,
+                               ymax = ANES_turnout,
+                               x = year),
+                 linetype = 'dashed') +
+  geom_point(mapping = aes(x=year, y=ANES_turnout),
+             color = 'red') +
+  geom_point(mapping = aes(x=year, y=votes/VEP*100),
+             color = 'black') +
+  facet_wrap(~midterm) +
+  labs(x = 'Year',
+       y = 'Turnout (%)',
+       title = 'Bias in Self-Reported Voter Turnout',
+       caption = 'Note: Red points denote turnout estimated from ANES. Black points are the percent of Voting Eligible Population that turned out in that election.')
+```
 
 # Class Notes
 

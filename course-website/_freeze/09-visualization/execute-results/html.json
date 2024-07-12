@@ -1,0 +1,16 @@
+{
+  "hash": "00817542175c00c7a60b4bdfcf49a305",
+  "result": {
+    "markdown": "---\ntitle: \"Week 9: Data Visualization\"\nauthor: Joe Ornstein\n\necho: false\nmessage: false\nwarning: false\n---\n\n\n# Reading\n\n-   **R4DS** Chapters 1-2\n\n# Problem Set\n\n1.  Recreate the following chart using the `voting.csv` dataset. (25 points)\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](09-visualization_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::\n\n\n2.  Recreate the following chart using the `ANES.csv` dataset. (25 points) Don't forget the caption. Recreating the dashed vertical lines is worth a **bonus** 10 points.\n\n\n::: {.cell}\n::: {.cell-output-display}\n![](09-visualization_files/figure-html/unnamed-chunk-2-1.png){width=672}\n:::\n:::\n\n\n# Class Notes\n\n# Additional Resources\n",
+    "supporting": [
+      "09-visualization_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
