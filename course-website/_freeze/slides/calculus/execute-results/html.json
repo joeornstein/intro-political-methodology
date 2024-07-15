@@ -1,0 +1,18 @@
+{
+  "hash": "43f64dc2f979fcc6c6e31cb89947546d",
+  "result": {
+    "markdown": "---\ntitle: \"Calculus (Just The Essentials)\"\nformat: \n  revealjs:\n    incremental: true\neditor: visual\necho: true\ncache: true\n---\n\n\n## The Linear Model\n\n\n::: {.cell hash='calculus_cache/revealjs/unnamed-chunk-1_d630c81eed04d8d5cba913baad298d80'}\n\n```{.r .cell-code}\nd <- read.csv('grades.csv')\n\nplot(d$midterm, d$final,\n     xlab = 'Midterm Grade',\n     ylab = 'Final Grade')\n```\n\n::: {.cell-output-display}\n![](calculus_files/figure-revealjs/unnamed-chunk-1-1.png){width=960}\n:::\n:::\n\n\n## The Linear Model\n\n\n::: {.cell hash='calculus_cache/revealjs/unnamed-chunk-2_d889dd24ba5fdd3299f8c66dd8c95ed3'}\n\n```{.r .cell-code}\nm <- lm(final ~ midterm, data = d)\n\n\nabline(a = m$coefficients['(Intercept)'],\n       b = m$coefficients['midterm'])\n```\n:::\n\n::: {.cell hash='calculus_cache/revealjs/unnamed-chunk-3_b77b4303aceeb9e9b888f71b1988fcb4'}\n::: {.cell-output-display}\n![](calculus_files/figure-revealjs/unnamed-chunk-3-1.png){width=960}\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-after-body": [
+        "\r\n<script>\r\n  // htmlwidgets need to know to resize themselves when slides are shown/hidden.\r\n  // Fire the \"slideenter\" event (handled by htmlwidgets.js) when the current\r\n  // slide changes (different for each slide format).\r\n  (function () {\r\n    // dispatch for htmlwidgets\r\n    function fireSlideEnter() {\r\n      const event = window.document.createEvent(\"Event\");\r\n      event.initEvent(\"slideenter\", true, true);\r\n      window.document.dispatchEvent(event);\r\n    }\r\n\r\n    function fireSlideChanged(previousSlide, currentSlide) {\r\n      fireSlideEnter();\r\n\r\n      // dispatch for shiny\r\n      if (window.jQuery) {\r\n        if (previousSlide) {\r\n          window.jQuery(previousSlide).trigger(\"hidden\");\r\n        }\r\n        if (currentSlide) {\r\n          window.jQuery(currentSlide).trigger(\"shown\");\r\n        }\r\n      }\r\n    }\r\n\r\n    // hookup for slidy\r\n    if (window.w3c_slidy) {\r\n      window.w3c_slidy.add_observer(function (slide_num) {\r\n        // slide_num starts at position 1\r\n        fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);\r\n      });\r\n    }\r\n\r\n  })();\r\n</script>\r\n\r\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,43 @@
+---
+title: "Calculus (Just The Essentials)"
+format: 
+  revealjs:
+    incremental: true
+editor: visual
+echo: true
+cache: true
+---
+
+## The Linear Model
+
+```{r}
+d <- read.csv('grades.csv')
+
+plot(d$midterm, d$final,
+     xlab = 'Midterm Grade',
+     ylab = 'Final Grade')
+```
+
+## The Linear Model
+
+```{r}
+#| eval: FALSE
+m <- lm(final ~ midterm, data = d)
+
+
+abline(a = m$coefficients['(Intercept)'],
+       b = m$coefficients['midterm'])
+```
+
+```{r}
+#| echo: FALSE
+m <- lm(final ~ midterm, data = d)
+
+plot(d$midterm, d$final,
+     xlab = 'Midterm Grade',
+     ylab = 'Final Grade')
+
+abline(a = m$coefficients['(Intercept)'],
+       b = m$coefficients['midterm'])
+
+```
