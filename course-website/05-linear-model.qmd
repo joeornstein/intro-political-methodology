@@ -37,12 +37,7 @@ For this problem set, you'll be analyzing the [florida.csv](data/florida.csv) da
 
 # Class Notes
 
-For this calculus demonstration, we'll use the [grades.csv](data/grades.csv) dataset:
-
-```{r}
-#| echo: FALSE
-knitr::include_url('slisdes/calculus.html')
-```
+-   [Slides](slides/calculus.html)
 
 # Additional Resources
 

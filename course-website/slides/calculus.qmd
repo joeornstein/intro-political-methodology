@@ -10,11 +10,19 @@ cache: true
 
 ## The Linear Model
 
+For this demonstration, download the [grades.csv](grades.csv) dataset.
+
 ```{r}
 d <- read.csv('grades.csv')
 
-plot(d$midterm, d$final,
-     xlab = 'Midterm Grade',
+head(d)
+```
+
+## The Linear Model
+
+```{r}
+plot(d$midterm, d$final, 
+     xlab = 'Midterm Grade', 
      ylab = 'Final Grade')
 ```
 
@@ -24,9 +32,7 @@ plot(d$midterm, d$final,
 #| eval: FALSE
 m <- lm(final ~ midterm, data = d)
 
-
-abline(a = m$coefficients['(Intercept)'],
-       b = m$coefficients['midterm'])
+abline(a = m$coefficients['(Intercept)'], b = m$coefficients['midterm'])
 ```
 
 ```{r}
@@ -39,5 +45,148 @@ plot(d$midterm, d$final,
 
 abline(a = m$coefficients['(Intercept)'],
        b = m$coefficients['midterm'])
+```
 
+## The Linear Model
+
+$$
+y_i = \alpha + \beta x_i + \varepsilon_i
+$$
+
+```{r}
+#| echo: FALSE
+
+plot(d$midterm, d$final,
+     xlab = 'Midterm Grade',
+     ylab = 'Final Grade')
+
+abline(a = m$coefficients['(Intercept)'],
+       b = m$coefficients['midterm'])
+```
+
+## The Linear Model
+
+Partitioning the outcome into two parts---the part we can explain, and the part we're ignoring:
+
+$$
+\underbrace{y_i}_\text{outcome} = \underbrace{\alpha + \beta x_i}_\text{explained} + \underbrace{\varepsilon_i}_\text{unexplained}
+$$
+
+## The Linear Model
+
+Partitioning the outcome into two parts---the part we can explain, and the part we're ignoring:
+
+$$
+\underbrace{y_i}_\text{outcome} = \overbrace{\alpha}^\text{intercept parameter} + \beta x_i + \varepsilon_i
+$$
+
+## The Linear Model
+
+Partitioning the outcome into two parts---the part we can explain, and the part we're ignoring:
+
+$$
+\underbrace{y_i}_\text{outcome} = \overbrace{\alpha}^\text{intercept parameter} + \underbrace{\beta}_\text{slope parameter} x_i + \varepsilon_i
+$$
+
+## The Linear Model
+
+Partitioning the outcome into two parts---the part we can explain, and the part we're ignoring:
+
+$$
+\underbrace{y_i}_\text{outcome} = \overbrace{\alpha}^\text{intercept parameter} + \underbrace{\beta}_\text{slope parameter} \overbrace{x_i}^\text{explanatory variable} + \varepsilon_i
+$$
+
+## The Linear Model
+
+Partitioning the outcome into two parts---the part we can explain, and the part we're ignoring:
+
+$$
+\underbrace{y_i}_\text{outcome} = \overbrace{\alpha}^\text{intercept parameter} + \underbrace{\beta}_\text{slope parameter} \overbrace{x_i}^\text{explanatory variable} + \underbrace{\varepsilon_i}_\text{prediction error}
+$$
+
+. . .
+
+But where do the $\alpha$ and $\beta$ values come from? How do we estimate the "line of best fit"?
+
+## An Optimization Problem
+
+We want to find values for $\alpha$ and $\beta$ that *minimize* the sum of squared error.
+
+. . .
+
+```{r}
+sse <- function(a,b){
+  y <- d$final # outcome
+  x <- d$midterm # explanatory variable
+  
+  predicted_y <- a + b*x
+  
+  squared_error <- (y - predicted_y)^2 
+  
+  return( sum(squared_error) )
+}
+```
+
+## An Optimization Problem
+
+```{r}
+plot(d$midterm, d$final,
+     xlab = 'Midterm Grade', ylab = 'Final Grade')
+
+abline(a = 10, b = 0.5) # too shallow
+```
+
+```{r}
+sse(a = 10, b = 0.5)
+```
+
+## An Optimization Problem
+
+```{r}
+plot(d$midterm, d$final,      
+     xlab = 'Midterm Grade', ylab = 'Final Grade')  
+
+abline(a = 5, b = 1) # too steep!
+```
+
+```{r}
+sse(a = 5, b = 1)
+```
+
+## An Optimization Problem
+
+We could keep hunting blindly for values $\hat{\alpha}$ and $\hat{\beta}$ that minimize the sum of squared errors, or we could take a more systematic approach...
+
+$$
+\text{SSE} = \sum_{i=1}^n(y_i - \hat{\alpha} - \hat{\beta}x_i)^2
+$$
+
+## An Optimization Problem
+
+$\text{SSE} = \sum_{i=1}^n(y_i - \hat{\alpha} - \hat{\beta}x_i)^2$
+
+```{r}
+#| echo: FALSE
+library(plotly)
+
+# thanks: https://www.datamentor.io/r-programming/3d-plot/
+
+f <- Vectorize(sse, c('a','b'))
+
+a <- seq(-10,2, length= 100)
+b <- seq(0.7, 1.3, length = 100)
+
+SSE <- outer(a, b, f)
+
+p <- plot_ly(z = ~SSE,
+             x = ~b,
+             y = ~a, 
+             type = "surface") |> 
+  layout(
+    scene = list(
+      xaxis = list(title = "b"),
+      yaxis = list(title = "a"),
+      zaxis = list(title = "SSE")
+    ))
+p
 ```
