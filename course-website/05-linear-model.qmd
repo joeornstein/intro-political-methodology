@@ -14,7 +14,7 @@ This week we introduce the **linear model**, the workhorse of empirical social s
 
 -   Determine when and how to compute logarithmic transformations of continuous variables.
 
--   Use differential calculus to optimize functions, and explain the link between optimization and the least-squares estimator for the linear model.
+-   Use differential calculus to optimize functions, and explain the link between optimization and the least-squares estimator.
 
 # Reading
 
@@ -33,11 +33,13 @@ For this problem set, you'll be analyzing the [florida.csv](data/florida.csv) da
 5.  Plot the raw data and the fitted linear model. Does anything stand out in the chart? (10 points)
 6.  Remove the county with the largest prediction error, and fit a new linear model with that county omitted. What is the $R^2$ value of this new model? (10 points)
 7.  How many votes would you have predicted the Reform candidate to receive in that county in 2000, based on the second linear model you fit? (10 points)
-8.  **Bonus.** What's going on here? If you're not familiar with the context of this election, you may need to do a little research. Write up your conclusions in a brief (1 page) report, and render the problem set as a Quarto PDF. (10 points)
+8.  **Bonus.** What's going on here? If you're not familiar with the context of this election, you may need to do a little research. Write up your conclusions in a brief report (a few paragraphs), and include it with the problem set rendered as a Quarto PDF. (10 points)
 
 # Class Notes
 
--   [Slides](slides/calculus.html)
+In class, we will discuss differential calculus and how it can be applied to the problem of fitting a linear model to data.
+
+Access the [slides](slides/calculus.html) here.
 
 # Additional Resources
 

@@ -1,5 +1,6 @@
 ---
-title: "Calculus (Just The Essentials)"
+title: "Calculus Essentials"
+subtitle: "Derivatives & Optimization"
 format: 
   revealjs:
     incremental: true
@@ -30,7 +31,7 @@ plot(d$midterm, d$final,
 
 ```{r}
 #| eval: FALSE
-m <- lm(final ~ midterm, data = d)
+m <- lm(final ~ midterm, data = d) # predict final grade from midterm grade
 
 abline(a = m$coefficients['(Intercept)'], b = m$coefficients['midterm'])
 ```
@@ -121,9 +122,9 @@ sse <- function(a,b){
   
   predicted_y <- a + b*x
   
-  squared_error <- (y - predicted_y)^2 
+  error <- y - predicted_y
   
-  return( sum(squared_error) )
+  return( sum(error^2) )
 }
 ```
 
@@ -146,24 +147,26 @@ sse(a = 10, b = 0.5)
 plot(d$midterm, d$final,      
      xlab = 'Midterm Grade', ylab = 'Final Grade')  
 
-abline(a = 5, b = 1) # too steep!
+abline(a = 0, b = 1.2) # too steep!
 ```
 
 ```{r}
-sse(a = 5, b = 1)
+sse(a = 0, b = 1.2)
 ```
 
 ## An Optimization Problem
 
-We could keep hunting blindly for values $\hat{\alpha}$ and $\hat{\beta}$ that minimize the sum of squared errors, or we could take a more systematic approach...
+We could keep hunting blindly for values $\alpha$ and $\beta$ that minimize the sum of squared errors, or we could take a more systematic approach...
+
+. . .
 
 $$
-\text{SSE} = \sum_{i=1}^n(y_i - \hat{\alpha} - \hat{\beta}x_i)^2
+\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2
 $$
 
 ## An Optimization Problem
 
-$\text{SSE} = \sum_{i=1}^n(y_i - \hat{\alpha} - \hat{\beta}x_i)^2$
+$\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2$
 
 ```{r}
 #| echo: FALSE
@@ -173,8 +176,8 @@ library(plotly)
 
 f <- Vectorize(sse, c('a','b'))
 
-a <- seq(-10,2, length= 100)
-b <- seq(0.7, 1.3, length = 100)
+a <- seq(-10,10, length= 100)
+b <- seq(0.7, 1.2, length = 100)
 
 SSE <- outer(a, b, f)
 
@@ -188,5 +191,247 @@ p <- plot_ly(z = ~SSE,
       yaxis = list(title = "a"),
       zaxis = list(title = "SSE")
     ))
+p
+```
+
+. . .
+
+Imagine dropping a ball on this surface. The ball will roll until it reaches a perfectly flat point: the function's **minimum**.
+
+## Review: Slopes
+
+What is the **slope** of this function? $f(x) = 3x + 2$
+
+```{r}
+#| echo: FALSE
+x <- -2:2
+y <- 3*x + 2
+
+plot(x,y,type = 'l')
+```
+
+. . .
+
+The slope of a linear function (a straight line) is measured by how much $y$ increases when you increase $x$ by $1$. In this case, $3$.
+
+## Review: Slopes
+
+Find the slope of each function:
+
+-   $y = 2x + 4$
+
+-   $f(x) = \frac{1}{2}x - 2$
+
+-   life expectancy (years) = 18.09359 + 5.737335 $\times$ log(GDP per capita)
+
+. . .
+
+Slope of a line $= \frac{rise}{run} = \frac{\Delta Y}{\Delta X} = \frac{f(x+h) - f(x)}{h}$
+
+::: notes
+Finding the slope of a line is *easy*.
+
+Just wanted you to get comfortable with that last expression, because we'll be see it again in a moment.
+
+<https://smartech.gatech.edu/bitstream/handle/1853/56031/effect_of_gdp_per_capita_on_national_life_expectancy.pdf>
+:::
+
+## Nonlinear Functions
+
+```{r}
+#| echo: FALSE
+
+library(tidyverse)
+arbitrary_polynomial <- function(x){
+  return((x-1)*(x+2)*(x-3)*(x+4)*(x-4))
+ # return(x^5 + 3*x^4 - 2*x^3 + 5*x^2 - 6*x + 2)
+}
+
+#TODO: Set the interval really small when you're ready to publish
+x <- seq(-4,4,0.1) #0.0001
+y <- arbitrary_polynomial(x)
+
+p <- ggplot(data = tibble(x,y)) +
+  geom_line(aes(x=x,y=y),size=1) +
+  xlab('x') + ylab('y') +
+  theme_minimal(base_size = 16)
+  
+p + 
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0)
+```
+
+. . .
+
+Nonlinear functions are confusing and scary...
+
+::: notes
+Nonlinear functions are confusing and scary. Sometimes the slope is positive. Sometimes it's negative. Sometimes it's zero. And unlike with linear functions, just looking at the formula gives you no indication what the slope is at any point.
+:::
+
+## Newton & Leibniz
+
+::: columns
+::: {.column width="55%"}
+![](img/newton.png)
+:::
+
+::: {.column width="45%"}
+![](img/leibniz.jpg)
+:::
+:::
+
+::: notes
+Developed/Discovered: - The theory of universal gravitation - Three Laws of Motion - The Nature of Light - And, as a side project so he'd have mathematical notation for those other projects, he created calculus
+
+NB: Newton did some of his best work while stuck at home during an epidemic. So, you know, get to it.
+
+Also invented calculus, but with better notation. A philosophical optimist who believed we lived in the "best of all possible worlds", a sentiment parodied by Voltaire, and perhaps belied by the fact that Newton took all the credit for inventing calculus.
+:::
+
+## The Key Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+. . .
+
+```{r}
+#| echo: FALSE
+p +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0)
+```
+
+## The Key Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+```{r}
+#| echo: FALSE
+
+# Add first rectangle
+p + 
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_rect(aes(xmin=1.2, xmax=1.75, ymin=25, ymax=50), fill = NA, 
+            color="black", alpha=0.5) 
+```
+
+## The Key Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+```{r}
+#| echo: FALSE
+
+# Zoom into first rectangle
+p + scale_x_continuous(limits = c(1.2, 1.75)) +
+  scale_y_continuous(limits = c(25, 50)) +
+  geom_rect(aes(xmin=1.2, xmax=1.75, ymin=25, ymax=50), fill = NA, 
+            color="black", alpha=0.5) 
+```
+
+## The Key Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+```{r}
+#| echo: FALSE
+
+# Add second rectangle
+p + scale_x_continuous(limits = c(1.2, 1.75)) +
+  scale_y_continuous(limits = c(25, 50)) +
+  geom_rect(aes(xmin=1.425, xmax=1.525, ymin=32.5, ymax=37.5), fill = NA, 
+            color="black", alpha=0.5) 
+```
+
+## The Key Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+```{r}
+#| echo: FALSE
+
+# Zoom into second rectangle
+p + scale_x_continuous(limits = c(1.425, 1.525)) +
+  scale_y_continuous(limits = c(32.5, 37.5)) +
+  geom_rect(aes(xmin=1.425, xmax=1.525, ymin=32.5, ymax=37.5), fill = NA, 
+            color="black", alpha=0.5)
+
+```
+
+## The Key Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+```{r}
+#| echo: FALSE
+
+# Add third rectangle
+p + scale_x_continuous(limits = c(1.425, 1.525)) +
+  scale_y_continuous(limits = c(32.5, 37.5)) +
+  geom_rect(aes(xmin=1.4775, xmax=1.4875, ymin=35, ymax=35.5), fill = NA, 
+            color="black", alpha=0.5) 
+
+```
+
+## The Key Insight
+
+Any curve becomes a straight line if you "zoom in" far enough.
+
+```{r}
+#| echo: FALSE
+
+# Zoom to third rectangle
+p + scale_x_continuous(limits = c(1.4775, 1.4875)) +
+  scale_y_continuous(limits = c(35, 35.5)) +
+  geom_rect(aes(xmin=1.4775, xmax=1.4875, ymin=35, ymax=35.5), fill = NA, 
+            color="black", alpha=0.5) 
+```
+
+. . .
+
+It's basically a straight line! And finding the slope of a straight line is easy...
+
+::: notes
+The point is that, in the limit, as you shrink the interval smaller and smaller (infinitesimally small), the function is better and better approximated by a straight line. And we already know the slope of a straight line, so the problem is solved! (That line is called the tangent line FYI.)
+:::
+
+## The Key Insight
+
+![](img/enhance.gif){width="1000"}
+
+::: notes
+<https://knowyourmeme.com/memes/zoom-and-enhance>
+:::
+
+## Next Week...
+
+We finally have the tools we need to find the values of $\alpha$ and $\beta$ that minimize this function:
+
+$\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2$
+
+```{r}
+#| echo: FALSE 
+library(plotly)  
+# thanks: https://www.datamentor.io/r-programming/3d-plot/  
+f <- Vectorize(sse, c('a','b'))
+
+# a <- seq(-30,10, length= 100)
+# b <- seq(0, 2, length = 100)
+a <- seq(-10,10, length= 100)
+b <- seq(0.7, 1.2, length = 100)
+SSE <- outer(a, b, f)  
+
+p <- plot_ly(z = ~SSE,             
+             x = ~b,     
+             y = ~a,         
+             type = "surface") |> 
+  layout(  
+    scene = list(   
+      xaxis = list(title = "b"),   
+      yaxis = list(title = "a"),     
+      zaxis = list(title = "SSE")  
+      ))
 p
 ```
