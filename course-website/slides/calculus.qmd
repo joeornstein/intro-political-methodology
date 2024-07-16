@@ -170,6 +170,7 @@ $\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2$
 
 ```{r}
 #| echo: FALSE
+#| out-width: 80%
 library(plotly)
 
 # thanks: https://www.datamentor.io/r-programming/3d-plot/
@@ -272,11 +273,11 @@ Nonlinear functions are confusing and scary. Sometimes the slope is positive. So
 ## Newton & Leibniz
 
 ::: columns
-::: {.column width="55%"}
+::: {.column width="51%"}
 ![](img/newton.png)
 :::
 
-::: {.column width="45%"}
+::: {.column width="49%"}
 ![](img/leibniz.jpg)
 :::
 :::
@@ -299,7 +300,8 @@ Any curve becomes a straight line if you "zoom in" far enough.
 #| echo: FALSE
 p +
   geom_hline(yintercept = 0) +
-  geom_vline(xintercept = 0)
+  geom_vline(xintercept = 0) +
+  theme_minimal(base_size = 16)
 ```
 
 ## The Key Insight
@@ -314,7 +316,8 @@ p +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 0) +
   geom_rect(aes(xmin=1.2, xmax=1.75, ymin=25, ymax=50), fill = NA, 
-            color="black", alpha=0.5) 
+            color="black", alpha=0.5)  +
+  theme_minimal(base_size = 16)
 ```
 
 ## The Key Insight
@@ -328,7 +331,8 @@ Any curve becomes a straight line if you "zoom in" far enough.
 p + scale_x_continuous(limits = c(1.2, 1.75)) +
   scale_y_continuous(limits = c(25, 50)) +
   geom_rect(aes(xmin=1.2, xmax=1.75, ymin=25, ymax=50), fill = NA, 
-            color="black", alpha=0.5) 
+            color="black", alpha=0.5) +
+  theme_minimal(base_size = 16) 
 ```
 
 ## The Key Insight
@@ -342,7 +346,8 @@ Any curve becomes a straight line if you "zoom in" far enough.
 p + scale_x_continuous(limits = c(1.2, 1.75)) +
   scale_y_continuous(limits = c(25, 50)) +
   geom_rect(aes(xmin=1.425, xmax=1.525, ymin=32.5, ymax=37.5), fill = NA, 
-            color="black", alpha=0.5) 
+            color="black", alpha=0.5) +
+  theme_minimal(base_size = 16) 
 ```
 
 ## The Key Insight
@@ -356,7 +361,8 @@ Any curve becomes a straight line if you "zoom in" far enough.
 p + scale_x_continuous(limits = c(1.425, 1.525)) +
   scale_y_continuous(limits = c(32.5, 37.5)) +
   geom_rect(aes(xmin=1.425, xmax=1.525, ymin=32.5, ymax=37.5), fill = NA, 
-            color="black", alpha=0.5)
+            color="black", alpha=0.5) +
+  theme_minimal(base_size = 16)
 
 ```
 
@@ -371,7 +377,8 @@ Any curve becomes a straight line if you "zoom in" far enough.
 p + scale_x_continuous(limits = c(1.425, 1.525)) +
   scale_y_continuous(limits = c(32.5, 37.5)) +
   geom_rect(aes(xmin=1.4775, xmax=1.4875, ymin=35, ymax=35.5), fill = NA, 
-            color="black", alpha=0.5) 
+            color="black", alpha=0.5) +
+  theme_minimal(base_size = 16) 
 
 ```
 
@@ -386,12 +393,9 @@ Any curve becomes a straight line if you "zoom in" far enough.
 p + scale_x_continuous(limits = c(1.4775, 1.4875)) +
   scale_y_continuous(limits = c(35, 35.5)) +
   geom_rect(aes(xmin=1.4775, xmax=1.4875, ymin=35, ymax=35.5), fill = NA, 
-            color="black", alpha=0.5) 
+            color="black", alpha=0.5) +
+  theme_minimal(base_size = 16) 
 ```
-
-. . .
-
-It's basically a straight line! And finding the slope of a straight line is easy...
 
 ::: notes
 The point is that, in the limit, as you shrink the interval smaller and smaller (infinitesimally small), the function is better and better approximated by a straight line. And we already know the slope of a straight line, so the problem is solved! (That line is called the tangent line FYI.)
@@ -405,6 +409,562 @@ The point is that, in the limit, as you shrink the interval smaller and smaller 
 <https://knowyourmeme.com/memes/zoom-and-enhance>
 :::
 
+## Putting all that into math...
+
+$$
+f'(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}
+$$
+
+## Putting all that into math...
+
+$$
+f'(x) = \underbrace{\lim_{h \to 0}}_\text{shrink h really small}\frac{\overbrace{f(x+h)-f(x)}^\text{the change in y}}{\underbrace{h}_\text{the change in x}}
+$$
+
+. . .
+
+This is called the **derivative** of a function. Using the derivative, you can find the slope at *any point*.
+
+## Derivative Example
+
+Let $f(x) = 2x + 3$. What is $f'(x)$?
+
+. . .
+
+$$
+f'(x) =  \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}
+$$
+
+. . .
+
+$$
+= \lim_{h \to 0}\frac{2(x+h)+3-(2x+3)}{h}
+$$
+
+. . .
+
+$$
+= \lim_{h \to 0}\frac{2x+2h+3-(2x+3)}{h}
+$$
+
+## Derivative Example
+
+Let $f(x) = 2x + 3$. What is $f'(x)$?
+
+$$ = \lim_{h \to 0}\frac{2x+2h+3-(2x+3)}{h} $$
+
+. . .
+
+$$ = \lim_{h \to 0}\frac{2h}{h} $$
+
+. . .
+
+$$ = 2 $$
+
+::: notes
+Hey look what we just discovered! The slope of a linear function equals the coefficient on $x$!
+:::
+
+## Now A Nonlinear Example
+
+Let $f(x) = 3x^2 + 2x + 3$. What is $f'(x)$?
+
+. . .
+
+$$
+= \lim_{h \to 0}\frac{3(x+h)^2 + 2(x+h) + 3 - (3x^2 + 2x + 3)}{h}
+$$
+
+. . .
+
+$$
+= \lim_{h \to 0}\frac{3x^2 + 3h^2 + 6xh + 2x+ 2h + 3 - (3x^2 + 2x + 3)}{h}
+$$
+
+$$
+= \lim_{h \to 0}\frac{3h^2 + 6xh + 2h}{h}
+$$
+
+## Now A Nonlinear Example
+
+Let $f(x) = 3x^2 + 2x + 3$. What is $f'(x)$?
+
+$$
+= \lim_{h \to 0}\frac{3h^2 + 6xh + 2h}{h}
+$$
+
+. . .
+
+$$
+= \lim_{h \to 0}3h + 6x + 2
+$$
+
+. . .
+
+$$
+= 6x + 2
+$$
+
+## Solution
+
+```{r}
+#| echo: FALSE
+f <- function(x){
+  3*x^2 + 2*x + 3
+}
+
+f_prime <- function(x){
+  6*x + 2
+}
+
+x <- seq(-2,2, 0.001)
+
+data <- tibble(x = x,
+               y1 = f(x),
+               y2 = f_prime(x))
+
+ggplot(data) +
+  geom_line(aes(x=x,y=y1), color = 'black', size = 1) +
+  geom_line(aes(x=x,y=y2), color = 'red', size = 1) +
+  xlab('x') + ylab('y') +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) +
+  geom_text(aes(x=0.8,y=15,label="f(x) = 3x^2 + 2x + 3"), size = 5) +
+  geom_text(aes(x=1.5,y=6,label="f '(x) = 6x + 2"), color = 'red', size = 5) +
+  theme_minimal(base_size = 16)
+```
+
+The function $f'(x)$, outputs the slope of $f(x)$ at every point.
+
+## Derivative Shortcuts
+
+**Good news!** You don't have to go through that process every time. Mathematicians have done it for you, and have discovered a whole bunch of useful shortcuts.
+
+## Shortcut 1: The Power Rule
+
+If $f(x) = ax^k$, then $f'(x) = kax^{k-1}$
+
+. . .
+
+**Example:** If $f(x) = 5x^4$, then $f'(x) = 20x^3$.
+
+. . .
+
+**Practice Problem:** Let $f(x) = 2x^3$. What is $f'(x)$?
+
+. . .
+
+$$f'(x) = 6x^2$$
+
+## Shortcut 2: The Sum Rule
+
+The derivative of a sum is equal to the sum of derivatives.
+
+If $f(x) = g(x) + h(x)$, then $f'(x) = g'(x) + h'(x)$
+
+. . .
+
+### Example:
+
+If $f(x) = x^3 + x^2$, then $f'(x) = 3x^2 + 2x$
+
+. . .
+
+### Practice Problem:
+
+If $f(x) = 2x^3 + x^2$, what is $f'(x)$?
+
+. . .
+
+$$f'(x) = 6x^2 + 2x$$
+
+## Shortcut 3: The Constant Rule
+
+The derivative of a constant is zero.
+
+If $f(x) = c$, then $f'(x) = 0$
+
+. . .
+
+### Example:
+
+If $f(x) = 5$, then $f'(x) = 0$.
+
+. . .
+
+### Practice Problem:
+
+If $f(x) = 4x^2 + 3x + 5$, what is $f'(x)$?
+
+. . .
+
+$$
+f'(x) = 8x + 3
+$$
+
+## Shortcut 4: The Product Rule
+
+The derivative of a product is a bit trickier...
+
+If $f(x) = g(x) \cdot h(x)$, then $f'(x) = g'(x) \cdot h(x) + g(x) \cdot h'(x)$
+
+. . .
+
+### Example:
+
+If $f(x) = (2x)(x + 2)$, then $f'(x) = 2x + 2(x+2) = 4x + 4$
+
+. . .
+
+### Practice Problem:
+
+$f(x) = (3x^2 + 6x)(x+2)$, what is $f'(x)$?
+
+. . .
+
+$$f'(x) = (3x^2 + 6x)(1) + (6x + 6)(x+2)$$
+
+$$f'(x) = 3x^2 + 6x + 6x^2 + 6x + 12x + 12$$
+
+$$f'(x) = 9x^2 + 24x + 12$$
+
+## Shortcut 5: The Chain Rule
+
+If $f(x) = g(h(x))$, then $f'(x) = g'(x) \cdot h'(x)$
+
+. . .
+
+"The derivative of the outside times the derivative of the inside."
+
+. . .
+
+### Example:
+
+If $f(x) = (2x^2 - x + 1)^3$, then $f'(x) = 3(2x^2 - x + 1)^2 (4x - 1)$
+
+. . .
+
+### Practice Problem:
+
+$f(x) = \sqrt{x + 3} = (x+3)^{\frac{1}{2}}$, what is $f'(x)$?
+
+. . .
+
+$f'(x) = \frac{1}{2}(x+3)^{-\frac{1}{2}}(1) = \frac{1}{2\sqrt{x+3}}$
+
+## More Practice
+
+-   Let $f(x) = 2x^3 + 4x + 79$. What is $f'(x)$?
+
+<!-- -->
+
+-   Let $f(x) = 3(x^2 + x + 42)$. What is $f'(x)$?
+
+-   Let $f(x) = (x^2 + 1)(x+3)$. What is $f'(x)$?
+
+## Now We Can Do Optimization!
+
+Let $f(x) = 2x^2 + 8x - 32$. At what value of $x$ is the function minimized?
+
+```{r}
+#| echo: FALSE
+#| out-width: 80%
+
+f <- function(x){
+  2*x^2 + 8*x - 32
+}
+
+f_prime <- function(x){
+  4*x + 8
+}
+
+x <- seq(-10,10,0.001)
+
+data <- tibble(x=x,
+               y1 = f(x),
+               y2 = f_prime(x))
+
+p <- ggplot(data = data) +
+  geom_line(aes(x=x,y=y1),size = 1) +
+  xlab('x') + ylab('y') +
+  theme_minimal(base_size = 16)
+              
+p
+```
+
+**Key Insight**: Function is minimized when the slope "switches" from decreasing to increasing. Exactly at the point where the slope equals zero.
+
+## Optimization in Three Steps
+
+. . .
+
+**1. Take the derivative of the function.**
+
+. . .
+
+**2. Set it equal to zero.**
+
+. . .
+
+**3. Solve for** $x$.
+
+## Optimization in Three Steps
+
+**1. Take the derivative of the function.**
+
+$$
+f(x) = 2x^2 + 8x - 32
+$$
+
+. . .
+
+$$
+f'(x) = 4x + 8
+$$
+
+. . .
+
+**2. Set it equal to zero**
+
+. . .
+
+$$
+4x + 8 = 0
+$$
+
+. . .
+
+**3. Solve for** $x$.
+
+. . .
+
+$$
+x = -2
+$$
+
+::: notes
+That second step is called the "First Order Condition", or FOC.
+:::
+
+## Optimization in Three Steps
+
+```{r}
+#| echo: FALSE
+
+p + geom_text(aes(x=7,y=175,label="f(x)"), size = 5) +
+  geom_line(aes(x=x,y=y2), color = 'red', size = 1) +
+  geom_text(aes(x=9,y=20,label="f '(x)"), size = 5, color = 'red') +
+  geom_vline(xintercept = -2, linetype = 'dashed', color = 'blue') +
+  geom_text(aes(x = 0, y = 125, label = 'x = -2'), color = 'blue', size = 5) +
+  theme_minimal(base_size = 16)
+```
+
+## Now You Try It!
+
+Suppose that happiness as a function of jellybeans consumed is $h(j) = -\frac{1}{3}j^3 + 81j + 2$. How many jellybeans should you eat? (Assume you can only eat a positive number of jellybeans).
+
+## Now You Try It!
+
+Suppose that happiness as a function of jellybeans consumed is $h(j) = -\frac{1}{3}j^3 + 81j + 2$. How many jellybeans should you eat? (Assume you can only eat a positive number of jellybeans).
+
+```{r}
+#| echo: FALSE
+
+happiness <- function(j){
+  (-1/3)*j^3 + 81*j + 2
+}
+
+happiness_prime <- function(j){
+  81 - j^2
+}
+
+j <- seq(0, 15, 0.01)
+h <- happiness(j)
+h_prime <- happiness_prime(j)
+
+ggplot(data = tibble(j, h, h_prime)) +
+  geom_line(aes(x=j,y=h), size = 1) +
+  geom_line(aes(x=j,y=h_prime), color = 'red', size = 1) +
+  xlab('Jellybeans Consumed') + ylab('Happiness') +
+  geom_text(aes(x=13,y=420,label = 'h(j)'), size = 5) +
+  geom_text(aes(x=14,y=-40,label = "h'(j)"), color = 'red', size = 5) +
+  geom_vline(xintercept = 9, linetype = 'dashed', color = 'blue') +
+  theme_minimal(base_size = 16)
+
+```
+
+## Wait.
+
+How do you know if it's a maximum or a minimum?
+
+. . .
+
+$h(j) = \frac{1}{3}j^3 + 81j + 2$ and $h'(j) = 81 - j^2$
+
+```{r}
+#| echo: FALSE
+
+ggplot(data = tibble(j, h, h_prime)) +
+  geom_line(aes(x=j,y=h), size = 1) +
+  geom_line(aes(x=j,y=h_prime), color = 'red', size = 1) +
+  xlab('Jellybeans Consumed') + ylab('Happiness') +
+  geom_text(aes(x=13,y=420,label = 'h(j)'), size = 5) +
+  geom_text(aes(x=14,y=-40,label = "h'(j)"), color = 'red', size = 5) +
+  geom_vline(xintercept = 9, linetype = 'dashed', color = 'blue') +
+  theme_minimal(base_size = 16)
+```
+
+## Wait.
+
+It's a maximum when the slope is **decreasing**, and a minimum when then slope is **increasing**. How do you figure out if the slope is increasing or decreasing?
+
+. . .
+
+That's right. You find the **slope of the slope** (aka the **second derivative**).
+
+## The Second Derivative Test
+
+$h(j) = \frac{1}{3}j^3 + 81j + 2$ and $h'(j) = 81 - j^2$
+
+What is $h''(j)$? Is it positive or negative when you eat $9$ jellybeans?
+
+## The Second Derivative Test
+
+$h(j) = \frac{1}{3}j^3 + 81j + 2$ and $h'(j) = 81 - j^2$
+
+What is $h''(j)$? Is it positive or negative when you eat $9$ jellybeans? $$
+h''(j) = -2j
+$$
+
+```{r}
+#| echo: FALSE
+
+happiness_prime_prime <- function(j){
+  -2*j
+}
+
+h_prime_prime <- happiness_prime_prime(j)
+
+ggplot(data = tibble(j, h, h_prime)) +
+  geom_line(aes(x=j,y=h), size = 1) +
+  geom_line(aes(x=j,y=h_prime), color = 'red', size = 1) +
+  geom_line(aes(x=j,y=h_prime_prime), color = 'purple', size = 1) +
+  xlab('Jellybeans Consumed') + ylab('Happiness') +
+  geom_text(aes(x=13,y=420,label = 'h(j)'), size = 5) +
+  geom_text(aes(x=14,y=-60,label = "h'(j)"), color = 'red', size = 5) +
+  geom_text(aes(x=1,y=-20,label = "h''(j)"), color = 'purple', size = 5) +
+  geom_vline(xintercept = 9, linetype = 'dashed', color = 'blue') +
+  theme_minimal(base_size = 16)
+
+```
+
+## Partial Derivatives
+
+. . .
+
+What if you have a multivariable function?
+
+$$
+f(x,y) = 2x^2y + xy - 4x + y -6
+$$
+
+. . .
+
+Same procedure! To get the derivative of a function *with respect to* $x$ or $y$, treat the other variable as a constant.
+
+. . .
+
+$$
+\frac{\partial f}{\partial x} = 4yx + y - 4
+$$
+
+. . .
+
+$$
+\frac{\partial f}{\partial y} = 2x^2 + x + 1
+$$
+
+## Now You Try!
+
+Suppose happiness as a function of jellybeans and Dr. Peppers consumed is
+
+$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$
+
+How many jellybeans should you eat? How many Dr. Peppers should you drink?
+
+::: aside
+Intuitively, the $jd$ term is an **interaction effect**. The effect of jellybeans on happiness increases if you also drink more Dr. Peppers.
+:::
+
+## Now You Try!
+
+$$
+h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100
+$$
+
+. . .
+
+$$
+\frac{\partial h}{\partial j} = 8 - j + d = 0
+$$
+
+$$
+\frac{\partial h}{\partial d} = 2 - 6d + j = 0
+$$
+
+. . .
+
+::: columns
+::: {.column width="50%"}
+$$
+j = 8 + d
+$$
+
+$$
+j = 6d - 2
+$$
+:::
+
+::: {.column width="50%"}
+$$
+d^* = 2
+$$
+
+$$
+j^* = 10
+$$
+:::
+:::
+
+## 
+
+$$h(j,d) = 8j -\frac{1}{2}j^2 + 2d - 3d^2 + jd + 100$$
+
+```{r}
+#| echo: FALSE
+
+library(plotly)
+
+# thanks: https://www.datamentor.io/r-programming/3d-plot/
+
+f <- function(j,d){
+  8*j - 0.5*j^2 + 2*d - 3*d^2 + j*d + 100
+}
+
+j <- seq(0, 20, length= 20)
+d <- seq(0, 4, length = 4)
+
+happiness <- outer(j, d, f)
+
+p <- plot_ly(z = happiness, type = "surface") %>% 
+  layout(
+    scene = list(
+      xaxis = list(title = "Dr. Peppers"),
+      yaxis = list(title = "Jellybeans"),
+      zaxis = list(title = "Happiness")
+    ))
+p
+```
+
 ## Next Week...
 
 We finally have the tools we need to find the values of $\alpha$ and $\beta$ that minimize this function:
@@ -413,9 +973,12 @@ $\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2$
 
 ```{r}
 #| echo: FALSE 
+
 library(plotly)  
 # thanks: https://www.datamentor.io/r-programming/3d-plot/  
 f <- Vectorize(sse, c('a','b'))
+
+d <- read.csv('grades.csv')
 
 # a <- seq(-30,10, length= 100)
 # b <- seq(0, 2, length = 100)
@@ -435,3 +998,33 @@ p <- plot_ly(z = ~SSE,
       ))
 p
 ```
+
+## Recap
+
+Our linear model looks like this:
+
+$$
+\underbrace{y_i}_\text{outcome} = \overbrace{\alpha}^\text{intercept parameter} + \underbrace{\beta}_\text{slope parameter} \overbrace{x_i}^\text{explanatory variable} + \underbrace{\varepsilon_i}_\text{prediction error}
+$$ . . .
+
+We want to find values for $\alpha$ and $\beta$ that minimize the **sum of squared errors**:
+
+$$
+\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2
+$$
+
+. . .
+
+Let's call these values $\hat{\alpha}$ and $\hat{\beta}$, to denote that they are **estimates**.
+
+## Optimization In Three Steps
+
+$\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2$
+
+. . .
+
+**1. Take the derivatives of the function**
+
+$$
+\frac{\partial}{\partial\alpha} = 
+$$
