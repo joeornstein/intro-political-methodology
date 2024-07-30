@@ -8,7 +8,7 @@ warning: false
 bibliography: references.bib
 ---
 
-Today we begin Part 2 of the semester. Our goal over the next few weeks is to train you to complete the entire data analysis pipeline: importing raw datasets, tidying them up, joining together information from multiple datasets, making sure everything is formatted correctly, performing statistical analyses, and, finally, communicating your results.
+Today we begin Part 2 of the semester. Our goal over the next few weeks is to train you to complete the entire data analysis pipeline: importing raw datasets, tidying them up, joining together information from multiple datasets, making sure everything is formatted correctly, performing statistical analyses, and communicating your results.
 
 We'll start by discussing data visualization, which is an essential tool at every step along that pipeline. Our brains are hardwired to detect patterns in images, and a well-crafted data visualization can take advantage of that fact to communicate lots of information about your data all at once. This makes visualization a particularly effective tool for communicating results to your audience.
 
@@ -26,7 +26,7 @@ This week, we dive deeper into building visualizations with the `ggplot2` packag
 
 In a knitted R script or Quarto document, complete the following exercises.
 
-1.  Recreate the following chart using the [voting.csv](data/voting.csv) dataset. (25 points)
+1.  Recreate the following chart using the [voting.csv](data/voting.csv) dataset.
 
 ```{r}
 library(tidyverse)
@@ -52,8 +52,7 @@ ggplot(data = d,
        y = NULL)
 ```
 
-2.  Recreate the following chart using the [ANES.csv](data/ANES.csv) dataset. Don't forget the caption. (25 points) \
-    Recreating the dashed vertical lines is worth a **bonus** 10 points.
+2.  Recreate the following chart using the [ANES.csv](data/ANES.csv) dataset. Don't forget the caption. **Bonus**. Recreate the dashed vertical lines.
 
 ```{r}
 d <- read_csv('data/ANES.csv')
