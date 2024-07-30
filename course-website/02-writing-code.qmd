@@ -8,11 +8,11 @@ warning: false
 bibliography: references.bib
 ---
 
-This week we introduce the statistical software that we will use to work with data this semester (R and RStudio). By the end of this module, you will learn:
+This week we introduce the statistical software that we will use to work with data this semester (R and RStudio). By the end of this week, you will learn:
 
 -   How to write a script that loads a dataset and performs basic analyses
 
--   How to navigate file systems, create objects, and use functions.
+-   How to navigate file systems, create objects, and use functions
 
 -   The basic structure of dataframes, units of analyses, types of variables
 
@@ -29,22 +29,22 @@ This week's problem set is designed to ensure that you have R and RStudio proper
 We will analyze a dataset from an experiment conducted in Michigan in 2006 [@gerberSocialPressureVoter2008]. In that experiment, voters were randomly assigned to receive a postcard with a "social pressure" message, describing the recipient's voting history and the voting history of their neighbors. The dataset we will use is called [voting.csv](data/voting.csv). The following table shows the names and descriptions of the variables in the dataset.
 
 | variable  | description                                                                                     |
-|--------------|----------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | *birth*   | year of birth of registered voter                                                               |
 | *message* | whether the registered voter was assigned to receive the social pressure message: "yes" or "no" |
 | *voted*   | whether registered voter voted in the August 2006 election: 1=voted, 0=didn't vote              |
 
 Write an R script that performs the following analyses, in order. You can use comments in your script to respond to questions.
 
-1.  Download the [voting.csv](data/voting.csv) file (note: you can right click that link to save the file to your computer) and put it into your DSS folder. Read the dataset into R and save it as an object called `voting`. (10 points)
+1.  Download the [voting.csv](data/voting.csv) file (note: you can right click that link to save the file to your computer) and put it into your DSS folder. Read the dataset into R and save it as an object called `voting`.
 
-2.  Use the function `head()` to view the first few observations of the dataset. (10 points)
+2.  Use the function `head()` to view the first few observations of the dataset.
 
-3.  How many observations are there in total? What is the unit of analysis? (10 points)
+3.  How many observations are there in total? What is the unit of analysis?
 
-4.  What is the average value of the variable *birth*? Interpret this number. (10 points)
+4.  What is the average value of the variable *birth*? Interpret this number.
 
-5.  What is the average value of the variable *voted*? Interpret this number. (10 points)
+5.  What is the average value of the variable *voted*? Interpret this number.
 
 6.  **Bonus.** Install the `tinytex` package by entering the following lines of code into the `R` console.[^1]
 
@@ -55,9 +55,9 @@ Write an R script that performs the following analyses, in order. You can use co
     tinytex::install_tinytex()
     ```
 
-    Once this is installed, you can compile your `R` script and its output as a PDF by clicking "Compile Report" in RStudio. Submit this PDF report to eLC. (10 points)
+    Once this is installed, you can compile your `R` script and its output as a PDF by clicking "Compile Report" in RStudio. Submit this PDF report to eLC.
 
-[^1]: Not the `R` script! If you install a package in the script then it will reinstall the package every time you run the script, which is time-consuming.
+[^1]: Not the `R` script! If you install a package in the script then it will reinstall the package every time you run the script, which is unnecessary and time-consuming.
 
 # Additional Resources
 

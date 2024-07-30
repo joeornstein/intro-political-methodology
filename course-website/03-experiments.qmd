@@ -8,7 +8,7 @@ warning: false
 bibliography: references.bib
 ---
 
-This week we introduce the **Fundamental Problem of Causal Inference**, and discuss why randomized experiments are generally considered the "gold standard" for approaching that problem. By the end of this week you will be able to:
+This week we introduce the **Fundamental Problem of Causal Inference**, and discuss why randomized experiments are generally considered the gold standard approach to that problem. By the end of this week you will be able to:
 
 -   Describe the potential outcomes framework
 
@@ -22,13 +22,14 @@ This week we introduce the **Fundamental Problem of Causal Inference**, and disc
 
 # Problem Set
 
-Please submit the responses to the following exercises as a knitted `R` script or Quarto document.
+Please submit the responses to the following exercises as a PDF knitted from an `R` script or Quarto document.
 
-1.  Load the [voting.csv](data/voting.csv) dataset from our previous problem set. What percent of registered voters who received the social pressure message turned out to vote in the 2006 election? What percent of those who did *not* receive the social pressure message turned out? (10 points)
-2.  Estimate the average treatment effect of the social pressure message on the probability of voting. Briefly explain why we can or cannot interpret this estimate as a causal effect. (10 points)
-3.  What was the average birth year of respondents who received the social pressure message? Those who did not receive the social pressure message? Explain this result. (10 points)
-4.  Create a new variable called `youth`, equal to 1 if the respondent was less than 25 years old in 2006 and 0 otherwise (10 points)
-5.  **Bonus**. Was the average effect of the social pressure message larger or smaller for young respondents than for the rest of the sample? Interpret this result. (10 points)
+1.  Load the [voting.csv](data/voting.csv) dataset from our previous problem set. What percent of registered voters who received the social pressure message turned out to vote in the 2006 election? What percent of those who did *not* receive the social pressure message turned out?
+2.  Estimate the average treatment effect of the social pressure message on the probability of voting. Briefly explain why we can or cannot interpret this estimate as a causal effect.
+3.  What was the average birth year of respondents who received the social pressure message? What about those who did not receive the social pressure message? Explain this result.
+4.  Create a new variable called `young`, equal to 1 if the respondent was less than 25 years old in 2006 and 0 otherwise.
+5.  Was the average effect of the social pressure message larger or smaller for young respondents than for the rest of the sample? Interpret this result.
+6.  **Bonus**. What was the average effect of the social pressure message for respondents born before 1910? What is the most sensible way to interpret this result?
 
 # Additional Resources
 
