@@ -29,7 +29,7 @@ Please submit the responses to the following exercises as a PDF knitted from an 
 3.  What was the average birth year of respondents who received the social pressure message? What about those who did not receive the social pressure message? Explain this result.
 4.  Create a new variable called `young`, equal to 1 if the respondent was less than 25 years old in 2006 and 0 otherwise.
 5.  Was the average effect of the social pressure message larger or smaller for young respondents than for the rest of the sample? Interpret this result.
-6.  **Bonus**. What was the average effect of the social pressure message for respondents born before 1910? What is the most sensible way to interpret this result?
+6.  **Bonus**. Estimate the average effect of the social pressure message for each birth decade cohort (e.g. everyone born in the 1960s, 1970s, 1980s, etc.). Do any of your estimates stand out as odd? What is the most sensible way to interpret this result?
 
 # Additional Resources
 
