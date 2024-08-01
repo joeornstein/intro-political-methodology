@@ -5,12 +5,32 @@ author: Joe Ornstein
 echo: true
 message: false
 warning: false
+bibliography: references.bib
 ---
+
+It is rare that all the variables you need for your research will be found in a single dataset. More often, you will need to merge information from multiple datasets before you can begin your analyses. By the end of this week, you will be able to:
+
+-   Join datasets based on one or more key identifying variables
+
+-   Conduct appropriate diagnostic tests to ensure that the datasets merged correctly
+
+-   Implement fuzzy record linkage when key variables do not match exactly
 
 # Reading
 
+-   **R4DS** Chapter 19
+
 # Problem Set
 
-# Class Notes
+@gelman2007 find an interesting paradox in which rich *people* are more likely to vote for Republican presidential candidates, but rich US *states* are more likely to vote for Democrats. In this problem set, we will see if this paradox still holds true in the year 2020.
+
+1.  Load the raw CES 2020 dataset and tidy the family income, 2020 presidential vote choice, and state of residence variables as necessary.
+2.  Were rich people more likely to vote Republican in 2020? Compute the percent of respondents at each family income level that reported voting for Joe Biden, and plot the relationship.
+3.  Use the `tidycensus` package to get a dataset with 5-year estimates of median income from the 2020 American Community Survey.
+4.  Join the individual-level survey data with the median income variable by state.
+5.  Were rich states more likely to vote Democratic in 2020? Create a state-level dataset with each state's median income and the percent of CES respondents in that state that reported voting for Joe Biden. Plot the relationship and fit a linear model, reporting the estimated slope.
+6.  **Bonus**. Another finding from the @gelman2007 paper is that the relationship between individual-level income and vote choice is strongest in poor states and weakest in rich states. Let's see if that result still holds up in 2020. Create a variable that splits the dataset into three groups: poor states (poorest third of the US states), middle-income states (middle third), and rich states (richest third of the US states). Then repeat the individual-level analysis in problem 2, faceting by this new income-group variable.
 
 # Additional Resources
+
+-   For a primer on **fuzzy record linkage** (merging datasets when the key variables do not contain exact matches), might I self-promote a bit and suggest this [paper](https://joeornstein.github.io/publications/fuzzylink.pdf) and [R package](https://joeornstein.github.io/software/fuzzylink/)?

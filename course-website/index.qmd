@@ -13,9 +13,6 @@ Welcome to our course website! Here you can find links to everything you'll need
 
 -   Reading assignments, problem sets, and class notes can be found in the **Schedule** drop-down menu on the upper-right; click each link to access that week's content.
 
-```{=html}
-<!-- -->
-```
 -   Submit assignments at our course [eLC page](https://uga.view.usg.edu/d2l/home/3240411) (mortarboard icon in the upper right).
 
 -   You can read, annotate, and ask questions about each week's readings on our course [Perusall](https://app.perusall.com/courses/introduction-to-political-methodology/) page (book icon in the upper right).[^1]
@@ -46,7 +43,20 @@ By the end of this course, you will be able to:
 
 ## Assignments & Grading
 
-Each week I will assign 1-2 chapters of reading and a problem set, both due at noon the day of class. Feel free to work collaboratively with your classmates on the problem sets, but please submit your answers individually. **Resist the temptation to copy-paste your classmates' code.** You are much more likely to learn if you type your responses yourself. 70% of your grade will come from these problem sets, and 15% each from a take-home midterm and final exam.
+Each week I will assign 1-2 chapters of reading and a problem set, both due at noon the day of class. Feel free to consult your classmates with questions about the problem sets, but I expect you to submit your answers individually. **Resist the temptation to copy-paste your classmates' code.** You are much more likely to learn if you type your responses yourself. Each problem set contains a **Bonus** problem that will require you to conduct some independent research beyond that week's reading. Problem sets will be graded pass/fail, where a passing grade indicates that you have correctly solved over 70% of the problems.
+
+The semester will culminate with each student completing an independent research project. During the final two weeks, students will present an original analysis of a dataset of their choice. To meet expectations, the project should address in a satisfying way issues relating to measurement, causal inference, and
+sampling, and students should submit code and a codebook that allows others to replicate their analysis from the raw dataset. Within 48 hours of your presentation, I will provide you a list of revisions that I think would improve the research. Completing these revisions before the end of finals period is a requirement for earning an A- or A in the course. Students wishing to earn an A will—in addition to the presentation, code, and codebook—submit a final paper that includes an abstract, brief literature review, and discussion of their findings.
+
+The final letter grade you earn for the semester will be determined based on the number of problem sets you complete that meet expectations, the number of bonus problems you successfully complete, and your performance on the final project. Consult the table below for the minimum requirements for each letter grade. To earn a given letter grade, you must complete the requirements for that grade and all the grades below it, and students must at least meet the requirements for a C to pass the course.
+
+| Letter Grade | Problem Sets | Bonus Problems | Final Project                |
+|--------------|--------------|----------------|------------------------------|
+| A            | 10           | 8              | Submit a final paper         |
+| A-           | 9            | 5              | Complete requested revisions |
+| B+           | 8            | 2              | Code successfully replicates |
+| B            | 7            | 0              | Provide code and codebook    |
+| C            | 6            | 0              | Present final project        |
 
 ## Office Hours and Email Policy
 

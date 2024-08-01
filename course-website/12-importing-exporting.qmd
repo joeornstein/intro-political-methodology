@@ -9,7 +9,11 @@ warning: false
 
 # Reading
 
+-   **R4DS** Chapters 7-8
+
 # Problem Set
+
+-   `tidycensus` package (bonus?)
 
 # Class Notes
 

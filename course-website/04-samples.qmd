@@ -23,8 +23,7 @@ This week we discuss the challenges involved in making inferences about a popula
 
 \<TBD\>
 
-# Class Notes
-
 # Additional Resources
 
 -   [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/02_bellCurve.html): Modules 2-5
+-   @bradleyUnrepresentativeBigSurveys2021 is a beautiful exploration of the "Paradox of Big Data", demonstrating why *large* samples are not necessarily *better* samples.

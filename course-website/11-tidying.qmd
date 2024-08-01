@@ -11,6 +11,35 @@ warning: false
 
 # Problem Set
 
+[This dataset](API_NY.GDP.PCAP.PP.CD_DS2_en_csv_v2_2357064.csv) that I downloaded from the World Bank has extensive data on each country's GDP per capita going back to the 1960s. But it's hopelessly untidy. In this problem set, we'll tidy it so that the unit of analysis is the country-year, then perform a few analyses.
+
+1.  Load the data into `R`. Note that the data itself doesn't start until row 5, so you'll need to account for that (hint: check out the `skip` argument in `read.csv()`).
+2.  Pivot the dataset so that each row is a country-year (e.g. Peru 1970), and there is a single column with the GDP per capita variable.
+3.  Make sure that the resulting year variable is formatted correctly as a numeric. (Hint: the `str_remove_all()` function may be helpful, depending on how you imported the dataset.)
+4.  Reproduce the following chart.
+
+```{r}
+d <- read.csv('data/API_NY.GDP.PCAP.PP.CD_DS2_en_csv_v2_2357064.csv', skip = 4)
+
+d2 <- d |> pivot_longer(cols = X1960:X2020,
+                        names_to = 'year',
+                        values_to = 'gdp_pc')
+
+d2 <- d2 |> 
+  mutate(year = year |> str_remove_all('X') |> as.numeric())
+
+d2 |> 
+  filter(!is.na(gdp_pc)) |> 
+  filter(Country.Name %in% c('Argentina', 'Brazil', 'Colombia', 'Chile')) |> 
+  ggplot(mapping = aes(x=year,y=gdp_pc, color=Country.Name))+
+  geom_line() +
+  theme_bw() +
+  labs(x = 'Year', y = 'GDP Per Capita (PPP)',
+       color = NULL)
+```
+
+5.  **Bonus**.
+
 # Class Notes
 
 # Additional Resources
