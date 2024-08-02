@@ -7,6 +7,14 @@ message: false
 warning: false
 ---
 
+Last week, we introduced probability theory from the perspective of *sampling*. We have some population of interest, and we imagine all the possible samples that we could draw from the population. With this sampling distribution in hand, we have a better sense of how far from the truth a sample estimate might be.
+
+This week, we turn that question on its head. We are no longer an omniscient being who can sample *ad infinitum* from the population. Instead, we are a humble researcher with a single sample. What conclusions can we draw? How confident are we that our sample is not way out in the tails of the sampling distribution? That is a task for **statistical inference**.
+
+By the end of this week, you will be able to:
+
+-   
+
 # Reading
 
 # Problem Set
@@ -14,3 +22,5 @@ warning: false
 # Class Notes
 
 # Additional Resources
+
+-   [There Is Only One Test](http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html)

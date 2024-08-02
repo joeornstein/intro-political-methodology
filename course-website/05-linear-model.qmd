@@ -2,7 +2,7 @@
 title: "Week 5: The Linear Model"
 author: Joe Ornstein
 
-echo: true
+echo: false
 message: false
 warning: false
 bibliography: references.bib
