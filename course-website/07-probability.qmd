@@ -7,11 +7,72 @@ message: false
 warning: false
 ---
 
+This week, we review the basics of **probability theory**, which will provide us with the tools we need to express how certain or uncertain we are about the quantities of interest that we estimate from data. By the end of this week, you will be able to:
+
+-   Describe the properties of probability distribution functions, starting with two that are particularly ubiquitous in social science: the Bernoulli and Normal distributions.
+
+-   Use the Central Limit Theorem to predict whether a sampling distribution will be normally distributed
+
+-   Compute the area under curves and the expected value of a probability distribution using integral calculus
+
 # Reading
+
+-   **DAFSS** Chapter 6
 
 # Problem Set
 
+\<TBD\>
+
 # Class Notes
+
+Over the past few weeks, we have been computing a variety of statistics to try and estimate quantities of interest from our data. We've estimated population averages using sample means. We've estimated average treatment effect using differences-in-means and linear models. For reasons we've discussed, these statistics represent our *best guess* at the truth, given the [fundamental limits of our knowledge](01-introduction.html).
+
+But when communicating the findings of our research, we don't just want to report our best guess. We want to honestly state how certain we are about that guess, given the strength of the evidence we've collected. We want to report not only a single value, but a *range* of the most likely values. To do that, we need to think carefully about the random process that generated our dataset.
+
+## Sampling
+
+The book and the problem set motivated probability theory with things like coins and cards. This is all very nice for building intution, but in class, I want us to focus on how all this connects to the concept of the **sampling distribution**.
+
+If we were to randomly select a person from the United States population, what is the probability we would select a female? According to the [2020 Census](https://www2.census.gov/library/publications/decennial/2020/census-briefs/c2020br-06.pdf), here are the total number of males and females in the population.
+
+```{r}
+females <- 168.8 * 1e6
+males <- 162.7 * 1e6
+
+probability <- females / (males + females)
+```
+
+Let's sample one.
+
+```{r}
+sample(c('F', 'M'), 
+       size = 1, 
+       prob = c(probability, 1-probability))
+```
+
+What if we randomly sampled 50 people?
+
+```{r}
+sample(c('F', 'M'), 
+       size = 50,
+       replace = TRUE,
+       prob = c(probability, 1-probability))
+```
+
+## Drawing Curves over Histograms
+
+I don't think it's explained in the book how the authors plot those nice curves of the distribution functions, so I wanted to include an example here.
+
+```{r}
+# generate a bunch of random normal draws
+Z <- rnorm(1e4, mean = 2, sd = 2)
+hist(Z, freq = FALSE)
+# add curve
+x <- seq(min(Z), max(Z), 0.1)
+lines( x = x,
+       y = dnorm(x, mean = 2, sd = 2),
+       lty = 'dashed' )
+```
 
 # Additional Resources
 

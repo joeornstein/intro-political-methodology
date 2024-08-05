@@ -53,6 +53,8 @@ Access the [slides](slides/calculus.html) here.
 
 -   @horstDerivativesSeries2020 explains derivatives with adorable illustrations
 
+-   [The Essence of Calculus](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr) (3Blue1Brown)
+
 -   @strogatzJoyGuidedTour2012, Chapters 17 and 18 (ebook available through the UGA library [here](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=3304559))
 
 -   @mooreMathematicsCoursePolitical2013, Chapter 5 (ebook available through the UGA library [here](https://ebookcentral.proquest.com/lib/ugalib/reader.action?docID=1205618))

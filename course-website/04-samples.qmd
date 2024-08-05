@@ -9,7 +9,7 @@ warning: false
 
 This week we discuss the challenges involved in making inferences about a population based on an observed sample. By the end of this week, you will be able to:
 
--   Describe the conditions under which a sample is representative of a population of interest, and the primary challenges involved in obtaining a representative sample.
+-   Describe the conditions under which a sample is representative of a population of interest, and the challenges involved in obtaining a representative sample.
 
 -   Compute and interpret a variety of summary statistics from data, including frequency tables, median, variance, standard deviation, covariance, and correlation coefficient.
 

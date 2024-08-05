@@ -8,7 +8,7 @@ warning: false
 bibliography: references.bib
 ---
 
-This week, we discuss strategies for estimating causal effects when treatments are not randomly assigned. Our key concern here is **confounders**: some variables that affect our outcomes and *also* influence whether our observations are treated or untreated. Unless we find some way to hold these confounders constant, any observed relationship between treatment and outcome might just be due to these other factors (e.g. eating ice cream doesn't cause heatstroke; the outdoor temperature is a confounding variable that causes both of those things to go up).
+This week, we discuss strategies for estimating causal effects when treatments are not randomly assigned. Our key concern here is **confounders**: variables that affect our outcomes and *also* influence whether our observations are treated or untreated. Unless we find some way to hold these confounders constant, any observed relationship between treatment and outcome might just be due to these other factors (e.g. eating ice cream doesn't cause heatstroke; temperature is the confounding variable that causes both of those things to increase).
 
 By the end of this week, you'll be able to:
 
@@ -49,11 +49,11 @@ For the next part of the problem set, load the [corruption.csv](data/corruption.
 
 6.  Now estimate a multiple regression model using both democracy and GDP per capita. What happened to the estimated coefficient on democracy compared to what you found in problem 4? Interpret the result.
 
-7.  **Bonus**.
+7.  **Bonus**. Demonstrate that you can recover the exact same slope estimate that you got in problem 6 through the following three step process: (1) Fit a linear model predicting GDP per capita using the democracy variable. (2) Fit a linear model predicting corruption score using the democracy variable. (3) Fit a linear model predicting the *residuals* from (2) using the *residuals* from (1). Describe why you think this process yields the same estimate that you got from the approach in problem 6.
 
 # Class Notes
 
-## Proof of OLS estimators
+## Derivation of OLS estimators
 
 I want to show you this proof because I think it ties together a lot of different concepts that we've been learning, and helps you see what's going on under-the-hood when you type `lm()` into R.
 
@@ -192,4 +192,4 @@ $$
 # Additional Resources
 
 -   @huntington-kleinEffectIntroductionResearch2021, a friendly yet thorough introduction to causal inference with observational data (free version online [here](https://theeffectbook.net/)).
--   A [YouTube video](https://www.youtube.com/watch?v=EEwzx9UpgsY) walking through the derivation of the OLS estimators
+-   A nice [YouTube video](https://www.youtube.com/watch?v=EEwzx9UpgsY) walking through the derivation of the OLS estimators
