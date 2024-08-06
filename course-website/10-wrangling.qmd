@@ -7,7 +7,19 @@ message: false
 warning: false
 ---
 
-*Move some of the class notes to the front here.*
+Up to now, we've been working with pretty tidy datasets. Every column is a variable, every row is an observation, and every value is where it should be. But things are not always this way. More often than you're going to like, data comes to you an unruly mess, and you'll need to tidy it up before you can even start to explore it.
+
+This week, we'll learn some of the most important functions in the `tidyverse` for data wrangling. By the end of the week, you will be able to:
+
+-   Filter the rows of a dataset using conditional logic with the `filter()` function
+
+-   Select and rename columns using the `select()` function
+
+-   Create new variables and modify existing ones using the `mutate()` function
+
+-   Properly format categorical variables, with the help of functions like `case_when()` and `factor()`
+
+-   Perform a basic data merge with `left_join()`
 
 # Reading
 
@@ -17,29 +29,25 @@ warning: false
 
 # Problem Set
 
-This week, we're going to be summarizing different variables from the CES 2020 dataset. You'll need to use the codebook to identify which variables contain the information you want, tidy them up, and then summarize. Write an `R` script that performs these tasks, compile a PDF report, and submit the report.
+This week, we're going to be summarizing different variables from the CES 2020 dataset. You'll need to download the dataset (see instructions in the class notes below) and use the codebook to identify which variables contain the information you want, tidy them up, and then summarize. Write an `R` script that performs these tasks, compile a PDF report, and submit the report.
 
 Here are the questions I'd like you to answer:
 
 1.  Are labor union members more likely to be Democrats or Republicans?
 
-2.  What is the median age of people with landline phones, compared to those who only have cell phones?
+2.  Compare the average age of people with landline phones, compared to those who only have cell phones? Estimate the difference-in-means and report the p-value from a null hypothesis test.
 
-3.  Are people who read the newspaper more likely to correctly answer the questions about who controls the US House of Representatives and US Senate?
+3.  Are people who read the newspaper more likely to correctly answer the questions about who controls the US House of Representatives and US Senate? (Remember, this survey was conducted at the end of 2020.)
 
-4.  Which religious groups are the most and least likely to support making abortion illegal in all circumstances?
+4.  Create a bar chart reporting the percent of respondents in each religious group that support making abortion illegal in all circumstances.
 
 5.  **Bonus**. The CES oversamples some respondents relative to their frequency among registered voters in order to get a better statistical picture of some smaller subgroups. The dataset contains a *weight* variable for each respondent, reflecting how much that type of respondent is overrepresented in the sample compared to the population. Compare the mean age of the sample with the *weighted mean* age of the sample. What do you notice? Do the same thing for the unweighted and weighted shares of each racial group. Redo the analyses in questions 1-4 using weighted means. What conclusions, if any, change?
 
 # Class Notes
 
-Up to now, we've been working with pretty tidy datasets. Every column is a variable, every row is an observation, and every value is where it should be. But things are not always this way. More often than you're going to like, data comes to you an unruly mess, and you'll need to tidy it up before you can even start to explore it.
-
-This week, we'll learn some of the most important functions in the `tidyverse` for data wrangling.
+Previously, we have worked with a tidied up version of the Cooperative Election Study (CES) from 2020. To illustrate the process of **data wrangling**, let's look at the steps I took to import and clean up that dataset.
 
 [![](img/data_wrangler.png)](https://allisonhorst.shinyapps.io/dplyr-learnr/#section-welcome)
-
-In your last problem set, you worked with a tidied up version of the Cooperative Election Study (CES) from 2020. Let's look at the steps I took to import and clean up that dataset.
 
 ### Importing The Data
 
@@ -54,7 +62,9 @@ name, age, party
 'Avery', 3, 'Know Nothing'
 ```
 
-It's a nice standardized way to represent datasets, and fortunately for us, the `read_csv()` function allows us to read such files into `R`. Let's create an object called `ces_raw` from that raw dataset.
+It's a nice standardized way to represent datasets, and fortunately for us, the `read_csv()` function allows us to read such files into `R`.[^1] Let's create an object called `ces_raw` from that raw dataset.
+
+[^1]: I will generally use `read_csv()` instead of `read.csv()` in my own work, since it is faster and will give you useful error messages if the input is formatted in a way it doesn't expect.
 
 ```{r}
 library(tidyverse)
@@ -174,7 +184,7 @@ ces_clean |>
   count(inputstate, state_name)
 ```
 
-More on joining datasets in two weeks.
+We will explore joining datasets more deeply in two weeks.
 
 ### Selecting Variables
 

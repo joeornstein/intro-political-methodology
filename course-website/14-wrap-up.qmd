@@ -1,0 +1,14 @@
+---
+title: "Weeks 14-15: Wrapping Up"
+author: Joe Ornstein
+
+echo: true
+message: false
+warning: false
+---
+
+In the final two weeks of the semester we will present our final projects to the class. There will be no reading assignments or problem sets due.
+
+Thank you for sharing your valuable time with me this semester. We've covered a lot, but I hope that you will come away from the class feeling more confident in your ability to conduct research and contribute to the conversation in political science. I look forward to seeing what you will do!
+
+[![](img/know-stuff.png)](https://allisonhorst.com/everything-else)

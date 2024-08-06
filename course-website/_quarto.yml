@@ -36,7 +36,7 @@ website:
           - 11-tidying.qmd
           - 12-importing-exporting.qmd
           - 13-joining.qmd
-          - 14-bonus.qmd
+          - 14-wrap-up.qmd
       - href: https://uga.view.usg.edu/d2l/home/3240411
         icon: mortarboard-fill
       - href: https://app.perusall.com/courses/introduction-to-political-methodology/

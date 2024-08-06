@@ -25,10 +25,6 @@ By the end of this week, you will be able to:
 
 \<TBD\>
 
-# Class Notes
-
-\<TBD\>
-
 # Additional Resources
 
 -   [There Is Only One Test](http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html) (blog post by Allen Downey)

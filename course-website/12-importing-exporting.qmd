@@ -13,8 +13,12 @@ warning: false
 
 # Problem Set
 
--   `tidycensus` package (bonus?)
+In this problem set, we'll practice reading and cleaning up data from a variety of sources. Submit your responses as a knitted R script or Quarto document.
+
+1.  <https://projects.fivethirtyeight.com/polls-page/data/president_polls.csv> (this could be a multistep thing, because week 12 is the week after election day don'tchaknow)
+2.  fwf
+3.  Follow the instructions on [this page](https://walker-data.com/tidycensus/articles/basic-usage.html) to obtain an API key from the US Census. Once you have an API key
 
 # Class Notes
 
-# Additional Resources
+In class, we'll work with a few other methods for importing data, including the [US Census API](https://walker-data.com/tidycensus/articles/basic-usage.html) and output files from other statistical programs like Stata and SPSS.

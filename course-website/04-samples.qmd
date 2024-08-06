@@ -5,6 +5,7 @@ author: Joe Ornstein
 echo: true
 message: false
 warning: false
+bibliography: references.bib
 ---
 
 This week we discuss the challenges involved in making inferences about a population based on an observed sample. By the end of this week, you will be able to:
