@@ -15,7 +15,7 @@ This week we discuss the core principles of **tidy data**, and why you want to e
 
 -   Complete the steps necessary to convert a raw, "messy" dataset into a form amenable to statistical analysis
 
-# Reading 
+# Reading
 
 -   **R4DS** Chapters 5-6
 
@@ -30,6 +30,8 @@ This week we discuss the core principles of **tidy data**, and why you want to e
 5.  Reproduce the following chart.
 
 ```{r}
+library(tidyverse)
+
 d <- read.csv('data/API_NY.GDP.PCAP.PP.CD_DS2_en_csv_v2_2357064.csv', skip = 4)
 
 d2 <- d |> pivot_longer(cols = X1960:X2020,
