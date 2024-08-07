@@ -87,7 +87,7 @@ As we established last week, the sampling distribution of the sample mean should
 se <- sqrt(var(samp)/length(samp))
 ```
 
-If the null hypothesis were true, then the sampling distribution of the sample mean would be a normal distribution with standard deviation equal to $\sqrt{\frac{\sigma}{n}}$ centered on the null hypothesis
+If the null hypothesis were true, then the sampling distribution of the sample mean would be a normal distribution with standard deviation equal to $\sqrt{\frac{\sigma}{n}}$ centered on the null hypothesis.
 
 ```{r}
 x <- seq(50, 70, 0.1)
@@ -106,6 +106,20 @@ abline(v = mean(samp), col = 'red')
 ```
 
 What's the probability of observing a test statistic that far away from 60 if the null hypothesis were true (the **p-value**)?
+
+Well, to answer that question we need to take a brief digression into [integral calculus](slides/integrals.html).
+
+Hey welcome back from the digression into integral calculus. It may interest you to know that what we just called the "area function" $F(x)$ is, when applied to a probability distribution function, called the **cumulative distribution function**. It tells you the probability that the random variable is less than or equal to $x$. And conveniently for us, `R` has a bunch of cumulative distribution functions built in. For a normal distribution, you want the`pnorm()` function.
+
+```{r}
+# the probability that a value drawn from a standard normal distribution will be 2 or less
+pnorm(2)
+
+# the probability that a value drawn from N(2,1) will be 2 or less
+pnorm(2, mean = 2, sd = 1)
+```
+
+To bring it back to our motivating example, we'd like to know the probability that a value randomly drawn from $N(60, \sqrt{\frac{s}{n}})$ will be as far away from 60 as our observed data. That will be the sum of two areas:
 
 ```{r}
 pnorm(mean(samp), mean = 60, sd = se, lower.tail = FALSE) +

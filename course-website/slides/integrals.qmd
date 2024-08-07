@@ -1,0 +1,315 @@
+---
+title: "Calculus Essentials"
+subtitle: "Integrals and The Fundamental Theorem of Calculus"
+format: 
+  revealjs:
+    incremental: true
+editor: visual
+echo: false
+cache: true
+---
+
+## Area Under A Curve
+
+To compute a p-value, we need to know the area under the shaded part of the probability distribution function. We know that the area under the *entire* curve equals 1, but what fraction of that area is shaded below?
+
+```{r}
+set.seed(42)
+pop <- round(runif(1e5, min = 18, max = 100))
+
+samp <- sample(pop, size = 100)
+
+se <- sqrt(var(samp)/length(samp))
+
+library(tidyverse)
+
+# plot a gaussian and shade a part of it
+mu <- 60
+sigma <- se
+
+# http://www.sthda.com/english/wiki/ggplot2-area-plot-quick-start-guide-r-software-and-data-visualization
+d <- tibble(x = seq(50, 70, 0.01),
+            y = dnorm(x, mean = mu, sd = sigma))
+
+p <- ggplot(data = d) +
+  geom_line(mapping = aes(x=x,y=y)) +
+  geom_area(mapping = aes(x=x, y = if_else(x > mean(samp), y, 0)),
+            fill = 'gray', alpha = 0.5) + 
+  theme_void() +
+  geom_vline(xintercept = mu, linetype = 'dashed')
+
+p
+```
+
+## Area Under A Curve
+
+The area of a rectangle is easy. $A = bh$
+
+```{r}
+data = tibble(x = -2:2,
+              y = 2)
+
+ggplot() +
+  geom_rect(aes(xmin = -2, xmax = 2, ymin = 0, ymax = 2),
+            alpha = 0.3, fill = 'blue') + 
+  geom_line(data = data, aes(x=x,y=y), linewidth = 1) +
+  scale_x_continuous(limits = c(-4,4)) +
+  scale_y_continuous(limits = c(-4,4)) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + 
+  xlab('x') + ylab('y') + 
+  geom_text(aes(x=2.4,y=2, label='f(x)'), size = 5) +
+  theme_minimal(base_size = 16)
+```
+
+## Area Under A Curve
+
+Curves are harder. We didn't learn this in geometry!
+
+```{r}
+f <- function(x){
+  x^3 - 2*x^2 + 2
+}
+
+# f <- function(x){
+#   0.7*x^2
+# }
+
+x <- seq(-2,2,0.01)
+
+data <- tibble(x=x,
+               y=f(x))
+
+ggplot() +
+  geom_line(data = data, aes(x=x,y=y), size = 1) +
+  scale_x_continuous(limits = c(-4,4)) +
+  scale_y_continuous(limits = c(-4,4)) +
+  geom_hline(yintercept = 0) + geom_vline(xintercept = 0) + 
+  xlab('x') + ylab('y') + 
+  geom_text(aes(x=2.4,y=2, label='f(x)'), size = 5) +
+  theme_minimal(base_size = 16)
+```
+
+## Area Under A Curve
+
+-   With derivatives, we approximated a hard problem (the slope of a curve) using an easy problem (the slope of a line) by zooming in close enough.
+-   With integrals, we'll use a similar trick.
+-   We approximate a hard problem (the area under a curve) using an easy problem (the area of a bunch of rectangles) by making the rectangles *really* thin.
+
+## Reimann Sum
+
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+. . .
+
+```{r}
+riemann_plot <- function(x_minimum, x_maximum, f, h,
+                         rectangle_outline = 'black'){
+  
+  # create x and y variables
+  x <- seq(x_minimum,x_maximum,0.1)
+  y <- f(x)
+  
+  # rectangle dimensions
+  x_rectangles <- seq(x_minimum, x_maximum - h, h)
+  y_rectangles <- f(seq(x_minimum, x_maximum - h, h))
+  
+  # approximate area
+  approximate_area <- sum(y_rectangles * h)
+  
+  # rectangle dataframe for plot
+  rectangles <- tibble(xmin = x_rectangles,
+                       xmax = seq(x_minimum + h, x_maximum, h),
+                       ymin = 0,
+                       ymax = f(xmin))
+  
+  
+  # return ggplot object
+  ggplot() +
+    geom_line(data = tibble(x,y),
+              aes(x=x,y=y)) +
+    geom_rect(data = rectangles,
+              aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
+              fill = 'blue', color = rectangle_outline, alpha = 0.3) +
+    labs(title = paste0("h = ", h, 
+                        ", Approximate Area = ", round(approximate_area, 3))) +
+    theme_bw()
+}
+```
+
+```{r}
+f <- function(x){
+  x^3 - 2*x^2 + 2
+}
+
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.5)
+```
+
+## Reimann Sum
+
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+```{r}
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.25)
+```
+
+## Reimann Sum
+
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+```{r}
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.1)
+```
+
+## Reimann Sum
+
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+```{r}
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.01)
+```
+
+## Reimann Sum
+
+$f(x) = x^3 - 2x^2 + 2$. Find area under curve from $x=0$ to $x=3$.
+
+```{r}
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.001,
+             rectangle_outline = NA)
+```
+
+## Integral Notation
+
+$$\lim_{h \to 0} \sum f(x) \cdot h = \int f(x)dx $$
+
+. . .
+
+$dx$ is an "infinitesimal" (infinitely small value).
+
+So $\int f(x)dx$ is the area of an infinite number of infinitely skinny rectangles.
+
+. . .
+
+If we want the area under a curve between $a$ and $b$, we denote it like so:
+
+$$\int_a^b f(x)dx$$
+
+## The Area Function $F(x)$
+
+. . .
+
+There has to be an easier way to compute the area under a curve than taking the sum of an nearly infinite number of skinny rectangles...
+
+. . .
+
+What we want is a function $F(x)$; let's call it the **area function**.
+
+-   $F(a)$ gives the area under $f(x)$ between $-\infty$ and $a$.
+
+-   $F(b) - F(a)$ gives the area under $f(x)$ between $a$ and $b$.
+
+## The Area Function $F(x)$
+
+As $h$ approaches zero, our skinny rectangles should become a better and better approximation of this area function...
+
+$$f(x) \cdot h = \lim_{h \to 0} F(x+h) - F(x)$$
+
+. . .
+
+Divide on both sides by $h$.
+
+$$f(x) = \lim_{h \to 0} \frac{F(x+h) - F(x)}{h}$$
+
+. . .
+
+Hey doesn't that look familiar?
+
+. . .
+
+$f(x) = F'(x)$. In other words, $F(x)$ is the *antiderivative*.
+
+## The Fundamental Theorem of Calculus
+
+$$\int_a^b f(x)dx =  F(b) - F(a)$$
+
+Finding the area under the curve and taking the antiderivative are equivalent operations!
+
+## Let's Try It!
+
+If $f(x) = x$, find the area under the curve between $x=0$ and $x=4$.
+
+```{r}
+x = -1:5
+
+ggplot(data = tibble(x)) +
+  geom_line(aes(x=x,y=x), size = 1) +
+  geom_vline(xintercept = 0) +
+  geom_hline(yintercept = 0) +
+  xlab('x') + ylab('f(x)') +
+  geom_vline(xintercept = 4, linetype = 'dashed', color = 'blue') +
+  theme_minimal(base_size = 16)
+```
+
+## Let's Try It!
+
+If $f(x) = x$, find the area under the curve between $x=0$ and $x=4$.
+
+. . .
+
+Use the Fundamental Theorem of Calculus
+
+$$
+\int_0^4 f(x)dx = F(4) - F(0)
+$$
+
+$F(x) = \frac{1}{2}x^2 + C$
+
+. . .
+
+$F(4) - F(0) = \frac{1}{2}\cdot4^2 = 8$
+
+## Now A Nonlinear Example...
+
+If $f(x) = x^3 - 2x^2 + 2$, find the area under the curve between $x=0$ and $x=3$.
+
+. . .
+
+$$\int_0^3 f(x)dx = F(3) - F(0)$$
+
+. . .
+
+$F(x) = \frac{1}{4}x^4 - \frac{2}{3}x^3 + 2x + C$
+
+. . .
+
+$F(3) - F(0) = \frac{1}{4}3^4 - \frac{2}{3}3^3 + 2(3) - [\frac{1}{4}0^4 - \frac{2}{3}0^3 + 2(0)]$
+
+. . .
+
+$= 8.25$
+
+## Now A Nonlinear Example...
+
+That's the same answer that we got from the skinny rectangles!
+
+```{r}
+riemann_plot(x_minimum = 0,
+             x_maximum = 3,
+             f = f,
+             h = 0.001,
+             rectangle_outline = NA)
+```
