@@ -200,18 +200,6 @@ Approximately zero. Out of 10,000 random samples, we didn't get a single one wit
 pbinom(125, size = 435, prob = probability)
 ```
 
-## Margin of Error
-
-So if I draw a sample of 435 individuals, then 95% of the time, my sample statistic will be within...
-
-```{r}
-2*sd(sampling_distribution)
-```
-
-...of the population average. This is what pollsters call the **margin of error**.
-
-Another way of describing this sampling variability is with a **confidence interval**. You construct a confidence interval by taking your sample estimate plus or minus 2 standard errors. Because the sample mean is within 2 standard deviations of the truth 95% of the time, the 95% confidence interval will contain the true value approximately 95% of the time.
-
 ## Sampling Distribution of the Difference-In-Means
 
 In class, we'll explore how the estimated effect of a treatment can vary even if we have data on the entire population. For this exercise, load the [potential-outcomes.csv](data/potential-outcomes.csv) dataset.

@@ -25,6 +25,104 @@ By the end of this week, you will be able to:
 
 \<TBD\>
 
+# Class Notes
+
+Every statistic has a sampling distribution. When we conduct a **hypothesis test**, we compare our observed statistic to its sampling distribution to assess whether that statistic is something we would have expected due to chance alone. Every single null hypothesis test you will ever perform proceeds in three steps:
+
+1.  Compute the test statistic
+
+2.  Generate the sampling distribution assuming a **null hypothesis**
+
+3.  Compare the test statistic with its sampling distribution. This comparison will take one of two forms:
+
+    -   A **p-value** (if the null hypothesis were true, how surprising would my test statistic be?)
+
+    -   A **confidence interval** (what is the set of null hypotheses for which my test statistic would *not* be surprising?)
+
+## Step 1: Compute the test statistic
+
+A statistic can be anything you compute from data! So far we've computed statistics like:
+
+-   The sample mean[^1]
+
+-   The difference in means
+
+-   Variance
+
+-   Linear model coefficients
+
+[^1]: The reason why statisticians like means as a measure of central tendency is because of Central Limit Theorem! The sampling distribution of the mean is normally distributed; no such guarantee for other statistics like medians or modes.
+
+A word on notation: statisticians denote population-level parameters with Greek letters.[^2] So the population mean is typically $\mu$, the population standard deviation is $\sigma$, the true average treatment effect is $\tau$, and the true linear model slope coefficient is $\beta$. Of course, you can write whatever Greek letters you like. These are just conventions.
+
+[^2]: Because mathematicians associate timeless truth and beauty with the ancient Greeks?
+
+Sample statistics get plain old English letters, like $b$ for an estimated slope or $s$ for a the standard deviation of a sample. Alternatively, they might get little hats on top of Greek letters, like $\hat{\beta}$, to show that they are estimates of the population-level parameter we care about.
+
+As a running example, suppose we have a random sample of 100 people from a population of interest. We want to test whether the average age of the population is equal to 60.
+
+```{r}
+set.seed(42)
+pop <- round(runif(1e5, min = 18, max = 100))
+
+mean(pop)
+var(pop)
+```
+
+Now let's randomly sample 100 people from the population.
+
+```{r}
+samp <- sample(pop, size = 100)
+
+mean(samp)
+```
+
+Do we have enough evidence from this sample to reject the hypothesis?
+
+## Step 2: Derive the sampling distribution under the null hypothesis
+
+As we established last week, the sampling distribution of the sample mean should be approximately normally distributed with mean equal to $\mu$ and variance equal to $\frac{\sigma}{n}$. But last week, we *knew* the values of $\mu$ and $\sigma$. This week, we only have this one sample of 100 people. So our trick will be to estimate the standard error of the sampling distribution based on the *sample variance*.
+
+```{r}
+se <- sqrt(var(samp)/length(samp))
+```
+
+If the null hypothesis were true, then the sampling distribution of the sample mean would be a normal distribution with standard deviation equal to $\sqrt{\frac{\sigma}{n}}$ centered on the null hypothesis
+
+```{r}
+x <- seq(50, 70, 0.1)
+y <- dnorm(x, mean = 60, sd = se)
+
+plot(x,y,type = 'l', lty='dashed')
+```
+
+## Step 3: Compare the test statistic with the sampling distribution
+
+The test statistic falls here:
+
+```{r}
+plot(x,y,type = 'l', lty='dashed')
+abline(v = mean(samp), col = 'red')
+```
+
+What's the probability of observing a test statistic that far away from 60 if the null hypothesis were true (the **p-value**)?
+
+```{r}
+pnorm(mean(samp), mean = 60, sd = se, lower.tail = FALSE) +
+  pnorm(60 - (mean(samp) - 60), mean = 60, sd = se, lower.tail = TRUE)
+```
+
+There is roughly a 2/3 chance that we would observe a test statistic at least that far away from 60, even if the null hypothesis were true! We do not have enough evidence to reject the null hypothesis.
+
+What is the set of null hypotheses that we would fail to reject? The set of values, in other words, that are consistent with the observed evidence (a **confidence interval**)?
+
+```{r}
+mean(samp) - 1.96 * se
+mean(samp) + 1.96 * se
+```
+
+A confidence interval, constructed this way, would contain the true value 95% of the time if we repeatedly drew random samples from the population.
+
 # Additional Resources
 
 -   [There Is Only One Test](http://allendowney.blogspot.com/2016/06/there-is-still-only-one-test.html) (blog post by Allen Downey)

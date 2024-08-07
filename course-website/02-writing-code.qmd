@@ -29,7 +29,7 @@ This week's problem set is designed to ensure that you have R and RStudio proper
 We will analyze a dataset from an experiment conducted in Michigan in 2006 [@gerberSocialPressureVoter2008]. In that experiment, voters were randomly assigned to receive a postcard with a "social pressure" message, describing the recipient's voting history and the voting history of their neighbors. The dataset we will use is called [voting.csv](data/voting.csv). The following table shows the names and descriptions of the variables in the dataset.
 
 | variable  | description                                                                                     |
-|------------------|------------------------------------------------------|
+|-----------|-------------------------------------------------------------------------------------------------|
 | *birth*   | year of birth of registered voter                                                               |
 | *message* | whether the registered voter was assigned to receive the social pressure message: "yes" or "no" |
 | *voted*   | whether registered voter voted in the August 2006 election: 1=voted, 0=didn't vote              |
