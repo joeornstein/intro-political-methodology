@@ -23,7 +23,17 @@ By the end of this week, you will be able to:
 
 # Problem Set
 
-\<TBD\>
+In this problem set, you are going to prove to yourself that a 95% confidence interval contains the truth about 95% of the time when your sample is randomly drawn from the population.
+
+To begin, load the [cards.csv](data/cards.csv) dataset we worked with in the last problem. Submit your responses to the following problems as a knitted R script or Quarto document.
+
+1.  Create an object called `truth`, equal to the average number of the cards in the deck.
+2.  Draw a random sample of 100 cards from the deck and construct a 95% confidence interval around the sample mean. Does your interval contain the `truth`?
+3.  Use a `for()` loop to repeat that process 10,000 times, each time recording 1 if your confidence interval contains the truth and 0 otherwise. What fraction of your confidence intervals contain the truth?
+4.  Now we're going to construct 95% confidence intervals around a difference-in-means estimator. Suppose you drew a random sample of cards and were asked to guess the average difference between the numbers on red cards and all other cards. To start, create an object called `truth` which contains this difference in means for the entire deck of cards.
+5.  Draw 100 cards from the deck and construct a 95% confidence interval for the difference-in-means estimator. Does your interval contain the `truth`?
+6.  Use a `for()` loop to repeat that process 10,000 times, each time recording 1 if your confidence interval contains the truth and 0 otherwise. What fraction of your confidence intervals contain the truth?
+7.  **Bonus**. The [georgia-polls.csv](data/georgia-polls.csv) dataset contains the results of all polls of likely voters collected by the website 538 during the 2020 US presidential election in the state of Georgia. The `biden` column contains the share of voters who said they planned to vote for Joe Biden. For each poll, construct a 95% confidence interval for the sample mean based on the assumption of Bernoulli random sampling. What fraction of the polls contain Biden's true vote share in Georgia (49.47%)? What about just the polls conducted within two weeks of the election date? Briefly explain what you think this result says about the most important sources of uncertainty in election polling.
 
 # Class Notes
 

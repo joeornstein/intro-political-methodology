@@ -7,6 +7,14 @@ message: false
 warning: false
 ---
 
+This week, we go back to the very start of the data analysis pipeline: importing data into R. Many datasets are formatted and stored in strange ways, and it is good to have practice working with importing data from many kinds of sources. By the end of this week, you will be able to:
+
+-   Use the `read_csv()` function from the tidyverse to wrangle unruly .csv files
+
+-   Perform manual data entry with `tibble()` and `tribble()`
+
+-   Read data from the web and APIs
+
 # Reading
 
 -   **R4DS** Chapters 7-8
@@ -15,10 +23,23 @@ warning: false
 
 In this problem set, we'll practice reading and cleaning up data from a variety of sources. Submit your responses as a knitted R script or Quarto document.
 
-1.  <https://projects.fivethirtyeight.com/polls-page/data/president_polls.csv> (this could be a multistep thing, because week 12 is the week after election day don'tchaknow)
-2.  fwf
-3.  Follow the instructions on [this page](https://walker-data.com/tidycensus/articles/basic-usage.html) to obtain an API key from the US Census. Once you have an API key
+## Part 1
 
-# Class Notes
+The website 538 maintains a dataset of all polls conducted during the 2024 US presidential election at the following [link](https://projects.fivethirtyeight.com/polls-page/data/president_polls.csv). The following set of problems involve reading and analyzing this dataset.
 
-In class, we'll work with a few other methods for importing data, including the [US Census API](https://walker-data.com/tidycensus/articles/basic-usage.html) and output files from other statistical programs like Stata and SPSS.
+1.  Read the .csv file directly into R from the URL.
+2.  Make sure that the start date and end date fields are properly formatted as a date.
+3.  What is the unit of analysis in this dataset? Perform the necessary transformation so that the unit of analysis is the poll (unique identifier is the variable `poll_id`) and for each poll compute the percent of respondents that planned to vote for the Democratic candidate.
+4.  Keep only the polls of likely voters in two states of your choice.
+5.  Create a scatter plot of Democratic vote share over time, faceted by state. Include dashed vertical lines indicating the dates of major campaign events.
+6.  **Bonus**. Compute 95% confidence intervals for each poll assuming random sampling from the population of likely voters. What fraction of these 95% confidence intervals contain the true Democratic vote share in the two states you selected? Does this fraction increase for polls conducted closer to the election? What about polls conducted by pollsters with high "grades" from 538? What about polls conducted over telephone vs. online polls?
+
+## Part 2
+
+In this part of the problem set, we'll be working with the `tidycensus` package, which can import data directly from the US Census API ([Application Programming Interface](https://joeornstein.github.io/text-as-data/apis.html)).
+
+7.  Follow the instructions on [this page](https://walker-data.com/tidycensus/articles/basic-usage.html) to obtain an API key from the US Census. Once you have an API key, reproduce the median income chart at the bottom of that page, but for counties in South Carolina instead of Vermont.
+
+## Part 3
+
+8.  **Bonus**. Download the Public Use Files at the bottom of [this page](https://www.census.gov/data/tables/2017/econ/gov-finances/summary-tables.html). Inside that folder is a giant fixed-width file called `2017FinEstDAT_06122023modp_pu.txt` with information on the finances of US state and local governments. Use the `read_fwf()` function to import that dataset into R; the first page of the Technical Documentation pdf in the folder will tell you exactly which positions are associated with which variable. Once you have imported the dataset, keep only the data for the Athens-Clarke County Unified Government and compute the share of tax revenue that comes from Property Taxes and Sales Taxes.

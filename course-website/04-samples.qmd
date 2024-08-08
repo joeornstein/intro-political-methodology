@@ -22,7 +22,56 @@ This week we discuss the challenges involved in making inferences about a popula
 
 # Problem Set
 
-\<TBD\>
+This problem set is based on @kingEnhancingValidityCrossCultural2004, a study of cross-cultural comparability in survey research.[^1] Essentially, the authors want to know whether people from very different contexts are likely to interpret survey questions in the same way. If you ask someone in China how much of a voice they have in government on a scale from 1-5, will they interpret those numbers in the same way as a survey respondent in Mexico? If not, then it's going to be difficult to make cross-country comparisons on the basis of such survey data.
+
+[^1]: See also chapter 3 of @imaiQuantitativeSocialScience2017.
+
+The authors come up with a clever way to help deal with this problem. First, they ask respondents the following question to try to gauge **political efficacy**.
+
+> How much say do you have in getting the government to address issues that interest you?
+>
+> \(1\) No say at all
+>
+> \(2\) Little say
+>
+> \(3\) Some say
+>
+> \(4\) A lot of say
+>
+> \(5\) Unlimited say
+
+Then they provide a series of *vignettes* about fictional people and ask the respondents to rate the political efficacy of the people in the vignettes. The idea is that by providing an "anchor" on which to gauge what different people mean by different responses, we can begin to make valid interpersonal comparisons.
+
+The vignettes read:
+
+> "\[Alison\] lacks clean drinking water. She and her neighbors are supporting an opposition candidate in the forthcoming elections that has promised to address the issue. It appears that so many people in her area feel the same way that the opposition candidate will defeat the incumbent representative."
+
+> "\[Jane\] lacks clean drinking water because the government is pursuing an industrial development plan. In the campaign for an upcoming election, an opposition party has promised to address the issue, but she feels it would be futile to vote for the opposition since the government is certain to win."
+
+> “\[Moses\] lacks clean drinking water. He would like to change this, but he can’t vote, and feels that no one in the government cares about this issue. So he suffers in silence, hoping something will be done in the future.”
+
+After reading each vignette, respondents are asked "How much say does \[name\] have in getting the government to address issues that interest \[him/her\]?", with the same set of responses as the original question above.
+
+Load the [vignettes.csv](data/vignettes.csv) dataset and you will find a dataset with 6 variables.
+
+-   `self`: the self-assessment response
+
+-   `alison`, `jane`, `moses`: responses to each vignette
+
+-   `china`: 1 for Chinese respondents, 0 for Mexican respondents
+
+-   `age`: age in years
+
+Please complete the following questions and upload your responses as a knitted R script or Quarto document.
+
+1.  Create a proportion table for responses to the self-assessment scale, broken down by country. What percent of Mexican respondents rated themselves as 1 ("no say at all")? What percent of Chinese respondents? What is the mean response in each country? Based on these measures, does political efficacy appear to be higher in China or Mexico? Is this result surprising to you?
+2.  Create histograms of age, one for each country. What is the median age of respondents from each country? How might this affect cross-country comparisons of political efficacy?
+3.  Compute the proportion of respondents—again separately for China and Mexico—who rate themselves lower than Moses on the political efficacy scale. How does this result differ from your analysis in problem 1? Give a brief interpretation of the result.
+4.  To help deal with the interpersonal incomparability problem, we're going to create a new variable that measures each respondent's political self-efficacy *relative* to their ratings on the three vignettes. First, create a new dataset with just the respondents who ranked Alison $\geq$ Jane and Jane $\geq$ Moses on the political efficacy scale. What percent of respondents thought this was the correct ordering of the vignettes?
+5.  In this new dataset, create a variable that represents how respondents rank themselves relative to the three vignettes. The variable should equal 1 if the respondent rated themselves lower than Moses, 2 if rated at least as high as Moses, 3 if rated at least as high as Jane, and 4 if the respondent rated themselves at least as high as Alison. Repeat the analysis from problem 1 with this new dataset. Give a brief interpretation of the result compared to the results obtained in problem 1.
+6.  Briefly describe how nonresponse bias might affect our conclusions from a survey about political efficacy?
+
+No **Bonus** problem this week! (I make it up to you by including two Bonus problems in Week 12.)
 
 # Additional Resources
 
