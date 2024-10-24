@@ -50,4 +50,4 @@ d2 |>
        color = NULL)
 ```
 
-6.  **Bonus**. Some economic growth theories suggest that poor countries should grow faster on average than rich countries (convergence). Other theories suggest that rich countries will grow faster than poor countries (divergence). Which theory appears to be a better description of the period between 1990 and 2015? Compute the average annual growth rate for each country during that period, and estimate the relationship between GDP per capita in 1990 and growth over the following 25 years. Interpret the associated hypothesis test and plot your results.
+6.  **Bonus**. Some economic growth theories suggest that poor countries should grow faster on average than rich countries (convergence). Other theories suggest that rich countries will grow faster than poor countries (divergence). Which theory appears to be a better description of the period between 1990 and 2015? Compute the annualized growth rate for each country during that period, and estimate the relationship between GDP per capita in 1990 and growth over the following 25 years. Interpret the associated hypothesis test and plot your results.
