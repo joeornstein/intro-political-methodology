@@ -224,3 +224,5 @@ write.csv(d, 'data/potential-outcomes.csv')
 # Additional Resources
 
 -   [Teacup Giraffes](https://tinystats.github.io/teacups-giraffes-and-statistics/06_standardError.html): Module 6 (Standard Error)
+-   [But what is the Central Limit Theorem?](https://www.3blue1brown.com/?v=clt) (3Blue1Brown)
+-   [Why is $\pi$ in the normal distribution?](https://www.3blue1brown.com/?v=gaussian-integral) (3Blue1Brown)
