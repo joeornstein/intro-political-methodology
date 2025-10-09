@@ -25,7 +25,7 @@ In this problem set, we'll practice reading and cleaning up data from a variety 
 
 ## Part 1
 
-The website 538 maintains a dataset of all polls conducted during the 2024 US presidential election at the following [link](https://projects.fivethirtyeight.com/polls-page/data/president_polls.csv). The following set of problems involve reading and analyzing this dataset.
+Before it was shut down by the Disney Company in May 2025, the website *FiveThirtyEight* maintained a dataset of all polls conducted during the 2024 US presidential election. Fortunately, you can still find the dataset through the Internet Archive, and I've posted it at this [link](https://joeornstein.github.io/pols-7012/data/president_polls.csv). The following set of problems involve reading and analyzing this dataset.
 
 1.  Read the .csv file directly into R from the URL.
 2.  Make sure that the start date and end date fields are properly formatted as a date.
