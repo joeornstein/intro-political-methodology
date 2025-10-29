@@ -36,7 +36,7 @@ Before it was shut down by the Disney Company in May 2025, the website *FiveThir
 
 ## Part 2
 
-In this part of the problem set, we'll be working with the `tidycensus` package, which can import data directly from the US Census API ([Application Programming Interface](https://joeornstein.github.io/text-as-data/apis.html)).
+In this part of the problem set, we'll be working with the `tidycensus` package, which can import data directly from the US Census API ([Application Programming Interface](https://joeornstein.github.io/text-as-data/APIs.html)).
 
 7.  Follow the instructions on [this page](https://walker-data.com/tidycensus/articles/basic-usage.html) to obtain an API key from the US Census. Once you have an API key, reproduce the median income chart at the bottom of that page, but for counties in South Carolina instead of Vermont.
 
