@@ -33,4 +33,4 @@ It is rare that all the variables you need for your research will be found in a 
 
 # Additional Resources
 
--   For a primer on **fuzzy record linkage** (merging datasets when the key variables do not contain exact matches), might I self-promote a bit and suggest this [paper](https://joeornstein.github.io/publications/fuzzylink.pdf) and [R package](https://joeornstein.github.io/software/fuzzylink/)?
+-   For a primer on **fuzzy record linkage** (merging datasets when the key variables do not contain exact matches), might I suggest this [paper](https://joeornstein.github.io/publications/probabilistic-record-linkage-using-pretrained-text-embeddings.pdf) and [R package](https://joeornstein.github.io/software/fuzzylink/)?
