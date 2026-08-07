@@ -9,11 +9,11 @@ date: today
 
 Welcome to our course website! Here you can find links to everything you'll need this semester:
 
--   The course syllabus (this page or in [PDF](syllabus/POLS-7012-syllabus.pdf))
+- The course syllabus (this page or in [PDF](syllabus/POLS-7012-syllabus.pdf))
 
--   Submit assignments at our course [eLC page](https://uga.view.usg.edu/d2l/home/3965695) (mortarboard icon in the upper right).
+- Submit assignments at our course [eLC page](https://uga.view.usg.edu/d2l/home/3965695) (mortarboard icon in the upper right).
 
--   I will post code and data on the course [GitHub repository](https://github.com/joeornstein/intro-political-methodology) (the octocat icon in the upper right).
+- I will post code and data on the course [GitHub repository](https://github.com/joeornstein/intro-political-methodology) (the octocat icon in the upper right).
 
 # Syllabus
 
@@ -23,13 +23,13 @@ This course will introduce the foundational mathematical and computational skill
 
 Upon successful completion of this course, students will be able to:
 
--   Describe the workhorse methods that political scientists use to test their theories with data. See **Readings** and **Exams & Grading** for details on how this competency will be assessed.
+- Describe the workhorse methods that political scientists use to test their theories with data. See **Readings** and **Exams & Grading** for details on how this competency will be assessed.
 
--   Confidently analyze datasets using the `R` programming language, organizing this work so that it is transparent and reproducible. See **Problem Sets** for details on how this competency will be assessed.
+- Confidently analyze datasets using the `R` programming language, organizing this work so that it is transparent and reproducible. See **Problem Sets** for details on how this competency will be assessed.
 
 ## Readings
 
-Each week we will read a selection from our course textbook, *Quantitative Social Science: An Introduction* by Kosuke Imai (abbreviated **QSS** below). At the start of each class period, students will take a short reading quiz, in which they will be asked to summarize one or more of the key concepts from that week's reading. These quizzes will be graded pass/fail, and there are 12 quizzes in total. To meet expectations, quiz responses must be accurate and clear enough that someone who hadn't read the textbook could understand the response.
+Each week we will read a selection from our course textbook, [*Quantitative Social Science: An Introduction*](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science) by Kosuke Imai (abbreviated **QSS** below). At the start of each class period, students will take a short reading quiz, in which they will be asked to summarize one or more of the key concepts from that week's reading. These quizzes will be graded pass/fail, and there are 12 quizzes in total. To meet expectations, quiz responses must be accurate and clear enough that someone who hadn't read the textbook could understand the response.
 
 As you read each week's assigned section, I strongly encourage you to follow along with the code examples by manually typing them into `R` and ensuring that everything works as expected. This practice will help you better understand how code works and prepare you for the problem sets.
 
@@ -43,43 +43,37 @@ There will be two written exams: one midterm (scheduled for October 6) and one f
 
 The final letter grade you earn for the semester will be determined based on the number of reading quizzes and problem sets you complete that meet expectations (each worth 5 points) and your performance on the exams (each worth 100 points). Consult the table below for the minimum requirements for each letter grade.
 
-| Letter Grade | Points     |
-|--------------|------------|
-| A            | 240+       |
-| A-           | 230-239    |
-| B+           | 220-229    |
-| B            | 210-219    |
-| B-           | 200-209    |
-| C+           | 185-199    |
-| C            | 170-184    |
-| F            | below 170  |
+| Letter Grade | Points    |
+|--------------|-----------|
+| A            | 240+      |
+| A-           | 230-239   |
+| B+           | 220-229   |
+| B            | 210-219   |
+| B-           | 200-209   |
+| C+           | 185-199   |
+| C            | 170-184   |
+| F            | below 170 |
 
 ## Office Hours and Email Policy
 
 I will be available for students to drop in and chat every Thursday afternoon from 2-3pm. My office is Baldwin 304C. If you send me an email, please allow me 24 hours to respond. Like many professors, my inbox is pretty overloaded. Also, I have small children, so it's my policy to not check email after 5pm or on weekends. You should feel free to seek assistance from the senior graduate students staffing the SPIA Methods Helpdesk. You can email them questions at **spia-methods-help\@uga.edu**.
 
-## Books
-
-Our readings will come from the course textbook:
-
--   **QSS**: Imai, Kosuke (2017). [Quantitative Social Science: An Introduction](https://press.princeton.edu/books/hardcover/9780691222271/quantitative-social-science). Princeton University Press.
-
 ## Course Outline
 
 | Date | Module | Topic | Reading Quiz | Problem Set |
-|------|--------|-------|--------------|-------------|
-| Aug 18 | I. Introduction | Getting Started | | QSS 1.5.2 |
-| Aug 25 | II. Causality | Experiments | QSS 2.1-2.4 | QSS 2.8.1 |
-| Sep 1 | | Observation | QSS 2.5-2.7 | QSS 2.8.1 |
-| Sep 8 | III. Measurement | Sampling | QSS 3.1-3.4 | QSS 3.9.2 |
-| Sep 15 | | Summary Statistics | QSS 3.5-3.8 | QSS 3.9.3 |
-| Sep 22 | IV. Prediction | Linear Models | QSS 4.1-4.2 | QSS 4.5.1 |
-| Sep 29 | | Regression and Causation | QSS 4.3-4.4 | QSS 4.5.2 |
-| Oct 6 | | **Midterm Exam** | | |
+|----|----|----|----|----|
+| Aug 18 | I. Introduction | Getting Started |  | QSS 1.5.2 |
+| Aug 25 | II\. Causality | Experiments | QSS 2.1-2.4 | QSS 2.8.1 |
+| Sep 1 |  | Observation | QSS 2.5-2.7 | QSS 2.8.3 |
+| Sep 8 | III\. Measurement | Sampling | QSS 3.1-3.4 | QSS 3.9.2 |
+| Sep 15 |  | Summary Statistics | QSS 3.5-3.8 | QSS 3.9.3 |
+| Sep 22 | IV\. Prediction | Linear Models | QSS 4.1-4.2 | QSS 4.5.1 |
+| Sep 29 |  | Regression and Causation | QSS 4.3-4.4 | QSS 4.5.2 |
+| Oct 6 |  | **Midterm Exam** |  |  |
 | Oct 13 | V. Probability | Probability | QSS 6.1 | QSS 6.6.1 |
-| Oct 20 | | Conditional Probability | QSS 6.2 (skip 6.2.4) | -- |
-| Oct 27 | | Distributions | QSS 6.3-6.4 | QSS 6.6.3 |
-| Nov 3 | VI. Uncertainty | Estimation | QSS 7.1 | QSS 7.5.1 |
-| Nov 10 | | Hypothesis Testing | QSS 7.2 | QSS 7.5.2 |
-| Nov 17 | | Model-Based Inference | QSS 7.3 | QSS 7.5.1 |
-| Dec 8 | | **Final Exam** | | |
+| Oct 20 |  | Conditional Probability | QSS 6.2 (skip 6.2.4) | -- |
+| Oct 27 |  | Distributions | QSS 6.3-6.4 | QSS 6.6.3 |
+| Nov 3 | VI\. Uncertainty | Estimation | QSS 7.1 | QSS 7.5.1 |
+| Nov 10 |  | Hypothesis Testing | QSS 7.2 | QSS 7.5.2 |
+| Nov 17 |  | Model-Based Inference | QSS 7.3 | QSS 7.5.3 |
+| Dec 8 |  | **Final Exam** |  |  |
