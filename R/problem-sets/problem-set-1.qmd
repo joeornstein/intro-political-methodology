@@ -1,0 +1,42 @@
+---
+title: "Problem Set 1"
+format: pdf
+---
+
+In this problem set, we look at demographic data from Sweden, Kenya, and the *world*, to compare birth and death rates over a 50 year period.
+
+## Crude Birth Rates
+
+First, let's compute crude death rates for each country and period.
+
+```{r}
+# read in the data
+kenya <- read.csv('INTRO/Kenya.csv')
+sweden <- read.csv('INTRO/Sweden.csv')
+world <- read.csv('INTRO/World.csv')
+
+# create a function to compute crude birth rates
+calculate_cbr <- function(dataset, period){
+
+  # total person-years column
+  dataset$py <- dataset$py.women + dataset$py.men
+
+  # compute total person-years and births in the given period
+  py_total_period <- sum(dataset$py[dataset$period == period])
+  births_total_period <- sum(dataset$births[dataset$period == period])
+
+  # return crude birth rate
+  return(births_total_period / py_total_period)
+
+}
+
+calculate_cbr(kenya, '1950-1955')
+calculate_cbr(kenya, '2005-2010')
+
+calculate_cbr(sweden, '1950-1955')
+calculate_cbr(sweden, '2005-2010')
+
+calculate_cbr(world, '1950-1955')
+calculate_cbr(world, '2005-2010')
+
+```
