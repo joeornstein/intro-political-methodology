@@ -40,3 +40,136 @@ calculate_cbr(world, '1950-1955')
 calculate_cbr(world, '2005-2010')
 
 ```
+
+## Age-Specific Fertility Rates
+
+Next, let's compute age-specific fertility rates (ASFR) for women aged 15-49.
+
+```{r}
+asfr <- function(dataset, period){
+
+  # just keep the women 15-50 in the period of interest
+  dataset <- dataset[dataset$period == period & dataset$age %in% c('15-19','20-24', '25-29', '30-34', '35-39', '40-44', '45-49') ,]
+
+  asfr <- dataset$births / dataset$py.women
+  names(asfr) <- dataset$age
+
+  return(asfr)
+
+}
+
+asfr(dataset = kenya, period = '1950-1955')
+asfr(dataset = kenya, period = '2005-2010')
+
+asfr(dataset = sweden, period = '1950-1955')
+asfr(dataset = sweden, period = '2005-2010')
+
+# that's interesting. Sweden birth rates declined in every age group *except* women in their 30s. That makes sense!
+
+asfr(dataset = world, period = '1950-1955')
+asfr(dataset = world, period = '2005-2010')
+
+```
+
+## Total Fertility Rate
+
+Now let's use the ASFRs to compute the total fertility rate (TFR) for each country and period.
+
+```{r}
+tfr <- function(dataset, period){
+
+  asfr <- asfr(dataset, period)
+
+  # total fertility rate is each asfr times 5, added together
+  sum(asfr * 5)
+
+}
+
+tfr(kenya, '1950-1955')
+tfr(kenya, '2005-2010')
+
+tfr(sweden, '1950-1955')
+tfr(sweden, '2005-2010')
+
+tfr(world, '1950-1955')
+tfr(world, '2005-2010')
+
+```
+
+## Crude Death Rate
+
+Next, we'll compute crude death rates (CDR) for each country and period.
+
+```{r}
+calculate_cdr <- function(dataset, period){
+
+  # total person-years column
+  dataset$py <- dataset$py.women + dataset$py.men
+
+  # compute total person-years and deaths in the given period
+  py_total_period <- sum(dataset$py[dataset$period == period])
+  deaths_total_period <- sum(dataset$deaths[dataset$period == period])
+
+  # return crude death rate
+  return(deaths_total_period / py_total_period)
+
+}
+
+calculate_cdr(kenya, '1950-1955')
+calculate_cdr(kenya, '2005-2010')
+
+calculate_cdr(sweden, '1950-1955')
+calculate_cdr(sweden, '2005-2010')
+
+# interesting note here. crude death rates appear to be equal in Kenya and Sweden in the 2005-2010 period!
+
+calculate_cdr(world, '1950-1955')
+calculate_cdr(world, '2005-2010')
+
+```
+
+## Age-Specific Death Rate
+
+Now let's compute age-specific death rates (ASDR) for each country and period.
+
+```{r}
+asdr <- function(dataset, period){
+
+  # just keep the period of interest
+  dataset <- dataset[dataset$period == period,]
+
+  asdr <- dataset$deaths / (dataset$py.women + dataset$py.men)
+  names(asdr) <- dataset$age
+
+  return(asdr)
+
+}
+
+asdr(kenya, '1950-1955')
+asdr(kenya, '2005-2010')
+
+asdr(sweden, '1950-1955')
+asdr(sweden, '2005-2010')
+
+asdr(world, '1950-1955')
+asdr(world, '2005-2010')
+
+```
+
+## Counterfactual CDR
+
+Finally, what would Kenya's Crude Death Rate be if it had the age-distribution of Sweden?
+
+```{r}
+asdr(kenya, '2005-2010')
+
+sweden$py <- sweden$py.men + sweden$py.women
+sweden_population <- sum(sweden$py[sweden$period=='2005-2010'])
+sweden_period <- sweden[sweden$period == '2005-2010',]
+# the proportion column will now tell me the percent of Swedes in each age bucket during the 2005-2010 period
+sweden_period$proportion <- sweden_period$py / sweden_population
+
+# counterfactual CDR is sum(asdr x sweden's population proportions)
+sum(asdr(kenya, '2005-2010') * sweden_period$proportion)
+
+```
