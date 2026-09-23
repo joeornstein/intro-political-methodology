@@ -77,3 +77,7 @@ I will be available for students to drop in and chat every Thursday afternoon fr
 | Nov 10 |  | Hypothesis Testing | QSS 7.2 | QSS 7.5.2 |
 | Nov 17 |  | Model-Based Inference | QSS 7.3 | QSS 7.5.3 |
 | Dec 8 |  | **Final Exam** |  |  |
+
+## Slides
+
+- [Calculus Essentials](slides/calculus.html)
