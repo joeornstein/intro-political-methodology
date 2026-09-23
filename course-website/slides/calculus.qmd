@@ -164,13 +164,13 @@ $$
 \text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2
 $$
 
-## An Optimization Problem
+## An Optimization Problem  {.smaller}
 
 $\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2$
 
 ```{r}
 #| echo: FALSE
-#| out-width: 80%
+#| out-width: 60%
 library(plotly)
 
 # thanks: https://www.datamentor.io/r-programming/3d-plot/
@@ -219,11 +219,11 @@ The slope of a linear function (a straight line) is measured by how much $y$ inc
 
 Find the slope of each function:
 
--   $y = 2x + 4$
+- $y = 2x + 4$
 
--   $f(x) = \frac{1}{2}x - 2$
+- $f(x) = \frac{1}{2}x - 2$
 
--   life expectancy (years) = 18.09359 + 5.737335 $\times$ log(GDP per capita)
+- life expectancy (years) = 18.09359 + 5.737335 $\times$ log(GDP per capita)
 
 . . .
 
@@ -272,7 +272,7 @@ Nonlinear functions are confusing and scary. Sometimes the slope is positive. So
 
 ## Newton & Leibniz
 
-::: columns
+::::: columns
 ::: {.column width="51%"}
 ![](img/newton.png)
 :::
@@ -280,12 +280,12 @@ Nonlinear functions are confusing and scary. Sometimes the slope is positive. So
 ::: {.column width="49%"}
 ![](img/leibniz.jpg)
 :::
-:::
+:::::
 
 ::: notes
 Developed/Discovered: - The theory of universal gravitation - Three Laws of Motion - The Nature of Light - And, as a side project so he'd have mathematical notation for those other projects, he created calculus
 
-NB: Newton did some of his best work while stuck at home during an epidemic. So, you know, get to it.
+(NB Fall 2020: Newton did some of his best work while stuck at home during an epidemic. So, you know, get to it.)
 
 Also invented calculus, but with better notation. A philosophical optimist who believed we lived in the "best of all possible worlds", a sentiment parodied by Voltaire, and perhaps belied by the fact that Newton took all the credit for inventing calculus.
 :::
@@ -617,7 +617,7 @@ $$f'(x) = 9x^2 + 24x + 12$$
 
 ## Shortcut 5: The Chain Rule
 
-If $f(x) = g(h(x))$, then $f'(x) = g'(x) \cdot h'(x)$
+If $f(x) = g(h(x))$, then $f'(x) = g'(h(x)) \cdot h'(x)$
 
 . . .
 
@@ -637,9 +637,9 @@ $f'(x) = \frac{1}{2}(x+3)^{-\frac{1}{2}}(1) = \frac{1}{2\sqrt{x+3}}$
 
 ## More Practice
 
--   Let $f(x) = 2x^3 + 4x + 79$. What is $f'(x)$?
--   Let $f(x) = 3(x^2 + x + 42)$. What is $f'(x)$?
--   Let $f(x) = (x^2 + 1)(x+3)$. What is $f'(x)$?
+- Let $f(x) = 2x^3 + 4x + 79$. What is $f'(x)$?
+- Let $f(x) = 3(x^2 + x + 42)$. What is $f'(x)$?
+- Let $f(x) = (x^2 + 1)(x+3)$. What is $f'(x)$?
 
 ## Now We Can Do Optimization!
 
@@ -895,7 +895,7 @@ $$
 
 . . .
 
-::: columns
+::::: columns
 ::: {.column width="50%"}
 $$
 j = 8 + d
@@ -915,7 +915,7 @@ $$
 j^* = 10
 $$
 :::
-:::
+:::::
 
 ## 
 
