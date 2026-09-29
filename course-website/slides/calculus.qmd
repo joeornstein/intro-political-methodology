@@ -164,7 +164,7 @@ $$
 \text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2
 $$
 
-## An Optimization Problem  {.smaller}
+## An Optimization Problem {.smaller}
 
 $\text{SSE} = \sum_{i=1}^n(y_i - \alpha - \beta x_i)^2$
 
@@ -947,7 +947,7 @@ p <- plot_ly(z = happiness, type = "surface") %>%
 p
 ```
 
-## Next Week...
+## The Payoff...
 
 We finally have the tools we need to find the values of $\alpha$ and $\beta$ that minimize this function:
 

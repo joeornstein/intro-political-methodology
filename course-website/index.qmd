@@ -81,3 +81,4 @@ I will be available for students to drop in and chat every Thursday afternoon fr
 ## Slides
 
 - [Calculus Essentials](slides/calculus.html)
+  - [Calculus Practice](calculus-practice.html)
