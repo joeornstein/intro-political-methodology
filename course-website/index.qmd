@@ -68,7 +68,7 @@ I will be available for students to drop in and chat every Thursday afternoon fr
 | Sep 8 | III\. Measurement | Sampling | QSS 3.1-3.4 | QSS 3.9.2 |
 | Sep 15 |  | Summary Statistics | QSS 3.5-3.8 | QSS 3.9.3 |
 | Sep 22 | IV\. Prediction | Linear Models | QSS 4.1-4.2 | QSS 4.5.1 |
-| Sep 29 |  | Regression and Causation | QSS 4.3-4.4 | QSS 4.5.2 |
+| Sep 29 |  | Regression and Causation | QSS 4.3-4.4 | ~~QSS 4.5.2~~ |
 | Oct 6 |  | **Midterm Exam** |  |  |
 | Oct 13 | V. Probability | Probability | QSS 6.1 | QSS 6.6.1 |
 | Oct 20 |  | Conditional Probability | QSS 6.2 (skip 6.2.4) | -- |
