@@ -31,7 +31,12 @@ encode <- function(message){
   message
 }
 
+# encode the message
 encode(message)
+
+# encode the encoded message (aka *decode* the message)
 encode(encode(message))
 
+# here's how you would express a sequence of functions with the pipe operator
 message |> encode() |> encode() |> encode() |> encode()
+# four encodings one after another should yield the original message
